@@ -8,11 +8,13 @@ from typing import Annotated
 import typer
 
 from refs import catalog as storage
-from refs import sources
+from refs import projects, sources
 from refs.config import absolute, select
 from refs.results import RefError, emit
 
 app = typer.Typer(no_args_is_help=True, pretty_exceptions_enable=False)
+project_app = typer.Typer(no_args_is_help=True)
+app.add_typer(project_app, name="project")
 
 
 @app.callback()
@@ -61,6 +63,19 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
 @app.command()
 def show(ctx: typer.Context, reference: str):
     report(ctx, "show", sources.show(settings(ctx).catalog_path(), reference))
+
+
+@project_app.command("create")
+def project_create(ctx: typer.Context, name: str,
+                   description: Annotated[str, typer.Option()] = "",
+                   dry_run: Annotated[bool, typer.Option()] = False):
+    report(ctx, "project create", projects.create(settings(ctx).catalog_path(), name, description, dry_run=dry_run))
+
+
+@project_app.command("cite")
+def project_cite(ctx: typer.Context, project: str, reference: str,
+                 dry_run: Annotated[bool, typer.Option()] = False):
+    report(ctx, "project cite", projects.cite(settings(ctx).catalog_path(), project, reference, dry_run=dry_run))
 
 
 def main() -> None:

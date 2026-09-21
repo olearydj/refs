@@ -45,3 +45,16 @@ CREATE TABLE origin_identities (
     input_fingerprint TEXT NOT NULL,
     PRIMARY KEY (namespace, library_uri, item_key)
 );
+
+CREATE TABLE projects (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE CHECK (length(trim(name)) > 0),
+    description TEXT NOT NULL DEFAULT '',
+    revision INTEGER NOT NULL DEFAULT 1 CHECK (revision > 0)
+);
+CREATE TABLE project_sources (
+    project_id TEXT NOT NULL REFERENCES projects(id),
+    source_id TEXT NOT NULL REFERENCES sources(id),
+    cited INTEGER NOT NULL DEFAULT 1 CHECK (cited IN (0, 1)),
+    PRIMARY KEY (project_id, source_id)
+);
