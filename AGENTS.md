@@ -23,7 +23,8 @@ refs aims for a 5 on the owner's scale (1 crude script, 10 comically over-engine
 
 - Slice 1 budget: about 12 commands, 7 tables, 4 runtime dependencies, 3,000 source lines. Going over is allowed only after naming the incident in the owner's workflow that it prevents and asking the owner.
 - Owner's allowance (2026-09-21): slice 1 may reach a 6 (about 15 commands, 10 tables, 3,500 lines) when the extra weight is a seam: a boundary or invariant that is cheap now and hard to retrofit, such as the result envelope, revisions, per-entry originals, identity columns, schema versioning, domain and adapter separation, and an internal search boundary. Surface that is easy to add later (extra commands, tables, and machinery for cases not yet met) stays within the 5 budget or goes to a later slice.
-- Governing docs shrink during revision; they do not grow.
+- Governing docs shrink during revision; they do not grow. Shrink by removing content, not by compressing sentences: trimmed text must still read as plain prose to a newcomer.
+- Planning is budgeted too: governing text for a slice stays near 4 words per expected source line, and planning takes less time than building. Plan what is costly to reverse; discover the rest by using working code. Ask the owner for judgment, not confirmation.
 - Never cut: stable citation keys; preserved original entries; no overwrite and no delete before a verified copy; a backup that has been restored once; explicit-only export.
 - A MUST needs a quoted owner decision or a visible "proposal" label.
 - Use before extend: no slice 2 specification work until slice 1 has been used on one real paper.

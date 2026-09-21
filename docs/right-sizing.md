@@ -35,6 +35,16 @@ Reading: git-muster and secretpath are the build-quality target (small, tested, 
 
 Historical items accepted before the first checkpoint and now deferred by audit §14: export waivers scoped to loss, revision and profile; request-ID replay outside file moves; per-field provenance; batch reconcile machinery before the 562-entry migration; the multi-file library export.
 
+## Right-sizing the planning
+
+The guardrails above size the product. This one sizes the effort spent specifying it. By 2026-09-21 refs had about 50,000 words of governing text, 25,000 words of reviews, several agent sessions and some twenty owner judgment calls, for a first slice of about 3,500 lines and no code yet. The findings that mattered (the duplicated model, the export default that would have stripped a real manuscript, the obsolete Zotero input) came from experiments on the owner's real data and from direct questions, not from specification prose. Agents produce text at no cost, so the usual brake on documentation is missing and has to be explicit.
+
+- *Planning budget:* governing text for a slice stays near 4 words per expected source line, and planning takes less time than building. A breach prompts the usual question: what does more planning protect against here?
+- *Plan what is costly to reverse; discover the rest by use.* Key format, canonical model, data locations, export dialect, anything that can destroy a file, and migration deserve up-front thought. Which commands get used, which warnings get ignored and what is annoying are answered by working code on a real paper.
+- *Lighter loop for later slices:* a one-page brief (outcome, decisions needed from the owner, what must never break), the owner's answers, a small experiment on real data where there is risk, tasks, build, use. Reserve full specification and independent audit for the risky pieces: the move-with-delete protocol and the Zotero migration.
+- *The owner's attention is the scarce resource.* Ask for judgment, not confirmation.
+- *Shrinking means removing content, not compressing sentences.* A trimmed document must still read as plain prose to someone new to the project: full sentences, terms defined or avoided, no slash-joined lists standing in for explanation. Review for this after any large trim.
+
 ## Checkpoints
 
 Each is about ten minutes of measuring by an agent and one judgment by the owner. A breach prompts a question; it never blocks.

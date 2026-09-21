@@ -623,3 +623,21 @@ The pre-revision archive made by the authoring session was verified against the 
 
 Next: the first right-sizing checkpoint, run as a trim of slice 1 toward the metered 6 by moving surface (export waivers and projection records, the operations journal and recover commands, batch resume and reconcile, convenience commands, the search entry point and proof package) to later slices or the backlog, with governing words going down. Nothing on the seam list or the never-cut list is a candidate.
 
+## 14. Addendum, 2026-09-21: First Right-Sizing Checkpoint and the Slice 1 Trim
+
+Measured after the authoring session's revision (commit 4209e5d): slice 1 had about 22 top-level commands and 41 invocations, 15 to 17 tables, and 49,468 governing words. Scored about 7. The architecture was sound; the excess was surface. The owner approved a trim to a metered 6.
+
+| Question as posed | Options | Literal reply | Interpretation |
+| --- | --- | --- | --- |
+| In slice 1, do you need to attach a source to a project without citing it (background membership)? | No, cited only for now; Yes, I need background membership | "No, cited only for now (Recommended)" | A project is its cited sources in slice 1: `project create`, `show`, `cite`, `uncite`. Keep the `cited` flag on the association table so background membership can return without a migration. |
+| When slice 1 copies a PDF into the library, do you want an option to rename it to your filename convention at that moment? | Yes, as a flag on the copy; No, preserve names in slice 1; Rename by default | "Rename by default" | Copies into the library are renamed to the accepted convention (for example `TuringTrap-2022.pdf`) unless a keep-name flag is passed. This reverses preserve-by-default for new intake only; linked files and later reorganize still preserve names. The standalone `filename` command is dropped. If the convention cannot produce a name (no short title or year), keep the original name and say so. |
+| The cut list | Presented as keep, fold, and defer tables | "I'm satisfied with changes based on my answers" | Trim approved as proposed, `reactivate` kept. |
+
+Keep: `init`, `paths`, `config show`, `schema` (four schemas), `add` (three formats, `--file`, `--dry-run`), `show`, `update` (`--set` and `--patch`), `search`, `list`, `key set`, `import` for `.bib`, `resource add` (link or `--copy`), `resource unlink`, `resource check`, `open`, the four project commands, `export` with the four-class report and single-run unknown override, `remove`, `reactivate`, `backup` plus the documented restore. Tables: `catalog_meta`, `sources`, `originals`, `origin_identities`, `resources`, `projects`, `project_sources`, `export_targets`, the search projection, and one light `imports` table (one row per run). Everything on the never-cut list.
+
+Fold: `config validate` into `config show`; `key preview` into `add --dry-run`; `resource list` into `show`; `resource intake` into `resource add --copy`; `project list` into `project show` with no argument; `project remove` into `project uncite`.
+
+Defer, each addable later without a migration or re-import: the operations and file-operations journal, `operations` and `recover` commands and request-ID replay (slice 2, with moves); per-entry import status with `import show`, `resume`, `reconcile` (slice 3; in slice 1 import never overwrites, reports conflicts, is safe to re-run, and `update` settles a conflict); `export_projections` and `export_waivers` with `export waive` (backlog, until a real repeated block); the `field_provenance` table (backlog; replaced by a marker of explicitly corrected fields on the source row plus preserved originals); `collections` tables (slice 2; `Unfiled` is a folder name in slice 1); `source_relations` (slice 3); `normalize` and `index rebuild` (backlog); the 10,000-source gate and four-process matrix (backlog; one smoke test and one two-process key-allocation test remain, and `BEGIN IMMEDIATE` stays); the search entry point and proof package (with the QMD investigation, per constitution 2.0.0).
+
+Documentation: move historical documents to `docs/archive/`, consider merging the seven contracts into about four, and bring governing text under roughly 30,000 words so the slice 1 specification can be read in one sitting.
+
