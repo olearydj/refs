@@ -1,5 +1,7 @@
 # Bibliographic Requirements Checklist: Academic Catalog Workflow
 
+> Scope notice, 2026-09-21 trim: the markers and independent assessments below describe the pre-trim revision (4209e5d), not certification of the current reduced design or implementation. Preserve the item text/IDs and prior findings. Apply the current spec/plan boundary when reassessing; deferred machinery is no longer a slice 1 obligation.
+
 **Purpose**: Review the completeness, clarity, consistency, and measurability of the revised bibliographic model, format mappings, and preservation requirements before task generation.
 **Created**: 2026-09-20
 **Feature**: [Academic Catalog Workflow](../spec.md)
@@ -163,7 +165,7 @@
 - **Spec**: [Feature specification](../spec.md).
 - **Bibliography**: [Bibliographic profile and mapping contract](../contracts/bibliography.md).
 - **Coverage registry**: [Pinned vocabulary and canonical-path inventory](../contracts/bibliographic-coverage.json).
-- **Records / Interchange / CLI**: [Records](../contracts/records.md), [interchange](../contracts/interchange.md), and [CLI](../contracts/cli.md) contracts.
+- **Records / Interchange / CLI**: [Records](../contracts/records.md), [historical interchange](../../../docs/archive/interchange-contract-pre-trim.md), and [CLI](../contracts/cli.md) contracts.
 - **Plan / Data model / Research / Quickstart**: [Plan](../plan.md), [data model](../data-model.md), [research](../research.md), and [quickstart](../quickstart.md).
 - **Bibliographic model / Constitution**: [Standards rationale](../../../docs/bibliographic-model.md) and [constitution](../../../.specify/memory/constitution.md).
 

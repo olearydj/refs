@@ -1,55 +1,27 @@
-# Slice 1 Validation Guide
+# Slice 1 Acceptance Walkthrough
 
-**Status:** executable acceptance design for the implementation phase; commands and fixtures below are not yet implemented. Use synthetic/public fixtures and disposable paths. Live manuscript replacement, Zotero migration and file movement need their own explicit authorization.
+**Planned checks, not executed implementation evidence.** Use disposable synthetic inputs and explicit test paths; no live Zotero/catalog/PDF/manuscript changes. The [file contract](contracts/files-and-recovery.md#snapshot-and-documented-restore) owns restore safety.
 
-## Setup and first workflow
+## One installed smoke workflow
 
-Implementation creates the package/lock and fixtures named here. Run uv sync --locked, Ruff, the exact-pinned ty, and pytest contract/integration checks. Verify SQLite capabilities and record Python, SQLite, OS/filesystem, package lock and policy versions.
+1. Install the locked package in its supported Python environment. Set an explicit temporary --config and --catalog for every invocation. Initialize with a disposable library; inspect paths and config show.
+2. Inspect the four schemas. Preview/add a refs record, a CSL record and a Bib entry; include incomplete metadata and protected spelling. Show the retained values/origins/key. Update using --set and a patch under revisions; prove a stale update fails.
+3. Import a mixed .bib with one valid entry and one conflict. Save its report, inspect preserved originals, re-run without duplicate sources/resources and settle a value conflict using update. Nothing silently overwrites a correction.
+4. Search/list the records. Create a project, cite two sources, uncite one, and show the selected set. Metadata/project changes alone produce no bibliography.
+5. Link a file in place; copy another into Unfiled. Check rename-by-default and --keep-name, show/check/open selection, then unlink the association without deleting bytes. A destination collision leaves both existing files unchanged.
+6. Export to a new target, repeat byte-identically, and exercise import-digest adoption of an existing file with --adopt --overwrite. Outside edits block by default. Four-class failures report all affected entries without changing target bytes; --allow-unknown-mappings does not waive known blocking losses.
+7. Remove/reactivate a source under revision guards, retaining its identity/key and external bytes. Snapshot, then perform the separate-home restore below.
 
-```bash
-refs_trial_root=$(mktemp -d)
-uv run --locked refs --config "$refs_trial_root/config.toml" --catalog "$refs_trial_root/cat" --no-project-config init --library-root "$refs_trial_root/lib"
-uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config --json add --format refs --input tests/fixtures/public/source.json --request-id capture-example
-uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config project create paper-x
-uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config project cite paper-x smith-2024-turingTrap
-uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config export --project paper-x --output "$refs_trial_root/references.bib" --profile portable-bibtex-v1
-```
+## Focused checks beside the smoke
 
-The source fixture supplies author Smith, year 2024 and short title The Turing Trap so the shown key is deterministic. Repeat capture/export; compare IDs and output bytes. Update with a returned revision, then reject a stale revision without changes. Search exact key/identifier and text from title, creator, abstract and context. Collection filters are excluded until slice 2. A removed source can be explicitly reactivated with the same ID/key.
+Keep one two-process key-allocation test. Use focused fixtures for parser defects, type-scoped aliases, names/particles/corporate “ and ”, dates, protection, keys, current-value clearing, no-overwrite imports, copied-file metadata and source changes, crash boundaries, invalid configuration and corrupt snapshots. Test portable rendering with Pandoc citeproc, Biber and classic BibTeX/elsarticle-num, asserting meaningful authors/dates/publication/edition/spelling, not just resolved keys. Record tool/style versions and limitations.
 
-## Cross-route and export gates
+No four-process matrix, 10,000-source performance gate, plugin proof, per-entry resume, stored waiver or saved export projection belongs to this slice.
 
-For every promoted mapping, exercise refs' actual bibtexparser adapter, agent input and (using the synthetic extractor input adapter) Zotero mapping without requiring live migration. Compare canonical facts, preserve exact originals, edit and clear each modeled field, then export and re-import. Re-import unchanged documented fallbacks using recorded projection evidence and assert no false type conflicts or duplicate sources. Changed projected values and key-only lookalikes must reconcile. A new catalog without projection evidence must report the generic imported type honestly.
+## Separate-home restore proof
 
-Include all 14 design-probe cases and the missing discriminators: free-text/parsedDate disagreement, partial/literal dates, both patent number kinds and priority date, assignee distinct from inventor, journal series versus collection title, numeric/descriptive editions, identifiers, corporate “ and ”, explicit particles, title-term/whole-title protection, accent-command braces, type changes and deliberate clearing. Run the parser corruption fixtures from the preserved audit through the actual adapter. Do not present Pandoc parsing as that test.
+Follow the documented procedure: verify hashes/schema/integrity, restore into an empty second home with separate config, open it with list/show/project show, and compare identities, keys, original hashes, corrections, selections and resource inventory. Missing roots are reported without file changes. Try a corrupt snapshot and nonempty destination; both fail safely. Demonstrate the procedure with the installed implementation and record exact commands/results before declaring slice 1 complete.
 
-Render portable output using Pandoc/APA and IEEE, Biber, and classic BibTeX with elsarticle-num. Keep golden expectations for authors, issued dates, journal/institution, editions, source identity and protected spelling. Case-only keys must block portable export. Known fallbacks warn; actual enumerated meaning loss blocks; unknowns block unless explicitly overridden for the run. Waivers expire on loss/revision/profile changes. All blocked cases report every affected source and leave destination bytes unchanged.
+## Owner's real-paper gate
 
-Exercise new-path export, adoption of an existing reconciled bibliography, repeat no-op, external edit conflict, explicit overwrite preservation and crash recovery. No metadata or membership mutation may write a bibliography. The real-paper trial remains a separately authorized release gate.
-
-## Copy intake and failure checks
-
-```bash
-uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config --json resource intake smith-2024-turingTrap --path tests/fixtures/public/sample.pdf --intake copy --dry-run
-uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config --json resource intake smith-2024-turingTrap --path tests/fixtures/public/sample.pdf --intake copy --request-id copy-example
-uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config --json resource check --verify
-```
-
-Expect lib/Unfiled/sample.pdf, unchanged basename, matching bytes, a named-root locator and the original still present. Slice 1 move must return unsupported_in_slice. Crash at every prepared/staged/published/catalog-committed boundary. Verify no overwrite even for equal-byte unrelated destinations, source-change detection, metadata warnings, permission failures, absent roots, nonce handling and retry after config repair. A temporary local same-volume fixture does not certify real cross-volume behavior; execute a separate synthetic macOS cross-volume fixture when that storage is available.
-
-## Snapshot and demonstrated restore
-
-```bash
-uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config backup --output "$refs_trial_root/snapshot"
-uv run --locked python tools/restore_snapshot.py --input "$refs_trial_root/snapshot" --catalog "$refs_trial_root/restored-cat" --config "$refs_trial_root/restored.toml"
-uv run --locked refs --config "$refs_trial_root/restored.toml" --no-project-config --json show smith-2024-turingTrap
-uv run --locked refs --config "$refs_trial_root/restored.toml" --no-project-config --json resource check --verify
-```
-
-The documented slice 1 helper validates manifest/hash/schema/integrity, refuses an existing destination, creates the separate catalog and config, and marks it ready only when verified. It performs no external file effect or operation resumption. Compare all saved identities, keys, canonical metadata, originals, provenance, projections/waivers, projects/selections and resource inventory. Snapshot again with an unresolved copy operation; confirm restoration reports it without touching shared files. Missing/corrupt members and incompatible schemas must fail. The later full restore CLI/bundle format is not required for this proof.
-
-Record explicitly that external bytes are excluded. Do not run both restored and original catalogs as active writers against shared output/library paths. Full logical export, collections, move and Zotero cutover belong to later slices.
-
-## Readiness evidence
-
-Record the complete slice 1 test result, consumer/style versions, corruption/interruption results, restore comparison and the 100-query/10,000-source/30,000-link performance measurement. Distinguish synthetic passing checks from actual manuscript acceptance. The metadata design examples and audit annotation evidence do not substitute for these implementation results.
+After these checks, the owner chooses one real paper for capture-to-export use with its actual consumer. Obtain task-specific authorization before replacing a live bibliography or migrating files. Render with the catalog unavailable, and record what was missing or unused. No slice 2 specification work begins before this trial. Whole-library migration remains separate.

@@ -7,7 +7,8 @@ Modified principles:
 - IV: capabilities sit behind application-owned documented boundaries from first delivery; selectable implementations, and adding one without modifying or rebuilding the core, are required when a second implementation is evaluated.
 - V: the replacement demonstration is required when a second implementation is evaluated, not at first delivery.
 Added or removed sections: none. Ratification date retained.
-Dependent artifacts to synchronize (not done by this edit): plan.md "Constitution review" and "Structure" (search entry point and proof package leave slice 1; the internal search boundary stays); contracts/capabilities.md; spec, data-model, file and configuration contracts that still describe Principle II as a pending conflict; reviews/2026-09-21-revision-summary.md and proposed-principle-ii-amendment.md status; docs/README.md current-stage paragraph.
+Dependent artifacts identified at amendment time: plan.md "Constitution review" and "Structure" (search entry point and proof package leave slice 1; the internal search boundary stays); contracts/capabilities.md; spec, data-model, file and configuration contracts that still describe Principle II as a pending conflict; reviews/2026-09-21-revision-summary.md and proposed-principle-ii-amendment.md status; docs/README.md current-stage paragraph.
+Synchronization completed by the slice 1 trim on 2026-09-21: current spec, plan, model, four consolidated contracts and docs index follow v2.0.0; the revision summary is marked historical. The later owner decision "Rename by default" is the separately requested naming policy for new copy intake only; linked files and later reorganize retain names. Principles/version are unchanged by this synchronization.
 -->
 
 # refs Constitution

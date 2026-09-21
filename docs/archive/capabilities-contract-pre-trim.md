@@ -1,3 +1,5 @@
+> Historical contract, superseded by the four current [contracts](../../specs/001-academic-catalog/plan.md#contracts), 2026-09-21.
+
 # Search Capability Contract v1
 
 This is the first bounded capability-replacement contract. It does not introduce a general plugin manager, remote provider, or background indexing service.

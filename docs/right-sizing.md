@@ -33,7 +33,7 @@ Reading: git-muster and secretpath are the build-quality target (small, tested, 
 - *Use before extend:* no slice 2 specification work until slice 1 has been used on one real paper.
 - *Two questions before adding anything:* which incident does this prevent, and which actual variation does this structure serve? If neither has an answer, it goes to the backlog. Deferred, not dismissed.
 
-Known items above 5 that were accepted knowingly and are worth revisiting at the first checkpoint: export waivers scoped to loss, revision and profile; request-ID replay outside file moves; per-field provenance; batch reconcile machinery before the 562-entry migration; the multi-file library export; and the weight of the review process itself.
+Historical items accepted before the first checkpoint and now deferred by audit §14: export waivers scoped to loss, revision and profile; request-ID replay outside file moves; per-field provenance; batch reconcile machinery before the 562-entry migration; the multi-file library export.
 
 ## Checkpoints
 

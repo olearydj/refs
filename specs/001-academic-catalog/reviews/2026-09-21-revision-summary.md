@@ -1,5 +1,7 @@
 # Revision Summary, 2026-09-21
 
+> Historical revision summary for commit 4209e5d. Constitution 2.0.0 has since been authorized and applied; its former amendment gate is closed. The owner-approved trim supersedes the slice 1 journals, waivers, projections and plugin proof described below. Current status and the checkpoint are in [the plan](../plan.md). Original findings and checks follow unchanged.
+
 ## Completed
 
 Read audit sections 10–12 in full before governing edits. Preserved the 29 pre-revision governing files in baseline-before-revision-2026-09-21.tar.gz. Selected the demand-driven CSL-shaped model after individual review of all 51 disputed fields and extension candidates. Expanded the synthetic probe to 14 cases with agent input, scoped aliases and neutralized oracle title casing; separately rendered the standard case under APA.

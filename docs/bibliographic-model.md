@@ -26,7 +26,7 @@ The native label and originals preserve future options, not a demonstrated cheap
 
 Store plain Unicode Title Case with per-title protected terms and a whole-title preserve-case flag. Accent/command braces are not automatically protection. Citation style governs output; internal casing does not override APA or other styles. Portable BibTeX emits Title Case with protection braces. Future CSL output derives suitable sentence case. Non-English titles need an export language declaration; unprotected mid-title capitals warn.
 
-Slice 1 implements portable BibTeX with documented miscellaneous fallbacks. Richer output requires declared compatible consumers and a later implementation. Quarto discovery may suggest a declaration, never choose silently. Four-class reports distinguish faithful incompleteness, documented fallback, enumerated blocking loss and unknown mapping. Stored projection evidence makes unchanged refs fallbacks idempotent on re-import without treating citation-key equality as identity proof.
+Slice 1 implements portable BibTeX with documented miscellaneous fallbacks. Richer output requires declared compatible consumers and a later implementation. Quarto discovery may suggest a declaration, never choose silently. Four-class reports distinguish faithful incompleteness, documented fallback, enumerated blocking loss and unknown mapping. Saved projection history is deferred by audit §14. Slice 1 import never overwrites, is safe to rerun, and may report lossy fallback differences as conflicts; the richer current record remains intact.
 
 ## Notes and migration
 

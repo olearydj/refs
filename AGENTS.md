@@ -13,7 +13,7 @@ Explicit user decisions take precedence. `docs/vision.md` owns product intent; `
 - Keep Markdown narrative paragraphs on one physical line.
 - Prefer source inspection and purpose-built tools. Ask before browser or desktop automation unless explicitly authorized for the current scope.
 - Treat Zotero catalogs, manuscript bibliographies, and externally linked files as read-only during research. Use read-only SQLite connections. Do not perform migration or relocation merely to investigate it.
-- Preserve assigned citation keys and existing filenames. Export bibliographies only on explicit invocation. Collection membership changes do not automatically move files.
+- Preserve assigned citation keys and existing linked filenames. New copy intake renames by the accepted convention unless --keep-name; later reorganize preserves names. Export bibliographies only on explicit invocation. Collection membership changes do not automatically move files.
 - Distinguish linked-in-place resources from managed placement. Refer to accepted A2 before making assumptions about collection or file behavior.
 - Use `adhoc-python` for ad hoc investigation until the project has its own managed environment; then use that environment for project work.
 

@@ -1,0 +1,14 @@
+{
+  "count_method": "whitespace tokens; active docs/bootstrap/constitution/feature/contracts including JSON; archives, reviews, historical checklists and tooling excluded",
+  "baseline_8435765_words_same_scope": 58470,
+  "governing_words": 29841,
+  "governing_markdown_words": 16698,
+  "spec_words": 2166,
+  "top_level_commands": 18,
+  "invocations": 23,
+  "logical_tables": 10,
+  "contracts": 4,
+  "registry_unchanged": true,
+  "local_links_pass": true,
+  "tasks_absent": true
+}

@@ -1,5 +1,7 @@
 # Specification Quality Checklist: Academic Catalog Workflow
 
+> Scope notice, 2026-09-21 trim: the markers and independent assessments below describe the pre-trim revision (4209e5d), not certification of the current reduced design or implementation. Preserve the item text/IDs and prior findings. Apply the current spec/plan boundary when reassessing; deferred machinery is no longer a slice 1 obligation.
+
 **Purpose**: Validate specification completeness and quality before proceeding to planning.
 
 **Created**: 2026-09-20

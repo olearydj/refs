@@ -1,6 +1,6 @@
 # Bibliographic Mapping and Export Contract v1
 
-**Profile:** refs-bibliography-v1. **Status:** revised design, not executed importer certification. [Registry](bibliographic-coverage.json), [semantic row review](../reviews/semantic-row-review-2026-09-21.md), and [examples](../reviews/model-examples-2026-09-21/README.md) are complementary.
+**Profile:** refs-bibliography-v1. **Status:** implementation proposal for trimmed slice 1, not executed importer certification. [Registry](bibliographic-coverage.json), [semantic row review](../reviews/semantic-row-review-2026-09-21.md), and [examples](../reviews/model-examples-2026-09-21/README.md) are complementary.
 
 ## Authority and bounded coverage
 
@@ -32,20 +32,20 @@ Extensions are limited to patent.assignees (ordered personal/literal names), pat
 | speech | misc; presenter as author and event/genre in howpublished. |
 | software | misc; programmer as author, version/publisher in howpublished and supplied locator. Programming language is not genre. |
 
-Known subtype downgrades warn and are recorded in a projection record. They are not unknown mappings. Richer profiles may later be selected only when a destination declares compatible consumers; unsupported profile requests fail rather than silently falling back. Quarto configuration detection may suggest declarations only. Portable output is tested with Pandoc citeproc, Biber and classic BibTeX/elsarticle-num. Compare rendered authors, issued dates, journal/institution, edition and protected spelling, not merely resolved keys. Golden outputs identify tool/style versions; schema validity and rendering are distinct evidence.
+Known subtype downgrades warn and are itemized in the export report; no projection-history table is stored. They are not unknown mappings. Richer profiles may later be selected only when a destination declares compatible consumers; unsupported profile requests fail rather than silently falling back. Quarto configuration detection may suggest declarations only. Portable output is tested with Pandoc citeproc, Biber and classic BibTeX/elsarticle-num. Compare rendered authors, issued dates, journal/institution, edition and protected spelling, not merely resolved keys. Golden outputs identify tool/style versions; schema validity and rendering are distinct evidence.
 
 ## Four-class policy
 
 | Class | Outcome |
 | --- | --- |
 | Faithful but incomplete | Warn about missing facts or assessed noncitation omissions; never invent values. |
-| Documented fallback | Warn with mapping ID and record the projection, including type downgrade. |
-| Enumerated meaning-changing loss | Block unless an exact stored waiver applies. |
+| Documented fallback | Warn with mapping ID and describe the emitted fallback, including type downgrade, in this run's report. |
+| Enumerated meaning-changing loss | Block. Stored waivers and export waive are backlog. |
 | Unknown or unassessed | Block by default; `--allow-unknown-mappings` is a single-run override, listed per entry/loss in the report. |
 
 Closed blocking-loss codes are `cited_authors_changed`, `issued_date_lost_or_changed`, `work_identity_changed` (source/container/edition/version/identifying locator altered), `in_text_citation_changed` (a tested transformation changes who/year is cited), and `protected_spelling_changed`. Omitting an access date is not equivalent to dropping issued date. Merely unprotected capitalization warns under the explicit user decision. A type downgrade alone is documented fallback; an observed consequence in this list upgrades it to blocking. Any transformation not assessed by a registered rule belongs to unknown, never an implicit safe remainder.
 
-Structural errors are never waivable: invalid/unserializable key/value, case-insensitive duplicate portable keys, malformed output, missing required non-English langid, or unsafe target. The command reports every affected entry in one pass. Blocked exports create no target/staging file and do not advance adoption. Waivers bind loss code plus affected paths/value fingerprints, source revision and complete destination-profile fingerprint, with actor/time. A change to any binding invalidates them. Unknown overrides cannot waive a known blocking loss.
+Structural errors cannot be overridden: invalid/unserializable key/value, case-insensitive duplicate portable keys, malformed output, missing required non-English langid, or unsafe target. The command reports every affected entry in one pass. Blocked exports create no target/staging file and do not advance adoption. There is no stored loss waiver in slice 1. Unknown overrides cannot waive a known blocking loss; correct the record, change project selection explicitly, or leave the export blocked. The earlier scoped-waiver design is deferred, not silently replaced with a blanket override.
 
 ## Titles, dates and originals
 

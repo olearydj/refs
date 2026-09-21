@@ -1,3 +1,5 @@
+> Historical contract, superseded by the four current [contracts](../../specs/001-academic-catalog/plan.md#contracts), 2026-09-21.
+
 # Input, Migration and Recovery Formats v1
 
 ## Bibliographic input in slice 1

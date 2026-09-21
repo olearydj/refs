@@ -1,73 +1,94 @@
-# CLI Contract v1
+# CLI and Configuration Contract v1
 
-**Status:** planned interface. Slice 1 is explicitly bounded below; later commands are design reservations, not available features.
+**Implementation proposal, 2026-09-21.** This is the full slice 1 command surface approved in audit §14. Deferred commands have no placeholders.
 
-## Invocation and mutation rules
+## Invocation and results
 
-`refs [--config PATH] [--catalog PATH] [--project-file PATH | --no-project-config] [--json] COMMAND`. Paths/configuration follow configuration.md. Global help/version are textual exceptions; schema provides machine discovery. Human output is default. JSON is one UTF-8 result object plus newline on stdout, including usage failures; progress goes to stderr. No command prompts.
+`refs [--config PATH] [--catalog PATH] [--project-file PATH | --no-project-config] [--json] COMMAND`. Human output is default; JSON is one UTF-8 object plus newline on stdout, including usage failures. Progress goes to stderr. Help/version are textual exceptions. No interactive prompts. File payloads accept `-` for stdin. REF is an exact source UUID or citation key; ambiguity fails. Projects use exact names or IDs.
 
-Mutations accept --dry-run and --request-id TEXT unless noted. Dry run validates without persistent changes, stages or reservations. Execution rechecks revisions and collisions. Request IDs contain 1–128 nonwhitespace printable ASCII characters. Identity fingerprints contain command, target selectors and semantic payload, excluding formatting, preview and configuration. Store settings separately. A changed payload under the same ID is request_id_reused; a completed identical request replays. Interrupted file effects follow captured intent and explicit recovery, never silently retarget after config changes.
+Mutations support --dry-run: validate and report intended effects without rows, locks, staging or key reservations. Actual execution rechecks revisions/collisions; previewed generated keys are not reserved. Removal, reactivation, unlink and rekey require --execute after their default preview. Add/copy/export are explicit actions and require no extra confirmation. There is no --request-id or stored replay contract.
 
-Removal, rekey, reactivation and reorganize preview unless --execute is provided. Ordinary explicit add/copy/export operations need no second confirmation. REF is an exact source UUID or citation key; ambiguity errors rather than guesses. UUIDs identify resources, operations and import entries. Project names are exact and unique. Input paths accept - for stdin where a file payload is supported.
-
-## Slice 1 commands
-
-| Command | Inputs | Result/effect |
-| --- | --- | --- |
-| init | --library-root PATH optional; global --config/--catalog | Explicit creation with private permissions and ready marker, no overwrite. Library default is the chosen lib path; metadata-only setup can explicitly disable intake. |
-| paths; config show; config validate | show optionally --sources | Separate config/catalog/root paths and origins, including missing/unwritable locations. No implicit catalog creation. |
-| schema NAME | source-create, source-patch, source-record, result, config, reconcile, snapshot-manifest | Packaged generated schemas, no network. |
-| add | --format refs\|csljson\|bib --input PATH; optional --file PATH --intake copy\|link | One record; optional verified non-destructive copy or link. No move in slice 1. File failure after metadata success is partial with IDs. |
-| show REF | none | Complete canonical values, revision, native label, provenance, context, resources, limitations. |
-| update REF | --patch PATH or repeated --set PATH=JSON; --if-revision N | Same validator and revision guard for humans and agents. |
-| normalize REF | --if-revision N; --execute | Preview/apply derived normalization, preserving explicit overrides. |
-| key preview | --input PATH | Components, policy and warnings without key reservation. |
-| key set REF | --key TEXT --if-revision N --execute | Explicit replacement; external citations are not rewritten. |
-| filename REF | --extension TEXT | Accepted filename preview only. |
-| search QUERY; list | --project PROJECT, --cited, --limit N, --offset N; list --sort title\|key | Exact lookup and lexical retrieval with matching origin. --cited requires project. Collection filters arrive in slice 2. |
-| index rebuild | --execute | Explicit derived projection rebuild. |
-| import | --format bib --input PATH --origin TEXT | Per-entry application with preserved conflicts/originals; mixed files allowed. |
-| import show BATCH; import resume BATCH | optional status on show | Accountable outcomes; resume pending work only. |
-| import reconcile BATCH | --input PATH | Explicit identity/field decisions under revisions. |
-| resource add REF | --path PATH or --root NAME --relative PATH; optional label/media type | Record an existing path without moving. Normalize absolute in-library paths to the library root. |
-| resource intake REF | --path PATH --intake copy\|link; optional label | Copy into Unfiled or link; preserve filename. |
-| resource list REF; resource primary RESOURCE | primary needs --if-revision N | Explicit primary selection; at most one per source. |
-| resource unlink RESOURCE | --if-revision N --execute | Catalog link removal only. |
-| resource check | optional --source REF, --verify | Current availability/digests/conflict-file diagnostics, no repair or timestamp write. |
-| open REF | optional --resource RESOURCE | Open primary, else sole resource; otherwise return choices. Never guess or alter content. |
-| project create NAME; project list; project show PROJECT | optional description on create | Project IDs, revisions and memberships. |
-| project add PROJECT REF; project cite PROJECT REF; project uncite PROJECT REF; project remove PROJECT REF | remove needs --uncite if selected | Background membership and citation selection remain distinct; repeats are no-ops. |
-| export | --project PROJECT --profile portable-bibtex-v1 --output PATH; optional --adopt --reconciliation BATCH, --overwrite, --allow-unknown-mappings | Explicit output only; project defaults may supply arguments. Four-class report before any write; complete projection evidence after publication. |
-| export waive REF | --loss FINGERPRINT --profile-fingerprint TEXT --if-revision N | Store an explicit current blocking-loss waiver with actor/time; never blanket permission. |
-| remove REF; reactivate REF | --if-revision N --execute | Preview dependent associations; preserve identity/key and external files. |
-| operations list; operations show OP; recover [OP] | recover needs --execute | Inspect or resume only verified safe effects. |
-| backup | --output NEW_DIRECTORY | Consistent snapshot including unresolved operations; external bytes excluded and listed. |
-
-Import is an invokable group: flags without subcommand run import; show/resume/reconcile are subcommands. Search takes literal text, with index administration in a separate group. Pagination defaults limit=50, offset=0; limit must be 1–1000, offset nonnegative. Report total and catalog snapshot/revision; separate pages need not share a snapshot and must expose changes.
-
-Slice 1 restoration uses the documented procedure, not an unfinished restore command. A missing catalog reports catalog_missing; no automatic init. Wrong schema yields unsupported_schema; hot-journal inspection yields recovery_required. The stable home_not_writable error carries resolved catalog path and required access.
-
-## Later slices
-
-Slice 2 adds collection create/list/update/add/remove/delete, resource file-under, resource assign-filing --from-folders, and selected reorganize. Assign-filing previews folder mappings/ambiguities and needs --execute, with no physical movement. There is no resource adopt or --unlink-managed. Move becomes the default for new-file intake in slice 2; linked outside files cannot be reorganized.
-
-Slice 3 adds the published Zotero JSON extractor input and migration reconciliation details. Slice 4 adds restore, library export, backup --include-managed and explicit schema migration. Unsupported commands/profile names return unsupported_in_slice; do not silently perform an approximation.
-
-## Result envelope
-
-All results contain schema_version="1.0", command, status, operation_id, data, warnings and errors. status is ok, partial or error; operation_id is null for reads/previews. data is object or null; dry runs include dry_run=true. Each warning/error has code, message, nullable path, details object and retryable boolean. No resolved secrets. Partial entry application or file failure never reports complete success.
+All results contain schema_version="1.0", command, status, data, warnings and errors. status is ok, partial or error; data is object or null. Warnings/errors contain code, message, nullable path, details and retryable. Return source/resource/import IDs where applicable; there is no operation ID. Never claim complete success after partial application. JSON exceptions are handled by refs' wrapper, not delegated to Typer help formatting.
 
 | Exit | Meaning |
 | --- | --- |
-| 0 | Complete/no-op; warnings alone. |
-| 2 | Invalid invocation, payload, schema or configuration. |
-| 3 | Missing/ambiguous target, stale revision, identity conflict, blocked export or unsafe replacement. |
-| 4 | Partial application or incomplete external effects. |
-| 5 | I/O, integrity, unsupported storage or recovery failure. |
+| 0 | Complete/no-op, possibly warnings. |
+| 2 | Invalid invocation/input/schema/configuration. |
+| 3 | Missing/ambiguous identity, stale revision, conflict, blocked export or unsafe replacement. |
+| 4 | Partially applied import or metadata saved but file action incomplete. |
+| 5 | I/O/integrity/storage/recovery failure. |
 | 6 | Retryable lock timeout after five seconds. |
 
-Unpartitionable input yields exit 2 with no source writes; actual import may preserve its raw input and reports that. Mixed parseable entries yield per-entry outcomes and exit 4. Ctrl-C records interruption where possible, otherwise exits 130; durable intents guide recovery. Typer exceptions are translated through refs' own main wrapper; help text is not the machine contract.
+Ctrl-C exits 130 where the process can handle it; a killed process cannot promise a report. Re-run imports safely; inspect source/destination after interrupted copy or export per the file contract. Unpartitionable input writes no sources; preserve its raw evidence only during actual import and report that. Mixed valid/invalid blocks return per-entry outcomes and exit 4.
 
-## Catalog recovery
+## Commands
 
-`recover --catalog-state --execute` is mutually exclusive with an OP argument. Without execute it inspects journal/ready-state diagnostics without opening writable recovery. With execute it acquires coordination, opens the existing selected SQLite catalog read-write so SQLite can recover its hot journal, then checks integrity/foreign keys/schema before marking it usable. It does not resume file operations or initialize a missing catalog. Failure retains a recovery_required result. `recover OP --execute` handles only an identified file/export intent after the catalog is usable.
+| Invocation | Inputs and effect |
+| --- | --- |
+| init | Explicit creation using selected config/catalog and optional --library-root PATH; --no-library permits metadata-only use. Private permissions; no overwrite. |
+| paths | Resolve config/catalog/library and origins even before initialization. |
+| config show | Inspect effective values, origins and validation diagnostics; replaces config validate. |
+| schema NAME | Exactly source-create, source-patch, source-record, result; packaged, offline. |
+| add | --format refs\|csljson\|bib --input PATH; optional --file PATH and --copy, --keep-name. Default file behavior links; --copy requests intake. --dry-run includes normalization, key components and file destination. |
+| show REF | Canonical record, revision, origins/corrections, context, limitations and resource list/availability. |
+| update REF | --patch PATH or repeated --set PATH=JSON; --if-revision N required. |
+| search QUERY | Exact key/normalized identifier match first, then literal lexical query; --project PROJECT, --limit N, --offset N; matched fields and source identities. |
+| list | Same filters/pagination; --sort title\|key. |
+| key set REF | --key TEXT --if-revision N --execute; preview otherwise, warn external citations remain unchanged. |
+| import | --format bib --input PATH --origin TEXT; preview or apply .bib with per-entry report and aggregate run counts. No subcommands. |
+| resource add REF | --path PATH or --root NAME --relative PATH; optional --copy, --keep-name, label/media type. Default links in place; --copy uses Unfiled. |
+| resource unlink RESOURCE | --if-revision N --execute; association only, never file deletion. |
+| resource check | Optional --source REF, --verify; availability/digest/root diagnostics, no repair/write. |
+| open REF | Optional --resource RESOURCE; use sole resource or return choices; external opener, no content editing. |
+| project create NAME | Optional description; unique name, repeats with identical values are no-ops. |
+| project show [PROJECT] | Project and active cited sources, plus removed-source diagnostics; no argument lists projects. |
+| project cite PROJECT REF | Add active source with cited=true; duplicate is no-op. |
+| project uncite PROJECT REF | Delete that association, leave source/other projects/files; absent association is no-op. |
+| export | --project PROJECT --output PATH --profile portable-bibtex-v1; optional --adopt, --overwrite, --allow-unknown-mappings. Allowed defaults from config; complete four-class report. |
+| remove REF | --if-revision N --execute; tombstone while retaining identity/key/relationships. |
+| reactivate REF | --if-revision N --execute; restore same identity/key, report retained associations. |
+| backup | --output NEW_DIRECTORY; consistent catalog/config snapshot and external-file inventory. |
+
+--keep-name is valid only with --copy. Repeated resource linking of the same source/locator is a no-op. Add with a duplicate candidate reports the identity rather than silently creating another or merging differences. Search/list default limit=50, offset=0; limit 1–1000, nonnegative offset. Report total/catalog revision; separate pages need not share a snapshot. All project associations are cited, so no --cited flag is needed.
+
+## Configuration and paths
+
+Select config by --config, then REFS_CONFIG, then ~/.config/refs/config.toml; select catalog by --catalog, then REFS_CATALOG, then config catalog.path. Explicit empty/invalid choices fail. No --home/REFS_HOME fallback. Canonical chosen data paths are /Volumes/Casa/refs/cat and /Volumes/Casa/refs/lib (owner's /casa aliases). Ordinary commands never create a missing catalog or substitute a location when Casa is unmounted.
+
+Init creates only at explicitly selected valid locations. Missing volume mountpoints, incompatible/nonempty unrecognized destinations or conflicting existing config produce init_conflict. A ready compatible catalog/config is a no-op. Existing config is not overwritten; partial initialization reports the files for inspection rather than declaring ready. Create a ready marker only after schema/integrity checks. Normal setup does not authorize relocation or sync configuration.
+
+```toml
+schema_version = 1
+[catalog]
+path = "/Volumes/Casa/refs/cat"
+[resources]
+library_root = "/Volumes/Casa/refs/lib"
+[resources.roots]
+library = "/Volumes/Casa/refs/lib"
+[keys]
+template = "{author}-{year}-{title}"
+without_creator = "{title}-{year}"
+missing_year = "ND"
+title_words = 2
+stopwords = ["a", "an", "the", "and", "or", "of", "to", "for", "in", "on", "with", "your"]
+transliteration_policy = "creator-latin-v1"
+[keys.corporate_aliases]
+[titles]
+policy = "english-title-case-v1"
+minor_words = ["a", "an", "the", "and", "but", "or", "nor", "for", "so", "yet", "as", "at", "by", "in", "of", "on", "per", "to", "up", "via"]
+protected_terms = ["AI", "GPT-4", "LaTeX", "PhD", "Python", "R", "nbgrader", "pH"]
+[sorting]
+ignore_leading_articles = ["a", "an", "the"]
+[export]
+profile = "portable-bibtex-v1"
+```
+
+Roots are named absolute local paths; library_root and roots.library agree. Relative config paths resolve against that file; invocation paths against cwd. Expand leading ~, never shell expressions. With library disabled, links/capture/export remain available; --copy fails rather than silently linking. No intake-mode or search-provider selector is needed in slice 1. The later accepted move default does not change today's explicit --copy interface.
+
+Catalog/staging require agent write access to /Volumes/Casa/refs/cat, and intake also to lib. home_not_writable names the resolved failing path and required access. catalog_missing, unsupported_schema and recovery_required are distinct failures. Never sync the live database or staging; library sync, if later configured by the owner, is not backup.
+
+## Project defaults and policy validation
+
+Discover the nearest .refs.toml between cwd and Git worktree root, recognizing .git files/directories; outside Git inspect cwd only. --project-file selects explicitly; --no-project-config disables discovery. Do not merge ancestors. Allowed keys: project, export.profile, export.output, export.consumers. Invocation wins over project, then user config, then defaults. Project files cannot change catalog, roots, naming or credentials. Invalid selected config fails before mutation, with path/value/origin. A declared richer profile fails as unsupported; consumer detection never silently chooses one.
+
+Key templates allow author/year/title tokens and literal separators only; without_creator excludes author. title_words is 1 or 2; nonblank policy lists deduplicate case-insensitively. Corporate aliases map exact NFC literal names to explicit valid tokens. Policy changes affect future generation, never existing keys or explicit corrections. Title Case capitalizes first/last words and words after an explicit subtitle boundary; minor words otherwise stay lowercase. Hyphen parts use their position in the whole title. Protected terms/whole-title flags win. Sort case-insensitively by sort title, numeric edition, year, then binary key; missing numeric values follow present ones. Strip only an initial whole-word article, ignoring opening quotation marks for comparison.

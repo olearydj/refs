@@ -1,3 +1,5 @@
+> Historical contract, superseded by the four current [contracts](../../specs/001-academic-catalog/plan.md#contracts), 2026-09-21.
+
 # Configuration Contract v1
 
 ## Separate configuration and catalog selection
