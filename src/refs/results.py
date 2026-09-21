@@ -17,10 +17,11 @@ class RefError(Exception):
 
 
 def emit(command: str, data: dict[str, Any] | None = None, *,
-         error: RefError | None = None, json_output: bool = False) -> None:
+         error: RefError | None = None, json_output: bool = False,
+         warnings: list[dict] | None = None) -> None:
     result = dict(schema_version="1.0", command=command,
                   status="partial" if error and error.exit_code == 4 else "error" if error else "ok",
-                  data=data, warnings=[], errors=[error.issue] if error else [])
+                  data=data, warnings=warnings or [], errors=[error.issue] if error else [])
     if json_output:
         print(json.dumps(result, ensure_ascii=False))
     elif error:

@@ -58,3 +58,11 @@ CREATE TABLE project_sources (
     cited INTEGER NOT NULL DEFAULT 1 CHECK (cited IN (0, 1)),
     PRIMARY KEY (project_id, source_id)
 );
+
+CREATE TABLE export_targets (
+    destination TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL REFERENCES projects(id),
+    profile_fingerprint TEXT NOT NULL,
+    baseline_digest TEXT,
+    pending_digest TEXT
+);

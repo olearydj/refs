@@ -7,8 +7,8 @@ from typing import Annotated
 
 import typer
 
+from refs import bibliography, projects, sources
 from refs import catalog as storage
-from refs import projects, sources
 from refs.config import absolute, select
 from refs.results import RefError, emit
 
@@ -26,7 +26,7 @@ def configure(ctx: typer.Context,
 
 
 def report(ctx: typer.Context, command: str, data: dict) -> None:
-    emit(command, data, json_output=ctx.obj["json_output"])
+    emit(command, data, json_output=ctx.obj["json_output"], warnings=data.get("warnings", []))
 
 
 def settings(ctx: typer.Context):
@@ -76,6 +76,14 @@ def project_create(ctx: typer.Context, name: str,
 def project_cite(ctx: typer.Context, project: str, reference: str,
                  dry_run: Annotated[bool, typer.Option()] = False):
     report(ctx, "project cite", projects.cite(settings(ctx).catalog_path(), project, reference, dry_run=dry_run))
+
+
+@app.command("export")
+def export_bibliography(ctx: typer.Context, project: Annotated[str, typer.Option()],
+                       output: Annotated[Path, typer.Option()],
+                       profile: Annotated[str, typer.Option()] = bibliography.PROFILE,
+                       dry_run: Annotated[bool, typer.Option()] = False):
+    report(ctx, "export", bibliography.export(settings(ctx).catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run))
 
 
 def main() -> None:

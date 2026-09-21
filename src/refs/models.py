@@ -59,7 +59,7 @@ class Article(StrictModel):
     page: Text | None = None
     DOI: Text | None = None
     URL: Text | None = None
-    language: Literal["en", "en-US", "en-GB"] = "en"
+    language: Literal["en", "en-US", "en-GB"] | None = None
 
 
 class Protection(StrictModel):
