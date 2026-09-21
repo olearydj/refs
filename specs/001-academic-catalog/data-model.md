@@ -11,7 +11,7 @@
 | resources | Stable ID, source ID, revision, label/media type, absolute or named-root relative locator, verified digest for copied files. Unique source/locator association. No mode flag or primary-selection machinery. Missing files remain locators, not deletion instructions. |
 | projects | Stable ID, unique nonblank name, description and revision. |
 | project_sources | Unique project/source pair and cited boolean. Every slice 1 row has cited=true. Cite inserts, uncite deletes; repeats are no-ops. Keep the column for future background membership. |
-| export_targets | Unique canonical destination, project/profile fingerprint and last successful byte digest. No operation ID or per-source projection. Advance only after verified publication. |
+| export_targets | Unique canonical destination, project/profile fingerprint and last successful byte digest. A nullable pending_digest records the intended output before publication. The baseline is nullable until first publication. Promote a matching pending digest on the next export; otherwise advance the baseline only after verified publication. No operation ID or per-source projection. |
 | imports | One row per actual import run: ID, origin, exact file digest, start/finish timestamps and aggregate counts (applied/unchanged/conflict/invalid); incomplete finish stays visible after interruption. No per-entry state or saved replay outcome. |
 | search projection | Derived FTS5 metadata/context/legacy-tag text keyed by source ID; matching fields returned with current source revision. Rebuildable, never an authority or file-content index. |
 

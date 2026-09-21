@@ -1,10 +1,10 @@
 # Implementation Plan: Slice 1
 
-**2026-09-21 — trimmed design.** Constitution 2.0.0 is applied. The owner passed the second right-sizing checkpoint and requested the intake corrections and checklist archival before tasks. Those updates are complete; this session stops at their commit by explicit instruction. Tasks then cover only this slice, followed by speckit-analyze. No implementation or live migration has run.
+**2026-09-21 — trimmed design.** Constitution 2.0.0 is applied. The owner passed the second right-sizing checkpoint and requested the intake corrections and checklist archival before tasks. Those updates are committed. The owner has authorized slice 1 task generation; tasks.md now groups the work by runnable user stories. Analysis follows before implementation. No implementation or live migration has run.
 
 ## Delivery boundary
 
-Deliver all six [slice 1 stories](spec.md#user-stories-and-acceptance): capture/correction/search, cited-only projects and portable export, .bib import, linking/copy into Unfiled, snapshot plus demonstrated manual restore, and configuration. All active FR/SC clauses in the trimmed spec apply; its deferred-ID ledger is excluded from task coverage. No partial US1-only release substitutes for capture-to-export and restore.
+Deliver all six [slice 1 stories](spec.md#user-stories-and-acceptance): capture/correction/search, cited-only projects and portable export, .bib import, linking/copy into Unfiled, snapshot plus demonstrated manual restore, and configuration. All active FR/SC clauses in the trimmed spec apply; its deferred-ID ledger is excluded from task coverage. No partial US1-only release substitutes for capture-to-export and restore. The first development milestone is a walking skeleton: init, add, show and export for one supplied-key reference, with project create/cite to select it. The tasks split US1 and US2 into an early pass and a completion pass so this demonstration precedes the full importer and file intake. It is not the slice 1 acceptance gate.
 
 The owner approved the keep/fold/defer list in [audit §14](reviews/2026-09-20-independent-design-audit.md#14-addendum-2026-09-21-first-right-sizing-checkpoint-and-the-slice-1-trim). That specific list supersedes the rough command budget; measure its actual size at the checkpoint rather than disguising subcommands as one operation. Architecture stays: application-owned boundaries, stable identities, revisions, schema versioning, per-entry originals and a lightweight correction marker.
 
