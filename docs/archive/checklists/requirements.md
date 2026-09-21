@@ -6,7 +6,7 @@
 
 **Created**: 2026-09-20
 
-**Feature**: [Academic Catalog Workflow](../spec.md)
+**Feature**: [Academic Catalog Workflow](../../../specs/001-academic-catalog/spec.md)
 
 **Review Ownership**: This is the built-in spec-quality checklist maintained by `$speckit-specify` and `$speckit-clarify`, not a custom reviewer-owned checklist.
 
@@ -69,7 +69,7 @@ The earlier completeness assessment missed explicit semantic coverage and is sup
 
 ## Independent revision assessment — 2026-09-21
 
-Reviewer: independent operations review agent, not the author of this checklist or the revised design. This assessment supersedes the current-readiness interpretation of earlier marks; historical notes above remain unchanged. Reviewed the revised specification, plan, data model, CLI/configuration/files/interchange/search contracts, validation guide, constitution and audit sections 10–12. This is document review, not implementation or live-file verification. See [operations findings](../reviews/2026-09-21-revision-operations-review.md).
+Reviewer: independent operations review agent, not the author of this checklist or the revised design. This assessment supersedes the current-readiness interpretation of earlier marks; historical notes above remain unchanged. Reviewed the revised specification, plan, data model, CLI/configuration/files/interchange/search contracts, validation guide, constitution and audit sections 10–12. This is document review, not implementation or live-file verification. See [operations findings](../../../specs/001-academic-catalog/reviews/2026-09-21-revision-operations-review.md).
 
 | Item | Current assessment | Evidence and limits |
 | --- | --- | --- |
@@ -97,4 +97,4 @@ Result: 14 of 16 specification-quality items satisfied, 2 not satisfied. This co
 
 The author repaired operations findings O01–O06; the same independent reviewer verified the changed governing text. CHK006 now passes because catalog-level journal recovery and source/resource/catalog revision authorities are explicit. CHK013 now passes because initialization has a documented validated no-op/conflict policy and the command/concurrency gaps are closed. The other fourteen assessments remain satisfied. Current markers therefore show 16 of 16 specification-quality items satisfied; the earlier assessment and finding descriptions remain historical evidence.
 
-The Principle II amendment (K01) remains pending explicit authorization and still blocks overall readiness. Bibliography checklist findings and implementation/runtime acceptance are separate gates. See the focused follow-up in the [operations review](../reviews/2026-09-21-revision-operations-review.md). No code or live-data verification is claimed.
+The Principle II amendment (K01) remains pending explicit authorization and still blocks overall readiness. Bibliography checklist findings and implementation/runtime acceptance are separate gates. See the focused follow-up in the [operations review](../../../specs/001-academic-catalog/reviews/2026-09-21-revision-operations-review.md). No code or live-data verification is claimed.

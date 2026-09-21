@@ -1,6 +1,6 @@
 # Implementation Plan: Slice 1
 
-**2026-09-21 — trimmed design.** Constitution 2.0.0 is applied. The next gate is the owner's second right-sizing judgment; do not generate tasks before it. Tasks then cover only this slice, followed by speckit-analyze. No implementation or live migration has run.
+**2026-09-21 — trimmed design.** Constitution 2.0.0 is applied. The owner passed the second right-sizing checkpoint and requested the intake corrections and checklist archival before tasks. Those updates are complete; this session stops at their commit by explicit instruction. Tasks then cover only this slice, followed by speckit-analyze. No implementation or live migration has run.
 
 ## Delivery boundary
 
@@ -49,7 +49,7 @@ This is a boundary ledger, not a later-slice specification.
 
 | Destination | Deferred surface |
 | --- | --- |
-| Slice 2, after real-paper use | Collections and filing; move default and explicit reorganize; operations/file-operations journals, operations list/show, recover, request-ID replay. Unfiled needs no table now. |
+| Slice 2, after real-paper use | Collections and filing; move default and explicit reorganize; operations/file-operations journals, operations list/show, recover, request-ID replay. Moving an original also requires the deferred native metadata adapter, verification of ACLs, extended attributes and resource forks, forced full flushes and directory syncing. Unfiled needs no table now. |
 | Slice 3 | One-time Zotero extraction/migration, child-note context/related pairs, source_relations; per-entry import status and import show/resume/reconcile. |
 | Later recovery/exit | Full restore command, file-inclusive backup/bundle validation and logical library export. |
 | Backlog | export_projections, export_waivers/export waive, field_provenance table, normalize, index rebuild, background project membership, primary-resource administration, 10,000-source gate and four-process matrix. |

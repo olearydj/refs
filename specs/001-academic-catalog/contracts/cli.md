@@ -29,7 +29,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | paths | Resolve config/catalog/library and origins even before initialization. |
 | config show | Inspect effective values, origins and validation diagnostics; replaces config validate. |
 | schema NAME | Exactly source-create, source-patch, source-record, result; packaged, offline. |
-| add | --format refs\|csljson\|bib --input PATH; optional --file PATH and --copy, --keep-name. Default file behavior links; --copy requests intake. --dry-run includes normalization, key components and file destination. |
+| add | --format refs\|csljson\|bib --input PATH accepts one reference. With --file PATH, the file is copied into Unfiled by default; --link keeps it in place. --keep-name preserves the copied file's name. --dry-run shows normalization, key components and the destination. |
 | show REF | Canonical record, revision, origins/corrections, context, limitations and resource list/availability. |
 | update REF | --patch PATH or repeated --set PATH=JSON; --if-revision N required. |
 | search QUERY | Exact key/normalized identifier match first, then literal lexical query; --project PROJECT, --limit N, --offset N; matched fields and source identities. |
@@ -49,7 +49,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | reactivate REF | --if-revision N --execute; restore same identity/key, report retained associations. |
 | backup | --output NEW_DIRECTORY; consistent catalog/config snapshot and external-file inventory. |
 
---keep-name is valid only with --copy. Repeated resource linking of the same source/locator is a no-op. Add with a duplicate candidate reports the identity rather than silently creating another or merging differences. Search/list default limit=50, offset=0; limit 1–1000, nonnegative offset. Report total/catalog revision; separate pages need not share a snapshot. All project associations are cited, so no --cited flag is needed.
+--keep-name is valid with add --file unless --link is supplied. For resource add, it requires --copy. It is invalid without a file. Repeated resource linking of the same source/locator is a no-op. Add with a duplicate candidate reports the identity rather than silently creating another or merging differences. Search/list default limit=50, offset=0; limit 1–1000, nonnegative offset. Report total/catalog revision; separate pages need not share a snapshot. All project associations are cited, so no --cited flag is needed.
 
 ## Configuration and paths
 
@@ -83,7 +83,7 @@ ignore_leading_articles = ["a", "an", "the"]
 profile = "portable-bibtex-v1"
 ```
 
-Roots are named absolute local paths; library_root and roots.library agree. Relative config paths resolve against that file; invocation paths against cwd. Expand leading ~, never shell expressions. With library disabled, links/capture/export remain available; --copy fails rather than silently linking. No intake-mode or search-provider selector is needed in slice 1. The later accepted move default does not change today's explicit --copy interface.
+Each resource root has a name and an absolute local path. The library_root setting and roots.library must agree. Relative paths in configuration are resolved against the configuration file; command-line paths are resolved against the current directory. Expand a leading ~, but never evaluate shell expressions. When the library is disabled, metadata capture, linking and export remain available. Both add --file without --link and resource add --copy fail if the library is unavailable. Neither command silently changes the requested action. Slice 1 retains the original file after every copy; the accepted move default arrives later.
 
 Catalog/staging require agent write access to /Volumes/Casa/refs/cat, and intake also to lib. home_not_writable names the resolved failing path and required access. catalog_missing, unsupported_schema and recovery_required are distinct failures. Never sync the live database or staging; library sync, if later configured by the owner, is not backup.
 
