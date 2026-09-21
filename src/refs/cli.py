@@ -5,7 +5,6 @@ import sys
 from typing import Annotated
 
 import typer
-from typer._click.exceptions import ClickException
 
 from refs import catalog as storage
 from refs.config import absolute, select
@@ -50,7 +49,7 @@ def main() -> None:
     args = sys.argv[1:]
     try:
         app(args=args, standalone_mode=False)
-    except ClickException as exc:
+    except typer.TyperException as exc:
         emit("invocation", error=RefError("invalid_invocation", exc.format_message(), 2),
              json_output="--json" in args)
         raise SystemExit(2) from None
