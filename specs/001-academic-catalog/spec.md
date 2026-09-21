@@ -83,7 +83,7 @@ In the first clarification session the owner answered five multiple-choice quest
 
 ### Working with agents
 
-- FR-013: Every operation is a command that prints readable text by default and one JSON object when asked. Commands never stop to ask a question. Errors say what went wrong and what to do next. `refs schema` prints the JSON Schema for the input and output formats, with no network access.
+- FR-013: Every operation is a command. With `--json` it prints exactly one JSON object. Without it, `show`, `search`, and `list` print a readable text layout meant for a person, and every other command prints the same JSON, indented. The owner chose this as a starting point on 2026-09-21: "readable layout for show, search, list; json for the rest is a good starting point". Commands never stop to ask a question. Errors say what went wrong and what to do next. `refs schema` prints the JSON Schema for the input and output formats, with no network access.
 - FR-014: Input is checked before anything is changed. `--dry-run` shows what would happen and changes nothing. An edit based on an out-of-date revision is refused. When a command completes only part of its work, for example the reference was saved and the file copy failed, the result says exactly which part succeeded.
 - FR-015: A source can be found by its exact key or identifier, or by words in its title, contributors, abstract, saved notes, or imported keywords. Each result shows the key, enough description to recognize the source, and which field matched.
 - FR-016: Sources can be listed for one project and ordered by title or by key.
