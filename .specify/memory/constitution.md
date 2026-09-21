@@ -1,12 +1,13 @@
 <!--
-Sync Impact Report — temporary review material; remove before committing.
-Version change: unratified template → 1.0.0 (initial adoption).
-Modified principles: five unnamed template slots replaced by I. Preserve Identity and Evidence; II. Make Ownership and Effects Explicit; III. Provide Predictable Agent Operations; IV. Keep Capabilities Replaceable; V. Establish Trust Through Evidence.
-Added sections: Product Boundaries; Development and Review; project-specific Governance.
-Removed sections: none; illustrative template comments removed.
-Template synchronization: no template changes required; dependent workflows read this constitution at runtime.
-Deferred placeholders: none.
-Follow-up: docs/README.md still describes the constitution as a placeholder. Update that status during the next authorized documentation pass; this workflow writes only the constitution.
+Sync Impact Report
+Version change: 1.0.0 → 2.0.0 (MAJOR: an ownership obligation in Principle II is redefined; delivery timing in Principles IV and V is changed).
+Authority: explicit owner authorization on 2026-09-21. The owner was shown three numbered items (1: Git baseline; 2: this Principle II wording; 3: keep the internal search boundary in slice 1 and move the entry point and proof package to "when a second implementation is evaluated", folded into the same 2.0.0 amendment) and replied "proceed with 1-3". Principle II follows the owner's A2 decision "B: Derive mode from location (Recommended)" recorded in audit section 11.
+Modified principles:
+- II: the sentence about adopting an existing link without an immediate move is replaced by the root-based ownership rule. The authoring session's draft said other files "MUST remain linked and untouched"; that was narrowed because it would have forbidden the owner's chosen move intake from outside the library.
+- IV: capabilities sit behind application-owned documented boundaries from first delivery; selectable implementations, and adding one without modifying or rebuilding the core, are required when a second implementation is evaluated.
+- V: the replacement demonstration is required when a second implementation is evaluated, not at first delivery.
+Added or removed sections: none. Ratification date retained.
+Dependent artifacts to synchronize (not done by this edit): plan.md "Constitution review" and "Structure" (search entry point and proof package leave slice 1; the internal search boundary stays); contracts/capabilities.md; spec, data-model, file and configuration contracts that still describe Principle II as a pending conflict; reviews/2026-09-21-revision-summary.md and proposed-principle-ii-amendment.md status; docs/README.md current-stage paragraph.
 -->
 
 # refs Constitution
@@ -23,7 +24,7 @@ Source information, normalized metadata, personal contributions, and generated e
 
 Linked-in-place files and authored notes MUST remain under their owners' control. Removing a catalog entry or relationship MUST NOT delete external files; metadata updates MUST NOT overwrite authored prose or rename attachments. Collection membership, project association, citation selection, and physical placement MUST remain distinct. Each managed attachment MUST have one filing collection, even when its source has several collection memberships.
 
-Managed intake MUST follow an explicit, inspectable intake policy. Managed reorganization MUST be previewed and explicitly invoked; membership edits MUST NOT move files automatically. Transfers MUST preserve filenames unless renaming is separately requested, prevent destructive collisions, verify the destination before removing an original, and support recovery from interruption. Catalog links MUST be updated and external-link impacts reported. Adopting an existing link into managed placement MUST NOT require an immediate move.
+Managed intake MUST follow an explicit, inspectable intake policy. Managed reorganization MUST be previewed and explicitly invoked; membership edits MUST NOT move files automatically. Transfers MUST preserve filenames unless renaming is separately requested, prevent destructive collisions, verify the destination before removing an original, and support recovery from interruption. Catalog links MUST be updated and external-link impacts reported. Files recorded under the configured library root MUST be treated as managed. Files elsewhere MUST remain linked; refs MUST NOT move, rename, or delete them except through an explicitly invoked intake. Assigning filing collections to files already in the library MUST NOT move them.
 
 Bibliographies MUST be written only on explicit export invocation, including deliberate calls by external automation. Catalog changes MUST NOT trigger regeneration. Unchanged selected catalog data and export configuration MUST produce reproducible output usable by the manuscript without access to the catalog. These boundaries preserve control over files and published work.
 
@@ -35,7 +36,7 @@ Catalog invariants MUST apply regardless of caller or provider. Mutations MUST d
 
 ### IV. Keep Capabilities Replaceable
 
-Search, extraction, classification, summarization, and similar capabilities MUST permit selectable implementations through documented boundaries as those capabilities are introduced. Adding a compatible implementation MUST NOT require modifying or rebuilding the core application. Replacement MUST preserve catalog identities, original material, relationships, and human decisions; required index rebuilds or enrichment regeneration MUST be visible.
+Search, extraction, classification, summarization, and similar capabilities MUST sit behind application-owned, documented boundaries from their first delivery. Selectable implementations, and adding a compatible implementation without modifying or rebuilding the core application, MUST be provided when a second implementation of that capability is evaluated. Replacement MUST preserve catalog identities, original material, relationships, and human decisions; required index rebuilds or enrichment regeneration MUST be visible.
 
 Capability contracts MUST expose unsupported operations, meaningful differences, failures, and enough input, configuration, and tool provenance to compare results. Catalog policy MUST retain authority over accepted changes. Model predictions and imported keywords MUST NOT silently expand approved vocabulary; vocabulary changes require explicit authorization, and human classification corrections MUST survive automation. Linking private content MUST NOT itself authorize sending it to a remote provider. Interfaces and dependencies MUST address demonstrated variation or a concrete workflow need.
 
@@ -43,7 +44,7 @@ Capability contracts MUST expose unsupported operations, meaningful differences,
 
 Feature acceptance MUST use representative records and realistic failure cases. Import and export claims MUST be supported by fidelity checks, including preserved keys, meaningful bibliographic fields, and rendered citation output; successful parsing alone is insufficient. Trusted daily use MUST demonstrate a real paper workflow and restoration into a separate location before whole-library cutover. Recovery procedures MUST identify authoritative data, configuration, and external-resource responsibilities; a backup of links MUST NOT be represented as a backup of their files.
 
-Provider adoption MUST follow a bounded evaluation with criteria set before judging results. Comparisons MUST use identifiable inputs, disclose limitations, and distinguish retrieval or classification scores from verified evidence. Replacement claims MUST be demonstrated with an alternative implementation when that capability is delivered. Verification MUST be proportionate to the affected behavior and risks; a successful integration alone does not establish product fitness.
+Provider adoption MUST follow a bounded evaluation with criteria set before judging results. Comparisons MUST use identifiable inputs, disclose limitations, and distinguish retrieval or classification scores from verified evidence. Replacement claims MUST be demonstrated with an alternative implementation when a second implementation of that capability is evaluated. Verification MUST be proportionate to the affected behavior and risks; a successful integration alone does not establish product fitness.
 
 ## Product Boundaries
 
@@ -63,4 +64,4 @@ This constitution governs enduring development commitments. Explicit user decisi
 
 Amendments MUST state the change, rationale, affected principles, and any migration or documentation consequences, and MUST have explicit user authorization. Update the version and amendment date and review dependent feature artifacts for conflicts. Use MAJOR for incompatible principle removals or redefinitions, MINOR for added principles or materially expanded guidance, and PATCH for clarifications without changed obligations. Preserve the original ratification date. Review every feature plan and implementation change for compliance; exceptions require a recorded user decision and an amendment when they alter an enduring commitment.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-20 | **Last Amended**: 2026-09-20
+**Version**: 2.0.0 | **Ratified**: 2026-09-20 | **Last Amended**: 2026-09-21
