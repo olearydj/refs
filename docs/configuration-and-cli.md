@@ -1,5 +1,7 @@
 # Configuration and Everyday CLI: Review Draft
 
+**Historical proposal notice, 2026-09-21:** Examples and earlier defaults below are source rationale. Audit sections 11–12 and the revised [feature contracts](../specs/001-academic-catalog/contracts/cli.md) supersede the single-home, mode/adopt, broad vocabulary and output-profile proposals. Follow the current [plan](../specs/001-academic-catalog/plan.md) for delivery slices.
+
 **Feature status (2026-09-20):** This document retains source rationale and earlier review proposals. Current behavior is in the [clarified academic specification](../specs/001-academic-catalog/spec.md); implementation decisions are in its [plan](../specs/001-academic-catalog/plan.md) and [contracts](../specs/001-academic-catalog/contracts/cli.md). Later clarification answers supersede conflicting older defaults below.
 
 **Status:** Proposed defaults for review, not implemented commands or newly accepted decisions.

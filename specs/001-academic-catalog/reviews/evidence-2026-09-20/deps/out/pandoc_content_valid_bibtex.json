@@ -1,0 +1,113 @@
+[
+  {
+    "DOI": "10.1000/abc_def(2021)1%2F2",
+    "URL": "https://example.org/a_b%20c#frag?x=1&y=2~z",
+    "author": [
+      {
+        "family": "Müller",
+        "given": "Jörg"
+      },
+      {
+        "family": "Erdős",
+        "given": "Pál"
+      },
+      {
+        "family": "Østergaard",
+        "given": "Søren"
+      }
+    ],
+    "container-title": "Journal with \"quotes\" and <i>italics</i>",
+    "id": "prot1",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "note": "Nested braces three deep and an unbalanced-looking { escaped } pair",
+    "title": "The NASA mission to Mars: A ö and ö and Öber study of $\\alpha$-decay & 50% growth in $\\mathrm{CO}_2$",
+    "title-short": "The NASA mission to Mars",
+    "type": "article-journal"
+  },
+  {
+    "abstract": "Line one.Line three after blank line, with multiple spaces.",
+    "author": [
+      {
+        "family": "Doe",
+        "given": "Jane"
+      }
+    ],
+    "id": "zotfile",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "title": "Zotero style file field",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "dropping-particle": "van der",
+        "family": "Berg",
+        "given": "Johannes"
+      },
+      {
+        "dropping-particle": "de la",
+        "family": "Fontaine",
+        "given": "Jean",
+        "suffix": "Jr."
+      },
+      {
+        "family": "King",
+        "given": "Martin Luther",
+        "suffix": "Jr"
+      },
+      {
+        "literal": "World Health Organization"
+      },
+      {
+        "literal": "Barnes and Noble, Inc."
+      },
+      {
+        "dropping-particle": "van",
+        "family": "Beethoven",
+        "given": "Ludwig"
+      },
+      {
+        "dropping-particle": "de la",
+        "family": "Vallée Poussin",
+        "given": "Charles Louis Xavier Joseph"
+      },
+      {
+        "literal": "others"
+      }
+    ],
+    "container-title": "Proceedings",
+    "editor": [
+      {
+        "family": "von Neumann",
+        "given": "John",
+        "non-dropping-particle": "von"
+      },
+      {
+        "family": "Smith Jones",
+        "given": "Anne"
+      }
+    ],
+    "id": "names1",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "Name parsing",
+    "type": "paper-conference"
+  }
+]

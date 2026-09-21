@@ -1,0 +1,18 @@
+{
+  "csl": {
+    "input": "[{\"id\": \"example\", \"type\": \"standard\", \"title\": \"Example standard\", \"author\": [{\"literal\": \"Research and Standards Council\"}], \"issued\": {\"date-parts\": [[2024]]}, \"number\": \"EX-42\"}]",
+    "html": "<p><span class=\"citation\" data-cites=\"example\">(Research and Standards\nCouncil, 2024)</span></p>\n<div id=\"refs\" class=\"references csl-bib-body hanging-indent\"\ndata-entry-spacing=\"0\" data-line-spacing=\"2\" role=\"list\">\n<div id=\"ref-example\" class=\"csl-entry\" role=\"listitem\">\nResearch and Standards Council. (2024). <em>Example standard</em>\n(EX-42).\n</div>\n</div>\n",
+    "stderr": ""
+  },
+  "native": {
+    "input": "@standard{example,title={Example Standard},author={{Research and Standards Council}},number={EX-42},year={2024}}",
+    "html": "<p><span class=\"citation\" data-cites=\"example\">(Example Standard,\n2024)</span></p>\n<div id=\"refs\" class=\"references csl-bib-body hanging-indent\"\ndata-entry-spacing=\"0\" data-line-spacing=\"2\" role=\"list\">\n<div id=\"ref-example\" class=\"csl-entry\" role=\"listitem\">\nExample Standard, Pub. L. Nos. EX-42 (2024).\n</div>\n</div>\n",
+    "stderr": ""
+  },
+  "portable": {
+    "input": "@misc{example,title={Example Standard},author={{Research and Standards Council}},howpublished={Standard EX-42},year={2024}}",
+    "html": "<p><span class=\"citation\" data-cites=\"example\">(Research and Standards\nCouncil, 2024)</span></p>\n<div id=\"refs\" class=\"references csl-bib-body hanging-indent\"\ndata-entry-spacing=\"0\" data-line-spacing=\"2\" role=\"list\">\n<div id=\"ref-example\" class=\"csl-entry\" role=\"listitem\">\nResearch and Standards Council. (2024). <em>Example standard</em>.\nStandard EX-42.\n</div>\n</div>\n",
+    "stderr": ""
+  },
+  "pandoc": "pandoc 3.11"
+}

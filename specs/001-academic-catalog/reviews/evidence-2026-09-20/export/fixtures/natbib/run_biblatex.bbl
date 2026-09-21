@@ -1,0 +1,30 @@
+\begin{thebibliography}{1}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \def\href#1#2{#2} \def\path#1{#1}\fi
+
+\bibitem{nb-article}
+A.~Alpha, p.~u. family=Gogh, given=Vincent, A history of {Alabama} rivers
+  12~(3).
+\newblock \href {https://doi.org/10.0000/eid.1} {\path{doi:10.0000/eid.1}}.
+
+\bibitem{nb-online}
+{Synthetic Org}, \href{https://example.org/page}{A synthetic web page}.
+\newline\urlprefix\url{https://example.org/page}
+
+\bibitem{nb-thesis}
+D.~Doc, A synthetic dissertation.
+
+\bibitem{nb-report}
+{Synthetic Agency}, Annual synthetic report.
+
+\bibitem{nb-software}
+C.~Coder, \href{https://example.org/synthtool}{synthtool}.
+\newline\urlprefix\url{https://example.org/synthtool}
+
+\bibitem{nb-book}
+J.~Müller, Ein Buch, Synthetic Press.
+
+\end{thebibliography}

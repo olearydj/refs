@@ -1,0 +1,76 @@
+% leading implicit comment line
+This is junk text outside any entry (implicit comment).
+
+@preamble{ "\newcommand{\noopsort}[1]{} " # "\providecommand{\foo}{bar}" }
+
+@string{jgr = "Journal of Geophysical Research"}
+@STRING{pub = {Synthetic Press}}
+@string{sfx = " (Series A)"}
+
+@comment{jabref-meta: databaseType:biblatex;}
+
+@comment{jabref-meta: grouping:
+0 AllEntriesGroup:;
+1 StaticGroup:Methods\;0\;1\;0x8a8a8aff\;\;\;;
+}
+
+@Comment{This is a plain explicit comment with {nested {braces}} inside.}
+
+@article{macro1,
+  author  = "Doe, Jane",
+  title   = {Macro Concatenation},
+  journal = jgr # sfx,
+  publisher = pub,
+  month   = jan,
+  year    = 2020,
+  volume  = 12,
+  note    = "quoted " # jgr # { and braced},
+  series  = undefinedmacro,
+}
+
+@ARTICLE{CaseKey,
+  AUTHOR = {Smith, John},
+  Title  = {Upper Case Field Names},
+  YEAR   = {2019},
+  year   = {2018},
+}
+
+@article{dupkey,
+  title = {First with this key},
+  year = {2001},
+}
+
+@article{dupkey,
+  title = {Second with this key},
+  year = {2002},
+}
+
+@article{DupKey,
+  title = {Case-variant of dupkey},
+  year = {2003},
+}
+
+@article{broken1,
+  title = {Missing closing brace,
+  year = {2004}
+
+@article{afterbroken,
+  title = {Entry After Broken One},
+  year = {2005},
+}
+
+@article{broken2
+  title = {Missing comma after key},
+  year = {2006},
+}
+
+@article{broken3,
+  title = {Missing equals}
+  year {2007},
+}
+
+@book{last_ok,
+  title = {Last Entry OK},
+  year = {2008}
+}
+trailing junk

@@ -1,0 +1,269 @@
+[
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "Journal of Synthetic Tests",
+    "id": "t-plain",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "page": "1-2",
+    "title": "Measuring pH with python: A practical guide to LaTeX and AI in r",
+    "title-short": "Measuring pH with python",
+    "type": "article-journal",
+    "volume": "1"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "Journal of Synthetic Tests",
+    "id": "t-protected",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "page": "1-2",
+    "title": "Measuring pH with Python: A practical guide to LaTeX and AI in R",
+    "title-short": "Measuring pH with Python",
+    "type": "article-journal",
+    "volume": "1"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "Journal of Synthetic Tests",
+    "id": "t-english",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "language": "en-US",
+    "title": "Measuring pH with Python: A practical guide",
+    "title-short": "Measuring pH with Python",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "Journal of Synthetic Tests",
+    "id": "t-american",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "language": "en-US",
+    "title": "Measuring pH with Python: A practical guide",
+    "title-short": "Measuring pH with Python",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "Beta",
+        "given": "Bernd"
+      }
+    ],
+    "container-title": "Zeitschrift für Synthetische Tests",
+    "id": "t-german",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "language": "de-DE",
+    "title": "Die Vermessung der Welt: Eine Neue Geschichte",
+    "title-short": "Die Vermessung der Welt",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "Gamma",
+        "given": "Guy"
+      }
+    ],
+    "container-title": "Revue des Tests",
+    "id": "t-french",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "language": "fr-FR",
+    "title": "La Vie Moderne: Une Histoire Nouvelle",
+    "title-short": "La Vie Moderne",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "Beta",
+        "given": "Bernd"
+      }
+    ],
+    "container-title": "Zeitschrift für Synthetische Tests",
+    "id": "t-german-nolangid",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "Die vermessung der welt: Eine neue geschichte",
+    "title-short": "Die vermessung der welt",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "Journal of Synthetic Tests",
+    "id": "t-doublebrace",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "Measuring pH with Python: A Practical Guide",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "Journal of Synthetic Tests",
+    "id": "t-propernoun",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "A history of alabama and the american south after darwin",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "Journal of Synthetic Tests",
+    "id": "t-acronym-bare",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "NASA and the IEEE: GPT-4 models for iPhone users",
+    "title-short": "NASA and the IEEE",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "Journal of Synthetic Tests",
+    "id": "t-sentence",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "Already sentence case: A subtitle follows",
+    "title-short": "Already sentence case",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "id": "t-subtitlefield",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "publisher": "Synthetic Press",
+    "title": "The main title: The separate subtitle field. An addon statement",
+    "title-short": "The main title",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "The big book of important things",
+    "id": "t-container",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "page": "1-9",
+    "publisher": "Synthetic Press",
+    "title": "A chapter about things",
+    "type": "chapter"
+  }
+]

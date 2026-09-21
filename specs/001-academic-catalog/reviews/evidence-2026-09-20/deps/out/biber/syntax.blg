@@ -1,0 +1,14 @@
+[0] Config.pm:328> INFO - This is Biber 2.21 running in TOOL mode
+[0] Config.pm:331> INFO - Logfile is 'syntax.blg'
+[21] biber-darwin:342> INFO - === Sun Sep 20, 2026, 21:28:52
+[29] Biber.pm:4674> INFO - Looking for bibtex file '../../fx/syntax.bib'
+[30] bibtex.pm:1713> INFO - LaTeX decoding ...
+[32] bibtex.pm:1519> INFO - Found BibTeX data source '../../fx/syntax.bib'
+[41] Utils.pm:479> ERROR - BibTeX subsystem: /tmp/claude-501/biber_tmp_XFOK/9e3c8d5ee8d1c4f958ab4c2b2299339c_78280.utf8, line 77, syntax error: at end of input, expected one of: number, name (entry type, key, field, or macro name) or quoted string ({...} or "...")
+[41] Biber.pm:132> WARN - Duplicate entry key: 'dupkey' in file '../../fx/syntax.bib', skipping ...
+[41] Biber.pm:132> WARN - Possible typo (case mismatch) between datasource keys: 'DupKey' and 'dupkey' in file '../../fx/syntax.bib'
+[41] Biber.pm:132> WARN - BibTeX subsystem: /tmp/claude-501/biber_tmp_XFOK/9e3c8d5ee8d1c4f958ab4c2b2299339c_78280.utf8, line 4, warning: 47 characters of junk seen at toplevel
+[41] Biber.pm:132> WARN - BibTeX subsystem: /tmp/claude-501/biber_tmp_XFOK/9e3c8d5ee8d1c4f958ab4c2b2299339c_78280.utf8, line 28, warning: undefined macro "undefinedmacro"
+[41] Biber.pm:132> WARN - BibTeX subsystem: /tmp/claude-501/biber_tmp_XFOK/9e3c8d5ee8d1c4f958ab4c2b2299339c_78280.utf8, line 55, warning: possible runaway string started at line 54
+[41] Biber.pm:134> INFO - WARNINGS: 5
+[41] Biber.pm:137> INFO - ERRORS: 1

@@ -1,0 +1,65 @@
+This is BibTeX, Version 0.99e (TeX Live 2026)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: keys2_aux.aux
+The style file: plain.bst
+Database file #1: keys2.bib
+Repeated entry---line 2 of file keys2.bib
+ : @book{smith-2024-turingtrap
+ :                            , author={Smith, Sam}, title={Lowercase Twin Key}, date={2023}}
+I'm skipping whatever remains of this entry
+Warning--empty publisher in doe:2020/web+x
+Warning--empty year in doe:2020/web+x
+Warning--empty publisher in a_b-c.d
+Warning--empty year in a_b-c.d
+Warning--empty publisher in müller-2018-über
+Warning--empty year in müller-2018-über
+Warning--empty publisher in o'brien-2019-title
+Warning--empty year in o'brien-2019-title
+Warning--empty publisher in 2016-digits-first
+Warning--empty year in 2016-digits-first
+Warning--empty publisher in roe-2017-end.
+Warning--empty year in roe-2017-end.
+Warning--empty publisher in smith-2024-turingTrap
+Warning--empty year in smith-2024-turingTrap
+You've used 7 entries,
+            2118 wiz_defined-function locations,
+            519 strings with 4303 characters,
+and the built_in function-call counts, 1504 in all, are:
+= -- 112
+> -- 49
+< -- 0
++ -- 21
+- -- 14
+* -- 93
+:= -- 254
+add.period$ -- 14
+call.type$ -- 7
+change.case$ -- 21
+chr.to.int$ -- 0
+cite$ -- 21
+duplicate$ -- 84
+empty$ -- 155
+format.name$ -- 14
+if$ -- 302
+int.to.chr$ -- 0
+int.to.str$ -- 7
+missing$ -- 14
+newline$ -- 31
+num.names$ -- 14
+pop$ -- 77
+preamble$ -- 1
+purify$ -- 21
+quote$ -- 0
+skip$ -- 35
+stack$ -- 0
+substring$ -- 35
+swap$ -- 7
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 14
+warning$ -- 14
+while$ -- 14
+width$ -- 8
+write$ -- 51
+(There was 1 error message)

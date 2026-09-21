@@ -1,0 +1,29 @@
+itemData rows for citationKey field [(1,)]
+itemTypeFields with citationKey [(3,)]
+where citationKey appears in embedded schema v28: ['locales'] meta {"fields": {"date": {"type": "date"}, "filingDate": {"type": "date"}}}
+csl part mention []
+itemNotes by item type [('attachment', 246, 0, 246), ('note', 238, 0, 0)]
+unsynced by type [('annotation', 240)]
+syncCache by type [('collection', 58, 35313), ('item', 1589, 6889568)]
+syncCache item JSON top keys ['key', 'version', 'library', 'links', 'meta', 'data'] data keys ['accessDate', 'charset', 'contentType', 'dateAdded', 'dateModified', 'itemType', 'key', 'linkMode', 'note', 'parentItem', 'path', 'relations', 'tags', 'title', 'url', 'version']
+items version/synced cols ['itemID', 'itemTypeID', 'dateAdded', 'dateModified', 'clientDateModified', 'libraryID', 'key', 'version', 'synced']
+itemAttachments cols ['itemID', 'parentItemID', 'linkMode', 'contentType', 'charsetID', 'path', 'syncState', 'storageModTime', 'storageHash', 'lastProcessedModificationTime']
+itemRelations sample object shape ['http://zotero.org/users/<id>/items/XXXXXXXX', 'http://zotero.org/users/<id>/items/XXXXXXXX']
+dc:replaces / owl:sameAs predicates defined [('dc:relation',), ('dc:replaces',), ('owl:sameAs',)]
+linked_file exists 511 missing 0 roots [('/Users/djo/Box Sync/zotero', 511)]
+storage: exists 43 missing 0
+dbstat total 73940992
+   sqlite_autoindex_fulltextItemWords_1 19304448 26.1%
+   fulltextItemWords 15937536 21.6%
+   fulltextItemWords_itemID 15388672 20.8%
+   syncCache 8036352 10.9%
+   itemNotes 4685824 6.3%
+   sqlite_autoindex_fulltextWords_1 2686976 3.6%
+   fulltextWords 2428928 3.3%
+   sqlite_autoindex_itemDataValues_1 1765376 2.4%
+   itemDataValues 1040384 1.4%
+   translatorCache 491520 0.7%
+   items 208896 0.3%
+   syncDeleteLog 167936 0.2%
+dbDebug1? [(0,)]
+bbt meta better-bibtex {'filename': 'better-bibtex', 'collections': 'list', 'databaseVersion': 1.5, 'engineVersion': 1.5, 'autosave': False, 'autosaveInterval': 5000, 'autosaveHandle': None, 'throttledSaves': False, 'options': 'dict', 'persistenceAdapter': None, 'throttledSavePending': False, 'throttledCallbacks': 'list', 'verbose': False, 'events': 'dict', 'ENV': 'NA'}

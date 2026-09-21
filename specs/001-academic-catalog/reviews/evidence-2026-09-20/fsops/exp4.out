@@ -1,0 +1,7 @@
+(a) inode at verification: 118081820  inode at unlink time: 118081821  -> identity check detects replacement: True
+(a) blind path unlink destroyed the only copy of the newer file: True
+(a) aside-link variant: identity mismatch detected, user's new file kept: b'NEWER bytes 2'
+(b) crash after step 1: (src,dst,state)=(True, False, 'prepared') -> rolled back: nothing to undo, source untouched; src=True dst=False catalog->dl/f1.pdf resolves=True
+(b) crash after step 2: (src,dst,state)=(True, True, 'prepared') -> rolled forward; src=False dst=True catalog->lib/f2.pdf resolves=True
+(b) crash after step 3: (src,dst,state)=(True, True, 'committed') -> rolled forward; src=False dst=True catalog->lib/f3.pdf resolves=True
+(b) identical squatter: rolled back: nothing to undo, source untouched | src kept: True dst kept: True

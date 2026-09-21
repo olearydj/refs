@@ -1,51 +1,35 @@
 # refs Design Notes
 
-**Current stage:** The [academic catalog specification](../specs/001-academic-catalog/spec.md) has completed its first clarification pass, and the [technical plan](../specs/001-academic-catalog/plan.md), research, data model, contracts, and validation guide are ready for review. Tasks and application implementation have not started. Earlier commands and architecture proposals in this source packet are historical input; the feature contracts contain current planning selections.
+**Current stage, 2026-09-21:** The academic catalog design has been revised after the independent audit and nine recorded user decisions. [Plan](../specs/001-academic-catalog/plan.md) declares slice 1. Independent reassessment is complete: requirements 16/16 and bibliography 36/36 as written requirements. The explicit Principle II amendment remains the task-generation gate; these marks do not establish implementation readiness. No application implementation or live migration has run.
 
-**Readiness:** Review the [plan](../specs/001-academic-catalog/plan.md) and [CLI contract](../specs/001-academic-catalog/contracts/cli.md), including the revised [bibliographic profile](../specs/001-academic-catalog/contracts/bibliography.md), then use `$speckit-tasks`. [Research](../specs/001-academic-catalog/research.md) records selected dependencies, alternatives, and limitations. The [local dependency audit](../specs/001-academic-catalog/dependency-audit.md) records sibling-project evidence and the Typer/pathlib conventions. The [specification checklist](../specs/001-academic-catalog/checklists/requirements.md) records requirements quality, not implementation completion.
+## Read order and authority
 
-## Start Here
-
-| Document | Purpose |
-| --- | --- |
-| [Vision](vision.md) | Product intent, ownership, scope, and enduring needs. |
-| [Academic MVP](academic-mvp.md) | Proposed first useful release, focused on leaving Zotero for daily academic work. |
-| [Behavior decisions](behavior-decisions.md) | Accepted naming/title conventions, agent-supplied capture (C1), collections and managed placement (A2), alongside unresolved proposals. |
-| [Configuration and CLI](configuration-and-cli.md) | Proposed settings and an illustrative everyday walkthrough. |
-| [Loose requirements](requirements-review.md) | Open choices, overlooked needs, deferred requirements, and evidence gaps. |
-
-## Supporting Material
+Explicit user decisions take precedence. [Vision](vision.md) owns product intent; [behavior decisions](behavior-decisions.md) owns accepted conventions and their provenance; the [spec](../specs/001-academic-catalog/spec.md) owns detailed outcomes; plan/contracts select implementation. [Audit sections 11–12](../specs/001-academic-catalog/reviews/2026-09-20-independent-design-audit.md#11-addendum-2026-09-21-user-decisions-on-the-open-items) distinguish literal replies from the auditor's interpretations. Earlier draft commands do not become accepted through repetition.
 
 | Document | Purpose |
 | --- | --- |
-| [Bibliographic model and standards](bibliographic-model.md) | Recovered model intent, standards comparison, selected profile rationale, and links to exact coverage/mapping contracts. |
-| [Architectural needs](architecture.md) | Anticipated variation, ownership boundaries, and architectural consequences. |
-| [Workflow research](workflow-research.md) | Observations from local applications, Zotero, publications, notes, and session history; includes limitations. |
-| [Development and evaluation brief](development.md) | Earlier proposed investigation sequence, including QMD and Jev; input to later planning. |
-| [ArjanCodes review](arjancodes-review.md) | Supporting design research, not a prescribed programming philosophy. |
+| [Vision](vision.md) | Product purpose and enduring ownership boundaries. |
+| [Behavior decisions](behavior-decisions.md) | Titles, keys, capture and revised A2, with provenance corrections. |
+| [Academic MVP](academic-mvp.md) | First useful workflow and revised four-slice sequence. |
+| [Bibliographic model](bibliographic-model.md) | Selected CSL-shaped core, alternatives and limits. |
+| [Requirements review](requirements-review.md) | Historical questions and ongoing backlog, including later CSL/Zotero outputs. |
+| [Configuration/CLI draft](configuration-and-cli.md) | Historical proposals; current contracts supersede conflicting examples. |
+| [Architecture](architecture.md) | Broader needs and justified capability boundaries. |
+| [Workflow research](workflow-research.md) | Local observations and provenance, with historical limits. |
+| [Development brief](development.md) | Earlier research sequence and evaluation rationale. |
+| [ArjanCodes review](arjancodes-review.md) | Supporting design research, not a prescribed framework. |
+| [Right-sizing](right-sizing.md) | Owner's 1 to 10 scale, calibration against sibling tools, slice 1 budget, never-cut floor, and checkpoints. Operative summary is in `AGENTS.md`. |
 
-## Reading Status Correctly
+## Current decisions
 
-### Latest Scope Decisions
+Use one CSL-shaped bibliographic authority, type-scoped mappings, optional native type and justified extensions, with verbatim per-entry originals. Fold imported Zotero child notes into context, exclude annotation/outline records, retain related pairs and archive Zotero externally. Titles stay Unicode Title Case with protected terms and a whole-title flag; citation styles govern exported presentation. Generate name tokens with Latin-only built-in normalization/table and overrides, without a transliteration dependency.
 
-- Agents obtain new-source metadata and submit it through the CLI. Retaining references, corrections, and collected PDFs beyond an individual writing project is a primary motivation. Built-in identifier lookup is deferred.
-- Collections are hierarchical library organization, distinct from projects and subject tags. A source may have multiple memberships; each managed attachment has one filing collection.
-- Files may remain linked in place or use managed placement. New-file intake can move a file into the document library. Existing links can be adopted without an immediate move.
-- Reorganization of managed attachments is explicit and previewed, updates catalog paths, and preserves filenames. Ordinary membership changes do not move files. External note links may still need attention.
-- Basic collections, managed intake, and reorganization are early requirements. Broad bulk consolidation and bulk renaming remain deferred. A2 refines A1's earlier blanket deferral of collection operations.
+Slice 1 is capture-to-portable-BibTeX export, linking, verified copy into Unfiled and demonstrated snapshot restore. Collections, folder-based filing and move/reorganize are slice 2; Zotero migration is slice 3; full restore/exit tooling is slice 4. Richer bibliography output is deferred until declared consumers need it. Four-class export reporting includes scoped waivers and single-run unknown overrides; documented fallback re-import uses saved projection evidence.
 
-### Open Choices for the Next Stage
+Config stays ~/.config/refs/config.toml; the selected data folders are /casa/refs/cat and /casa/refs/lib, represented canonically as /Volumes/Casa/refs/.... Only lib may be synced. Root-based ownership removes the stored mode flag and adopt command. Missing/unwritable data locations fail explicitly without fallback creation. No real folder move or sync configuration is authorized by this design revision.
 
-Five answers are recorded in the feature spec: new downloads move into the document library by default; unfiled intake uses `Unfiled`; conflict-free imports proceed while conflicts are retained; explicit export replaces adopted unchanged bibliographies while outside edits conflict; generated name tokens use deterministic transliteration with overrides and package evaluation. Remaining mapping, matching, configuration, and detailed naming defaults are concrete reviewable planning selections in the contracts. Select a real paper and representative migration sample before live trials; schema, annotation, recovery, and rendered-citation fidelity remain acceptance work. See [loose requirements](requirements-review.md) for historical rationale.
+## Evidence and next gates
 
-### Local Spec Kit State
+The [semantic review](../specs/001-academic-catalog/reviews/semantic-row-review-2026-09-21.md) individually disposes of the 51 disputed crosswalk fields. [Fourteen examples](../specs/001-academic-catalog/reviews/model-examples-2026-09-21/README.md) test candidate mappings and an independent reader, not refs' future importer. The [audit](../specs/001-academic-catalog/reviews/2026-09-20-independent-design-audit.md) and preserved evidence retain their historical findings/counts. A [baseline archive](../specs/001-academic-catalog/reviews/baseline-before-revision-2026-09-21.tar.gz) preserves governing documents before this revision.
 
-The `.specify/` scripts/templates and `.agents/skills/speckit-*` workflows are present. [Constitution v1.0.0](../.specify/memory/constitution.md) was established on 2026-09-20. The active feature is `specs/001-academic-catalog`, recorded in `.specify/feature.json`; its specification, built-in quality checklist, technical plan, research, data model, seven contracts, a bibliographic coverage inventory, and quickstart guide exist. No tasks or application implementation exists. The project is not yet a Git repository; repository initialization remains separate setup work, and the feature directory does not depend on a branch name.
-
-Continue from the active specification, constitution, and accepted decisions. Keep the first feature bounded around the academic catalog workflow; use the vision and architecture as constraints without pulling deferred search/classification experiments into the first release. Detailed behavior belongs in the feature specification as it is reviewed; the documents below remain its source rationale and historical review material.
-
-### Authority
-
-Explicit user decisions take precedence over proposals. Accepted items are recorded in the behavior decision sheet; illustrative commands and configuration do not become accepted merely because they appear in a document. The loose-requirements document indexes gaps rather than establishing a second detailed contract.
-
-The user's subsequent constitution, specification, clarification, and planning requests authorized the current stage. Earlier stop-before-specification instructions in the source packet describe the previous discussion. Task generation, implementation, and live migration remain subsequent work.
+Both checklists have now been re-evaluated by independent reviewers; the [revision summary](../specs/001-academic-catalog/reviews/2026-09-21-revision-summary.md) links their findings and verified repairs. Generate tasks for the declared slice 1 only, then run speckit-analyze read-only. The constitution conflict must be explicitly amended rather than silently interpreted away. Current implementation acceptance and live-paper gates remain in [quickstart](../specs/001-academic-catalog/quickstart.md).

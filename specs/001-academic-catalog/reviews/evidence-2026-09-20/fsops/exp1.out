@@ -1,0 +1,52 @@
+--- A os.link+os.unlink (6.32 ms)
+  ino     SAME  before=118078712  after=118078712
+  birth   SAME  before=1577955845  after=1577955845
+  mtime   SAME  before=1600000000  after=1600000000
+  nlink   SAME  before=1  after=1
+  xattrs  SAME  before=['com.apple.ResourceFork', 'com.apple.metadata:_kMDItemUserTags', 'com.apple.metadata:kMDItemWhereFroms', 'com.apple.provenance', 'com.apple.quarantine', 'user.refs.test']  after=['com.apple.ResourceFork', 'com.apple.metadata:_kMDItemUserTags', 'com.apple.metadata:kMDItemWhereFroms', 'com.apple.provenance', 'com.apple.quarantine', 'user.refs.test']
+  acl     SAME  before=['0: group:everyone deny', '1: group:staff allow read']  after=['0: group:everyone deny', '1: group:staff allow read']
+  flags   SAME  before=0  after=0
+  nlink while both names exist: 2
+  collision: FileExistsError errno 17 - source and destination untouched
+renamex_np rc 0 errno 0
+--- B renamex_np(RENAME_EXCL)
+  ino     SAME  before=118078718  after=118078718
+  birth   SAME  before=1577955845  after=1577955845
+  mtime   SAME  before=1600000000  after=1600000000
+  nlink   SAME  before=1  after=1
+  xattrs  SAME  before=['com.apple.ResourceFork', 'com.apple.metadata:_kMDItemUserTags', 'com.apple.metadata:kMDItemWhereFroms', 'com.apple.provenance', 'com.apple.quarantine', 'user.refs.test']  after=['com.apple.ResourceFork', 'com.apple.metadata:_kMDItemUserTags', 'com.apple.metadata:kMDItemWhereFroms', 'com.apple.provenance', 'com.apple.quarantine', 'user.refs.test']
+  acl     SAME  before=['0: group:everyone deny', '1: group:staff allow read']  after=['0: group:everyone deny', '1: group:staff allow read']
+  flags   SAME  before=0  after=0
+  collision rc -1 errno EEXIST source still exists: True
+--- C staging byte copy + hardlink_to (0.56 ms)
+  ino     DIFF  before=118078722  after=118078724
+  birth   DIFF  before=1577955845  after=1789957980
+  mtime   DIFF  before=1600000000  after=1789957980
+  nlink   SAME  before=1  after=1
+  xattrs  DIFF  before=['com.apple.ResourceFork', 'com.apple.metadata:_kMDItemUserTags', 'com.apple.metadata:kMDItemWhereFroms', 'com.apple.provenance', 'com.apple.quarantine', 'user.refs.test']  after=['com.apple.provenance']
+  acl     DIFF  before=['0: group:everyone deny', '1: group:staff allow read']  after=[]
+  flags   SAME  before=0  after=0
+--- D staging shutil.copy2 + hardlink_to
+  ino     DIFF  before=118078727  after=118078729
+  birth   DIFF  before=1577955845  after=1600000000
+  mtime   SAME  before=1600000000  after=1600000000
+  nlink   SAME  before=1  after=1
+  xattrs  DIFF  before=['com.apple.ResourceFork', 'com.apple.metadata:_kMDItemUserTags', 'com.apple.metadata:kMDItemWhereFroms', 'com.apple.provenance', 'com.apple.quarantine', 'user.refs.test']  after=['com.apple.provenance', 'com.apple.quarantine']
+  acl     DIFF  before=['0: group:everyone deny', '1: group:staff allow read']  after=[]
+  flags   SAME  before=0  after=0
+--- E /bin/cp -p (copyfile(3))
+  ino     DIFF  before=118078732  after=118078734
+  birth   DIFF  before=1577955845  after=1600000000
+  mtime   SAME  before=1600000000  after=1600000000
+  nlink   SAME  before=1  after=1
+  xattrs  SAME  before=['com.apple.ResourceFork', 'com.apple.metadata:_kMDItemUserTags', 'com.apple.metadata:kMDItemWhereFroms', 'com.apple.provenance', 'com.apple.quarantine', 'user.refs.test']  after=['com.apple.ResourceFork', 'com.apple.metadata:_kMDItemUserTags', 'com.apple.metadata:kMDItemWhereFroms', 'com.apple.provenance', 'com.apple.quarantine', 'user.refs.test']
+  acl     SAME  before=['0: group:everyone deny', '1: group:staff allow read']  after=['0: group:everyone deny', '1: group:staff allow read']
+  flags   SAME  before=0  after=0
+a.pdf GetFileInfo -d: 01/02/2020 03:04:05
+c.pdf GetFileInfo -d: 09/20/2026 21:33:00
+d.pdf GetFileInfo -d: 09/13/2020 07:26:40
+e.pdf GetFileInfo -d: 09/13/2020 07:26:40
+stdlib xattr API on this platform: {'listxattr': False, 'getxattr': False, 'setxattr': False}
+shutil._copyxattr usable: False
+64MiB link+unlink: 0.32 ms
+64MiB copy+fsync+3xsha256 protocol: 89.97 ms  ok=True

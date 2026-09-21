@@ -1,0 +1,17 @@
+[WARNING] Citeproc: Bibliography entry with no printed form: r-letter
+Alpha, Ann. [1850?]. An Approximately Dated Book. Synthetic Press.
+Alpha, Ann. 2019. The Volume Title. Vol. 3 of The Multivolume Main Title. First Press; Second Press.
+Alpha, Ann. 2020a. “A History of Alabama and the American South After Darwin: Measuring pH with Python.” Journal of Synthetic Tests 1: 1–2.
+Alpha, Ann. 2020b. “An Article Numbered Not Paged.” Journal of Synthetic Tests 12 (3): e0123456. https://doi.org/10.0000/eid.1.
+Alpha, Ann. 2021. “A Seasonal Issue Article.” Synthetic Quarterly, Spring.
+Coder, Cody. 2023. Synthtool. V. 2.4.1. Synthetic Labs, released March 1. https://example.org/synthtool.
+Darwin, Carl. (1859) 2003. On the Origin of Synthetic Species. Old Press. Reprint, Reprint Press.
+Data, Dee. 2022. “Synthetic Measurements of Alabama Rivers.” Version 3. Synthetic Repository. https://doi.org/10.0000/data.3.
+Director, Dot, dir. 2010. A Synthetic Film. Synthetic Studios.
+Foreword, Flo. 2019. “Introduction.” In The Collected Works, by Bob Bookman. Synthetic Press.
+Gogh, Vincent van, and Ludwig van Beethoven. 2020. Particles in Practice. Synthetic Press.
+Host, Hal. 2019. The Synthetic Podcast. Audio podcast episode 12, “The Synthetic Interview,” hosted by Hal Host. Synthetic Audio Network, April 5. https://example.org/pod/12.
+Inventor, Ivy. 2015. Method for synthetic testing. U.S. Patent and Trademark Office Patent US 1234567 B2, issued April 7, 2015.
+Pre, Pia. 2024. “A Synthetic Preprint.” arXiv:2401.00001. Version 2. Preprint, arXiv, prepublished January 1. https://arxiv.org/abs/2401.00001.
+Speaker, Sam. 2022. “A Talk Without Proceedings.” Conference presentation. Synthetic Conference, Springfield, June 1.
+Synthetic Standards Body. 2020. Standard for Synthetic Things. SSB 1234-2020. Synthetic Standards Body.

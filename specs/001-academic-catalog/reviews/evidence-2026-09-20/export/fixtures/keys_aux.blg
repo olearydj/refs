@@ -1,0 +1,74 @@
+This is BibTeX, Version 0.99e (TeX Live 2026)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: keys_aux.aux
+The style file: plain.bst
+Database file #1: keys.bib
+Repeated entry---line 2 of file keys.bib
+ : @book{smith-2024-turingtrap
+ :                            , author={Smith, Sam}, title={Lowercase Twin Key}, date={2023}}
+I'm skipping whatever remains of this entry
+I was expecting a `,' or a `}'---line 8 of file keys.bib
+ : @book{key 
+ :           with space, author={Low, Lee}, title={Space Key}, date={2015}}
+I'm skipping whatever remains of this entry
+Warning--to sort, need author, editor, or key in key
+Warning--empty author and editor in key
+Warning--empty title in key
+Warning--empty publisher in key
+Warning--empty year in key
+Warning--empty publisher in doe:2020/web+x
+Warning--empty year in doe:2020/web+x
+Warning--empty publisher in a_b-c.d
+Warning--empty year in a_b-c.d
+Warning--empty publisher in müller-2018-über
+Warning--empty year in müller-2018-über
+Warning--empty publisher in o'brien-2019-title
+Warning--empty year in o'brien-2019-title
+Warning--empty publisher in 2016-digits-first
+Warning--empty year in 2016-digits-first
+Warning--empty publisher in roe-2017-end.
+Warning--empty year in roe-2017-end.
+Warning--empty publisher in smith-2024-turingTrap
+Warning--empty year in smith-2024-turingTrap
+You've used 8 entries,
+            2118 wiz_defined-function locations,
+            519 strings with 4300 characters,
+and the built_in function-call counts, 1674 in all, are:
+= -- 122
+> -- 50
+< -- 0
++ -- 22
+- -- 14
+* -- 110
+:= -- 269
+add.period$ -- 15
+call.type$ -- 8
+change.case$ -- 23
+chr.to.int$ -- 0
+cite$ -- 27
+duplicate$ -- 97
+empty$ -- 179
+format.name$ -- 14
+if$ -- 338
+int.to.chr$ -- 0
+int.to.str$ -- 8
+missing$ -- 15
+newline$ -- 34
+num.names$ -- 14
+pop$ -- 90
+preamble$ -- 1
+purify$ -- 23
+quote$ -- 0
+skip$ -- 41
+stack$ -- 0
+substring$ -- 40
+swap$ -- 7
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 16
+warning$ -- 19
+while$ -- 14
+width$ -- 9
+write$ -- 55
+(There were 2 error messages)

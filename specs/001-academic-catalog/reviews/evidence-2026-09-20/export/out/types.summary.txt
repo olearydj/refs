@@ -1,0 +1,68 @@
+[y-software] type=software
+     DOI=10.0000/synth.1 | URL=https://example.org/synthtool | publisher=Synthetic Labs | version=2.4.1
+[y-patent] type=patent
+     genre=U.S. patent | jurisdiction=United States of America | number=US 1234567 B2
+[y-patent-req] type=patent
+     genre=patent request | number=US 2014/0000001 A1
+[y-thesis-phd] type=thesis
+     genre=PhD thesis | publisher=Synthetic University | publisher-place=Auburn, AL
+[y-phdthesis] type=thesis
+     genre=PhD thesis | publisher=Synthetic University
+[y-thesis-literal] type=thesis
+     genre=Habilitation thesis | publisher=Synthetic University
+[y-masters] type=thesis
+     genre=Master’s thesis | publisher=Synthetic University
+[y-report] type=report
+     genre=technical report | number=SA-TR-42 | publisher=Synthetic Agency | publisher-place=Washington, DC
+[y-techreport] type=report
+     number=SA-TR-42 | publisher=Synthetic Agency
+[y-report-literal] type=report
+     genre=White paper | number=7 | publisher=Synthetic Institute
+[y-online] type=webpage
+     URL=https://example.org/page | accessed=2026-9-1 | publisher=Synthetic Org
+[y-dataset] type=dataset
+     DOI=10.0000/data.3 | publisher=Synthetic Repository | version=3
+[y-preprint] type=manuscript
+     URL=https://arxiv.org/abs/2401.00001 | publisher=arXiv | status=pre-published | version=2
+[y-article-eprint] type=article-journal
+     URL=https://arxiv.org/abs/2401.00001
+[y-misc] type=
+     note=A note | publisher=Pamphlet
+[y-movie] type=motion_picture
+     publisher=Synthetic Studios
+[y-video] type=motion_picture
+     URL=https://example.org/v
+[y-audio] type=song
+     
+[y-music] type=song
+     
+[y-letter] type=personal_communication
+     
+[y-performance] type=speech
+     
+[y-artwork] type=graphic
+     
+[y-image] type=graphic
+     
+[y-podcast] type=
+     
+[y-standard] type=legislation
+     number=SSB 1234-2020
+[y-manual] type=book
+     edition=3
+[y-legislation] type=legislation
+     
+[y-jurisdiction] type=legal_case
+     
+[y-periodical] type=article-journal
+     container-title=Journal of Synthetic Tests | editor={fam=Editor giv=Eve} | issue=2 | volume=4
+[y-review] type=review
+     container-title=Journal of Synthetic Tests
+[y-newspaper] type=article-newspaper
+     container-title=The Synthetic Times
+[y-magazine] type=article-magazine
+     container-title=Synthetic Monthly
+[y-inreference] type=entry-encyclopedia
+     container-title=Encyclopedia of tests
+[y-talk] type=speech
+     event=Synthetic conference | event-date=2022-6-1 | event-place=Springfield | publisher=Conference presentation

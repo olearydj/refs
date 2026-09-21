@@ -1,0 +1,17 @@
+@inbook{h-inbook3, author={Alpha, Ann}, title={The Chapter Title}, booktitle={The Volume Title}, maintitle={The Multivolume Main Title}, mainsubtitle={A Main Subtitle}, volume={3}, bookauthor={Bookman, Bob}, editor={Edison, Ed}, publisher={First Press and Second Press}, location={Boston and New York}, date={2019}, pages={10-20}}
+@incollection{h-incoll3, author={Alpha, Ann}, title={The Chapter Title}, booktitle={The Volume Title}, maintitle={The Multivolume Main Title}, volume={3}, editor={Edison, Ed}, series={Synthetic Series}, number={7}, publisher={First Press}, location={Boston}, date={2019}, pages={10-20}}
+@book{h-book2, author={Alpha, Ann}, title={The Volume Title}, maintitle={The Multivolume Main Title}, volume={3}, volumes={5}, part={2}, publisher={First Press}, location={Boston}, date={2019}}
+@mvbook{h-mvbook, author={Alpha, Ann}, title={The Multivolume Main Title}, volumes={5}, publisher={First Press}, date={2015/2019}}
+@inbook{h-child-inbook, author={Childs, Cy}, title={Child Chapter}, pages={5-9}, crossref={h-parent-book}}
+@book{h-parent-book, author={Parent, Pat}, title={Parent Book Title}, subtitle={Parent Subtitle}, publisher={Parent Press}, location={Paris}, date={2018}, isbn={000-0-00-000000-0}, url={https://example.org/parent}}
+@incollection{h-child-incoll, author={Childs, Cy}, title={Child Contribution}, pages={15-19}, crossref={h-parent-coll}}
+@collection{h-parent-coll, editor={Editor, Eve}, title={Parent Collection Title}, publisher={Coll Press}, date={2017}}
+@inproceedings{h-child-inproc, author={Childs, Cy}, title={Child Paper}, pages={25-29}, crossref={h-parent-proc}}
+@proceedings{h-parent-proc, editor={Editor, Eve}, title={Proceedings of the Synthetic Conference}, eventtitle={Synthetic Conference 2016}, venue={Springfield}, eventdate={2016-06-01/2016-06-03}, organization={Synthetic Society}, publisher={Proc Press}, date={2016}}
+@inbook{h-child-mv, author={Childs, Cy}, title={Child In Volume}, crossref={h-parent-vol}}
+@book{h-parent-vol, author={Parent, Pat}, title={Volume Two Title}, volume={2}, crossref={h-parent-mv}}
+@mvbook{h-parent-mv, author={Parent, Pat}, title={Grand Multivolume Title}, publisher={MV Press}, date={2014}}
+@xdata{h-xd, publisher={Xdata Press}, location={Xville}}
+@book{h-uses-xdata, author={Alpha, Ann}, title={Book Using Xdata}, date={2013}, xdata={h-xd}}
+@book{h-uses-xref, author={Alpha, Ann}, title={Book Using Xref}, date={2013}, xref={h-parent-book}}
+@inbook{h-missing-parent, author={Alpha, Ann}, title={Orphan Chapter}, crossref={h-does-not-exist}}

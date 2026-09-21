@@ -1,0 +1,74 @@
+client lastVersion [('6.0.37',)]
+lastCompatibleVersion [('5.0.97-beta.1+586a6f1dd',)]
+embedded globalSchema keys ['version', 'meta', 'csl', 'locales']
+embedded version 28 citationKey string present: True
+fields table has citationKey: [(107, 'citationKey')]
+libraries [(1, 'user', 1, 1, 8288, 0), (2, 'group', 1, 1, 43, 0)]
+groups [(1,)] feeds [(0,)]
+items total [(1832,)]
+items by library [(1, 1832)]
+items by type:
+   ('attachment', 792)
+   ('annotation', 240)
+   ('note', 238)
+   ('journalArticle', 233)
+   ('book', 201)
+   ('conferencePaper', 36)
+   ('preprint', 24)
+   ('bookSection', 23)
+   ('webpage', 13)
+   ('magazineArticle', 10)
+   ('thesis', 5)
+   ('blogPost', 5)
+   ('report', 3)
+   ('standard', 2)
+   ('presentation', 2)
+   ('document', 2)
+   ('patent', 1)
+   ('newspaperArticle', 1)
+   ('manuscript', 1)
+deletedItems [(0,)]
+deleted by type []
+deletedCollections [(0,)]
+regular items [(562,)] regular not deleted [(562,)]
+attachments by linkMode (0=imported_file,1=imported_url,2=linked_file,3=linked_url,4=embedded_image):
+   mode,count,emptypath,storage:,attachments:,absolute,standalone (0, 6, 0, 6, 0, 0, 3)
+   mode,count,emptypath,storage:,attachments:,absolute,standalone (1, 37, 0, 37, 0, 0, 0)
+   mode,count,emptypath,storage:,attachments:,absolute,standalone (2, 511, 0, 0, 0, 511, 0)
+   mode,count,emptypath,storage:,attachments:,absolute,standalone (3, 238, 238, None, None, None, 0)
+attachment contentType [('application/pdf', 515), ('text/html', 274), ('image/jpeg', 2), ('application/vnd.openxmlformats-officedocument.wordprocessingml.document', 1)]
+syncState [(0, 792)]
+notes [(484, 246)]
+annotations [(240,)] by type/isExternal [(1, 1, 240)]
+annotation cols ['itemID', 'parentItemID', 'type', 'authorName', 'text', 'comment', 'color', 'pageLabel', 'sortIndex', 'position', 'isExternal']
+collections [(58,)] by library [(1, 58)]
+collection depth histogram [(1, 10), (2, 41), (3, 7)]
+collectionItems [(574,)] items in >1 coll [(9,)]
+collectionItems of non-regular items [('attachment', 3), ('blogPost', 5), ('book', 210), ('bookSection', 23), ('conferencePaper', 36), ('document', 2), ('journalArticle', 233), ('magazineArticle', 10), ('manuscript', 1), ('newspaperArticle', 1), ('patent', 1), ('preprint', 24), ('presentation', 2), ('report', 3), ('standard', 2), ('thesis', 5), ('webpage', 13)]
+itemRelations [('dc:relation', 6)]
+collectionRelations [(0,)]
+tags [(362,)] itemTags by type [(0, 217), (1, 570)]
+creators [(1527,)] itemCreators by type:
+   ('author', 1639)
+   ('editor', 41)
+   ('seriesEditor', 6)
+   ('contributor', 3)
+   ('bookAuthor', 3)
+   ('presenter', 2)
+   ('inventor', 2)
+single-field creators [(6,)]
+savedSearches [(0,)] publicationsItems [(2,)] retracted [(0,)]
+syncCache rows [(1647,)] unsynced items [(240,)]
+fulltext words [(1185613,)]
+items with non-empty extra 562
+extra line kinds (lines) {'Citation Key:': 562, 'kv-line': 206, 'prose': 6, 'bbt-directive:tex': 4}
+extra kinds (items) {'Citation Key:': 562, 'kv-line': 203, 'prose': 6, 'bbt-directive:tex': 4}
+extra kv labels [('google-books-id', 130), ('arxiv', 21), ('publisher', 19), ('section', 11), ('oclc', 6), ('doi', 5), ('conference name', 4), ('issn', 3), ('place', 1), ('num pages', 1), ('accepted', 1), ('number', 1), ('pmid', 1), ('pmcid', 1), ('type', 1)]
+BBT citationkey rows [(562, 562, 0, 562, 562)]
+BBT pinned typeof [('integer', 1, 562)]
+BBT libraryIDs [(1, 562)]
+BBT meta names [('migrated.autoexport', 2237, None), ('better-bibtex.citekey', 31016, 1), ('better-bibtex', 478, None)]
+regular item keys 562 with BBT row 562 BBT rows without item 0 itemID mismatch 0
+Extra Citation Key lines 562 matching BBT 562
+duplicate citekeys in BBT (0,)
+key shape: non-ascii 0 has uppercase 2 has punctuation 18 examples ['he2021', 'cai2020'] ['cetinkaya-rundel2021introa']

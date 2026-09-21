@@ -1,0 +1,382 @@
+[
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-approx-month",
+    "issued": {
+      "circa": true,
+      "date-parts": [
+        [
+          2020,
+          5
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-uncertain",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-uncertain-approx",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-range-years",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ],
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-open-range",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ],
+        [
+          0
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-open-range-dots",
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-decade",
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-century",
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-season",
+    "issued": {
+      "date-parts": [
+        [
+          2021,
+          21
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-season-winter",
+    "issued": {
+      "date-parts": [
+        [
+          2021,
+          24
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-circa-text",
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-negative",
+    "issued": {
+      "date-parts": [
+        [
+          -351
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-origdate",
+    "issued": {
+      "date-parts": [
+        [
+          2003
+        ]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [
+          1859,
+          11,
+          24
+        ]
+      ]
+    },
+    "original-publisher": "Old Press",
+    "original-publisher-place": "London",
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-legacy-month",
+    "issued": {
+      "date-parts": [
+        [
+          2020,
+          1
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-legacy-month-braced",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-legacy-month-num",
+    "issued": {
+      "date-parts": [
+        [
+          2020,
+          3,
+          9
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-year-text",
+    "issued": {
+      "date-parts": []
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-year-forthcoming",
+    "status": "forthcoming",
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-both",
+    "issued": {
+      "date-parts": [
+        [
+          2021,
+          6
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-datetime",
+    "issued": {
+      "date-parts": [
+        [
+          2020,
+          5,
+          6
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-nodate",
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "URL": "https://example.org",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          9
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "A",
+        "given": "A"
+      }
+    ],
+    "id": "d-urldate-month",
+    "title": "T",
+    "type": "webpage"
+  }
+]

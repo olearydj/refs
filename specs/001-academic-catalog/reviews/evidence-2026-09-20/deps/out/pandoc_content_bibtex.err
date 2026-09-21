@@ -1,0 +1,4 @@
+Error at "fx/content.bib" (line 4, column 28):
+unexpected '"'
+  journal = "Journal with ""quotes"" {and} \textit{italics}",
+                           ^

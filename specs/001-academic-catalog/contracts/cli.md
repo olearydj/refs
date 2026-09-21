@@ -1,99 +1,73 @@
 # CLI Contract v1
 
-**Status**: Planned public interface for [the feature](../spec.md). These commands become available during implementation; this document does not claim they already run.
+**Status:** planned interface. Slice 1 is explicitly bounded below; later commands are design reservations, not available features.
 
-## Invocation and Global Options
+## Invocation and mutation rules
 
-`refs [GLOBAL_OPTIONS] COMMAND [COMMAND_OPTIONS]` is the canonical grammar. Global options appear before the command: `--home PATH`, `--project-file PATH`, `--no-project-config`, `--json`, `--help`, and `--version`. `--project-file` and `--no-project-config` are mutually exclusive. Human output is the default; JSON output is one UTF-8 object plus a newline on stdout. Diagnostics/progress go to stderr. When `--json` is present, usage/validation failures also use the envelope below. Help and version are explicit textual exceptions; machine discovery uses `schema`.
+`refs [--config PATH] [--catalog PATH] [--project-file PATH | --no-project-config] [--json] COMMAND`. Paths/configuration follow configuration.md. Global help/version are textual exceptions; schema provides machine discovery. Human output is default. JSON is one UTF-8 result object plus newline on stdout, including usage failures; progress goes to stderr. No command prompts.
 
-Mutating commands accept `--dry-run` and `--request-id TEXT` unless noted. Dry run validates and reports proposed effects without creating catalog rows, staging files, adoption state, or request reservations. Actual execution rechecks conflicts and revisions; preview is not a reservation. Request IDs are 1–128 printable ASCII characters without whitespace; reuse with a different resolved request is an error. Completed matching requests return their prior outcome. Partial or interrupted requests resume pending safe steps after acquiring the required lock and checking journal state; unresolved conflicts require explicit reconciliation rather than automatic retry. Fingerprints include command, canonical targets, payload bytes/values, and effective behavior-changing settings; exclude output formatting and `--dry-run`.
+Mutations accept --dry-run and --request-id TEXT unless noted. Dry run validates without persistent changes, stages or reservations. Execution rechecks revisions and collisions. Request IDs contain 1–128 nonwhitespace printable ASCII characters. Identity fingerprints contain command, target selectors and semantic payload, excluding formatting, preview and configuration. Store settings separately. A changed payload under the same ID is request_id_reused; a completed identical request replays. Interrupted file effects follow captured intent and explicit recovery, never silently retarget after config changes.
 
-Destructive catalog removals and rekeying use `--execute` after an inspectable preview, even with `--json`. No command prompts. Managed intake itself is authorized by the add command and its configured/default action; `--dry-run` is available, but a separate confirmation is not required for routine default intake. `reorganize` requires `--execute`. Explicit export is sufficient for an adopted unchanged target; see [file operations](files-and-recovery.md).
+Removal, rekey, reactivation and reorganize preview unless --execute is provided. Ordinary explicit add/copy/export operations need no second confirmation. REF is an exact source UUID or citation key; ambiguity errors rather than guesses. UUIDs identify resources, operations and import entries. Project names are exact and unique. Input paths accept - for stdin where a file payload is supported.
 
-## Commands
+## Slice 1 commands
 
-`REF` means exact source UUID or exact citation key; if a string could identify two different records, return `ambiguous_reference`. Collection and project selectors accept UUID or exact canonical path/name. Resource/operation/batch/entry selectors are UUIDs. All `--input PATH` options accept `-` for stdin except multi-file snapshot inputs. Metadata schemas are in [records](records.md).
-
-| Command | Inputs/options | Result and side effects |
+| Command | Inputs | Result/effect |
 | --- | --- | --- |
-| `init` | `--library-root PATH` optional | Explicitly creates a home, config defaults, catalog, lock, and ready marker. Repeating against a valid home preserves it. No library root is guessed; metadata-only use remains possible. |
-| `paths` | None | Resolved home/config/project/root paths; works before initialization. |
-| `config show` | `--sources` | Effective values, origins, validation diagnostics; never runs credential helpers. |
-| `config validate` | None | Validates configuration without opening/creating a missing catalog. |
-| `schema NAME` | `source-create`, `source-patch`, `source-record`, `result`, `reconcile`, `config`, `snapshot-manifest`, `library-export` | Emits one JSON Schema document; with `--json`, schema is inside `data`. Generated from boundary models; no network access. |
-| `add` | `--input PATH`; optional `--file PATH`, `--intake move\|copy\|link`, `--collection COLLECTION` | Creates/reuses source or reports conflict. `--file` denotes new-file acquisition, so default is managed move. Metadata outcome and attachment operation outcomes are reported separately. |
-| `show REF` | None | Complete source record including typed citation/native fields and profile ID, revision, provenance, resource and relationship summaries, and associated imported supporting records. |
-| `update REF` | `--patch PATH --if-revision N` | Explicit field patch; returns unchanged/updated/conflict. No implicit rekey or rename. |
-| `normalize REF` | `--if-revision N`, optional `--execute` | Without execute, returns normalization preview; with execute, updates derived fields only, preserving overrides. |
-| `key preview` | `--input PATH` | Shows generated components/policy/warnings without reserving a key. |
-| `key set REF` | `--key TEXT --if-revision N --execute` | Explicit unique-key replacement with external-citation warning; without execute returns preview. |
-| `filename REF` | `--extension TEXT` | Returns a generated filename and components; does not rename any file. |
-| `search QUERY` | `--collection`, `--project`, `--cited`, `--limit N`, `--offset N` | Exact lookup plus lexical matches with evidence origins; no automatic resource opening. |
-| `list` | Same filters; `--sort title\|key`; `--limit N`, `--offset N` | Stable paginated listing; title default. |
-| `index rebuild` | `--execute` | Explicitly rebuilds the derived search projection; otherwise returns planned scope. |
-| `import` | `--format bibtex\|biblatex\|zotero-snapshot --input PATH --origin TEXT` | Retains original input and applies conflict-free entries. Returns a batch and counts; dry run persists nothing. Snapshot input is a directory manifest. |
-| `import show BATCH` | Optional `--status pending\|conflict\|invalid\|applied\|unchanged` | Lists entry outcomes, mapping/field coverage limitations, supporting-item records including standalone/unresolved parents, raw locators, and conflicts. |
-| `import resume BATCH` | None | Retries pending/interrupted entries without duplicating completed work. It does not silently accept conflicts. |
-| `import reconcile BATCH` | `--input PATH` | Applies explicit per-entry identity/field decisions with revision checks. See records contract. |
-| `collection create PATH` | Optional `--parent COLLECTION` for a single name | Creates requested collection; missing parents are errors rather than implicit structure. |
-| `collection list` | None | Hierarchy, IDs, memberships, filing counts, effective folder mappings. |
-| `collection update COLLECTION` | `--name TEXT` or `--parent COLLECTION`; `--if-revision N` | Renames/reparents without moving files; validates cycle/sibling rules. |
-| `collection add COLLECTION REF` | None | Adds membership; no move. |
-| `collection remove COLLECTION REF` | Optional `--filing-reassign COLLECTION` or `--unlink-managed` | Removes membership; affected filing assignments must be explicitly resolved, with no filesystem move. |
-| `collection delete COLLECTION` | `--if-revision N --execute` | Only empty, unreferenced, non-system collections; otherwise returns dependents. |
-| `resource add REF` | `--path PATH` or `--root NAME --relative PATH`; optional label/media type | Explicit link-in-place operation, preserving file/path. Distinct from acquisition via `add --file` or `resource intake`. |
-| `resource intake REF` | `--path PATH`, optional `--intake move\|copy\|link`, `--collection COLLECTION`, label | Acquires new attachment; move default and `Unfiled` fallback. Returns operation state and final location. |
-| `resource list REF` | None | IDs, labels, paths, modes, filing/primary status, recorded availability. |
-| `resource primary RESOURCE` | `--if-revision N` | Sets one primary and clears the earlier designation. |
-| `resource adopt RESOURCE` | `--collection COLLECTION --if-revision N` | Changes to managed mode without moving the existing file. |
-| `resource file-under RESOURCE` | `--collection COLLECTION --if-revision N` | Changes intended filing assignment and adds membership if absent; no move. |
-| `resource unlink RESOURCE` | `--if-revision N --execute` | Removes catalog link after preview; no external deletion. |
-| `resource check` | Optional `--source REF` | Read-only current diagnostics; does not persist check timestamps or repair anything. |
-| `reorganize` | One or more `--resource RESOURCE`; `--execute` for actual moves | Explicit selected managed relocation; no broad `--all` consolidation. Preview returns paths and risks. |
-| `open REF` | Optional `--resource RESOURCE` | Opens primary, otherwise sole resource; multiple candidates return choices. No editing or copying. |
-| `project create NAME` | Optional description | Creates activity identity. |
-| `project list` | None | Projects with membership/citation counts. |
-| `project show PROJECT` | None | Project revision and associated/cited sources. |
-| `project add PROJECT REF` | None | Adds background membership. |
-| `project cite PROJECT REF` | None | Adds membership if needed and selects citation. |
-| `project uncite PROJECT REF` | None | Removes citation selection only. |
-| `project remove PROJECT REF` | Optional `--uncite` | Removes membership; rejects a cited source unless `--uncite` supplied. |
-| `export` | `--project PROJECT --format biblatex\|bibtex --output PATH`; optional `--adopt --reconciliation BATCH`, `--overwrite` | Writes explicit project bibliography; project defaults can supply arguments. Existing unadopted output requires adoption evidence. Adopted outside edits conflict unless explicitly overwritten or reconciled. |
-| `remove REF` | `--if-revision N --execute` | Explicit catalog removal after dependent-relationship preview; never deletes files. |
-| `operations list` / `operations show OP` | Optional state filter for list | Read-only applied and recoverable outcomes. |
-| `recover OP` | `--execute` | Inspects and completes only verified safe pending steps; unknown fingerprints return conflict. Without execute, preview only. |
-| `backup` | `--output DIRECTORY` | New versioned consistent backup bundle; external contents excluded. |
-| `restore` | `--input DIRECTORY` | Restores into selected new empty home; this command may operate without an existing home. |
-| `library export` | `--output DIRECTORY` | New logical JSON/JSONL export bundle with originals and inventory. |
-| `migrate` | `--execute` | Preview and explicitly apply supported catalog schema migrations with backup. |
+| init | --library-root PATH optional; global --config/--catalog | Explicit creation with private permissions and ready marker, no overwrite. Library default is the chosen lib path; metadata-only setup can explicitly disable intake. |
+| paths; config show; config validate | show optionally --sources | Separate config/catalog/root paths and origins, including missing/unwritable locations. No implicit catalog creation. |
+| schema NAME | source-create, source-patch, source-record, result, config, reconcile, snapshot-manifest | Packaged generated schemas, no network. |
+| add | --format refs\|csljson\|bib --input PATH; optional --file PATH --intake copy\|link | One record; optional verified non-destructive copy or link. No move in slice 1. File failure after metadata success is partial with IDs. |
+| show REF | none | Complete canonical values, revision, native label, provenance, context, resources, limitations. |
+| update REF | --patch PATH or repeated --set PATH=JSON; --if-revision N | Same validator and revision guard for humans and agents. |
+| normalize REF | --if-revision N; --execute | Preview/apply derived normalization, preserving explicit overrides. |
+| key preview | --input PATH | Components, policy and warnings without key reservation. |
+| key set REF | --key TEXT --if-revision N --execute | Explicit replacement; external citations are not rewritten. |
+| filename REF | --extension TEXT | Accepted filename preview only. |
+| search QUERY; list | --project PROJECT, --cited, --limit N, --offset N; list --sort title\|key | Exact lookup and lexical retrieval with matching origin. --cited requires project. Collection filters arrive in slice 2. |
+| index rebuild | --execute | Explicit derived projection rebuild. |
+| import | --format bib --input PATH --origin TEXT | Per-entry application with preserved conflicts/originals; mixed files allowed. |
+| import show BATCH; import resume BATCH | optional status on show | Accountable outcomes; resume pending work only. |
+| import reconcile BATCH | --input PATH | Explicit identity/field decisions under revisions. |
+| resource add REF | --path PATH or --root NAME --relative PATH; optional label/media type | Record an existing path without moving. Normalize absolute in-library paths to the library root. |
+| resource intake REF | --path PATH --intake copy\|link; optional label | Copy into Unfiled or link; preserve filename. |
+| resource list REF; resource primary RESOURCE | primary needs --if-revision N | Explicit primary selection; at most one per source. |
+| resource unlink RESOURCE | --if-revision N --execute | Catalog link removal only. |
+| resource check | optional --source REF, --verify | Current availability/digests/conflict-file diagnostics, no repair or timestamp write. |
+| open REF | optional --resource RESOURCE | Open primary, else sole resource; otherwise return choices. Never guess or alter content. |
+| project create NAME; project list; project show PROJECT | optional description on create | Project IDs, revisions and memberships. |
+| project add PROJECT REF; project cite PROJECT REF; project uncite PROJECT REF; project remove PROJECT REF | remove needs --uncite if selected | Background membership and citation selection remain distinct; repeats are no-ops. |
+| export | --project PROJECT --profile portable-bibtex-v1 --output PATH; optional --adopt --reconciliation BATCH, --overwrite, --allow-unknown-mappings | Explicit output only; project defaults may supply arguments. Four-class report before any write; complete projection evidence after publication. |
+| export waive REF | --loss FINGERPRINT --profile-fingerprint TEXT --if-revision N | Store an explicit current blocking-loss waiver with actor/time; never blanket permission. |
+| remove REF; reactivate REF | --if-revision N --execute | Preview dependent associations; preserve identity/key and external files. |
+| operations list; operations show OP; recover [OP] | recover needs --execute | Inspect or resume only verified safe effects. |
+| backup | --output NEW_DIRECTORY | Consistent snapshot including unresolved operations; external bytes excluded and listed. |
 
-The `import` group is invokable without a subcommand: import options select the default import operation; `show`, `resume`, and `reconcile` select administration. Search has only a literal query argument; index administration uses the separate `index` group so reserved command words remain searchable.
+Import is an invokable group: flags without subcommand run import; show/resume/reconcile are subcommands. Search takes literal text, with index administration in a separate group. Pagination defaults limit=50, offset=0; limit must be 1–1000, offset nonnegative. Report total and catalog snapshot/revision; separate pages need not share a snapshot and must expose changes.
 
-Listing defaults are `limit=50`, `offset=0`; limit is 1–1000 and offset is nonnegative. Each paginated result reports total matches, limit, offset, and a snapshot identifier; pagination across separate calls is not a frozen snapshot and must expose revision changes. `--cited` requires a project selector. Descendant collections are included by default; `--collection-exact` selects only direct membership.
+Slice 1 restoration uses the documented procedure, not an unfinished restore command. A missing catalog reports catalog_missing; no automatic init. Wrong schema yields unsupported_schema; hot-journal inspection yields recovery_required. The stable home_not_writable error carries resolved catalog path and required access.
 
-## Result Envelope and Exit Status
+## Later slices
 
-```json
-{
-  "schema_version": "1.0",
-  "command": "add",
-  "status": "ok",
-  "operation_id": "95be7cde-5c77-41b2-ae8f-3fd2c28c85cc",
-  "data": {"source_id": "a5b4de9b-2a59-440e-bc61-40a9b016d33c", "citation_key": "smith-2024-turingTrap", "revision": 1, "outcome": "created"},
-  "warnings": [],
-  "errors": []
-}
-```
+Slice 2 adds collection create/list/update/add/remove/delete, resource file-under, resource assign-filing --from-folders, and selected reorganize. Assign-filing previews folder mappings/ambiguities and needs --execute, with no physical movement. There is no resource adopt or --unlink-managed. Move becomes the default for new-file intake in slice 2; linked outside files cannot be reorganized.
 
-All seven envelope keys are present; `operation_id` is null for read-only operations and previews. `status` is `ok|partial|error`; dry-run data contains `dry_run:true`. Warnings/errors have `code`, `message`, `path` nullable, `details` object, and `retryable` boolean. `data` is an object or null. Results must not include resolved secrets. Partial import and metadata-success/file-failure use `partial` with complete accounting, never misleading success.
+Slice 3 adds the published Zotero JSON extractor input and migration reconciliation details. Slice 4 adds restore, library export, backup --include-managed and explicit schema migration. Unsupported commands/profile names return unsupported_in_slice; do not silently perform an approximation.
+
+## Result envelope
+
+All results contain schema_version="1.0", command, status, operation_id, data, warnings and errors. status is ok, partial or error; operation_id is null for reads/previews. data is object or null; dry runs include dry_run=true. Each warning/error has code, message, nullable path, details object and retryable boolean. No resolved secrets. Partial entry application or file failure never reports complete success.
 
 | Exit | Meaning |
 | --- | --- |
-| 0 | Completed or unchanged; warnings alone do not fail. |
-| 2 | Invalid invocation, payload, unsupported schema, or configuration. |
-| 3 | Missing/ambiguous target, stale revision, identity conflict, unsafe destination, or outside edit; no silent overwrite. |
-| 4 | Partial application with unresolved/invalid entries or incomplete external effects. |
-| 5 | I/O, integrity, unsupported storage, or recovery failure. |
-| 6 | Retryable lock contention after the bounded wait. |
+| 0 | Complete/no-op; warnings alone. |
+| 2 | Invalid invocation, payload, schema or configuration. |
+| 3 | Missing/ambiguous target, stale revision, identity conflict, blocked export or unsafe replacement. |
+| 4 | Partial application or incomplete external effects. |
+| 5 | I/O, integrity, unsupported storage or recovery failure. |
+| 6 | Retryable lock timeout after five seconds. |
 
-A malformed whole input that cannot be partitioned fails with exit 2 and no source writes; raw bytes may be retained by an actual import operation, and its result must report that retained artifact. Parseable mixed inputs use per-entry outcomes and exit 4. Ctrl-C returns a recoverable interrupted result when possible, otherwise process exit 130; the journal remains the authority for the next `operations`/`recover` call.
+Unpartitionable input yields exit 2 with no source writes; actual import may preserve its raw input and reports that. Mixed parseable entries yield per-entry outcomes and exit 4. Ctrl-C records interruption where possible, otherwise exits 130; durable intents guide recovery. Typer exceptions are translated through refs' own main wrapper; help text is not the machine contract.
+
+## Catalog recovery
+
+`recover --catalog-state --execute` is mutually exclusive with an OP argument. Without execute it inspects journal/ready-state diagnostics without opening writable recovery. With execute it acquires coordination, opens the existing selected SQLite catalog read-write so SQLite can recover its hot journal, then checks integrity/foreign keys/schema before marking it usable. It does not resume file operations or initialize a missing catalog. Failure retains a recovery_required result. `recover OP --execute` handles only an identified file/export intent after the catalog is usable.

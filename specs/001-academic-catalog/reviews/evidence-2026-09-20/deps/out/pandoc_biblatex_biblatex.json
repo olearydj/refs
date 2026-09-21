@@ -1,0 +1,275 @@
+[
+  {
+    "author": [
+      {
+        "family": "Knuth",
+        "given": "Donald E."
+      }
+    ],
+    "collection-title": "Synthetic series",
+    "id": "mv1",
+    "issued": {
+      "date-parts": [
+        [
+          1990
+        ],
+        [
+          1999
+        ]
+      ]
+    },
+    "publisher": "Synthetic University Press",
+    "publisher-place": "Springfield",
+    "title": "The multivolume work: A subtitle",
+    "title-short": "The multivolume work",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Knuth",
+        "given": "Donald E."
+      }
+    ],
+    "collection-title": "Synthetic series",
+    "container-author": [
+      {
+        "family": "Knuth",
+        "given": "Donald E."
+      }
+    ],
+    "id": "vol1",
+    "issued": {
+      "date-parts": [
+        [
+          1990
+        ]
+      ]
+    },
+    "publisher": "Synthetic University Press",
+    "publisher-place": "Springfield",
+    "title": "The multivolume work: A subtitle",
+    "type": "book",
+    "volume": "1",
+    "volume-title": "Volume one title"
+  },
+  {
+    "author": [
+      {
+        "family": "Knuth",
+        "given": "Donald E."
+      }
+    ],
+    "collection-title": "Synthetic series",
+    "container-author": [
+      {
+        "family": "Knuth",
+        "given": "Donald E."
+      }
+    ],
+    "container-title": "The multivolume work: A subtitle",
+    "id": "chap1",
+    "issued": {
+      "date-parts": [
+        [
+          1990
+        ]
+      ]
+    },
+    "page": "10-20",
+    "publisher": "Synthetic University Press",
+    "publisher-place": "Springfield",
+    "title": "Chapter title",
+    "type": "chapter",
+    "volume": "1",
+    "volume-title": "Volume one title"
+  },
+  {
+    "editor": [
+      {
+        "family": "Editor",
+        "given": "Ellen"
+      }
+    ],
+    "id": "proc1",
+    "issued": {
+      "date-parts": [
+        [
+          2019,
+          7,
+          1
+        ],
+        [
+          2019,
+          7,
+          5
+        ]
+      ]
+    },
+    "other-ids": "oldproc, proc2019",
+    "publisher": "ACM",
+    "title": "Proceedings of the synthetic conference: SynthConf",
+    "title-short": "Proceedings of the synthetic conference",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Author",
+        "given": "Alice"
+      }
+    ],
+    "container-title": "Proceedings of the synthetic conference: SynthConf",
+    "editor": [
+      {
+        "family": "Editor",
+        "given": "Ellen"
+      }
+    ],
+    "id": "inproc1",
+    "issued": {
+      "date-parts": [
+        [
+          2019,
+          7,
+          1
+        ],
+        [
+          2019,
+          7,
+          5
+        ]
+      ]
+    },
+    "language": "en-US",
+    "page": "1-9",
+    "publisher": "ACM",
+    "title": "A paper",
+    "type": "paper-conference"
+  },
+  {
+    "accessed": {
+      "date-parts": [
+        [
+          2021,
+          3,
+          4
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Circa",
+        "given": "Carl"
+      }
+    ],
+    "container-title": "Journal of Dates",
+    "event-date": {
+      "date-parts": [
+        [
+          2019
+        ],
+        [
+          2020
+        ]
+      ]
+    },
+    "id": "dates1",
+    "issued": {
+      "circa": true,
+      "date-parts": [
+        [
+          2020,
+          5
+        ]
+      ]
+    },
+    "title": "Approximate date",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "Open",
+        "given": "Olive"
+      }
+    ],
+    "container-title": "Journal of Dates",
+    "id": "dates2",
+    "original-date": {
+      "date-parts": [
+        [
+          -45
+        ]
+      ]
+    },
+    "title": "Open range and uncertain",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "Legacy",
+        "given": "Larry"
+      }
+    ],
+    "container-title": "Old Journal",
+    "id": "legacy1",
+    "issue": "3",
+    "issued": {
+      "date-parts": [
+        [
+          1998,
+          3
+        ]
+      ]
+    },
+    "title": "Legacy year month",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "Trans",
+        "given": "Tina"
+      }
+    ],
+    "id": "orig1",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "title": "Translated book",
+    "type": "book"
+  },
+  {
+    "URL": "https://example.org/x_y%7Ez#top",
+    "accessed": {
+      "date-parts": [
+        [
+          2024,
+          2,
+          30
+        ]
+      ]
+    },
+    "author": [
+      {
+        "literal": "World Health Organization"
+      }
+    ],
+    "id": "onl1",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "title": "Online thing",
+    "type": "webpage"
+  }
+]

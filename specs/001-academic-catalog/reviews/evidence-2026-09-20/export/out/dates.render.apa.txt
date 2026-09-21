@@ -1,0 +1,22 @@
+A, A. (n.d.-a). T d-century.
+A, A. (n.d.-b). T d-circa-text.
+A, A. (n.d.-c). T d-decade.
+A, A. (n.d.-d). T d-nodate.
+A, A. (n.d.-e). T d-open-range-dots.
+A, A. (n.d.-f). T d-urldate-month. Retrieved September 2026, from https://example.org
+A, A. (351 B.C.E.). T d-negative.
+A, A. (2003). T d-origdate. (Original work published 1859, Old Press)
+A, A. (2019–). T d-open-range.
+A, A. (2019–2020). T d-range-years.
+A, A. (ca. 2020). T d-approx-month.
+A, A. (2020a). T d-datetime.
+A, A. (2020b). T d-legacy-month.
+A, A. (2020c). T d-legacy-month-braced.
+A, A. (2020d). T d-legacy-month-num.
+A, A. (2020e). T d-uncertain.
+A, A. (2020f). T d-uncertain-approx.
+A, A. (2021a). T d-both.
+A, A. (2021b). T d-season.
+A, A. (2021c). T d-season-winter.
+A, A. (in press). T d-year-text.
+A, A. (forthcoming). T d-year-forthcoming.

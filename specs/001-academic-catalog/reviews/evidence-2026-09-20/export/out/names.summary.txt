@@ -1,0 +1,21 @@
+[n-corp-double]  ->  author=LIT<World Health Organization> | title=T
+[n-corp-single]  ->  author={fam=Organization giv=World Health} | title=T
+[n-corp-and]  ->  author=LIT<Synthetic Holdings and Sons, Inc.>; {fam=Roe giv=Rae} | title=T
+[n-corp-and-unbraced]  ->  author={fam=Health giv=Ministry dro=of}; {fam=Welfare} | title=T
+[n-van-natural]  ->  author={fam=Beethoven giv=Ludwig dro=van} | title=T
+[n-van-comma]  ->  author={fam=Beethoven giv=Ludwig dro=van} | title=T
+[n-Van-capital]  ->  author={fam=Van Buren giv=Martin} | title=T
+[n-delacruz]  ->  author={fam=Cruz giv=Juan dro=de la} | title=T
+[n-junior]  ->  author={fam=Smith giv=John suf=Jr.} | title=T
+[n-junior-natural]  ->  author={fam=Jr. giv=John Smith} | title=T
+[n-extended]  ->  author={fam=Gogh giv=Vincent non=van} | title=T
+[n-extended-false]  ->  author={fam=Gogh giv=Vincent dro=van} | title=T
+[n-extended-suffix]  ->  author={fam=King giv=Martin Luther suf=Jr.} | title=T
+[n-others]  ->  author={fam=Alpha giv=Ann}; {fam=Beta giv=Bo}; LIT<others> | title=T
+[n-single-name]  ->  author={fam=Aristotle} | title=T
+[n-hyphen-given]  ->  author={fam=Sartre giv=Jean-Paul} | title=T
+[n-cjk]  ->  author={fam=毛 giv=泽东} | title=T
+[n-tex-escaped]  ->  author={fam=Müller giv=Jörg}; {fam=Garcı́a giv=José}; {fam=Łukasiewicz giv=Jan} | title=Æsthetics of naı̈veté & café: 50% $\alpha$-particles | title-short=Æsthetics of naı̈veté & café
+[n-unicode]  ->  author={fam=Müller giv=Jörg}; {fam=García giv=José}; {fam=Łukasiewicz giv=Jan} | title=Æsthetics of naïveté & café
+[n-roles]  ->  author={fam=Alpha giv=Ann} | editor={fam=Compiler giv=Cal} | title=T | translator={fam=Trans giv=Tia}
+[n-director]  ->  director={fam=Director giv=Dot} | title=A film

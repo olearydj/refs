@@ -1,12 +1,8 @@
 # Record and Mutation Contract v1
 
-This contract owns structured input semantics. CLI names and error envelopes are in [CLI](cli.md). Runtime models will emit JSON Schema through `refs schema`; the tables below are the design source until implementation creates those models.
+**Status:** Revised preimplementation contract, 2026-09-21. The envelope remains version 1.0; there is no installed API to migrate. The [registry](bibliographic-coverage.json) and [bibliography contract](bibliography.md) own the bounded bibliographic profile.
 
-## Bibliographic profile
-
-The [bibliographic profile](bibliography.md) and [coverage registry](bibliographic-coverage.json) define the complete vocabulary, native namespaces, richer names/dates, and target mappings. This record envelope remains version 1.0 because it is a preimplementation revision, not a change to an installed API. `metadata.profile` defaults to `refs-bibliography-v1`; supplied unknown profiles are rejected. Profile identifiers and schema fingerprints are returned in complete records.
-
-## Source Creation
+## Creation and canonical ownership
 
 ```json
 {
@@ -15,81 +11,63 @@ The [bibliographic profile](bibliography.md) and [coverage registry](bibliograph
   "key_author": null,
   "metadata": {
     "type": "article-journal",
-    "title": "The Turing Trap",
-    "language": "en",
-    "creators": [{"role": "author", "family": "Smith", "given": "Alex"}],
-    "issued": {"date_parts": [[2024]]},
-    "identifiers": [],
-    "legacy_tags": []
+    "title": "Learning With Python",
+    "author": [{"family": "Example", "given": "Alex"}],
+    "issued": {"date-parts": [[2024]]},
+    "language": "en"
   },
-  "context": [{"text": "Background for the paper", "origin": "user"}],
-  "provenance": [{"origin": "agent", "source_url": "https://example.org/paper", "access": "metadata"}],
-  "extra": {}
+  "title_protection": {"title": {"protected_terms": ["Python"], "preserve_case": false}},
+  "native_type": null,
+  "extensions": {},
+  "context": [{"text": "Background for the paper", "origin": "agent"}],
+  "provenance": [{"origin": "agent", "access": "metadata", "source_url": "https://example.org/paper"}]
 }
 ```
 
-Unknown top-level keys and wrong primitive types are errors; no string-to-integer coercion. `schema_version` must be `1.0`. `metadata` is required with a nonblank title or nonblank absolute original URL; the documented traditional inbook case may instead supply container_title and chapter/pages with its native subtype. `citation_key` and `key_author` are optional strings or null; null means omitted at creation. Empty/unsupported generated title tokens require an explicit key; a bare URL is not fabricated into a bibliographic title. Structured input does not implicitly execute file or export operations; attachments enter through explicit CLI acquisition/link commands.
+Unknown envelope keys and wrong primitive types fail; no general string-to-number coercion. Creation needs a nonblank title or absolute HTTP(S) URL, or a container-title plus page or chapter-number identification for a traditional title-less part. It needs no tags, project or file. Generic casually captured records may use type document; unknown explicitly supplied types remain unapplied originals with a diagnostic. Generated keys require usable title tokens or an explicit key. URLs are not invented into titles.
 
-| Field | Type and validation |
-| --- | --- |
-| `metadata.type` | A pinned CSL source type; all types in the coverage registry are valid catalog classifications. `metadata.native_types` preserves narrower registered Zotero/BibLaTeX types as structured metadata. Unknown namespaced types are retained with explicit unsupported-output status. Shared `article` alone does not establish preprint status. |
-| `title`, `main_title`, `subtitle`, `short_title`, `sort_title` | Unicode strings; title may be absent with original URL or the explicit traditional inbook part-record exception. Supplied short/sort titles are explicit overrides. Main/subtitle boundaries are supplied facts, never inferred from every colon. |
-| `language` | Optional language tag; English normalization only for `en` or `en-*`. Absent/other tags preserve original casing and produce a normalization warning where relevant. |
-| `original_url` | Optional absolute URI with `http` or `https` scheme; preserved without fetching. URL query/fragment are not stripped for identity. |
-| `creators` | Ordered array. Each has role and optional registered role namespace, plus either nonempty literal or personal family/given with at least one nonempty component. Personal fields include dropping_particle, non_dropping_particle, suffix, comma_suffix, static_ordering, parse_names. Name-form mixing is invalid. All roles in the registered Zotero, CSL, and BibLaTeX vocabularies are representable. Core aliases author/editor/translator/book-author/series-editor/contributor remain valid. Unclassified prefix is not silently assigned a particle kind. |
-| `issued`, `accessed`, `event_date`, `original_date`, `submitted`, `available_date` | Date object with optional date_parts (one or two year/month/day arrays), literal/raw text, season, circa. Validate supplied calendar values and range order; missing components are absent. Literal-only uncertainty is valid. A usable first issued year drives keys; otherwise ND. Source-specific dates retain their native role in registered extension fields. |
-| `edition` | Optional positive integer interpretation of authoritative edition_statement text. Numeric-only input supplies the equivalent statement. Conflicting supplied interpretations fail. Literal editions such as “Revised and expanded” are valid; version and variant remain separate. Clearing/changing the statement clears a stale numeric interpretation. |
-| `publication` | Optional textual container_title/container_subtitle/container_title_addon, multivolume_title/multivolume_subtitle/multivolume_title_addon, volume, issue, pages, article_number, series, series_number, number_of_pages, number_of_volumes, genre, jurisdiction, number, status; ordered string arrays publishers, publisher_places, original_publishers, original_publisher_places, institutions, organizations. Other recognized facts use citation_fields or registered native extension paths. No invented page range, hierarchy, or publication status. |
-| `citation_fields`, `extensions` | Schema-validated recognized CSL fields and registered native namespace fields as defined in the coverage registry. Core-field duplicates are rejected. These fields support creation, inspection, patching and full export; target bibliography support is separately reported. |
-| `identifiers` | Array of `{scheme,value}` strings. Preserve raw form. Normalize DOI prefix/case, ISBN separator/checksum representation, and PMID decimal form. ISBN-10/13 equivalence requires validated conversion; DOI/ISBN disagreement with known edition/type is a conflict. Unrecognized schemes use exact trimmed value with no guessed semantics. |
-| `abstract` | Optional Unicode text; stored separately from authored context. |
-| `legacy_tags` | Array of nonblank strings, deduplicated exactly; preserved metadata, not approved taxonomy. |
-| `protected_terms` | Optional array of literal terms that take precedence over casing. |
-| `native_fields` | Import-adapter-owned object with source format, original type, field expressions, protected groups, and unresolved dependencies. Ordinary creation may supply it only through explicit supported format ingestion; avoid treating arbitrary TeX as trusted executable content. |
-| `context` | Array of `{text,origin}` with optional source URL; origin is user/agent/import. Does not establish full-text review. |
-| `provenance` | Array of origin records with optional URL, observed time, source-system identity, and `access=metadata|abstract|full_text|unknown`. Preserve supplied claim; refs does not independently certify it. |
-| `extra` | JSON object preserving explicitly namespaced extension fields. Never used to override core fields. |
+`metadata` is the sole authority for the registry's CSL-shaped fields. No parallel creators, identifiers, publication object, citation_fields or editable native-fields namespace exists. Creator arrays use CSL roles and ordered personal/literal names. Standard identifiers occupy DOI/ISBN/ISSN/PMID/PMCID; normalized lookup indexes are derived. Additional scheme/value identifiers can be preserved in originals until a justified extension is registered. Native type is optional `{namespace,value}`, validated against the type crosswalk; it cannot contradict the canonical type. Origin-system identity belongs to provenance, not this label.
 
-Input strings preserve source spelling. Generated citation keys must be nonempty, have no whitespace/control characters or BibTeX delimiters `,{}()=\\#%"`, and be serializable without reinterpretation. Preserve imported assigned keys byte-for-byte as decoded text; incompatible export keys remain cataloged with an explicit error requiring user decision. Uniqueness is case-sensitive to preserve legacy distinctions; report a case-only collision warning because external tools may handle it differently.
+Dates use `date-parts`, `literal`, `season`, `circa` where supported by the pinned schema. Validate calendar values and range order; never invent January 1. Free-text Zotero dates remain in originals; API `meta.parsedDate` is an aid, not another authority. Structured dates must agree with reliable explicit components; contradictions require reconciliation. Unparseable dates remain literal with a precision warning. Bib date and year/month must agree at their overlapping precision. Month macros jan–dec are supported; other macros/inheritance need explicit preprocessing and preserved provenance. Complex uncertain/open dates remain literal until a tested target mapping exists.
 
-## Patch Semantics
+Edition is one CSL-compatible string or positive integer. An unambiguous decimal edition becomes an integer; descriptive text remains text. Numeric display/filename interpretations are derived, never independently editable edition statements. Version is separate. A source type change must explicitly clear incompatible fields or fail with all conflicts; originals cannot restore them.
 
-```json
-{
-  "schema_version": "1.0",
-  "set": {"metadata.publication.pages": "12-19", "metadata.short_title": "Turing Trap"},
-  "clear": ["metadata.sort_title"],
-  "provenance": [{"origin": "user", "access": "metadata"}]
-}
-```
+Name forms are either literal or personal with family/given and optional dropping-particle, non-dropping-particle, suffix and strict boolean flags. They cannot mix literal and personal properties. BibTeX's explicit von part defaults to dropping-particle with preview and override; Zotero's unsplit lastName is not split by guessing lowercase words. Such structural differences remain visible in reconciliation. A fully grouped corporate author containing “ and ” stays one literal. Native inventor/presenter/programmer map to citation author only on their corresponding types; native role survives as provenance. Key generation uses author then editor, but author arrays on patent, speech and software denote inventor/presenter/programmer and are ineligible for the author-token fallback. Those types use editor if supplied, otherwise title/year unless key_author overrides. This preserves the earlier separation between citation role projection and key-role policy, consistently for every input route. Presentation overrides such as shortauthor/sortname are not contributor roles.
 
-`update` requires `--if-revision N`. `set` maps documented mutable field paths to complete replacement values; arrays such as creators, identifiers, and tags are replaced as units. `clear` lists fields to remove. A path cannot be in both. Null in `set` is rejected; use `clear`. Paths cannot address IDs, revisions, citation keys, file paths, operation state, immutable import evidence, or array elements. Registered native type/field and citation-field paths are mutable under their profile validators. Setting type/native_types must keep their classifications consistent; no update silently deletes now-inapplicable metadata. Clearing a short/sort-title override restores derivation. Clearing the last recognizable title/URL or valid container-and-part identification is invalid. Provenance for changed fields is retained. No changed values yields unchanged revision and outcome.
+## Titles and normalization
 
-`key set` and resource/project operations are separate from metadata patching. An explicit correction may replace a previously explicit field; an import or derived update cannot silently do so. The command always rechecks the expected revision at commit.
+`title_protection` maps each supported title field to `{protected_terms: [nonempty strings], preserve_case: boolean}`. Terms are literal, case-sensitive whole-word/phrase matches after NFC normalization; punctuation boundaries count as word boundaries. Do not use offsets. Preserve-case bypasses title normalization for that whole field. Warn on protected terms no longer present after an edit; retain them until explicitly changed. Import distinguishes case-protection groups from accent/command arguments. The global terms list suggests per-record protection and never retroactively changes a record.
 
-## Matching and Reconciliation
+English titles use the configured Title Case rule and preserve original input. Unknown/non-English language retains spelling with a warning; export requires langid for known non-English titles. Unprotected internal capitals warn, never block. Style-specific output casing does not mutate stored text. The explicit sort-title override lives at overrides.sort_title; the explicit short title lives only at metadata.title-short. Derived values are computed from current metadata, supplied main-title structure and policy. A supplied metadata.title-short is an explicit short title; it is not duplicated in overrides. Subtitle boundaries are not inferred from colons.
 
-All evidence is checked before applying the precedence order. An explicit source UUID, prior origin identity, or consistent persistent identifier produces a candidate. If two signals identify different sources or conflict with type/edition facts, return all candidates and apply nothing to that entry. A citation key alone is a candidate for explicit matching; a title alone is never a merge instruction. DOI equality is not permission to overwrite a record.
+Creator key policy `creator-latin-v1`: NFC then NFKD, remove combining marks only from Latin-letter sequences, use ASCII letters/digits and a table `ß→ss, æ→ae, ø→o, ł→l, đ→d, þ→th, ð→d, œ→oe, ı→i` (including uppercase forms). Reject any remaining unsupported letter, symbol, private-use or control character; allow surname hyphens, remove spaces/apostrophes. Non-Latin names require key_author; never silently drop their characters. Record policy, table and Unicode-data versions. AnyAscii is a future evaluated fallback, not a dependency. Assigned keys never regenerate automatically.
 
-```json
-{
-  "schema_version": "1.0",
-  "decisions": [{
-    "entry_id": "83a6e01b-d9d6-40d0-9fb0-e67c153f7051",
-    "action": "match",
-    "source_id": "a5b4de9b-2a59-440e-bc61-40a9b016d33c",
-    "if_revision": 2,
-    "fields": {"metadata.publication.pages": "incoming", "metadata.title": "current"}
-  }]
-}
-```
+Title-token stopwords, two-word camel casing, author/editor fallback, uppercase ND and collision suffixes remain in the spec. A key must be nonempty, unique, and contain no whitespace/control characters or BibTeX delimiters `,{}()=\#%"`. Imported incompatible keys remain recorded with export errors. Case-sensitive catalog uniqueness preserves legacy keys; case-only twins block portable export. Filename preview follows the accepted short-title/edition/version/year conventions and never renames a file.
 
-Actions are `match`, `create_distinct`, or `leave_unresolved`. Match requires source ID, revision, and a decision for every conflicting field; unspecified nonconflicting fields can be retained but not silently replace different current values. `create_distinct` accepts a `citation_key` string, required and validated by the explicit-key grammar when the imported key is occupied, and must preserve the original key as provenance. Shared identifiers remain reported. `leave_unresolved` records the decision without discarding the entry and blocks initial bibliography adoption for that batch. Invalid decisions do not roll back unrelated valid entries; the report accounts for every decision. New unmatched records preserve supplied keys; missing keys use the generation policy.
+## Patches and clearing
 
-## Key, Title, and Filename Transformations
+`update REF --patch PATH --if-revision N` accepts `{schema_version:"1.0", set:{path:value}, clear:[path], provenance:[...]}`. Arrays are replaced whole. Null in set is rejected; use clear. A path cannot occur in both. IDs, keys, revisions, original evidence, resource paths and operation state are not patchable. Each changed source increments revision once; a no-op preserves it. Explicit corrections may replace earlier explicit values, but imports cannot do so silently. Clearing an override restores derivation; clearing the last recognizable title/URL/part identification fails.
 
-The spec's accepted component order, literal author/editor role fallback, `ND`, camel case, and collision sequence are binding. Configuration lists and presets are in [configuration](configuration.md). Normalize creator input to NFC, apply explicit creator override/alias first, then strict pinned transliteration and lowercase/punctuation rules. Reject control/symbol or unmapped letter input and empty tokens. Show original and transformed name with policy ID; a mapping warning does not assert a person's canonical romanization. Transliteration never affects identity matching.
+Record modeled absence, explicit clearing and type supersession. Preserved originals may supply only specifically approved unmodeled passthrough facts, never modeled fields. Export always generates current modeled values, including deliberate absence. No stale original TeX can replace a later edit.
 
-Title word selection uses Unicode letter/digit runs, excludes configured words case-insensitively, and takes the first two remaining words without truncation. Lowercase the first word; capitalize only the initial of the second and lowercase its rest. Unicode title words remain Unicode if the output format permits them; unsupported export cases require an explicit key. This name-transliteration decision does not authorize inventing an English title.
+`update REF --set PATH=JSON --if-revision N` is the human shortcut and uses the same validator. Repeated set options are allowed for distinct paths; strings require JSON quoting. JSON patch remains the complete agent interface.
 
-Generated filenames join whitespace-separated short-title words preserving their existing spelling, then optional edition/version, then available issued year, using hyphens between components and the requested extension. Missing year uses `ND`; no edition/version adds no empty component. Reject path separators, control characters, empty basename, or unsafe resulting names rather than silently sanitize. Filename preview never renames an attachment. Both numbering and version labels cannot be compressed into one token without an explicit selected label; report ambiguity.
+## Identity and reconciliation
+
+Check all identity evidence before precedence: explicit UUID, prior origin identity and consistent persistent identifiers generate candidates. Conflicting signals, editions or versions stop that entry. A key alone proposes a match; title similarity never authorizes one. Reconciliation actions are match, create_distinct or leave_unresolved, with entry ID, target source and expected revision; every differing field needs current/incoming/clear selection. Distinct creation under an occupied key needs a new explicitly supplied key and preserves the old key as provenance.
+
+An export projection record contains source ID/revision, destination profile fingerprint, emitted entry digest and the canonical-to-emitted field/type decisions. Re-import can retain a richer current type only when this record and matching emitted values prove an unchanged documented downgrade. Other edits are reconciled normally; current later corrections are never rolled back. A fresh catalog without projection evidence cannot reconstruct lost type information or infer identity from the key.
+
+## Applicability
+
+The registry explicitly lists field_applicability and extension_applicability by canonical type. A mapping applies only when its input type scope and target applicability both hold. Values outside those bounds remain preserved originals or explicit reconciliation conflicts; no silent field deletion. Source type defaults to document only when omitted for casual capture. The core type enum is restricted to the modeled types; complete upstream schemas are validation references, not a broader acceptance promise. `chapter-number` owns the traditional part identifier.
+
+## Complete envelope and import omission rules
+
+Allowed source-create keys are schema_version, citation_key, key_author, metadata, native_type, extensions, title_protection, title_parts, overrides, legacy_tags, context and provenance. Only schema_version and metadata are required; omitted lists/objects default empty, optional labels/overrides default absent. `legacy_tags` is a list of nonblank Unicode strings deduplicated exactly, searchable without becoming approved taxonomy. `overrides` admits only sort_title (nonblank Unicode text). `title_parts` admits only main_title: a supplied nonblank complete-word prefix of metadata.title, representing an explicitly supplied boundary, never an inferred colon split. A title change that invalidates it must clear or replace it explicitly. Short-title derivation uses that value, otherwise full title; metadata.title-short remains the sole explicit short-title override. Patches may set/clear these documented paths. key_author is a validated generation override and cannot change bibliographic names or an already assigned key.
+
+Context entries require text and origin=user|agent|import; optional source_url and original-entry reference are allowed. Provenance entries admit origin=user|agent|import|derived, access=metadata|abstract|full_text|unknown, source_url, observed_at, original-entry reference and a source-system identity object {namespace,library_uri,item_key}. Claims remain supplied claims, not verified reading. Unknown nested keys fail at every modeled boundary; unmodeled import data remains immutable evidence rather than arbitrary envelope keys.
+
+Incoming omission means no proposal, never deletion. Only an explicit patch clear or a reconciliation clear decision deletes a modeled value. Known howpublished text enters metadata.note as citation-note text with typed field provenance; if both howpublished and note exist, concatenate decoded howpublished then note with a newline, preserving separate field origins. This is a documented composition of note fragments, not conflicting aliases or inference of rich type/authority/event facts. Emit the resulting citation note once as note; profile-generated howpublished remains derived output. Unsupported executable/math syntax follows the unknown policy.
+
+Projection comparison first validates identifiers and parses supported input into the portable profile's field/value representation, including ordered names, calendar precision and protection terms. Ignore field ordering, lexical enclosure and whitespace outside values, not meaningful text, creator order, case protection or unknown directives. Byte digests are a fast path; harmless syntax reformatting with identical semantic projection remains a match. Require a unique saved projection source with the same assigned key and complete matching emitted semantics, and no contradictory origin/identifier evidence. Multiple candidate source IDs require reconciliation. Matching fields retain current values even if their source revision has since advanced or they were cleared; the historical source revision identifies the emission, not permission to roll back. New/changed incoming fields follow ordinary reconciliation. A profile change cannot reuse another profile's interpretation without an explicitly compatible mapping. A fresh catalog lacking this evidence cannot infer a richer original type.

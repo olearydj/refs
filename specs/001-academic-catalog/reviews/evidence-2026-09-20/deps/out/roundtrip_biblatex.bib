@@ -1,0 +1,103 @@
+@xdata{xd:press,
+	publisher = {Synthetic University Press},
+	location = {Springfield}
+}
+
+
+@xdata{xd:series,
+	xdata = {xd:press},
+	series = {Synthetic Series}
+}
+
+
+@mvbook{mv1,
+	author = {Knuth, Donald E.},
+	title = {The Multivolume Work},
+	subtitle = {A Subtitle},
+	date = {1990/1999},
+	xdata = {xd:series}
+}
+
+
+@book{vol1,
+	crossref = {mv1},
+	title = {Volume One Title},
+	volume = {1},
+	date = {1990}
+}
+
+
+@inbook{chap1,
+	crossref = {vol1},
+	title = {Chapter Title},
+	pages = {10--20}
+}
+
+
+@proceedings{proc1,
+	editor = {Editor, Ellen},
+	title = {Proceedings of the Synthetic Conference},
+	subtitle = {SynthConf},
+	date = {2019-07-01/2019-07-05},
+	publisher = {ACM},
+	ids = {oldproc, proc2019}
+}
+
+
+@inproceedings{inproc1,
+	author = {Author, Alice},
+	title = {A Paper},
+	crossref = {proc1},
+	pages = {1-9},
+	langid = {american},
+	options = {useprefix=true,skipbib=false}
+}
+
+
+@article{dates1,
+	author = {Circa, Carl},
+	title = {Approximate Date},
+	journaltitle = {Journal of Dates},
+	date = {2020-05~},
+	urldate = {2021-03-04},
+	eventdate = {2019/2020},
+	origdate = {199X}
+}
+
+
+@article{dates2,
+	author = {Open, Olive},
+	title = {Open Range and Uncertain},
+	journaltitle = {Journal of Dates},
+	date = {2004-22/..},
+	origdate = {-0044?}
+}
+
+
+@article{legacy1,
+	author = {Legacy, Larry},
+	title = {Legacy Year Month},
+	journal = {Old Journal},
+	year = {1998},
+	month = mar,
+	number = {3}
+}
+
+
+@book{orig1,
+	author = {Trans, Tina},
+	title = {Translated Book},
+	date = {2015},
+	related = {mv1},
+	relatedtype = {translationof},
+	relatedstring = {Translation of}
+}
+
+
+@online{onl1,
+	author = {{World Health Organization}},
+	title = {Online Thing},
+	url = {https://example.org/x_y%7Ez#top},
+	urldate = {2024-02-30},
+	date = {2024}
+}

@@ -1,0 +1,428 @@
+[
+  {
+    "author": [
+      {
+        "literal": "World Health Organization"
+      }
+    ],
+    "id": "n-corp-double",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Organization",
+        "given": "World Health"
+      }
+    ],
+    "id": "n-corp-single",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "literal": "Synthetic Holdings and Sons, Inc."
+      },
+      {
+        "family": "Roe",
+        "given": "Rae"
+      }
+    ],
+    "id": "n-corp-and",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "dropping-particle": "of",
+        "family": "Health",
+        "given": "Ministry"
+      },
+      {
+        "family": "Welfare"
+      }
+    ],
+    "id": "n-corp-and-unbraced",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "dropping-particle": "van",
+        "family": "Beethoven",
+        "given": "Ludwig"
+      }
+    ],
+    "id": "n-van-natural",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "dropping-particle": "van",
+        "family": "Beethoven",
+        "given": "Ludwig"
+      }
+    ],
+    "id": "n-van-comma",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Van Buren",
+        "given": "Martin"
+      }
+    ],
+    "id": "n-Van-capital",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "dropping-particle": "de la",
+        "family": "Cruz",
+        "given": "Juan"
+      }
+    ],
+    "id": "n-delacruz",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Smith",
+        "given": "John",
+        "suffix": "Jr."
+      }
+    ],
+    "id": "n-junior",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Jr.",
+        "given": "John Smith"
+      }
+    ],
+    "id": "n-junior-natural",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Gogh",
+        "given": "Vincent",
+        "non-dropping-particle": "van"
+      }
+    ],
+    "id": "n-extended",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "dropping-particle": "van",
+        "family": "Gogh",
+        "given": "Vincent"
+      }
+    ],
+    "id": "n-extended-false",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "King",
+        "given": "Martin Luther",
+        "suffix": "Jr."
+      }
+    ],
+    "id": "n-extended-suffix",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      },
+      {
+        "family": "Beta",
+        "given": "Bo"
+      },
+      {
+        "literal": "others"
+      }
+    ],
+    "id": "n-others",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Aristotle"
+      }
+    ],
+    "id": "n-single-name",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Sartre",
+        "given": "Jean-Paul"
+      }
+    ],
+    "id": "n-hyphen-given",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "毛",
+        "given": "泽东"
+      }
+    ],
+    "id": "n-cjk",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Müller",
+        "given": "Jörg"
+      },
+      {
+        "family": "Garcı́a",
+        "given": "José"
+      },
+      {
+        "family": "Łukasiewicz",
+        "given": "Jan"
+      }
+    ],
+    "id": "n-tex-escaped",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "Æsthetics of naı̈veté & café: 50% $\\alpha$-particles",
+    "title-short": "Æsthetics of naı̈veté & café",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Müller",
+        "given": "Jörg"
+      },
+      {
+        "family": "García",
+        "given": "José"
+      },
+      {
+        "family": "Łukasiewicz",
+        "given": "Jan"
+      }
+    ],
+    "id": "n-unicode",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "Æsthetics of naïveté & café",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "editor": [
+      {
+        "family": "Compiler",
+        "given": "Cal"
+      }
+    ],
+    "id": "n-roles",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "T",
+    "translator": [
+      {
+        "family": "Trans",
+        "given": "Tia"
+      }
+    ],
+    "type": "book"
+  },
+  {
+    "director": [
+      {
+        "family": "Director",
+        "given": "Dot"
+      }
+    ],
+    "id": "n-director",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "A film",
+    "type": "motion_picture"
+  }
+]

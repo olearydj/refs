@@ -1,0 +1,81 @@
+Parsing of `@article` block (line 52) aborted on line 56 due to syntactical error in bibtex:
+ Unexpected block start: `@article`. Was still looking for field-value closing `}` 
+Parsing of `@article` block (line 61) aborted on line 62 due to syntactical error in bibtex:
+ Expected comma after entry key, but found =
+WARNINGS: []
+n blocks 20 entries 7 failed 3 strings 3 preambles 1 comments 6
+--- ImplicitComment start_line=0 raw_len=87
+   comment='% leading implicit comment line\nThis is junk text outside any entry (implicit comment).'
+--- Preamble start_line=3 raw_len=74
+   value=' "\\newcommand{\\noopsort}[1]{} " # "\\providecommand{\\foo}{bar}" '
+--- String start_line=5 raw_len=48
+   key='jgr' value='Journal of Geophysical Research' enclosing=None
+--- String start_line=6 raw_len=32
+   key='pub' value='Synthetic Press' enclosing=None
+--- String start_line=7 raw_len=28
+   key='sfx' value=' (Series A)' enclosing=None
+--- ExplicitComment start_line=9 raw_len=45
+   comment='jabref-meta: databaseType:biblatex;'
+--- ExplicitComment start_line=11 raw_len=100
+   comment='jabref-meta: grouping:\n0 AllEntriesGroup:;\n1 StaticGroup:Methods\\;0\\;1\\;0x8a8a8aff\\;\\;\\;;'
+--- ExplicitComment start_line=16 raw_len=73
+   comment='This is a plain explicit comment with {nested {braces}} inside.'
+--- Entry start_line=18 raw_len=244
+   type='article' key='macro1'
+   field 'author' line=19 enclosing=None value='Doe, Jane'
+   field 'title' line=20 enclosing=None value='Macro Concatenation'
+   field 'journal' line=21 enclosing='no-enclosing' value='jgr # sfx'
+   field 'publisher' line=22 enclosing=None value='Synthetic Press'
+   field 'month' line=23 enclosing='no-enclosing' value='jan'
+   field 'year' line=24 enclosing=None value='2020'
+   field 'volume' line=25 enclosing=None value='12'
+   field 'note' line=26 enclosing='no-enclosing' value='"quoted " # jgr # { and braced}'
+   field 'series' line=27 enclosing='no-enclosing' value='undefinedmacro'
+   meta: {'ResolveStringReferences': ['publisher'], 'removed_enclosing': {'author': '"', 'title': '{', 'journal': 'no-enclosing', 'publisher': '{', 'month': 'no-enclosing', 'year': 'no-enclosing', 'volume': 'no-enclosing', 'note': 'no-enclosing', 'series': 'no-enclosing'}}
+--- Entry start_line=30 raw_len=120
+   type='article' key='CaseKey'
+   field 'AUTHOR' line=31 enclosing=None value='Smith, John'
+   field 'Title' line=32 enclosing=None value='Upper Case Field Names'
+   field 'YEAR' line=33 enclosing=None value='2019'
+   field 'year' line=34 enclosing=None value='2018'
+   meta: {'removed_enclosing': {'AUTHOR': '{', 'Title': '{', 'YEAR': '{', 'year': '{'}}
+--- Entry start_line=37 raw_len=68
+   type='article' key='dupkey'
+   field 'title' line=38 enclosing=None value='First with this key'
+   field 'year' line=39 enclosing=None value='2001'
+   meta: {'removed_enclosing': {'title': '{', 'year': '{'}}
+--- DuplicateBlockKeyBlock start_line=42 raw_len=69
+   error: Exception Duplicate entry key 'dupkey'
+   raw: '@article{dupkey,\n  title = {Second with this key},\n  year = {2002},\n}'
+   ignore_error_block: Entry(entry_type=`article`, key=`dupkey`, fields=`[Field(key=`title`, value=`{Second with this key}`, start_line=43, enclosing=None), Field(key=`year`, value=`{2002}`, start_line=44, enclosing=None)]`, start_line=42)
+--- Entry start_line=47 raw_len=71
+   type='article' key='DupKey'
+   field 'title' line=48 enclosing=None value='Case-variant of dupkey'
+   field 'year' line=49 enclosing=None value='2003'
+   meta: {'removed_enclosing': {'title': '{', 'year': '{'}}
+--- ParsingFailedBlock start_line=52 raw_len=68
+   error: BlockAbortedException 
+   raw: '@article{broken1,\n  title = {Missing closing brace,\n  year = {2004}\n'
+--- Entry start_line=56 raw_len=76
+   type='article' key='afterbroken'
+   field 'title' line=57 enclosing=None value='Entry After Broken One'
+   field 'year' line=58 enclosing=None value='2005'
+   meta: {'removed_enclosing': {'title': '{', 'year': '{'}}
+--- ParsingFailedBlock start_line=61 raw_len=26
+   error: BlockAbortedException 
+   raw: '@article{broken2\n  title ='
+--- ImplicitComment start_line=62 raw_len=45
+   comment='{Missing comma after key},\n  year = {2006},\n}'
+--- Entry start_line=66 raw_len=61
+   type='article' key='broken3'
+   field 'title' line=67 enclosing='no-enclosing' value='{Missing equals}\n  year {2007}'
+   meta: {'removed_enclosing': {'title': 'no-enclosing'}}
+--- Entry start_line=71 raw_len=59
+   type='book' key='last_ok'
+   field 'title' line=72 enclosing=None value='Last Entry OK'
+   field 'year' line=73 enclosing=None value='2008'
+   meta: {'removed_enclosing': {'title': '{', 'year': '{'}}
+--- ImplicitComment start_line=75 raw_len=13
+   comment='trailing junk'
+RAW COVERAGE: source chars 1441 sum raw chars 1407
+source == '\n'.join(raw)? False

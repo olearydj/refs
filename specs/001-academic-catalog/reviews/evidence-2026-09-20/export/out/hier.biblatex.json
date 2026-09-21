@@ -1,0 +1,416 @@
+[
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-author": [
+      {
+        "family": "Bookman",
+        "given": "Bob"
+      }
+    ],
+    "container-title": "The multivolume main title: A main subtitle",
+    "editor": [
+      {
+        "family": "Edison",
+        "given": "Ed"
+      }
+    ],
+    "id": "h-inbook3",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "page": "10-20",
+    "publisher": "First Press; Second Press",
+    "publisher-place": "Boston; New York",
+    "title": "The chapter title",
+    "type": "chapter",
+    "volume": "3",
+    "volume-title": "The volume title"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "collection-number": "7",
+    "collection-title": "Synthetic series",
+    "container-title": "The multivolume main title",
+    "editor": [
+      {
+        "family": "Edison",
+        "given": "Ed"
+      }
+    ],
+    "id": "h-incoll3",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "page": "10-20",
+    "publisher": "First Press",
+    "publisher-place": "Boston",
+    "title": "The chapter title",
+    "type": "chapter",
+    "volume": "3",
+    "volume-title": "The volume title"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "id": "h-book2",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "number-of-volumes": "5",
+    "publisher": "First Press",
+    "publisher-place": "Boston",
+    "title": "The multivolume main title",
+    "type": "book",
+    "volume": "3.2",
+    "volume-title": "The volume title"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "id": "h-mvbook",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ],
+        [
+          2019
+        ]
+      ]
+    },
+    "number-of-volumes": "5",
+    "publisher": "First Press",
+    "title": "The multivolume main title",
+    "type": "book"
+  },
+  {
+    "ISBN": "000-0-00-000000-0",
+    "URL": "https://example.org/parent",
+    "author": [
+      {
+        "family": "Childs",
+        "given": "Cy"
+      }
+    ],
+    "container-author": [
+      {
+        "family": "Parent",
+        "given": "Pat"
+      }
+    ],
+    "container-title": "Parent book title: Parent subtitle",
+    "id": "h-child-inbook",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "page": "5-9",
+    "publisher": "Parent Press",
+    "publisher-place": "Paris",
+    "title": "Child chapter",
+    "type": "chapter"
+  },
+  {
+    "ISBN": "000-0-00-000000-0",
+    "URL": "https://example.org/parent",
+    "author": [
+      {
+        "family": "Parent",
+        "given": "Pat"
+      }
+    ],
+    "id": "h-parent-book",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "publisher": "Parent Press",
+    "publisher-place": "Paris",
+    "title": "Parent book title: Parent subtitle",
+    "title-short": "Parent book title",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Childs",
+        "given": "Cy"
+      }
+    ],
+    "container-title": "Parent collection title",
+    "editor": [
+      {
+        "family": "Editor",
+        "given": "Eve"
+      }
+    ],
+    "id": "h-child-incoll",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "page": "15-19",
+    "publisher": "Coll Press",
+    "title": "Child contribution",
+    "type": "chapter"
+  },
+  {
+    "editor": [
+      {
+        "family": "Editor",
+        "given": "Eve"
+      }
+    ],
+    "id": "h-parent-coll",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "publisher": "Coll Press",
+    "title": "Parent collection title",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Childs",
+        "given": "Cy"
+      }
+    ],
+    "container-title": "Proceedings of the synthetic conference",
+    "editor": [
+      {
+        "family": "Editor",
+        "given": "Eve"
+      }
+    ],
+    "event": "Synthetic conference 2016",
+    "event-date": {
+      "date-parts": [
+        [
+          2016,
+          6,
+          1
+        ],
+        [
+          2016,
+          6,
+          3
+        ]
+      ]
+    },
+    "event-place": "Springfield",
+    "id": "h-child-inproc",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "page": "25-29",
+    "publisher": "Synthetic Society; Proc Press",
+    "title": "Child paper",
+    "type": "paper-conference"
+  },
+  {
+    "editor": [
+      {
+        "family": "Editor",
+        "given": "Eve"
+      }
+    ],
+    "event": "Synthetic conference 2016",
+    "event-date": {
+      "date-parts": [
+        [
+          2016,
+          6,
+          1
+        ],
+        [
+          2016,
+          6,
+          3
+        ]
+      ]
+    },
+    "event-place": "Springfield",
+    "id": "h-parent-proc",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "publisher": "Synthetic Society; Proc Press",
+    "title": "Proceedings of the synthetic conference",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Childs",
+        "given": "Cy"
+      }
+    ],
+    "container-author": [
+      {
+        "family": "Parent",
+        "given": "Pat"
+      }
+    ],
+    "container-title": "Grand multivolume title",
+    "id": "h-child-mv",
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    },
+    "publisher": "MV Press",
+    "title": "Child in volume",
+    "type": "chapter",
+    "volume": "2",
+    "volume-title": "Volume two title"
+  },
+  {
+    "author": [
+      {
+        "family": "Parent",
+        "given": "Pat"
+      }
+    ],
+    "container-author": [
+      {
+        "family": "Parent",
+        "given": "Pat"
+      }
+    ],
+    "id": "h-parent-vol",
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    },
+    "publisher": "MV Press",
+    "title": "Grand multivolume title",
+    "type": "book",
+    "volume": "2",
+    "volume-title": "Volume two title"
+  },
+  {
+    "author": [
+      {
+        "family": "Parent",
+        "given": "Pat"
+      }
+    ],
+    "id": "h-parent-mv",
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    },
+    "publisher": "MV Press",
+    "title": "Grand multivolume title",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "id": "h-uses-xdata",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "publisher": "Xdata Press",
+    "publisher-place": "Xville",
+    "title": "Book using xdata",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "id": "h-uses-xref",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "title": "Book using xref",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "id": "h-missing-parent",
+    "title": "Orphan chapter",
+    "type": "chapter"
+  }
+]

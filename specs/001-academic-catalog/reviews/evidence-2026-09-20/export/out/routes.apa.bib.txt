@@ -1,0 +1,17 @@
+[WARNING] Citeproc: Bibliography entry with no printed form: r-letter
+Alpha, A. (ca. 1850). An approximately dated book. Synthetic Press.
+Alpha, A. (2019). The multivolume main title: Vol. 3. The volume title. First Press; Second Press.
+Alpha, A. (2020a). A history of Alabama and the American south after Darwin: Measuring pH with Python. Journal of Synthetic Tests, 1, 1–2.
+Alpha, A. (2020b). An article numbered not paged. Journal of Synthetic Tests, 12(3). https://doi.org/10.0000/eid.1
+Alpha, A. (2021, Spring). A seasonal issue article. Synthetic Quarterly.
+Coder, C. (2023). Synthtool (Version 2.4.1) [Computer software]. Synthetic Labs. https://example.org/synthtool
+Darwin, C. (2003). On the origin of synthetic species. Reprint Press. (Original work published 1859, Old Press)
+Data, D. (2022). Synthetic measurements of Alabama rivers (Version 3) [Dataset]. Synthetic Repository. https://doi.org/10.0000/data.3
+Director, D. (Director). (2010). A synthetic film [Video recording]. Synthetic Studios.
+Foreword, F. (2019). Introduction. In B. Bookman, The collected works (pp. 1–9). Synthetic Press.
+Host, H. (2019, April 5). The synthetic podcast: Episode 12: The synthetic interview (No. 12) [Audio recording]. Synthetic Audio Network. https://example.org/pod/12
+Inventor, I. (2015). Method for synthetic testing (U.S. patent Nos. US 1234567 B2).
+Pre, P. (2024). A synthetic preprint (Version 2). arXiv. https://arxiv.org/abs/2401.00001
+Speaker, S. (2022, June 1). A talk without proceedings. Conference presentation. Synthetic conference, Springfield, June 1, 2022.
+Standard for Synthetic Things, Pub. L. Nos. SSB 1234-2020 (2020).
+van Gogh, V., & Beethoven, L. van. (2020). Particles in practice. Synthetic Press.

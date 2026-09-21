@@ -1,0 +1,28 @@
+##### apa
+Alpha, A. (2020a). A chapter about things. In The big book of important things (pp. 1–9). Synthetic Press.
+Alpha, A. (2020b). A history of alabama and the american south after darwin. Journal of Synthetic Tests.
+Alpha, A. (2020c). Already sentence case: A subtitle follows. Journal of Synthetic Tests.
+Alpha, A. (2020f). Measuring pH with Python: A practical guide. Journal of Synthetic Tests.
+Alpha, A. (2020d). Measuring pH with Python: A practical guide. Journal of Synthetic Tests.
+Alpha, A. (2020e). Measuring pH with Python: A Practical Guide. Journal of Synthetic Tests.
+Alpha, A. (2020g). Measuring pH with python: A practical guide to LaTeX and AI in r. Journal of Synthetic Tests, 1, 1–2.
+Alpha, A. (2020h). Measuring pH with Python: A practical guide to LaTeX and AI in R. Journal of Synthetic Tests, 1, 1–2.
+Alpha, A. (2020i). NASA and the IEEE: GPT-4 models for iPhone users. Journal of Synthetic Tests.
+Alpha, A. (2020j). The main title: The separate subtitle field. An addon statement. Synthetic Press.
+Beta, B. (2020a). Die Vermessung der Welt: Eine Neue Geschichte. Zeitschrift für Synthetische Tests.
+Beta, B. (2020b). Die vermessung der welt: Eine neue geschichte. Zeitschrift Für Synthetische Tests.
+Gamma, G. (2020). La Vie Moderne: Une Histoire Nouvelle. Revue des Tests.
+##### chicago-author-date
+Alpha, Ann. 2020a. “A Chapter about Things.” In The Big Book of Important Things. Synthetic Press.
+Alpha, Ann. 2020b. “A History of Alabama and the American South After Darwin.” Journal of Synthetic Tests.
+Alpha, Ann. 2020c. “Already Sentence Case: A Subtitle Follows.” Journal of Synthetic Tests.
+Alpha, Ann. 2020f. “Measuring pH with Python: A Practical Guide.” Journal of Synthetic Tests.
+Alpha, Ann. 2020d. “Measuring pH with Python: A Practical Guide.” Journal of Synthetic Tests.
+Alpha, Ann. 2020e. “Measuring pH with Python: A Practical Guide.” Journal of Synthetic Tests.
+Alpha, Ann. 2020g. “Measuring pH with Python: A Practical Guide to LaTeX and AI in r.” Journal of Synthetic Tests 1: 1–2.
+Alpha, Ann. 2020h. “Measuring pH with Python: A Practical Guide to LaTeX and AI in R.” Journal of Synthetic Tests 1: 1–2.
+Alpha, Ann. 2020i. “NASA and the IEEE: GPT-4 Models for iPhone Users.” Journal of Synthetic Tests.
+Alpha, Ann. 2020j. The Main Title: The Separate Subtitle Field. An Addon Statement. Synthetic Press.
+Beta, Bernd. 2020a. “Die Vermessung der Welt: Eine Neue Geschichte.” Zeitschrift für Synthetische Tests.
+Beta, Bernd. 2020b. “Die Vermessung Der Welt: Eine Neue Geschichte.” Zeitschrift Für Synthetische Tests.
+Gamma, Guy. 2020. “La Vie Moderne: Une Histoire Nouvelle.” Revue des Tests.

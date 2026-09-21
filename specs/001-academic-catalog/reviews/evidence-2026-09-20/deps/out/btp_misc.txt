@@ -1,0 +1,10 @@
+Parsing of `@article` block (line 6) aborted on line 7 due to syntactical error in bibtex:
+ Unexpected block start: `@article`. Was still looking for field-value closing `,` or `}` 
+DuplicateFieldKeyBlock line 0 None ("Duplicate field keys on entry: 'year'. Note: The entry (containing duplicates) is available as `fail", "'@article{d1, year = {2019}, year = {2018}, title={x}}'")
+Entry line 1 d2 [('title', '"A" # " B"'), ('year', '2020')]
+Entry line 2 parens [('title', 'Paren delimited entry'), ('year', '2001')]
+Entry line 3 ws key [('title', 'key with space')]
+Entry line 4 k:1/2+3 [('title', 'odd key chars')]
+Entry line 5 Upper [('TITLE', 't')]
+ParsingFailedBlock line 6 None ('', "'@article{at_in_value, note = {email a@b.org and @article{fake, in valu'")
+Entry line 7 utf8 [('author', 'Müller, Jörg'), ('title', 'Łódź 山田')]

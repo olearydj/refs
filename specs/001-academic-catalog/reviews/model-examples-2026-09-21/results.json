@@ -1,0 +1,1360 @@
+{
+  "purpose": "Design evidence only; no refs code exists",
+  "pandoc": "pandoc 3.11",
+  "cases": [
+    {
+      "id": "thesis",
+      "zotero": {
+        "itemType": "thesis",
+        "title": "Example Thesis",
+        "thesisType": "Doctoral dissertation",
+        "university": "Example University",
+        "date": "2024"
+      },
+      "bibtex": "@phdthesis{thesis, title={Example Thesis}, type={Doctoral dissertation}, school={Example University}, year={2024}}",
+      "expected": {
+        "type": "thesis",
+        "title": "Example Thesis",
+        "genre": "Doctoral dissertation",
+        "publisher": "Example University",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_input": {
+        "type": "thesis",
+        "title": "Example Thesis",
+        "genre": "Doctoral dissertation",
+        "publisher": "Example University",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_projection": {
+        "type": "thesis",
+        "title": "Example Thesis",
+        "genre": "Doctoral dissertation",
+        "publisher": "Example University",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "zotero_projection": {
+        "type": "thesis",
+        "title": "Example Thesis",
+        "genre": "Doctoral dissertation",
+        "publisher": "Example University",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "extension_projection": {},
+      "pandoc_projection": {
+        "genre": "Doctoral dissertation",
+        "id": "thesis",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "publisher": "Example University",
+        "title": "Example thesis",
+        "type": "thesis"
+      },
+      "pandoc_differences": {}
+    },
+    {
+      "id": "report",
+      "zotero": {
+        "itemType": "report",
+        "title": "Example Report",
+        "reportType": "Technical report",
+        "institution": "Example Institute",
+        "reportNumber": "TR-17",
+        "date": "2023"
+      },
+      "bibtex": "@techreport{report, title={Example Report}, type={Technical report}, institution={Example Institute}, number={TR-17}, year={2023}}",
+      "expected": {
+        "type": "report",
+        "title": "Example Report",
+        "genre": "Technical report",
+        "publisher": "Example Institute",
+        "number": "TR-17",
+        "issued": {
+          "date-parts": [
+            [
+              2023
+            ]
+          ]
+        }
+      },
+      "agent_input": {
+        "type": "report",
+        "title": "Example Report",
+        "genre": "Technical report",
+        "publisher": "Example Institute",
+        "number": "TR-17",
+        "issued": {
+          "date-parts": [
+            [
+              2023
+            ]
+          ]
+        }
+      },
+      "agent_projection": {
+        "type": "report",
+        "title": "Example Report",
+        "genre": "Technical report",
+        "publisher": "Example Institute",
+        "number": "TR-17",
+        "issued": {
+          "date-parts": [
+            [
+              2023
+            ]
+          ]
+        }
+      },
+      "zotero_projection": {
+        "type": "report",
+        "title": "Example Report",
+        "genre": "Technical report",
+        "publisher": "Example Institute",
+        "number": "TR-17",
+        "issued": {
+          "date-parts": [
+            [
+              2023
+            ]
+          ]
+        }
+      },
+      "extension_projection": {},
+      "pandoc_projection": {
+        "genre": "Technical report",
+        "id": "report",
+        "issued": {
+          "date-parts": [
+            [
+              2023
+            ]
+          ]
+        },
+        "number": "TR-17",
+        "publisher": "Example Institute",
+        "title": "Example report",
+        "type": "report"
+      },
+      "pandoc_differences": {}
+    },
+    {
+      "id": "article",
+      "zotero": {
+        "itemType": "journalArticle",
+        "title": "Example Article",
+        "publicationTitle": "Example Journal",
+        "volume": "8",
+        "issue": "2",
+        "pages": "10-19",
+        "date": "2024-01"
+      },
+      "bibtex": "@article{article, title={Example Article}, journal={Example Journal}, volume={8}, number={2}, pages={10--19}, year={2024}, month=jan}",
+      "expected": {
+        "type": "article-journal",
+        "title": "Example Article",
+        "container-title": "Example Journal",
+        "volume": "8",
+        "issue": "2",
+        "page": "10-19",
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              1
+            ]
+          ]
+        }
+      },
+      "agent_input": {
+        "type": "article-journal",
+        "title": "Example Article",
+        "container-title": "Example Journal",
+        "volume": "8",
+        "issue": "2",
+        "page": "10-19",
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              1
+            ]
+          ]
+        }
+      },
+      "agent_projection": {
+        "type": "article-journal",
+        "title": "Example Article",
+        "container-title": "Example Journal",
+        "volume": "8",
+        "issue": "2",
+        "page": "10-19",
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              1
+            ]
+          ]
+        }
+      },
+      "zotero_projection": {
+        "type": "article-journal",
+        "title": "Example Article",
+        "container-title": "Example Journal",
+        "volume": "8",
+        "issue": "2",
+        "page": "10-19",
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              1
+            ]
+          ]
+        }
+      },
+      "extension_projection": {},
+      "pandoc_projection": {
+        "container-title": "Example Journal",
+        "id": "article",
+        "issue": "2",
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              1
+            ]
+          ]
+        },
+        "page": "10-19",
+        "title": "Example article",
+        "type": "article-journal",
+        "volume": "8"
+      },
+      "pandoc_differences": {}
+    },
+    {
+      "id": "chapter",
+      "zotero": {
+        "itemType": "bookSection",
+        "title": "Example Chapter",
+        "bookTitle": "Example Book",
+        "publisher": "Example Press",
+        "place": "Example City",
+        "pages": "20-29",
+        "date": "2022"
+      },
+      "bibtex": "@incollection{chapter, title={Example Chapter}, booktitle={Example Book}, publisher={Example Press}, address={Example City}, pages={20--29}, year={2022}}",
+      "expected": {
+        "type": "chapter",
+        "title": "Example Chapter",
+        "container-title": "Example Book",
+        "publisher": "Example Press",
+        "publisher-place": "Example City",
+        "page": "20-29",
+        "issued": {
+          "date-parts": [
+            [
+              2022
+            ]
+          ]
+        }
+      },
+      "agent_input": {
+        "type": "chapter",
+        "title": "Example Chapter",
+        "container-title": "Example Book",
+        "publisher": "Example Press",
+        "publisher-place": "Example City",
+        "page": "20-29",
+        "issued": {
+          "date-parts": [
+            [
+              2022
+            ]
+          ]
+        }
+      },
+      "agent_projection": {
+        "type": "chapter",
+        "title": "Example Chapter",
+        "container-title": "Example Book",
+        "publisher": "Example Press",
+        "publisher-place": "Example City",
+        "page": "20-29",
+        "issued": {
+          "date-parts": [
+            [
+              2022
+            ]
+          ]
+        }
+      },
+      "zotero_projection": {
+        "type": "chapter",
+        "title": "Example Chapter",
+        "container-title": "Example Book",
+        "publisher": "Example Press",
+        "publisher-place": "Example City",
+        "page": "20-29",
+        "issued": {
+          "date-parts": [
+            [
+              2022
+            ]
+          ]
+        }
+      },
+      "extension_projection": {},
+      "pandoc_projection": {
+        "container-title": "Example book",
+        "id": "chapter",
+        "issued": {
+          "date-parts": [
+            [
+              2022
+            ]
+          ]
+        },
+        "page": "20-29",
+        "publisher": "Example Press",
+        "publisher-place": "Example City",
+        "title": "Example chapter",
+        "type": "chapter"
+      },
+      "pandoc_differences": {}
+    },
+    {
+      "id": "web",
+      "zotero": {
+        "itemType": "webpage",
+        "title": "Example Web Page",
+        "url": "https://example.org/reference",
+        "date": "2024"
+      },
+      "bibtex": "@misc{web, title={Example Web Page}, howpublished={Web page}, url={https://example.org/reference}, year={2024}}",
+      "expected": {
+        "type": "webpage",
+        "title": "Example Web Page",
+        "URL": "https://example.org/reference",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_input": {
+        "type": "webpage",
+        "title": "Example Web Page",
+        "URL": "https://example.org/reference",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_projection": {
+        "type": "webpage",
+        "title": "Example Web Page",
+        "URL": "https://example.org/reference",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "zotero_projection": {
+        "type": "webpage",
+        "title": "Example Web Page",
+        "URL": "https://example.org/reference",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "extension_projection": {},
+      "pandoc_projection": {
+        "URL": "https://example.org/reference",
+        "id": "web",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "publisher": "Web page",
+        "title": "Example web page",
+        "type": ""
+      },
+      "pandoc_differences": {
+        "type": {
+          "expected": "webpage",
+          "pandoc": ""
+        }
+      }
+    },
+    {
+      "id": "preprint",
+      "zotero": {
+        "itemType": "preprint",
+        "title": "Learning With AI",
+        "repository": "arXiv",
+        "archiveID": "2401.01234",
+        "date": "2024"
+      },
+      "bibtex": "@unpublished{preprint,title={Learning With {AI}},eprint={2401.01234},archiveprefix={arXiv},year={2024}}",
+      "expected": {
+        "type": "article",
+        "title": "Learning With AI",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "number": "2401.01234",
+        "archive": "arXiv"
+      },
+      "agent_input": {
+        "type": "article",
+        "title": "Learning With AI",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "number": "2401.01234",
+        "archive": "arXiv"
+      },
+      "agent_projection": {
+        "type": "article",
+        "title": "Learning With AI",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "number": "2401.01234",
+        "archive": "arXiv"
+      },
+      "zotero_projection": {
+        "type": "article",
+        "title": "Learning With AI",
+        "archive": "arXiv",
+        "number": "2401.01234",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "extension_projection": {},
+      "pandoc_projection": {
+        "URL": "https://arxiv.org/abs/2401.01234",
+        "id": "preprint",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "title": "Learning with AI",
+        "type": "manuscript"
+      },
+      "pandoc_differences": {
+        "type": {
+          "expected": "article",
+          "pandoc": "manuscript"
+        },
+        "number": {
+          "expected": "2401.01234",
+          "pandoc": null
+        },
+        "archive": {
+          "expected": "arXiv",
+          "pandoc": null
+        }
+      }
+    },
+    {
+      "id": "conference",
+      "zotero": {
+        "itemType": "conferencePaper",
+        "title": "Learning With Python",
+        "proceedingsTitle": "Proceedings of Example Research",
+        "conferenceName": "Example Research Conference",
+        "date": "2024"
+      },
+      "bibtex": "@inproceedings{conference,title={Learning With {Python}},booktitle={Proceedings of Example Research},eventtitle={Example Research Conference},year={2024}}",
+      "expected": {
+        "type": "paper-conference",
+        "title": "Learning With Python",
+        "container-title": "Proceedings of Example Research",
+        "event-title": "Example Research Conference",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_input": {
+        "type": "paper-conference",
+        "title": "Learning With Python",
+        "container-title": "Proceedings of Example Research",
+        "event-title": "Example Research Conference",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_projection": {
+        "type": "paper-conference",
+        "title": "Learning With Python",
+        "container-title": "Proceedings of Example Research",
+        "event-title": "Example Research Conference",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "zotero_projection": {
+        "type": "paper-conference",
+        "title": "Learning With Python",
+        "container-title": "Proceedings of Example Research",
+        "event-title": "Example Research Conference",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "extension_projection": {},
+      "pandoc_projection": {
+        "container-title": "Proceedings of example research",
+        "event": "Example research conference",
+        "id": "conference",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "title": "Learning with Python",
+        "type": "paper-conference"
+      },
+      "pandoc_differences": {}
+    },
+    {
+      "id": "book",
+      "zotero": {
+        "itemType": "book",
+        "title": "Working With LaTeX",
+        "edition": "2",
+        "series": "Example Methods",
+        "ISBN": "9780306406157",
+        "date": "2020"
+      },
+      "bibtex": "@book{book,title={Working With {LaTeX}},edition={2},series={Example Methods},isbn={9780306406157},year={2020}}",
+      "expected": {
+        "type": "book",
+        "title": "Working With LaTeX",
+        "edition": "2",
+        "collection-title": "Example Methods",
+        "ISBN": "9780306406157",
+        "issued": {
+          "date-parts": [
+            [
+              2020
+            ]
+          ]
+        }
+      },
+      "agent_input": {
+        "type": "book",
+        "title": "Working With LaTeX",
+        "edition": "2",
+        "collection-title": "Example Methods",
+        "ISBN": "9780306406157",
+        "issued": {
+          "date-parts": [
+            [
+              2020
+            ]
+          ]
+        }
+      },
+      "agent_projection": {
+        "type": "book",
+        "title": "Working With LaTeX",
+        "edition": "2",
+        "collection-title": "Example Methods",
+        "ISBN": "9780306406157",
+        "issued": {
+          "date-parts": [
+            [
+              2020
+            ]
+          ]
+        }
+      },
+      "zotero_projection": {
+        "type": "book",
+        "title": "Working With LaTeX",
+        "edition": "2",
+        "collection-title": "Example Methods",
+        "ISBN": "9780306406157",
+        "issued": {
+          "date-parts": [
+            [
+              2020
+            ]
+          ]
+        }
+      },
+      "extension_projection": {},
+      "pandoc_projection": {
+        "ISBN": "9780306406157",
+        "collection-title": "Example methods",
+        "edition": "2",
+        "id": "book",
+        "issued": {
+          "date-parts": [
+            [
+              2020
+            ]
+          ]
+        },
+        "title": "Working with LaTeX",
+        "type": "book"
+      },
+      "pandoc_differences": {}
+    },
+    {
+      "id": "magazine",
+      "zotero": {
+        "itemType": "magazineArticle",
+        "title": "Measuring pH",
+        "publicationTitle": "Example Monthly",
+        "date": "2024-03"
+      },
+      "bibtex": "@article{magazine,title={Measuring {pH}},journal={Example Monthly},year={2024},month=mar}",
+      "expected": {
+        "type": "article-magazine",
+        "title": "Measuring pH",
+        "container-title": "Example Monthly",
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              3
+            ]
+          ]
+        }
+      },
+      "agent_input": {
+        "type": "article-magazine",
+        "title": "Measuring pH",
+        "container-title": "Example Monthly",
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              3
+            ]
+          ]
+        }
+      },
+      "agent_projection": {
+        "type": "article-magazine",
+        "title": "Measuring pH",
+        "container-title": "Example Monthly",
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              3
+            ]
+          ]
+        }
+      },
+      "zotero_projection": {
+        "type": "article-magazine",
+        "title": "Measuring pH",
+        "container-title": "Example Monthly",
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              3
+            ]
+          ]
+        }
+      },
+      "extension_projection": {},
+      "pandoc_projection": {
+        "container-title": "Example Monthly",
+        "id": "magazine",
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              3
+            ]
+          ]
+        },
+        "title": "Measuring pH",
+        "type": "article-journal"
+      },
+      "pandoc_differences": {
+        "type": {
+          "expected": "article-magazine",
+          "pandoc": "article-journal"
+        }
+      }
+    },
+    {
+      "id": "standard",
+      "zotero": {
+        "itemType": "standard",
+        "title": "Example Standard",
+        "number": "EX-42",
+        "creators": [
+          {
+            "creatorType": "author",
+            "name": "Research and Standards Council"
+          }
+        ],
+        "date": "2024"
+      },
+      "bibtex": "@standard{standard,title={Example Standard},number={EX-42},author={{Research and Standards Council}},year={2024}}",
+      "expected": {
+        "type": "standard",
+        "title": "Example Standard",
+        "number": "EX-42",
+        "author": [
+          {
+            "literal": "Research and Standards Council"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_input": {
+        "type": "standard",
+        "title": "Example Standard",
+        "number": "EX-42",
+        "author": [
+          {
+            "literal": "Research and Standards Council"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_projection": {
+        "type": "standard",
+        "title": "Example Standard",
+        "number": "EX-42",
+        "author": [
+          {
+            "literal": "Research and Standards Council"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "zotero_projection": {
+        "type": "standard",
+        "title": "Example Standard",
+        "number": "EX-42",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "author": [
+          {
+            "literal": "Research and Standards Council"
+          }
+        ]
+      },
+      "extension_projection": {},
+      "pandoc_projection": {
+        "author": [
+          {
+            "literal": "Research and Standards Council"
+          }
+        ],
+        "id": "standard",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "number": "EX-42",
+        "title": "Example standard",
+        "type": "legislation"
+      },
+      "pandoc_differences": {
+        "type": {
+          "expected": "standard",
+          "pandoc": "legislation"
+        }
+      }
+    },
+    {
+      "id": "patent",
+      "zotero": {
+        "itemType": "patent",
+        "title": "Example Device",
+        "patentNumber": "US-EX-42",
+        "assignee": "Research and Devices Ltd",
+        "creators": [
+          {
+            "creatorType": "inventor",
+            "firstName": "Ada",
+            "lastName": "Example"
+          }
+        ],
+        "date": "2024"
+      },
+      "bibtex": "@patent{patent,title={Example Device},number={US-EX-42},holder={{Research and Devices Ltd}},author={Example, Ada},year={2024}}",
+      "expected": {
+        "type": "patent",
+        "title": "Example Device",
+        "number": "US-EX-42",
+        "author": [
+          {
+            "family": "Example",
+            "given": "Ada"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "extension_expected": {
+        "patent_assignees": [
+          {
+            "literal": "Research and Devices Ltd"
+          }
+        ]
+      },
+      "agent_input": {
+        "type": "patent",
+        "title": "Example Device",
+        "number": "US-EX-42",
+        "author": [
+          {
+            "family": "Example",
+            "given": "Ada"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_projection": {
+        "type": "patent",
+        "title": "Example Device",
+        "number": "US-EX-42",
+        "author": [
+          {
+            "family": "Example",
+            "given": "Ada"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "zotero_projection": {
+        "type": "patent",
+        "title": "Example Device",
+        "number": "US-EX-42",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "author": [
+          {
+            "family": "Example",
+            "given": "Ada"
+          }
+        ]
+      },
+      "extension_projection": {
+        "patent_assignees": [
+          {
+            "literal": "Research and Devices Ltd"
+          }
+        ]
+      },
+      "pandoc_projection": {
+        "author": [
+          {
+            "family": "Example",
+            "given": "Ada"
+          }
+        ],
+        "id": "patent",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "number": "US-EX-42",
+        "title": "Example device",
+        "type": "patent"
+      },
+      "pandoc_differences": {}
+    },
+    {
+      "id": "presentation",
+      "zotero": {
+        "itemType": "presentation",
+        "title": "Example Presentation",
+        "meetingName": "Example Conference",
+        "creators": [
+          {
+            "creatorType": "presenter",
+            "firstName": "Alex",
+            "lastName": "Example"
+          }
+        ],
+        "date": "2024"
+      },
+      "bibtex": "@misc{presentation,title={Example Presentation},author={Example, Alex},howpublished={Presentation at Example Conference},year={2024}}",
+      "expected": {
+        "type": "speech",
+        "title": "Example Presentation",
+        "event-title": "Example Conference",
+        "author": [
+          {
+            "family": "Example",
+            "given": "Alex"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_input": {
+        "type": "speech",
+        "title": "Example Presentation",
+        "event-title": "Example Conference",
+        "author": [
+          {
+            "family": "Example",
+            "given": "Alex"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_projection": {
+        "type": "speech",
+        "title": "Example Presentation",
+        "event-title": "Example Conference",
+        "author": [
+          {
+            "family": "Example",
+            "given": "Alex"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "zotero_projection": {
+        "type": "speech",
+        "title": "Example Presentation",
+        "event-title": "Example Conference",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "author": [
+          {
+            "family": "Example",
+            "given": "Alex"
+          }
+        ]
+      },
+      "extension_projection": {},
+      "pandoc_projection": {
+        "author": [
+          {
+            "family": "Example",
+            "given": "Alex"
+          }
+        ],
+        "id": "presentation",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "publisher": "Presentation at Example Conference",
+        "title": "Example presentation",
+        "type": ""
+      },
+      "pandoc_differences": {
+        "type": {
+          "expected": "speech",
+          "pandoc": ""
+        },
+        "event-title": {
+          "expected": "Example Conference",
+          "pandoc": null
+        }
+      }
+    },
+    {
+      "id": "particle",
+      "zotero": {
+        "itemType": "book",
+        "title": "Example Names",
+        "creators": [
+          {
+            "creatorType": "author",
+            "firstName": "Alex",
+            "lastName": "de Example"
+          }
+        ],
+        "date": "2024"
+      },
+      "bibtex": "@book{particle,title={Example Names},author={de Example, Alex},year={2024}}",
+      "expected": {
+        "type": "book",
+        "title": "Example Names",
+        "author": [
+          {
+            "family": "de Example",
+            "given": "Alex"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_input": {
+        "type": "book",
+        "title": "Example Names",
+        "author": [
+          {
+            "family": "de Example",
+            "given": "Alex"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_projection": {
+        "type": "book",
+        "title": "Example Names",
+        "author": [
+          {
+            "family": "de Example",
+            "given": "Alex"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "zotero_projection": {
+        "type": "book",
+        "title": "Example Names",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "author": [
+          {
+            "family": "de Example",
+            "given": "Alex"
+          }
+        ]
+      },
+      "extension_projection": {},
+      "pandoc_projection": {
+        "author": [
+          {
+            "dropping-particle": "de",
+            "family": "Example",
+            "given": "Alex"
+          }
+        ],
+        "id": "particle",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "title": "Example names",
+        "type": "book"
+      },
+      "pandoc_differences": {
+        "author": {
+          "expected": [
+            {
+              "family": "de Example",
+              "given": "Alex"
+            }
+          ],
+          "pandoc": [
+            {
+              "dropping-particle": "de",
+              "family": "Example",
+              "given": "Alex"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "corporate",
+      "zotero": {
+        "itemType": "report",
+        "title": "Research With R",
+        "institution": "Research and Training Institute",
+        "creators": [
+          {
+            "creatorType": "author",
+            "name": "Research and Training Institute"
+          }
+        ],
+        "date": "2024"
+      },
+      "bibtex": "@techreport{corporate,title={Research With {R}},author={{Research and Training Institute}},institution={{Research and Training Institute}},year={2024}}",
+      "expected": {
+        "type": "report",
+        "title": "Research With R",
+        "publisher": "Research and Training Institute",
+        "author": [
+          {
+            "literal": "Research and Training Institute"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_input": {
+        "type": "report",
+        "title": "Research With R",
+        "publisher": "Research and Training Institute",
+        "author": [
+          {
+            "literal": "Research and Training Institute"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "agent_projection": {
+        "type": "report",
+        "title": "Research With R",
+        "publisher": "Research and Training Institute",
+        "author": [
+          {
+            "literal": "Research and Training Institute"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        }
+      },
+      "zotero_projection": {
+        "type": "report",
+        "title": "Research With R",
+        "publisher": "Research and Training Institute",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "author": [
+          {
+            "literal": "Research and Training Institute"
+          }
+        ]
+      },
+      "extension_projection": {},
+      "pandoc_projection": {
+        "author": [
+          {
+            "literal": "Research and Training Institute"
+          }
+        ],
+        "id": "corporate",
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "publisher": "Research and Training Institute",
+        "title": "Research with R",
+        "type": "report"
+      },
+      "pandoc_differences": {}
+    }
+  ],
+  "alias_conflict_detected": true,
+  "approximate_aliases_not_collapsed": [
+    "programmingLanguage",
+    "applicationNumber",
+    "session",
+    "priorityNumbers",
+    "codeNumber",
+    "committee"
+  ]
+}

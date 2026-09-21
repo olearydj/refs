@@ -1,0 +1,18 @@
+pub/2026-insight-dema-llm/references.bib
+   n=7 mapped=3 review-gated @misc=4 (57%) unmapped=0 -> whole-file export blocked until every @misc individually reviewed; misc signatures={'url-only web/doc': 4}
+pub/manufacturing-training-media-tradeoffs/references.bib
+   n=41 mapped=38 review-gated @misc=3 (7%) unmapped=0 -> whole-file export blocked until every @misc individually reviewed; misc signatures={'url-only web/doc': 3}
+pub/pipyer-paper/references.bib
+   n=11 mapped=7 review-gated @misc=4 (36%) unmapped=0 -> whole-file export blocked until every @misc individually reviewed; misc signatures={'url-only web/doc': 1, 'arxiv preprint': 3}
+pub/dissertation/references.bib
+   n=292 mapped=283 review-gated @misc=8 (3%) unmapped={'manual': 1} -> whole-file export BLOCKED; misc signatures={'url-only web/doc': 5, 'other': 3}
+pub/2026-jose-danvas/references.bib
+   n=11 mapped=11 review-gated @misc=0 (0%) unmapped=0 -> whole-file export ok; misc signatures={}
+pub/rejected/2026-ai4se-pipyer/proposal/references.bib
+   n=5 mapped=4 review-gated @misc=1 (20%) unmapped=0 -> whole-file export blocked until every @misc individually reviewed; misc signatures={'url-only web/doc': 1}
+dev/near-earth-object-monitor/reports/references.bib
+   n=2 mapped=0 review-gated @misc=2 (100%) unmapped=0 -> whole-file export blocked until every @misc individually reviewed; misc signatures={'url-only web/doc': 2}
+dev/dema-llm/docs/references.bib
+   n=34 mapped=22 review-gated @misc=12 (35%) unmapped=0 -> whole-file export blocked until every @misc individually reviewed; misc signatures={'url-only web/doc': 6, 'arxiv preprint': 5, 'other': 1}
+au/!Research/bib/zotero.bib
+   n=562 mapped=557 review-gated @misc=2 (0%) unmapped={'standard': 2, 'manual': 1} -> whole-file export BLOCKED; misc signatures={'url-only web/doc': 1, 'other': 1}

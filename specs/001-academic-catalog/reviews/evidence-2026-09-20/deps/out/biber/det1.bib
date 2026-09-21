@@ -1,0 +1,108 @@
+@XDATA{xd:press,
+  LOCATION = {Springfield},
+  PUBLISHER = {Synthetic University Press},
+}
+
+@XDATA{xd:series,
+  LOCATION = {Springfield},
+  PUBLISHER = {Synthetic University Press},
+  SERIES = {Synthetic Series},
+}
+
+@MVBOOK{mv1,
+  AUTHOR = {Knuth, Donald E.},
+  LOCATION = {Springfield},
+  PUBLISHER = {Synthetic University Press},
+  DATE = {1990/1999},
+  SERIES = {Synthetic Series},
+  SUBTITLE = {A Subtitle},
+  TITLE = {The Multivolume Work},
+}
+
+@BOOK{vol1,
+  AUTHOR = {Knuth, Donald E.},
+  DATE = {1990},
+  MAINSUBTITLE = {A Subtitle},
+  MAINTITLE = {The Multivolume Work},
+  TITLE = {Volume One Title},
+  VOLUME = {1},
+}
+
+@INBOOK{chap1,
+  AUTHOR = {Knuth, Donald E.},
+  BOOKAUTHOR = {Knuth, Donald E.},
+  BOOKTITLE = {Volume One Title},
+  DATE = {1990},
+  MAINSUBTITLE = {A Subtitle},
+  MAINTITLE = {The Multivolume Work},
+  PAGES = {10--20},
+  TITLE = {Chapter Title},
+  VOLUME = {1},
+}
+
+@PROCEEDINGS{proc1,
+  EDITOR = {Editor, Ellen},
+  PUBLISHER = {ACM},
+  DATE = {2019-07-01/2019-07-05},
+  IDS = {oldproc,proc2019},
+  SUBTITLE = {SynthConf},
+  TITLE = {Proceedings of the Synthetic Conference},
+}
+
+@INPROCEEDINGS{inproc1,
+  OPTIONS = {useprefix=true,skipbib=false},
+  AUTHOR = {Author, Alice},
+  EDITOR = {Editor, Ellen},
+  PUBLISHER = {ACM},
+  BOOKSUBTITLE = {SynthConf},
+  BOOKTITLE = {Proceedings of the Synthetic Conference},
+  DATE = {2019-07-01/2019-07-05},
+  IDS = {oldproc,proc2019},
+  LANGID = {american},
+  PAGES = {1--9},
+  TITLE = {A Paper},
+}
+
+@ARTICLE{dates1,
+  AUTHOR = {Circa, Carl},
+  DATE = {2020-05~},
+  EVENTDATE = {2019/2020},
+  JOURNALTITLE = {Journal of Dates},
+  ORIGDATE = {199X},
+  TITLE = {Approximate Date},
+  URLDATE = {2021-03-04},
+}
+
+@ARTICLE{dates2,
+  AUTHOR = {Open, Olive},
+  DATE = {2004-22/},
+  JOURNALTITLE = {Journal of Dates},
+  ORIGDATE = {-44?},
+  TITLE = {Open Range and Uncertain},
+  YEARDIVISION = {summer},
+}
+
+@ARTICLE{legacy1,
+  AUTHOR = {Legacy, Larry},
+  DATE = {1998-03},
+  JOURNALTITLE = {Old Journal},
+  NUMBER = {3},
+  TITLE = {Legacy Year Month},
+}
+
+@BOOK{orig1,
+  AUTHOR = {Trans, Tina},
+  DATE = {2015},
+  RELATED = {mv1},
+  RELATEDSTRING = {Translation of},
+  RELATEDTYPE = {translationof},
+  TITLE = {Translated Book},
+}
+
+@ONLINE{onl1,
+  AUTHOR = {{World Health Organization}},
+  URL = {https://example.org/x_y%7Ez#top},
+  DATE = {2024},
+  TITLE = {Online Thing},
+}
+

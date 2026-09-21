@@ -1,0 +1,6 @@
+---
+title: "Synthetic"
+bibliography: r.json
+---
+
+Standard [@r-standard]; numbered article [@r-eid]; podcast [@r-podcast].

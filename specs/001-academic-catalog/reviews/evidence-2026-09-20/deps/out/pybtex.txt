@@ -1,0 +1,50 @@
+Installed 3 packages in 5ms
+fx/syntax.bib: WARNING: undefined string in line 28: undefinedmacro
+WARNING: entry with key CaseKey has a duplicate year field
+WARNING: repeated bibliography entry: dupkey
+WARNING: repeated bibliography entry: DupKey
+fx/syntax.bib: WARNING: syntax error in line 75: premature end of file
+fx/syntax_valid.bib: WARNING: undefined string in line 28: undefinedmacro
+WARNING: entry with key CaseKey has a duplicate year field
+WARNING: repeated bibliography entry: dupkey
+WARNING: repeated bibliography entry: DupKey
+WARNING: Too many commas in 'family=von Neumann, given=John, prefix=von, useprefix=true'
+##### fx/syntax.bib
+ strict=True EXC UndefinedMacro: undefined string in line 28: undefinedmacro
+ strict=False entries=['macro1', 'CaseKey', 'dupkey', 'broken1'] preamble='\\newcommand{\\noopsort}[1]{} \\providecommand{\\foo}{bar}'
+    macro1 article {'title': 'Macro Concatenation', 'journal': 'Journal of Geophysical Research (Series A)', 'publisher': 'Synthetic Press', 'month': 'January', 'year': '2020', 'volume': '12', 'note': 'quoted Journal of Geophysical Research and braced', 'series': ''}
+        author {'first': ['Jane'], 'middle': [], 'prelast': [], 'last': ['Doe'], 'lineage': []}
+    CaseKey article {'Title': 'Upper Case Field Names', 'YEAR': '2019'}
+        AUTHOR {'first': ['John'], 'middle': [], 'prelast': [], 'last': ['Smith'], 'lineage': []}
+##### fx/syntax_valid.bib
+ strict=True EXC UndefinedMacro: undefined string in line 28: undefinedmacro
+ strict=False entries=['macro1', 'CaseKey', 'dupkey', 'afterbroken', 'last_ok'] preamble='\\newcommand{\\noopsort}[1]{} \\providecommand{\\foo}{bar}'
+    macro1 article {'title': 'Macro Concatenation', 'journal': 'Journal of Geophysical Research (Series A)', 'publisher': 'Synthetic Press', 'month': 'January', 'year': '2020', 'volume': '12', 'note': 'quoted Journal of Geophysical Research and braced', 'series': ''}
+        author {'first': ['Jane'], 'middle': [], 'prelast': [], 'last': ['Doe'], 'lineage': []}
+    CaseKey article {'Title': 'Upper Case Field Names', 'YEAR': '2019'}
+        AUTHOR {'first': ['John'], 'middle': [], 'prelast': [], 'last': ['Smith'], 'lineage': []}
+##### fx/content_valid.bib
+ strict=True EXC InvalidNameString: Too many commas in 'family=von Neumann, given=John, prefix=von, useprefix=true'
+ strict=False entries=['prot1', 'zotfile', 'names1'] preamble=''
+    prot1 article {'title': 'The {NASA} Mission to {{M}ars}: A {\\"o} and \\"{o} and {\\"O}ber Study of $\\alpha$-decay \\& 50\\% Growth in {$\\mathrm{CO}_2$}', 'journal': 'Journal with {"}quotes{"} {and} \\textit{italics}', 'year': '2021', 'url': 'https://example.org/a_b%20c#frag?x=1&y=2~z', 'doi': '10.1000/abc_def(2021)1%2F2', 'file': ':papers/prot1.pdf:PDF;Supp:papers/prot1\\_supp.pdf:application/pdf', 'note': 'Nested {braces {three {deep}}} and an unbalanced-looking \\{ escaped \\} pair'}
+        author {'first': ['J{\\"o}rg'], 'middle': [], 'prelast': [], 'last': ['M{\\"u}ller'], 'lineage': []}
+        author {'first': ["P\\'al"], 'middle': [], 'prelast': [], 'last': ['Erd\\H{o}s'], 'lineage': []}
+        author {'first': ['S{\\o}ren'], 'middle': [], 'prelast': [], 'last': ['{\\O}stergaard'], 'lineage': []}
+    names1 inproceedings {'title': 'Name Parsing', 'booktitle': 'Proceedings', 'year': '2020'}
+        author {'first': ['Johannes'], 'middle': [], 'prelast': ['van', 'der'], 'last': ['Berg'], 'lineage': []}
+        author {'first': ['Jean'], 'middle': [], 'prelast': ['de', 'la'], 'last': ['Fontaine'], 'lineage': ['Jr.']}
+        author {'first': ['Martin'], 'middle': ['Luther'], 'prelast': [], 'last': ['King'], 'lineage': ['Jr']}
+        author {'first': [], 'middle': [], 'prelast': [], 'last': ['{World Health Organization}'], 'lineage': []}
+        author {'first': [], 'middle': [], 'prelast': [], 'last': ['{Barnes and Noble, Inc.}'], 'lineage': []}
+        author {'first': ['Ludwig'], 'middle': [], 'prelast': ['van'], 'last': ['Beethoven'], 'lineage': []}
+        author {'first': ['Charles'], 'middle': ['Louis', 'Xavier', 'Joseph'], 'prelast': ['de', 'la'], 'last': ["Vall{\\'e}e", 'Poussin'], 'lineage': []}
+        author {'first': [], 'middle': [], 'prelast': [], 'last': ['others'], 'lineage': []}
+        editor {'first': ['prefix=von'], 'middle': ['useprefix=true'], 'prelast': ['family=von'], 'last': ['Neumann'], 'lineage': ['given=John']}
+        editor {'first': ['given-i=A'], 'middle': [], 'prelast': [], 'last': ['family={Smith Jones}'], 'lineage': ['given=Anne']}
+##### fx/biblatex.bib
+ strict=True entries=['xd:press', 'xd:series', 'mv1', 'vol1', 'chap1', 'proc1', 'inproc1', 'dates1', 'dates2', 'legacy1', 'orig1', 'onl1'] preamble=''
+    chap1 inbook {'crossref': 'vol1', 'title': 'Chapter Title', 'pages': '10--20'}
+    inproc1 inproceedings {'title': 'A Paper', 'crossref': 'proc1', 'pages': '1-9', 'langid': 'american', 'options': 'useprefix=true,skipbib=false'}
+        author {'first': ['Alice'], 'middle': [], 'prelast': [], 'last': ['Author'], 'lineage': []}
+    dates1 article {'title': 'Approximate Date', 'journaltitle': 'Journal of Dates', 'date': '2020-05~', 'urldate': '2021-03-04', 'eventdate': '2019/2020', 'origdate': '199X'}
+        author {'first': ['Carl'], 'middle': [], 'prelast': [], 'last': ['Circa'], 'lineage': []}

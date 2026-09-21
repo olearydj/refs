@@ -1,0 +1,18 @@
+[0] Config.pm:328> INFO - This is Biber 2.21 running in TOOL mode
+[0] Config.pm:331> INFO - Logfile is 'biblatex_resolved.blg'
+[23] biber-darwin:342> INFO - === Sun Sep 20, 2026, 21:28:45
+[32] Biber.pm:4674> INFO - Looking for bibtex file '../../fx/biblatex.bib'
+[32] bibtex.pm:1713> INFO - LaTeX decoding ...
+[35] bibtex.pm:1519> INFO - Found BibTeX data source '../../fx/biblatex.bib'
+[52] Biber.pm:1709> INFO - Datamodel validation starting
+[52] Biber.pm:1759> INFO - Datamodel validation complete
+[55] UCollate.pm:68> INFO - Overriding locale 'en_US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[55] UCollate.pm:68> INFO - Overriding locale 'en_US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[55] Biber.pm:4307> INFO - Sorting list 'tool/global//global/global/global' of type 'entry' with template 'tool' and locale 'en_US'
+[55] Biber.pm:4313> INFO - No sort tailoring available for locale 'en_US'
+[57] bibtex.pm:440> INFO - Writing 'biblatex_resolved.bib' with encoding 'UTF-8'
+[57] bibtex.pm:481> INFO - Output to biblatex_resolved.bib
+[57] Biber.pm:132> WARN - online entry 'onl1' (../../fx/biblatex.bib): Invalid format '2024-02-30' of date field 'urldate' - ignoring
+[57] Biber.pm:132> WARN - Datamodel: article entry 'dates1' (../../fx/biblatex.bib): Invalid field 'eventendyear' for entrytype 'article'
+[57] Biber.pm:132> WARN - Datamodel: article entry 'dates1' (../../fx/biblatex.bib): Invalid field 'eventyear' for entrytype 'article'
+[57] Biber.pm:134> INFO - WARNINGS: 3

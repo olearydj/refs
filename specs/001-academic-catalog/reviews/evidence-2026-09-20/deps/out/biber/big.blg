@@ -1,0 +1,12 @@
+[0] Config.pm:328> INFO - This is Biber 2.21 running in TOOL mode
+[0] Config.pm:331> INFO - Logfile is 'big.blg'
+[21] biber-darwin:342> INFO - === Sun Sep 20, 2026, 21:30:09
+[30] Biber.pm:4674> INFO - Looking for bibtex file '../../fx/big10000.bib'
+[103] bibtex.pm:1713> INFO - LaTeX decoding ...
+[3456] bibtex.pm:1519> INFO - Found BibTeX data source '../../fx/big10000.bib'
+[26158] UCollate.pm:68> INFO - Overriding locale 'en_US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[26159] UCollate.pm:68> INFO - Overriding locale 'en_US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[26159] Biber.pm:4307> INFO - Sorting list 'tool/global//global/global/global' of type 'entry' with template 'tool' and locale 'en_US'
+[26159] Biber.pm:4313> INFO - No sort tailoring available for locale 'en_US'
+[27847] bibtex.pm:440> INFO - Writing 'big.bib' with encoding 'UTF-8'
+[27965] bibtex.pm:481> INFO - Output to big.bib

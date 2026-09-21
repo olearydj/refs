@@ -1,0 +1,113 @@
+
+=== pub/2026-insight-dema-llm/references.bib
+ bytes=2430 enc=utf-8 entries=7 nonascii_chars=0 tex_escapes~=0
+ types: {'misc': 4, 'article': 2, 'phdthesis': 1}
+ fields: {'author': 7, 'title': 7, 'year': 7, 'howpublished': 4, 'url': 3, 'journal': 2, 'volume': 2, 'pages': 2, 'doi': 2, 'month': 2, 'school': 1, 'type': 1, 'address': 1, 'number': 1, 'note': 1, 'organization': 1}
+ month_macro=0 month_other=2 bare_macro_values=0 @string=0 @comment=0 @preamble=0 jabref-meta=False
+ crossref=0 xdata=0 related=0 ids=0 file=0 keywords=0 abstract=0 langid=0 language=0
+ corporate_double_brace_creator=0 title_with_inner_braces=4 title_fully_double_braced=1
+ key_nonalnum_chars={} keys_with_uppercase=0 dup_keys=0 case_insensitive_dup_keys=0
+ date_forms: {}
+ dialect_markers: biblatex-ish=0 (date=0 journaltitle=0 location=0) bibtex-ish=15 (year=7 journal=2 address=1 howpublished=4)
+
+=== pub/manufacturing-training-media-tradeoffs/references.bib
+ bytes=15757 enc=utf-8 entries=41 nonascii_chars=0 tex_escapes~=6
+ types: {'article': 25, 'inproceedings': 7, 'misc': 3, 'phdthesis': 2, 'book': 2, 'incollection': 2}
+ fields: {'title': 41, 'author': 41, 'year': 41, 'doi': 32, 'pages': 31, 'volume': 26, 'journal': 25, 'publisher': 11, 'number': 11, 'booktitle': 9, 'url': 5, 'isbn': 4, 'month': 4, 'editor': 3, 'howpublished': 3, 'urldate': 3, 'address': 3, 'school': 2, 'type': 2, 'issn': 1}
+ month_macro=4 month_other=0 bare_macro_values=0 @string=0 @comment=0 @preamble=0 jabref-meta=False
+ crossref=0 xdata=0 related=0 ids=0 file=0 keywords=0 abstract=0 langid=0 language=0
+ corporate_double_brace_creator=5 title_with_inner_braces=20 title_fully_double_braced=3
+ key_nonalnum_chars={'-': 2} keys_with_uppercase=0 dup_keys=0 case_insensitive_dup_keys=0
+ date_forms: {'urldate:DDDD-DD-DD': 3}
+ dialect_markers: biblatex-ish=3 (date=0 journaltitle=0 location=0) bibtex-ish=74 (year=41 journal=25 address=3 howpublished=3)
+
+=== pub/pipyer-paper/references.bib
+ bytes=4443 enc=utf-8 entries=11 nonascii_chars=1 tex_escapes~=0
+ types: {'article': 5, 'misc': 4, 'inproceedings': 2}
+ fields: {'author': 11, 'title': 11, 'year': 11, 'doi': 8, 'pages': 6, 'journal': 5, 'volume': 5, 'number': 5, 'howpublished': 4, 'url': 4, 'booktitle': 2, 'publisher': 1}
+ month_macro=0 month_other=0 bare_macro_values=0 @string=0 @comment=0 @preamble=0 jabref-meta=False
+ crossref=0 xdata=0 related=0 ids=0 file=0 keywords=0 abstract=0 langid=0 language=0
+ corporate_double_brace_creator=1 title_with_inner_braces=0 title_fully_double_braced=0
+ key_nonalnum_chars={} keys_with_uppercase=0 dup_keys=0 case_insensitive_dup_keys=0
+ date_forms: {}
+ dialect_markers: biblatex-ish=0 (date=0 journaltitle=0 location=0) bibtex-ish=20 (year=11 journal=5 address=0 howpublished=4)
+
+=== pub/dissertation/references.bib
+ bytes=405010 enc=utf-8 entries=292 nonascii_chars=18 tex_escapes~=66
+ types: {'article': 199, 'book': 31, 'inproceedings': 28, 'incollection': 19, 'misc': 8, 'phdthesis': 5, 'patent': 1, 'manual': 1}
+ fields: {'title': 292, 'author': 291, 'year': 287, 'file': 242, 'abstract': 224, 'journal': 199, 'pages': 192, 'doi': 190, 'volume': 186, 'number': 110, 'issn': 99, 'publisher': 76, 'keywords': 58, 'isbn': 52, 'booktitle': 40, 'month': 38, 'editor': 22, 'address': 21, 'urldate': 20, 'shorttitle': 18, 'langid': 12, 'series': 7, 'howpublished': 5, 'school': 5, 'copyright': 3, 'googlebooks': 3, 'edition': 2, 'pmcid': 1, 'pmid': 1, 'assignee': 1, 'annotation': 1, 'type': 1}
+ month_macro=38 month_other=0 bare_macro_values=0 @string=0 @comment=0 @preamble=0 jabref-meta=False
+ crossref=0 xdata=0 related=0 ids=0 file=242 keywords=58 abstract=224 langid=12 language=0
+ corporate_double_brace_creator=18 title_with_inner_braces=240 title_fully_double_braced=20
+ key_nonalnum_chars={'-': 10} keys_with_uppercase=2 dup_keys=0 case_insensitive_dup_keys=0
+ date_forms: {'urldate:DDDD-DD-DD': 16, 'urldate:DDDD-DD': 4}
+ dialect_markers: biblatex-ish=32 (date=0 journaltitle=0 location=0) bibtex-ish=517 (year=287 journal=199 address=21 howpublished=5)
+
+=== pub/2026-jose-danvas/references.bib
+ bytes=3936 enc=utf-8 entries=11 nonascii_chars=0 tex_escapes~=1
+ types: {'article': 6, 'online': 5}
+ fields: {'author': 11, 'title': 11, 'year': 11, 'journal': 6, 'volume': 6, 'number': 6, 'doi': 6, 'pages': 5, 'url': 5, 'urldate': 5}
+ month_macro=0 month_other=0 bare_macro_values=0 @string=0 @comment=0 @preamble=0 jabref-meta=False
+ crossref=0 xdata=0 related=0 ids=0 file=0 keywords=0 abstract=0 langid=0 language=0
+ corporate_double_brace_creator=5 title_with_inner_braces=7 title_fully_double_braced=7
+ key_nonalnum_chars={} keys_with_uppercase=0 dup_keys=0 case_insensitive_dup_keys=0
+ date_forms: {'urldate:DDDD-DD-DD': 5}
+ dialect_markers: biblatex-ish=5 (date=0 journaltitle=0 location=0) bibtex-ish=17 (year=11 journal=6 address=0 howpublished=0)
+
+=== pub/2026-jose-danvas/worktrees/danvas-jose/paper.bib
+ bytes=3936 enc=utf-8 entries=11 nonascii_chars=0 tex_escapes~=1
+ types: {'article': 6, 'online': 5}
+ fields: {'author': 11, 'title': 11, 'year': 11, 'journal': 6, 'volume': 6, 'number': 6, 'doi': 6, 'pages': 5, 'url': 5, 'urldate': 5}
+ month_macro=0 month_other=0 bare_macro_values=0 @string=0 @comment=0 @preamble=0 jabref-meta=False
+ crossref=0 xdata=0 related=0 ids=0 file=0 keywords=0 abstract=0 langid=0 language=0
+ corporate_double_brace_creator=5 title_with_inner_braces=7 title_fully_double_braced=7
+ key_nonalnum_chars={} keys_with_uppercase=0 dup_keys=0 case_insensitive_dup_keys=0
+ date_forms: {'urldate:DDDD-DD-DD': 5}
+ dialect_markers: biblatex-ish=5 (date=0 journaltitle=0 location=0) bibtex-ish=17 (year=11 journal=6 address=0 howpublished=0)
+
+=== pub/rejected/2026-ai4se-pipyer/proposal/references.bib
+ bytes=1395 enc=utf-8 entries=5 nonascii_chars=0 tex_escapes~=0
+ types: {'article': 3, 'misc': 1, 'phdthesis': 1}
+ fields: {'author': 5, 'title': 5, 'year': 5, 'journal': 3, 'howpublished': 1, 'note': 1, 'school': 1}
+ month_macro=0 month_other=0 bare_macro_values=0 @string=0 @comment=0 @preamble=0 jabref-meta=False
+ crossref=0 xdata=0 related=0 ids=0 file=0 keywords=0 abstract=0 langid=0 language=0
+ corporate_double_brace_creator=0 title_with_inner_braces=0 title_fully_double_braced=0
+ key_nonalnum_chars={} keys_with_uppercase=0 dup_keys=0 case_insensitive_dup_keys=0
+ date_forms: {}
+ dialect_markers: biblatex-ish=0 (date=0 journaltitle=0 location=0) bibtex-ish=10 (year=5 journal=3 address=0 howpublished=1)
+
+=== dev/near-earth-object-monitor/reports/references.bib
+ bytes=446 enc=utf-8 entries=2 nonascii_chars=0 tex_escapes~=0
+ types: {'misc': 2}
+ fields: {'author': 2, 'title': 2, 'url': 2, 'urldate': 2}
+ month_macro=0 month_other=0 bare_macro_values=0 @string=0 @comment=0 @preamble=0 jabref-meta=False
+ crossref=0 xdata=0 related=0 ids=0 file=0 keywords=0 abstract=0 langid=0 language=0
+ corporate_double_brace_creator=2 title_with_inner_braces=0 title_fully_double_braced=0
+ key_nonalnum_chars={'-': 2} keys_with_uppercase=0 dup_keys=0 case_insensitive_dup_keys=0
+ date_forms: {'urldate:DDDD-DD-DD': 2}
+ dialect_markers: biblatex-ish=2 (date=0 journaltitle=0 location=0) bibtex-ish=0 (year=0 journal=0 address=0 howpublished=0)
+
+=== dev/dema-llm/docs/references.bib
+ bytes=12326 enc=utf-8 entries=34 nonascii_chars=0 tex_escapes~=0
+ types: {'misc': 12, 'article': 10, 'inproceedings': 7, 'techreport': 3, 'phdthesis': 1, 'incollection': 1}
+ fields: {'title': 34, 'author': 34, 'year': 34, 'url': 15, 'pages': 14, 'journal': 10, 'note': 10, 'booktitle': 8, 'volume': 8, 'howpublished': 8, 'number': 6, 'doi': 5, 'publisher': 3, 'month': 3, 'institution': 3, 'type': 2, 'school': 1, 'address': 1, 'organization': 1}
+ month_macro=2 month_other=1 bare_macro_values=0 @string=0 @comment=0 @preamble=0 jabref-meta=False
+ crossref=0 xdata=0 related=0 ids=0 file=0 keywords=0 abstract=0 langid=0 language=0
+ corporate_double_brace_creator=7 title_with_inner_braces=7 title_fully_double_braced=3
+ key_nonalnum_chars={'-': 1} keys_with_uppercase=0 dup_keys=0 case_insensitive_dup_keys=0
+ date_forms: {}
+ dialect_markers: biblatex-ish=3 (date=0 journaltitle=0 location=0) bibtex-ish=54 (year=34 journal=10 address=1 howpublished=8)
+
+=== au/!Research/bib/zotero.bib
+ bytes=911417 enc=utf-8 entries=562 nonascii_chars=708 tex_escapes~=0
+ types: {'article': 244, 'book': 201, 'online': 42, 'inproceedings': 36, 'incollection': 20, 'thesis': 5, 'unpublished': 3, 'inbook': 3, 'standard': 2, 'misc': 2, 'report': 2, 'patent': 1, 'manual': 1}
+ fields: {'title': 562, 'author': 556, 'date': 550, 'file': 508, 'abstract': 453, 'publisher': 256, 'journaltitle': 241, 'doi': 240, 'shorttitle': 234, 'pages': 227, 'volume': 218, 'isbn': 215, 'langid': 212, 'keywords': 189, 'pagetotal': 169, 'eprint': 152, 'eprinttype': 152, 'issn': 143, 'number': 138, 'url': 122, 'urldate': 110, 'edition': 63, 'location': 50, 'booktitle': 28, 'eventtitle': 28, 'editor': 27, 'pubstate': 25, 'shortjournal': 22, 'eprintclass': 21, 'series': 15, 'entrysubtype': 11, 'type': 10, 'organization': 9, 'annotation': 7, 'institution': 6, 'year': 6, 'bookauthor': 3, 'editortype': 2, 'pmcid': 1, 'holder': 1, 'howpublished': 1, 'issue': 1, 'namea': 1, 'nameatype': 1}
+ month_macro=0 month_other=0 bare_macro_values=0 @string=0 @comment=0 @preamble=0 jabref-meta=False
+ crossref=0 xdata=0 related=0 ids=0 file=508 keywords=189 abstract=453 langid=212 language=0
+ corporate_double_brace_creator=10 title_with_inner_braces=502 title_fully_double_braced=36
+ key_nonalnum_chars={'-': 17, '_': 2, '.': 1} keys_with_uppercase=2 dup_keys=0 case_insensitive_dup_keys=0
+ date_forms: {'date:DDDD': 306, 'date:DDDD-DD-DD': 214, 'urldate:DDDD-DD-DD': 106, 'date:DDDD-DD': 15, 'date:DDDD-DD-DDTDD:DD:DDZ': 9, 'urldate:DDDD-DD': 4, 'date:DDDD-DD-DDTDD:DD:DD+DD:DD': 3, 'date:DDDD-DD-DD/DDDD-DD-DD': 2, 'date:DDDD-DD-DDTDD:DD:DD.DDDDDDD+DD:DD': 1}
+ dialect_markers: biblatex-ish=1321 (date=550 journaltitle=241 location=50) bibtex-ish=7 (year=6 journal=0 address=0 howpublished=1)
+
+=== AGGREGATE types: {'article': 500, 'book': 234, 'inproceedings': 80, 'online': 52, 'incollection': 42, 'misc': 36, 'phdthesis': 10, 'thesis': 5, 'techreport': 3, 'unpublished': 3, 'inbook': 3, 'patent': 2, 'manual': 2, 'standard': 2, 'report': 2}
+=== AGGREGATE fields: {'title': 976, 'author': 969, 'file': 750, 'abstract': 677, 'date': 550, 'doi': 489, 'pages': 482, 'volume': 457, 'year': 413, 'publisher': 347, 'number': 283, 'isbn': 271, 'journal': 256, 'shorttitle': 252, 'keywords': 247, 'issn': 243, 'journaltitle': 241, 'langid': 224, 'pagetotal': 169, 'url': 161, 'eprint': 152, 'eprinttype': 152, 'urldate': 145, 'booktitle': 87, 'edition': 65, 'editor': 52, 'location': 50, 'month': 47, 'eventtitle': 28, 'address': 26, 'howpublished': 26, 'pubstate': 25, 'series': 22, 'shortjournal': 22, 'eprintclass': 21, 'type': 16, 'note': 12, 'organization': 11, 'entrysubtype': 11, 'school': 10, 'institution': 9, 'annotation': 8, 'copyright': 3, 'googlebooks': 3, 'bookauthor': 3, 'pmcid': 2, 'editortype': 2, 'pmid': 1, 'assignee': 1, 'holder': 1, 'issue': 1, 'namea': 1, 'nameatype': 1}

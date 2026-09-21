@@ -1,0 +1,104 @@
+[
+  {
+    "author": [
+      {
+        "family": "Doe",
+        "given": "Jane"
+      }
+    ],
+    "collection-title": "Undefinedmacro",
+    "container-title": "Journal of Geophysical Research (Series A)",
+    "id": "macro1",
+    "issued": {
+      "date-parts": [
+        [
+          2020,
+          1
+        ]
+      ]
+    },
+    "note": "quoted Journal of Geophysical Research and braced",
+    "publisher": "Synthetic Press",
+    "title": "Macro concatenation",
+    "type": "article-journal",
+    "volume": "12"
+  },
+  {
+    "author": [
+      {
+        "family": "Smith",
+        "given": "John"
+      }
+    ],
+    "id": "CaseKey",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "title": "Upper case field names",
+    "type": "article-journal"
+  },
+  {
+    "id": "dupkey",
+    "issued": {
+      "date-parts": [
+        [
+          2001
+        ]
+      ]
+    },
+    "title": "First with this key",
+    "type": "article-journal"
+  },
+  {
+    "id": "dupkey",
+    "issued": {
+      "date-parts": [
+        [
+          2002
+        ]
+      ]
+    },
+    "title": "Second with this key",
+    "type": "article-journal"
+  },
+  {
+    "id": "DupKey",
+    "issued": {
+      "date-parts": [
+        [
+          2003
+        ]
+      ]
+    },
+    "title": "Case-variant of dupkey",
+    "type": "article-journal"
+  },
+  {
+    "id": "afterbroken",
+    "issued": {
+      "date-parts": [
+        [
+          2005
+        ]
+      ]
+    },
+    "title": "Entry after broken one",
+    "type": "article-journal"
+  },
+  {
+    "id": "last_ok",
+    "issued": {
+      "date-parts": [
+        [
+          2008
+        ]
+      ]
+    },
+    "title": "Last entry OK",
+    "type": "book"
+  }
+]

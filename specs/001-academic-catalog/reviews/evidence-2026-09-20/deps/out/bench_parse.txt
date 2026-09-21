@@ -1,0 +1,5 @@
+bibtexparser v2 default stack N=10000: 0.29s entries=10000 failed=0
+  + names: 0.39s
+  + latex decode: 8.18s
+real 4.30
+real 28.49

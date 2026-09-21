@@ -1,0 +1,8 @@
+[project]
+name = "clibench"
+version = "0"
+requires-python = ">=3.14,<3.15"
+dependencies = ["typer>=0.27,<0.28", "pydantic>=2.13,<3", "click>=8", "bibtexparser==2.0.1", "Unidecode==1.4.0", "anyascii", "text-unidecode"]
+[tool.uv]
+exclude-newer = "3 days"
+package = false

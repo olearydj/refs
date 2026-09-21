@@ -1,0 +1,12 @@
+[WARNING] Citeproc: citation Smith-2024-TuringTrap not found
+[WARNING] Citeproc: citation o not found
+[WARNING] Citeproc: citation roe-2017-end not found
+1 camel (Smith 2024). 2 lower twin (Smith 2023). 3 wrongcase (Smith-2024-TuringTrap?). 4 punct bare (Doe 2020). 5 apostrophe bare (o?’brien-2019-title). 6 apostrophe braced (O’Brien 2019). 7 unicode (Müller 2018). 8 trailing dot bare (roe-2017-end?). and braced (Roe 2017). 9 digit (Poe 2016). 11 underscore dot (Moe 2014). 12 possessive Smith (2024)’s claim.
+Doe, Dee. 2020. Colon Slash Plus Key.
+Moe, Mia. 2014. Underscore Dot Key.
+Müller, Jörg. 2018. Unicode Key.
+O’Brien, Pat. 2019. Apostrophe Key.
+Poe, Pam. 2016. Digit First Key.
+Roe, Rae. 2017. Trailing Dot Key.
+Smith, Sam. 2023. Lowercase Twin Key.
+Smith, Sam. 2024. Camel Hyphen Key.

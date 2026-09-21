@@ -1,0 +1,22 @@
+[d-approx-month]  ->  issued=2020-5 circa=True
+[d-uncertain]  ->  issued=2020
+[d-uncertain-approx]  ->  issued=2020
+[d-range-years]  ->  issued=2019/2020
+[d-open-range]  ->  issued=2019/0
+[d-open-range-dots]  ->  
+[d-decade]  ->  
+[d-century]  ->  
+[d-season]  ->  issued=2021-21
+[d-season-winter]  ->  issued=2021-24
+[d-circa-text]  ->  
+[d-negative]  ->  issued=-351
+[d-origdate]  ->  issued=2003 | original-date=1859-11-24 | original-publisher=Old Press | original-publisher-place=London
+[d-legacy-month]  ->  issued=2020-1
+[d-legacy-month-braced]  ->  issued=2020
+[d-legacy-month-num]  ->  issued=2020-3-9
+[d-year-text]  ->  issued=
+[d-year-forthcoming]  ->  status=forthcoming
+[d-both]  ->  issued=2021-6
+[d-datetime]  ->  issued=2020-5-6
+[d-nodate]  ->  
+[d-urldate-month]  ->  URL=https://example.org | accessed=2026-9

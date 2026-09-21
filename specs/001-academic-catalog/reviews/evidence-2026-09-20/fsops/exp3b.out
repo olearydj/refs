@@ -1,0 +1,12 @@
+DELETE files after clean close: ['catalog.sqlite', 'lock']
+  plain connect + select             -> [('smith-2024',)]
+  uri mode=ro + select               -> [('smith-2024',)]
+  uri immutable=1 + select           -> [('smith-2024',)]
+  begin immediate (write)            -> []
+  flock on read-only lock file       -> flock LOCK_EX ok on O_RDONLY fd
+WAL files after clean close: ['catalog.sqlite', 'lock']
+  plain connect + select             -> OperationalError: attempt to write a readonly database
+  uri mode=ro + select               -> OperationalError: attempt to write a readonly database
+  uri immutable=1 + select           -> [('smith-2024',)]
+  begin immediate (write)            -> OperationalError: attempt to write a readonly database
+  flock on read-only lock file       -> flock LOCK_EX ok on O_RDONLY fd

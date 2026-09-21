@@ -1,0 +1,4 @@
+7777de6adb166d92b4c9ee4b24054637ab8477b7
+BibLaTeX inbook should be CSL book, not chapter.
+
+Closes #11552.

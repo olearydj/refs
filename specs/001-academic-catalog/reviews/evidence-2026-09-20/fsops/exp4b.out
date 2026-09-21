@@ -1,0 +1,6 @@
+DELETE after kill: ['catalog.sqlite', 'catalog.sqlite-journal']
+  mode=ro    -> OperationalError: attempt to write a readonly database
+  read-write -> ok (5000, 2500000)
+WAL after kill: ['catalog.sqlite', 'catalog.sqlite-shm', 'catalog.sqlite-wal']
+  mode=ro    -> ok (5000, 2500000)
+  read-write -> ok (5000, 2500000)

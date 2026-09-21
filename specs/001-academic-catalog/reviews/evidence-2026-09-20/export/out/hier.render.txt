@@ -1,0 +1,30 @@
+##### apa
+Alpha, A. (n.d.). Orphan chapter.
+Alpha, A. (2013b). Book using xref.
+Alpha, A. (2015–2019). The multivolume main title (Vols. 1–5). First Press.
+Alpha, A. (2019a). The chapter title. In B. Bookman, The multivolume main title: A main subtitle: Vol. 3. The volume title (pp. 10–20). First Press; Second Press.
+Alpha, A. (2019b). The chapter title. In E. Edison (Ed.), The multivolume main title: Vol. 3. The volume title (pp. 10–20). First Press.
+Alpha, A. (2019c). The multivolume main title: 3.2. The volume title. First Press.
+Childs, C. (2014). Child in volume. In P. Parent, Grand multivolume title: Vol. 2. Volume two title. MV Press.
+Parent, P. (2014a). Grand multivolume title. MV Press.
+Parent, P. (2014b). Grand multivolume title: Vol. 2. Volume two title (By P. Parent). MV Press.
+##### chicago-author-date
+Alpha, Ann. 2013b. Book Using Xref.
+Alpha, Ann. 2015–2019. The Multivolume Main Title. 5 vols. First Press.
+Alpha, Ann. 2019a. “The Chapter Title.” In The Volume Title, by Bob Bookman, vol. 3 of The Multivolume Main Title: A Main Subtitle. Edited by Ed Edison. First Press; Second Press.
+Alpha, Ann. 2019b. “The Chapter Title.” In The Volume Title, edited by Ed Edison, vol. 3 of The Multivolume Main Title. Synthetic Series 7. First Press.
+Alpha, Ann. 2019c. The Volume Title. 3.2 of The Multivolume Main Title. First Press.
+Alpha, Ann. n.d. Orphan Chapter.
+Childs, Cy. 2014. “Child in Volume.” In Volume Two Title, by Pat Parent, vol. 2 of Grand Multivolume Title. MV Press.
+Parent, Pat. 2014a. Grand Multivolume Title. MV Press.
+Parent, Pat. 2014b. Volume Two Title. By Pat Parent. Vol. 2 of Grand Multivolume Title. MV Press.
+##### ieee
+[1] A. Alpha, “The chapter title,” in The multivolume main title: A main subtitle, vol. 3, E. Edison, Ed., Boston; New York: First Press; Second Press, 2019, pp. 10–20.
+[2] A. Alpha, “The chapter title,” in The multivolume main title, vol. 3, E. Edison, Ed., in Synthetic series, no. 7, vol. 3., Boston: First Press, 2019, pp. 10–20.
+[3] A. Alpha, The multivolume main title, vol. 3.2, 5 vols. Boston: First Press, 2019.
+[4] A. Alpha, The multivolume main title, 5 vols. First Press, 2015–2019.
+[11] C. Childs, “Child in volume,” in Grand multivolume title, vol. 2, MV Press, 2014.
+[12] P. Parent, Grand multivolume title, vol. 2. MV Press, 2014.
+[13] P. Parent, Grand multivolume title. MV Press, 2014.
+[15] A. Alpha, Book using xref. 2013.
+[16] A. Alpha, “Orphan chapter.”

@@ -1,0 +1,138 @@
+################ apa
+== r-software
+  bib    Coder, C. (2023). Synthtool (Version 2.4.1) [Computer software]. Synthetic Labs. https://example.org/synthtool 
+  bibtex Coder, C. (2023). Synthtool. Computer software, version 2.4.1, Synthetic Labs. https://example.org/synthtool 
+  json   Coder, C. (2023). synthtool (Version 2.4.1) [Computer software]. Synthetic Labs. https://example.org/synthtool 
+== r-dataset
+  bib    Data, D. (2022). Synthetic measurements of Alabama rivers (Version 3) [Dataset]. Synthetic Repository. https://doi.org/10.0000/data.3 
+  bibtex Data, D. (2022). Synthetic measurements of Alabama rivers. Dataset, version 3, Synthetic Repository. https://doi.org/10.0000/data.3 
+  json   Data, D. (2022). Synthetic measurements of Alabama rivers (Version 3) [Dataset]. Synthetic Repository. https://doi.org/10.0000/data.3 
+== r-podcast
+  bib    Host, H. (2019, April 5). The synthetic podcast: Episode 12: The synthetic interview (No. 12) [Audio recording]. Synthetic Audio Network. https://example.org/pod/12 
+  bibtex Host, H. (2019). Episode 12: The synthetic interview. The Synthetic Podcast, no. 12, Synthetic Audio Network. https://example.org/pod/12 
+  json   Host, H. (2019, April 5). The synthetic interview (Audio Podcast Episode No. 12). In The Synthetic Podcast. Synthetic Audio Network. https://example.org/pod/12 
+== r-film
+  bib    Director, D. (Director). (2010). A synthetic film [Video recording]. Synthetic Studios. 
+  bibtex Director, D. (2010). A synthetic film. Film, Synthetic Studios. 
+  json   Director, D. (Director). (2010). A synthetic film [Video recording]. Synthetic Studios. 
+== r-letter
+  bib    [WARNING] Citeproc: Bibliography entry with no printed form: r-letter 
+  bibtex Writer, W. (1999). Letter to rae roe. 
+  json   [WARNING] Citeproc: Bibliography entry with no printed form: r-letter 
+== r-talk
+  bib    Speaker, S. (2022, June 1). A talk without proceedings. Conference presentation. Synthetic conference, Springfield, June 1, 2022. 
+  bibtex Speaker, S. (2022). A talk without proceedings. Conference presentation, Synthetic Conference, Springfield. 
+  json   Speaker, S. (2022, June 1). A talk without proceedings [Conference presentation]. Synthetic Conference, Springfield. 
+== r-particle
+  bib    van Gogh, V., & Beethoven, L. van. (2020). Particles in practice. Synthetic Press. 
+  bibtex Gogh, V. van, & Beethoven, L. van. (2020). Particles in practice. Synthetic Press. 
+  json   van Gogh, V., & Beethoven, L. van. (2020). Particles in practice. Synthetic Press. 
+== r-title
+  bib    Alpha, A. (2020). A history of Alabama and the American south after Darwin: Measuring pH with Python. Journal of Synthetic Tests, 1, 1–2. 
+  bibtex Alpha, A. (2020). A history of Alabama and the American south after Darwin: Measuring pH with Python. Journal of Synthetic Tests, 1, 1–2. 
+  json   Alpha, A. (2020). A history of Alabama and the American South after Darwin: Measuring pH with Python. Journal of Synthetic Tests, 1, 1–2. 
+== r-origdate
+  bib    Darwin, C. (2003). On the origin of synthetic species. Reprint Press. (Original work published 1859, Old Press) 
+  bibtex Darwin, C. (2003). On the origin of synthetic species. Reprint Press. 
+  json   Darwin, C. (2003). On the origin of synthetic species. Reprint Press. (Original work published 1859, Old Press) 
+== r-bookauthor
+  bib    Foreword, F. (2019). Introduction. In B. Bookman, The collected works (pp. 1–9). Synthetic Press. 
+  bibtex Foreword, F. (2019). Introduction. In The collected works (pp. 1–9). Synthetic Press. 
+  json   Foreword, F. (2019). Introduction. In B. Bookman, The collected works (pp. 1–9). Synthetic Press. 
+== r-season
+  bib    Alpha, A. (2021, Spring). A seasonal issue article. Synthetic Quarterly. 
+  bibtex Alpha, A. (2021). A seasonal issue article. Synthetic Quarterly. 
+  json   Alpha, A. (2021, Spring). A seasonal issue article. Synthetic Quarterly. 
+== r-circa
+  bib    Alpha, A. (ca. 1850). An approximately dated book. Synthetic Press. 
+  bibtex Alpha, A. (c. 1850). An approximately dated book. Synthetic Press. 
+  json   Alpha, A. (ca. 1850). An approximately dated book. Synthetic Press. 
+== r-multivol
+  bib    Alpha, A. (2019). The multivolume main title: Vol. 3. The volume title. First Press; Second Press. 
+  bibtex Alpha, A. (2019). The volume title (Vol. 3). First Press and Second Press. 
+  json   Alpha, A. (2019). The multivolume main title: Vol. 3. The volume title. First Press; Second Press. 
+== r-eid
+  bib    Alpha, A. (2020). An article numbered not paged. Journal of Synthetic Tests, 12(3). https://doi.org/10.0000/eid.1 
+  bibtex Alpha, A. (2020). An article numbered not paged. Journal of Synthetic Tests, 12(3), e0123456. https://doi.org/10.0000/eid.1 
+  json   Alpha, A. (2020). An article numbered not paged. Journal of Synthetic Tests, 12(3), Article e0123456. https://doi.org/10.0000/eid.1 
+== r-standard
+  bib    Standard for Synthetic Things, Pub. L. Nos. SSB 1234-2020 (2020). 
+  bibtex Synthetic Standards Body. (2020). Standard for synthetic things. SSB 1234-2020. 
+  json   Synthetic Standards Body. (2020). Standard for synthetic things (SSB 1234-2020). Synthetic Standards Body. 
+== r-preprint
+  bib    Pre, P. (2024). A synthetic preprint (Version 2). arXiv. https://arxiv.org/abs/2401.00001 
+  bibtex Pre, P. (2024). A synthetic preprint [Unpublished manuscript]. 
+  json   Pre, P. (2024). A synthetic preprint (arXiv:2401.00001; Version 2). arXiv. https://arxiv.org/abs/2401.00001 (Prepublished) 
+== r-patent
+  bib    Inventor, I. (2015). Method for synthetic testing (U.S. patent Nos. US 1234567 B2). 
+  bibtex Inventor, I. (2015). Method for synthetic testing. U.S. Patent US 1234567 B2, Synthetic Holdings and Sons, Inc. 
+  json   Inventor, I. (2015). Method for synthetic testing (U.S. Patent and Trademark Office Patent Nos. US 1234567 B2). Synthetic Holdings and Sons, Inc. 
+################ chicago-author-date
+== r-software
+  bib    Coder, Cody. 2023. Synthtool. V. 2.4.1. Synthetic Labs, released March 1. https://example.org/synthtool. 
+  bibtex Coder, Cody. 2023. Synthtool. Computer software, version 2.4.1, Synthetic Labs. https://example.org/synthtool. 
+  json   Coder, Cody. 2023. Synthtool. V. 2.4.1. Synthetic Labs, released March 1. https://example.org/synthtool. 
+== r-dataset
+  bib    Data, Dee. 2022. “Synthetic Measurements of Alabama Rivers.” Version 3. Synthetic Repository. https://doi.org/10.0000/data.3. 
+  bibtex Data, Dee. 2022. Synthetic Measurements of Alabama Rivers. Dataset, version 3, Synthetic Repository. https://doi.org/10.0000/data.3. 
+  json   Data, Dee. 2022. “Synthetic Measurements of Alabama Rivers.” Version 3. Synthetic Repository. https://doi.org/10.0000/data.3. 
+== r-podcast
+  bib    Host, Hal. 2019. Episode 12: The Synthetic Interview. The Synthetic Podcast. Synthetic Audio Network 12, April 5. https://example.org/pod/12. 
+  bibtex Host, Hal. 2019. Episode 12: The Synthetic Interview. The Synthetic Podcast, no. 12, Synthetic Audio Network. https://example.org/pod/12. 
+  json   Host, Hal. 2019. The Synthetic Podcast. Audio podcast episode 12, “The Synthetic Interview,” hosted by Hal Host. Synthetic Audio Network, April 5. https://example.org/pod/12. 
+== r-film
+  bib    Director, Dot, dir. 2010. A Synthetic Film. Synthetic Studios. 
+  bibtex Director, Dot. 2010. A Synthetic Film. Film, Synthetic Studios. 
+  json   Director, Dot, dir. 2010. A Synthetic Film. Synthetic Studios. 
+== r-letter
+  bib    [WARNING] Citeproc: Bibliography entry with no printed form: r-letter 
+  bibtex Writer, Wes. 1999. Letter to Rae Roe. 
+  json   [WARNING] Citeproc: Bibliography entry with no printed form: r-letter 
+== r-talk
+  bib    Speaker, Sam. 2022. “A Talk Without Proceedings.” Synthetic conference, June 1, 2022, Springfield. Conference presentation, June 1. 
+  bibtex Speaker, Sam. 2022. A Talk Without Proceedings. Conference presentation, Synthetic Conference, Springfield. 
+  json   Speaker, Sam. 2022. “A Talk Without Proceedings.” Conference presentation. Synthetic Conference, Springfield, June 1. 
+== r-particle
+  bib    Gogh, Vincent van, and Ludwig van Beethoven. 2020. Particles in Practice. Synthetic Press. 
+  bibtex Gogh, Vincent van, and Ludwig van Beethoven. 2020. Particles in Practice. Synthetic Press. 
+  json   Gogh, Vincent van, and Ludwig van Beethoven. 2020. Particles in Practice. Synthetic Press. 
+== r-title
+  bib    Alpha, Ann. 2020. “A History of Alabama and the American South After Darwin: Measuring pH with Python.” Journal of Synthetic Tests 1: 1–2. 
+  bibtex Alpha, Ann. 2020. “A History of Alabama and the American South After Darwin: Measuring pH with Python.” Journal of Synthetic Tests 1: 1–2. 
+  json   Alpha, Ann. 2020. “A History of Alabama and the American South After Darwin: Measuring pH with Python.” Journal of Synthetic Tests 1: 1–2. 
+== r-origdate
+  bib    Darwin, Carl. (1859) 2003. On the Origin of Synthetic Species. Old Press. Reprint, Reprint Press. 
+  bibtex Darwin, Carl. 2003. On the Origin of Synthetic Species. Reprint Press. 
+  json   Darwin, Carl. (1859) 2003. On the Origin of Synthetic Species. Old Press. Reprint, Reprint Press. 
+== r-bookauthor
+  bib    Foreword, Flo. 2019. “Introduction.” In The Collected Works, by Bob Bookman. Synthetic Press. 
+  bibtex Foreword, Flo. 2019. “Introduction.” In The Collected Works. Synthetic Press. 
+  json   Foreword, Flo. 2019. “Introduction.” In The Collected Works, by Bob Bookman. Synthetic Press. 
+== r-season
+  bib    Alpha, Ann. 2021. “A Seasonal Issue Article.” Synthetic Quarterly, Spring. 
+  bibtex Alpha, Ann. 2021. “A Seasonal Issue Article.” Synthetic Quarterly. 
+  json   Alpha, Ann. 2021. “A Seasonal Issue Article.” Synthetic Quarterly, Spring. 
+== r-circa
+  bib    Alpha, Ann. [1850?]. An Approximately Dated Book. Synthetic Press. 
+  bibtex Alpha, Ann. c. 1850. An Approximately Dated Book. Synthetic Press. 
+  json   Alpha, Ann. [1850?]. An Approximately Dated Book. Synthetic Press. 
+== r-multivol
+  bib    Alpha, Ann. 2019. The Volume Title. Vol. 3 of The Multivolume Main Title. First Press; Second Press. 
+  bibtex Alpha, Ann. 2019. The Volume Title. Vol. 3. The Multivolume Main Title. First Press and Second Press. 
+  json   Alpha, Ann. 2019. The Volume Title. Vol. 3 of The Multivolume Main Title. First Press; Second Press. 
+== r-eid
+  bib    Alpha, Ann. 2020. “An Article Numbered Not Paged.” Journal of Synthetic Tests 12 (3). https://doi.org/10.0000/eid.1. 
+  bibtex Alpha, Ann. 2020. “An Article Numbered Not Paged.” Journal of Synthetic Tests 12 (3): e0123456. https://doi.org/10.0000/eid.1. 
+  json   Alpha, Ann. 2020. “An Article Numbered Not Paged.” Journal of Synthetic Tests 12 (3): e0123456. https://doi.org/10.0000/eid.1. 
+== r-standard
+  bib    Standard for Synthetic Things, Pub. L. Nos. SSB 1234-2020 (2020). 
+  bibtex Synthetic Standards Body. 2020. Standard for Synthetic Things. SSB 1234-2020. 
+  json   Synthetic Standards Body. 2020. Standard for Synthetic Things. SSB 1234-2020. Synthetic Standards Body. 
+== r-preprint
+  bib    Pre, Pia. 2024. “A Synthetic Preprint.” Version 2. arXiv, pre-published January 1. https://arxiv.org/abs/2401.00001. 
+  bibtex Pre, Pia. 2024. “A Synthetic Preprint.” Unpublished manuscript. January. 
+  json   Pre, Pia. 2024. “A Synthetic Preprint.” arXiv:2401.00001. Version 2. Preprint, arXiv, prepublished January 1. https://arxiv.org/abs/2401.00001. 
+== r-patent
+  bib    Inventor, Ivy. 2015. Method for synthetic testing. U.S. patent US 1234567 B2, issued April 7, 2015. 
+  bibtex Inventor, Ivy. 2015. Method for Synthetic Testing. U.S. Patent US 1234567 B2, Synthetic Holdings and Sons, Inc. 
+  json   Inventor, Ivy. 2015. Method for synthetic testing. U.S. Patent and Trademark Office Patent US 1234567 B2, issued April 7, 2015. 

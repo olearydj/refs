@@ -1,0 +1,17 @@
+python -c pass                       first=   12.2ms  median=  11.1ms  min=  10.7ms  max=  13.7ms
+python -S -c pass                    first=    8.0ms  median=   7.9ms  min=   7.6ms  max=   8.7ms
+app_argparse show k                  first=   22.2ms  median=  22.5ms  min=  22.0ms  max=  23.3ms
+app_click show k                     first=   45.8ms  median=  22.9ms  min=  22.3ms  max=  24.2ms
+app_typer show k                     first=   61.5ms  median=  31.8ms  min=  31.2ms  max=  32.7ms
+app_typer_norich show k              first=   31.5ms  median=  32.0ms  min=  31.4ms  max=  34.9ms
+app_typer_pyd show k                 first=  138.8ms  median=  62.5ms  min=  61.2ms  max=  65.4ms
+app_argparse --help                  first=   23.5ms  median=  22.6ms  min=  22.2ms  max=  24.1ms
+app_click --help                     first=   26.8ms  median=  24.9ms  min=  24.4ms  max=  26.9ms
+app_typer --help                     first=  161.2ms  median=  61.4ms  min=  60.9ms  max=  65.8ms
+app_typer_norich --help              first=   32.3ms  median=  32.1ms  min=  31.2ms  max=  32.4ms
+import pydantic                      first=   27.9ms  median=  27.6ms  min=  26.8ms  max=  29.7ms
+import pydantic + define 1 model     first=   54.2ms  median=  52.9ms  min=  52.1ms  max=  54.0ms
+import sqlite3                       first=   12.4ms  median=  11.7ms  min=  11.3ms  max=  12.2ms
+import bibtexparser                  first=   52.5ms  median=  27.7ms  min=  26.9ms  max=  28.3ms
+import unidecode                     first=   14.7ms  median=  12.6ms  min=  12.0ms  max=  13.3ms
+import rich.console                  first=   26.3ms  median=  26.2ms  min=  25.6ms  max=  26.7ms

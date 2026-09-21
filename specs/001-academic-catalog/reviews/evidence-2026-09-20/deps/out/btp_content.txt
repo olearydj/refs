@@ -1,0 +1,62 @@
+Parsing of `@article` block (line 52) aborted on line 56 due to syntactical error in bibtex:
+ Unexpected block start: `@article`. Was still looking for field-value closing `}` 
+Parsing of `@article` block (line 61) aborted on line 62 due to syntactical error in bibtex:
+ Expected comma after entry key, but found =
+NormalizeFieldKeys: in entry 'CaseKey': duplicate normalized key 'year' (original 'year'); overriding previous value
+##### default stack
+ENTRY article prot1 line 0
+   author = 'M{\\"u}ller, J{\\"o}rg and Erd\\H{o}s, P\\\'al and {\\O}stergaard, S{\\o}ren'
+   title = 'The {NASA} Mission to {{M}ars}: A {\\"o} and \\"{o} and {\\"O}ber Study of $\\alpha$-decay \\& 50\\% Growth in {$\\mathrm{CO}_2$}'
+   journal = '"Journal with ""quotes"" {and} \\textit{italics}"'
+   year = '2021'
+   url = 'https://example.org/a_b%20c#frag?x=1&y=2~z'
+   doi = '10.1000/abc_def(2021)1%2F2'
+   file = ':papers/prot1.pdf:PDF;Supp:papers/prot1\\_supp.pdf:application/pdf'
+   note = 'Nested {braces {three {deep}}} and an unbalanced-looking \\{ escaped \\} pair'
+ENTRY article zotfile line 11
+   author = 'Doe, Jane'
+   title = 'Zotero Style File Field'
+   year = '2022'
+   file = 'Full Text PDF:/Users/example/Zotero/storage/ABCD1234/Doe - 2022 - Title; with semicolon.pdf:application/pdf;Snapshot:/Users/example/Zotero/storage/EFGH5678/index.html:text/html'
+   abstract = 'Line one.\n\nLine three after blank line, with   multiple   spaces.'
+ENTRY inproceedings names1 line 21
+   author = "van der Berg, Johannes and de la Fontaine, Jr., Jean and King, Jr, Martin Luther and {World Health Organization} and {Barnes and Noble, Inc.} and Ludwig van Beethoven and Charles Louis Xavier Joseph de la Vall{\\'e}e Poussin and others"
+   editor = 'family=von Neumann, given=John, prefix=von, useprefix=true and family={Smith Jones}, given=Anne, given-i=A'
+   title = 'Name Parsing'
+   booktitle = 'Proceedings'
+   year = '2020'
+raw is exact substring of source: prot1 True
+raw is exact substring of source: zotfile True
+raw is exact substring of source: names1 True
+##### + LatexDecodingMiddleware
+ENTRY article prot1 line 0
+   author = 'Müller, Jörg and Erdős, Pál and Østergaard, Søren'
+   title = 'The NASA Mission to Mars: A ö and ö and Öber Study of $\\alpha$-decay & 50% Growth in $\\mathrm{CO}_2$'
+   journal = '"Journal with ""quotes"" and italics"'
+   url = 'https://example.org/a_b'
+   doi = '10.1000/abc_def(2021)1'
+   file = ':papers/prot1.pdf:PDF;Supp:papers/prot1_supp.pdf:application/pdf'
+   note = 'Nested braces three deep and an unbalanced-looking { escaped } pair'
+ENTRY article zotfile line 11
+   author = 'Doe, Jane'
+   title = 'Zotero Style File Field'
+   file = 'Full Text PDF:/Users/example/Zotero/storage/ABCD1234/Doe - 2022 - Title; with semicolon.pdf:application/pdf;Snapshot:/Users/example/Zotero/storage/EFGH5678/index.html:text/html'
+ENTRY inproceedings names1 line 21
+   author = 'van der Berg, Johannes and de la Fontaine, Jr., Jean and King, Jr, Martin Luther and World Health Organization and Barnes and Noble, Inc. and Ludwig van Beethoven and Charles Louis Xavier Joseph de la Vallée Poussin and others'
+   editor = 'family=von Neumann, given=John, prefix=von, useprefix=true and family=Smith Jones, given=Anne, given-i=A'
+   title = 'Name Parsing'
+##### + SeparateCoAuthors + SplitNameParts (no latex decode)
+prot1 author
+     {'first': ['J{\\"o}rg'], 'von': [], 'last': ['M{\\"u}ller'], 'jr': []}
+     {'first': ["P\\'al"], 'von': [], 'last': ['Erd\\H{o}s'], 'jr': []}
+     {'first': ['S{\\o}ren'], 'von': [], 'last': ['{\\O}stergaard'], 'jr': []}
+zotfile author
+     {'first': ['Jane'], 'von': [], 'last': ['Doe'], 'jr': []}
+FAILED MiddlewareErrorBlock Cannot split the following name `family=von Neumann, given=John, prefix=von, useprefix=true` into parts: Too many commas '@inproceedings{names1,\n  author = {van der Berg, Johannes an'
+warnings: []
+##### + MonthIntMiddleware / NormalizeFieldKeys on syntax fixture
+macro1 [('author', 'Doe, Jane'), ('title', 'Macro Concatenation'), ('journal', 'jgr # sfx'), ('publisher', 'Synthetic Press'), ('month', 1), ('year', '2020'), ('volume', '12'), ('note', '"quoted " # jgr # { and braced}'), ('series', 'undefinedmacro')]
+CaseKey [('author', 'Smith, John'), ('title', 'Upper Case Field Names'), ('year', '2018')]
+FAILED DuplicateBlockKeyBlock Duplicate entry key 'dupkey' line 42
+FAILED ParsingFailedBlock  line 52
+FAILED ParsingFailedBlock  line 61

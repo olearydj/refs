@@ -1,0 +1,8 @@
+fsync        n=100 median=0.032 ms p95=0.044 ms total=3.3 ms
+F_FULLFSYNC  n=100 median=4.541 ms p95=6.450 ms total=477.4 ms
+dir fsync: ok
+dir F_FULLFSYNC: ok
+sqlite journal=DELETE synchronous=FULL fullfsync=0: 200 commits 50 ms (0.25 ms/commit)
+sqlite journal=DELETE synchronous=FULL fullfsync=1: 200 commits 2992 ms (14.96 ms/commit)
+sqlite journal=WAL    synchronous=FULL fullfsync=0: 200 commits 20 ms (0.10 ms/commit)
+sqlite journal=WAL    synchronous=FULL fullfsync=1: 200 commits 895 ms (4.47 ms/commit)

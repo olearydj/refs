@@ -1,0 +1,6 @@
+   Building bibtexparser==1.4.4
+      Built bibtexparser==1.4.4
+Installed 2 packages in 1ms
+v 1.4.4
+fx/syntax.bib EXC UndefinedString 'undefinedmacro'
+fx/content.bib entries: ['zotfile', 'names1'] comments: 1 preambles: [] strings: 12

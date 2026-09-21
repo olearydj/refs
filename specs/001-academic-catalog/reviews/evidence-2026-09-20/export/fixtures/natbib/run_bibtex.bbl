@@ -1,0 +1,33 @@
+\begin{thebibliography}{1}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \def\href#1#2{#2} \def\path#1{#1}\fi
+
+\bibitem{nb-article}
+A.~Alpha, V.~van Gogh, A history of {Alabama} rivers, Journal of Synthetic
+  Tests 12~(3) (2020) e0123456.
+\newblock \href {https://doi.org/10.0000/eid.1} {\path{doi:10.0000/eid.1}}.
+
+\bibitem{nb-online}
+{Synthetic Org}, A synthetic web page, \url{https://example.org/page}, accessed
+  2026-09-01 (2024).
+
+\bibitem{nb-thesis}
+D.~Doc, A synthetic dissertation, Ph.D. thesis, Synthetic University, Auburn,
+  AL (2021).
+
+\bibitem{nb-report}
+{Synthetic Agency}, Annual synthetic report, Tech. Rep. SA-TR-42, Synthetic
+  Agency (2022).
+
+\bibitem{nb-software}
+C.~Coder, \href{https://example.org/synthtool}{{synthtool}}, Computer software,
+  version 2.4.1 (2023).
+\newline\urlprefix\url{https://example.org/synthtool}
+
+\bibitem{nb-book}
+J.~M{\"u}ller, Ein Buch, Synthetic Press, Boston, 2019.
+
+\end{thebibliography}

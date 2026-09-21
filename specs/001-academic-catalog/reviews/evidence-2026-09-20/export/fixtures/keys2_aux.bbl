@@ -1,0 +1,31 @@
+\begin{thebibliography}{1}
+
+\bibitem{doe:2020/web+x}
+Dee Doe.
+\newblock {\em Colon Slash Plus Key}.
+
+\bibitem{a_b-c.d}
+Mia Moe.
+\newblock {\em Underscore Dot Key}.
+
+\bibitem{müller-2018-über}
+Jörg Müller.
+\newblock {\em Unicode Key}.
+
+\bibitem{o'brien-2019-title}
+Pat O'Brien.
+\newblock {\em Apostrophe Key}.
+
+\bibitem{2016-digits-first}
+Pam Poe.
+\newblock {\em Digit First Key}.
+
+\bibitem{roe-2017-end.}
+Rae Roe.
+\newblock {\em Trailing Dot Key}.
+
+\bibitem{smith-2024-turingTrap}
+Sam Smith.
+\newblock {\em Camel Hyphen Key}.
+
+\end{thebibliography}

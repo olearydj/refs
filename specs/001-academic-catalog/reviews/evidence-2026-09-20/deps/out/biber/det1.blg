@@ -1,0 +1,14 @@
+[0] Config.pm:328> INFO - This is Biber 2.21 running in TOOL mode
+[0] Config.pm:331> INFO - Logfile is 'det1.blg'
+[21] biber-darwin:342> INFO - === Sun Sep 20, 2026, 21:35:19
+[30] Biber.pm:4674> INFO - Looking for bibtex file '../../fx/biblatex.bib'
+[31] bibtex.pm:1713> INFO - LaTeX decoding ...
+[34] bibtex.pm:1519> INFO - Found BibTeX data source '../../fx/biblatex.bib'
+[53] UCollate.pm:68> INFO - Overriding locale 'en_US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[53] UCollate.pm:68> INFO - Overriding locale 'en_US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[53] Biber.pm:4307> INFO - Sorting list 'tool/global//global/global/global' of type 'entry' with template 'tool' and locale 'en_US'
+[53] Biber.pm:4313> INFO - No sort tailoring available for locale 'en_US'
+[55] bibtex.pm:440> INFO - Writing 'det1.bib' with encoding 'UTF-8'
+[55] bibtex.pm:481> INFO - Output to det1.bib
+[55] Biber.pm:132> WARN - online entry 'onl1' (../../fx/biblatex.bib): Invalid format '2024-02-30' of date field 'urldate' - ignoring
+[55] Biber.pm:134> INFO - WARNINGS: 1

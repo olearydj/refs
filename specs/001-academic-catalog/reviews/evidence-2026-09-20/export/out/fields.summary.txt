@@ -1,0 +1,16 @@
+[f-eid] type=article-journal
+     container-title=Journal of Synthetic Tests | container-title-short=J. Synth. Tests | issue=3 | title=Article with eid only | title-short=Eid only | volume=12
+[f-eid-pages] type=article-journal
+     container-title=Journal of Synthetic Tests | issue=3 | page=1-15 | title=Article with eid and pages | volume=12
+[f-issue] type=article-journal
+     container-title=Journal of Synthetic Tests | issue=3, Spring | page=1-15 | title=Article with issue and number | volume=12
+[f-series] type=article-journal
+     collection-title=New series | container-title=Journal of Synthetic Tests | page=1-15 | title=Article with series | volume=12
+[f-custom] type=book
+     ISBN=000-0-00-000000-0 | ISSN=0000-0000 | abstract=Synthetic abstract. | annote=Synthetic annotation. | call-number=lib | edition=2 | keyword=alpha, beta | language=en-US | note=Synthetic note. Synthetic addendum | number-of-pages=321 | title=Book with custom fields
+[f-edition-text] type=book
+     edition=Revised and Expanded | title=Book with literal edition
+[f-ids] type=book
+     other-ids=f-old-key, f-older-key | title=Book with ids aliases
+[f-doi-url] type=article-journal
+     DOI=10.0000/ABC_def | URL=https://doi.org/10.0000/ABC_def | container-title=Journal of Synthetic Tests | title=Doi and url both

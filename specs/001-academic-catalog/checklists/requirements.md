@@ -63,3 +63,36 @@ The earlier completeness assessment missed explicit semantic coverage and is sup
 | Requirement coverage | Acceptance evidence specified |
 | --- | --- |
 | FR-047–FR-049 | SC-010; B01–B15 and supporting/inheritance fixtures in the bibliography contract and quickstart. |
+
+
+## Independent revision assessment — 2026-09-21
+
+Reviewer: independent operations review agent, not the author of this checklist or the revised design. This assessment supersedes the current-readiness interpretation of earlier marks; historical notes above remain unchanged. Reviewed the revised specification, plan, data model, CLI/configuration/files/interchange/search contracts, validation guide, constitution and audit sections 10–12. This is document review, not implementation or live-file verification. See [operations findings](../reviews/2026-09-21-revision-operations-review.md).
+
+| Item | Current assessment | Evidence and limits |
+| --- | --- | --- |
+| CHK001 | Satisfied | The specification states outcomes and accepted interchange/location behavior without choosing Python libraries or storage mechanisms. |
+| CHK002 | Satisfied | Six stories remain organized around capture, writing, reuse, files, recovery and preferences. |
+| CHK003 | Satisfied | Stories explain the user-facing results; technical vocabulary is confined mainly to interoperability requirements. |
+| CHK004 | Satisfied | Scenarios, requirements, entities, success criteria and assumptions are present. |
+| CHK005 | Satisfied | No unresolved clarification placeholders; the constitutional amendment is separately identified, not disguised as an unanswered product choice. |
+| CHK006 | Not satisfied | Recovering a hot journal has no catalog-level command distinct from recover OP; resource revision identity is ambiguous (O02/O03). |
+| CHK007 | Satisfied | SC-001–010 name observable outcomes, fixture coverage or quantified comparisons; none is claimed achieved. |
+| CHK008 | Satisfied | Success criteria measure user outcomes and interoperability, not an implementation stack. |
+| CHK009 | Satisfied | Every story has acceptance scenarios. Whole-feature scenarios and slice applicability are distinguished by plan.md. |
+| CHK010 | Satisfied | Keys, identifiers, partial metadata, stale writes, collisions, removal, unavailable roots and interrupted effects are explicit. |
+| CHK011 | Satisfied | Plan allocation separates copy-only slice 1 from collections/move, Zotero migration and full recovery/exit tooling. |
+| CHK012 | Satisfied | Live-paper permission, consumer fixtures, filesystem evidence and the pending constitutional amendment are identified dependencies. O01 is an additional constitutional inconsistency rather than an absent dependency inventory. |
+| CHK013 | Not satisfied | Repeatable initialization has no explicit existing-valid-catalog no-op outcome; recovery and resource concurrency require the missing decisions in O02–O04. |
+| CHK014 | Satisfied | Primary flows have stories and a slice 1 validation sequence. |
+| CHK015 | Satisfied | Capture-to-paper, preservation, deterministic export and second-location restore have observable completion criteria. |
+| CHK016 | Satisfied | Framework/package selections remain in the plan/contracts; accepted types and user-visible paths are legitimate specification behavior. |
+
+Result: 14 of 16 specification-quality items satisfied, 2 not satisfied. This count is not overall readiness: the known Principle II amendment and the additional Principle IV/V conflict (O01) remain constitutional gates. Do not generate executable tasks from these unresolved commitments. Reassess the two unchecked items after O02–O04 are repaired; do not erase this dated assessment.
+
+
+### Focused independent follow-up — 2026-09-21
+
+The author repaired operations findings O01–O06; the same independent reviewer verified the changed governing text. CHK006 now passes because catalog-level journal recovery and source/resource/catalog revision authorities are explicit. CHK013 now passes because initialization has a documented validated no-op/conflict policy and the command/concurrency gaps are closed. The other fourteen assessments remain satisfied. Current markers therefore show 16 of 16 specification-quality items satisfied; the earlier assessment and finding descriptions remain historical evidence.
+
+The Principle II amendment (K01) remains pending explicit authorization and still blocks overall readiness. Bibliography checklist findings and implementation/runtime acceptance are separate gates. See the focused follow-up in the [operations review](../reviews/2026-09-21-revision-operations-review.md). No code or live-data verification is claimed.

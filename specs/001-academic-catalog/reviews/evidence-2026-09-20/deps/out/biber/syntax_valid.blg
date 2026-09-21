@@ -1,0 +1,28 @@
+[0] Config.pm:328> INFO - This is Biber 2.21 running in TOOL mode
+[0] Config.pm:331> INFO - Logfile is 'syntax_valid.blg'
+[21] biber-darwin:342> INFO - === Sun Sep 20, 2026, 21:28:52
+[29] Biber.pm:4674> INFO - Looking for bibtex file '../../fx/syntax_valid.bib'
+[30] bibtex.pm:1713> INFO - LaTeX decoding ...
+[31] bibtex.pm:1519> INFO - Found BibTeX data source '../../fx/syntax_valid.bib'
+[41] Biber.pm:1709> INFO - Datamodel validation starting
+[41] Biber.pm:1759> INFO - Datamodel validation complete
+[43] UCollate.pm:68> INFO - Overriding locale 'en_US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[44] UCollate.pm:68> INFO - Overriding locale 'en_US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[44] Biber.pm:4307> INFO - Sorting list 'tool/global//global/global/global' of type 'entry' with template 'tool' and locale 'en_US'
+[44] Biber.pm:4313> INFO - No sort tailoring available for locale 'en_US'
+[44] bibtex.pm:440> INFO - Writing 'syntax_valid.out.bib' with encoding 'UTF-8'
+[44] bibtex.pm:481> INFO - Output to syntax_valid.out.bib
+[45] Biber.pm:132> WARN - Duplicate entry key: 'dupkey' in file '../../fx/syntax_valid.bib', skipping ...
+[45] Biber.pm:132> WARN - Possible typo (case mismatch) between datasource keys: 'DupKey' and 'dupkey' in file '../../fx/syntax_valid.bib'
+[45] Biber.pm:132> WARN - BibTeX subsystem: /tmp/claude-501/biber_tmp_h2Ul/2ec05e589fcc4902498d357fe669c539_78274.utf8, line 4, warning: 47 characters of junk seen at toplevel
+[45] Biber.pm:132> WARN - BibTeX subsystem: /tmp/claude-501/biber_tmp_h2Ul/2ec05e589fcc4902498d357fe669c539_78274.utf8, line 28, warning: undefined macro "undefinedmacro"
+[45] Biber.pm:132> WARN - Datamodel: article entry 'macro1' (../../fx/syntax_valid.bib): Invalid field 'publisher' for entrytype 'article'
+[45] Biber.pm:132> WARN - Datamodel: article entry 'CaseKey' (../../fx/syntax_valid.bib): Missing mandatory field 'journaltitle'
+[45] Biber.pm:132> WARN - Datamodel: article entry 'dupkey' (../../fx/syntax_valid.bib): Missing mandatory field 'author'
+[45] Biber.pm:132> WARN - Datamodel: article entry 'dupkey' (../../fx/syntax_valid.bib): Missing mandatory field 'journaltitle'
+[45] Biber.pm:132> WARN - Datamodel: article entry 'DupKey' (../../fx/syntax_valid.bib): Missing mandatory field 'author'
+[45] Biber.pm:132> WARN - Datamodel: article entry 'DupKey' (../../fx/syntax_valid.bib): Missing mandatory field 'journaltitle'
+[45] Biber.pm:132> WARN - Datamodel: article entry 'afterbroken' (../../fx/syntax_valid.bib): Missing mandatory field 'author'
+[45] Biber.pm:132> WARN - Datamodel: article entry 'afterbroken' (../../fx/syntax_valid.bib): Missing mandatory field 'journaltitle'
+[45] Biber.pm:132> WARN - Datamodel: book entry 'last_ok' (../../fx/syntax_valid.bib): Missing mandatory field 'author'
+[45] Biber.pm:134> INFO - WARNINGS: 13

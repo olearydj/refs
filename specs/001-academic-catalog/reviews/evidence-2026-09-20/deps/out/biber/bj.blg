@@ -1,0 +1,5 @@
+[0] Config.pm:328> INFO - This is Biber 2.21 running in TOOL mode
+[0] Config.pm:331> INFO - Logfile is 'bj.blg'
+[21] biber-darwin:342> INFO - === Sun Sep 20, 2026, 21:29:16
+[21] Utils.pm:479> ERROR - Error loading data source package 'Biber::Output::bibjson': Can't locate Biber/Output/bibjson.pm in @INC (you may need to install the Biber::Output::bibjson module) (@INC entries checked: /usr/local/texlive/2026basic/bin/universal-darwin /tmp/claude-501/par/par-646a6f/cache-dcc15f9fea3fe4843317c81e274edd3cffcb0a6f/inc/lib /tmp/claude-501/par/par-646a6f/cache-dcc15f9fea3fe4843317c81e274edd3cffcb0a6f/inc CODE(0x91c44e378) CODE(0x91c44eb88)) at (eval 411) line 1.
+[21] Biber.pm:137> INFO - ERRORS: 1

@@ -1,0 +1,71 @@
+[0] Config.pm:328> INFO - This is Biber 2.21 running in TOOL mode
+[0] Config.pm:331> INFO - Logfile is 'all_synth.blg'
+[22] biber-darwin:342> INFO - === Sun Sep 20, 2026, 21:39:12
+[31] Biber.pm:4674> INFO - Looking for bibtex file 'all_synth.bib'
+[31] bibtex.pm:1713> INFO - LaTeX decoding ...
+[49] bibtex.pm:1519> INFO - Found BibTeX data source 'all_synth.bib'
+[142] Biber.pm:1709> INFO - Datamodel validation starting
+[146] Biber.pm:1759> INFO - Datamodel validation complete
+[151] UCollate.pm:68> INFO - Overriding locale 'en_US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[151] UCollate.pm:68> INFO - Overriding locale 'en_US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[151] Biber.pm:4307> INFO - Sorting list 'tool/global//global/global/global' of type 'entry' with template 'tool' and locale 'en_US'
+[151] Biber.pm:4313> INFO - No sort tailoring available for locale 'en_US'
+[162] bibtex.pm:440> INFO - Writing 'all_synth_bibertool.bib' with encoding 'UTF-8'
+[162] bibtex.pm:481> INFO - Output to all_synth_bibertool.bib
+[162] Biber.pm:132> WARN - ISBN '000-0-00-000000-0' in entry 'h-parent-book' is invalid - run biber with '--validate_datamodel' for details.
+[162] Biber.pm:132> WARN - legacy year field 'in press' in entry 'd-year-text' is not an integer - this will probably not sort properly.
+[162] Biber.pm:132> WARN - book entry 'd-circa-text' (all_synth.bib): Invalid format 'circa 1850' of date field 'date' - ignoring
+[162] Biber.pm:132> WARN - Datamodel: book entry 'f-custom' (all_synth.bib): Field 'mycustomfield' invalid in data model - ignoring
+[162] Biber.pm:132> WARN - ISBN '000-0-00-000000-0' in entry 'f-custom' is invalid - run biber with '--validate_datamodel' for details.
+[162] Biber.pm:132> WARN - Overwriting field 'year' with year value from field 'date' for entry 'd-both'
+[162] Biber.pm:132> WARN - legacy month field 'January' in entry 'd-legacy-month-braced' is not an integer - this will probably not sort properly.
+[162] Biber.pm:132> WARN - I didn't find a database entry for crossref 'h-does-not-exist' in entry 'h-missing-parent' - ignoring (section 99999)
+[163] Biber.pm:132> WARN - Datamodel: software entry 'y-software' (all_synth.bib): Invalid field 'publisher' for entrytype 'software'
+[163] Biber.pm:132> WARN - Datamodel: unpublished entry 'y-preprint' (all_synth.bib): Invalid field 'version' for entrytype 'unpublished'
+[163] Biber.pm:132> WARN - Datamodel: article entry 'y-article-eprint' (all_synth.bib): Missing mandatory field 'journaltitle'
+[163] Biber.pm:132> WARN - Datamodel: movie entry 'y-movie' (all_synth.bib): Invalid field 'author' for entrytype 'movie'
+[163] Biber.pm:132> WARN - Datamodel: movie entry 'y-movie' (all_synth.bib): Invalid field 'publisher' for entrytype 'movie'
+[163] Biber.pm:132> WARN - Datamodel: movie entry 'y-movie' (all_synth.bib): Invalid field 'title' for entrytype 'movie'
+[163] Biber.pm:132> WARN - Datamodel: video entry 'y-video' (all_synth.bib): Invalid field 'author' for entrytype 'video'
+[163] Biber.pm:132> WARN - Datamodel: video entry 'y-video' (all_synth.bib): Invalid field 'title' for entrytype 'video'
+[163] Biber.pm:132> WARN - Datamodel: audio entry 'y-audio' (all_synth.bib): Invalid field 'author' for entrytype 'audio'
+[163] Biber.pm:132> WARN - Datamodel: audio entry 'y-audio' (all_synth.bib): Invalid field 'title' for entrytype 'audio'
+[163] Biber.pm:132> WARN - Datamodel: music entry 'y-music' (all_synth.bib): Invalid field 'author' for entrytype 'music'
+[163] Biber.pm:132> WARN - Datamodel: music entry 'y-music' (all_synth.bib): Invalid field 'title' for entrytype 'music'
+[163] Biber.pm:132> WARN - Datamodel: letter entry 'y-letter' (all_synth.bib): Invalid field 'author' for entrytype 'letter'
+[163] Biber.pm:132> WARN - Datamodel: letter entry 'y-letter' (all_synth.bib): Invalid field 'title' for entrytype 'letter'
+[163] Biber.pm:132> WARN - Datamodel: performance entry 'y-performance' (all_synth.bib): Invalid field 'author' for entrytype 'performance'
+[163] Biber.pm:132> WARN - Datamodel: performance entry 'y-performance' (all_synth.bib): Invalid field 'title' for entrytype 'performance'
+[163] Biber.pm:132> WARN - Datamodel: artwork entry 'y-artwork' (all_synth.bib): Invalid field 'author' for entrytype 'artwork'
+[163] Biber.pm:132> WARN - Datamodel: artwork entry 'y-artwork' (all_synth.bib): Invalid field 'title' for entrytype 'artwork'
+[163] Biber.pm:132> WARN - Datamodel: image entry 'y-image' (all_synth.bib): Invalid field 'author' for entrytype 'image'
+[163] Biber.pm:132> WARN - Datamodel: image entry 'y-image' (all_synth.bib): Invalid field 'title' for entrytype 'image'
+[163] Biber.pm:132> WARN - Datamodel: podcast entry 'y-podcast' (all_synth.bib): Invalid entry type 'podcast' - defaulting to 'misc'
+[163] Biber.pm:132> WARN - Datamodel: standard entry 'y-standard' (all_synth.bib): Invalid field 'author' for entrytype 'standard'
+[163] Biber.pm:132> WARN - Datamodel: standard entry 'y-standard' (all_synth.bib): Invalid field 'number' for entrytype 'standard'
+[163] Biber.pm:132> WARN - Datamodel: standard entry 'y-standard' (all_synth.bib): Invalid field 'title' for entrytype 'standard'
+[163] Biber.pm:132> WARN - Datamodel: legislation entry 'y-legislation' (all_synth.bib): Invalid field 'title' for entrytype 'legislation'
+[163] Biber.pm:132> WARN - Datamodel: jurisdiction entry 'y-jurisdiction' (all_synth.bib): Invalid field 'title' for entrytype 'jurisdiction'
+[163] Biber.pm:132> WARN - Datamodel: review entry 'y-review' (all_synth.bib): Invalid field 'author' for entrytype 'review'
+[163] Biber.pm:132> WARN - Datamodel: review entry 'y-review' (all_synth.bib): Invalid field 'journaltitle' for entrytype 'review'
+[163] Biber.pm:132> WARN - Datamodel: review entry 'y-review' (all_synth.bib): Invalid field 'title' for entrytype 'review'
+[163] Biber.pm:132> WARN - Datamodel: inreference entry 'y-inreference' (all_synth.bib): Missing mandatory field 'editor'
+[163] Biber.pm:132> WARN - Datamodel: book entry 'f-custom' (all_synth.bib): Invalid field 'issn' for entrytype 'book'
+[163] Biber.pm:132> WARN - Datamodel: book entry 'd-circa-text' (all_synth.bib): Missing mandatory field - one of 'date, year' must be defined
+[163] Biber.pm:132> WARN - Datamodel: book entry 'd-year-text' (all_synth.bib): Invalid value of field 'year' must be datatype 'datepart' - ignoring field
+[163] Biber.pm:132> WARN - Datamodel: book entry 'd-year-forthcoming' (all_synth.bib): Missing mandatory field - one of 'date, year' must be defined
+[163] Biber.pm:132> WARN - Datamodel: book entry 'd-nodate' (all_synth.bib): Missing mandatory field - one of 'date, year' must be defined
+[163] Biber.pm:132> WARN - Datamodel: online entry 'd-urldate-month' (all_synth.bib): Missing mandatory field - one of 'date, year' must be defined
+[163] Biber.pm:132> WARN - Datamodel: inbook entry 'h-child-inbook' (all_synth.bib): Missing mandatory field - one of 'date, year' must be defined
+[163] Biber.pm:132> WARN - Datamodel: inbook entry 'h-child-inbook' (all_synth.bib): Missing mandatory field 'booktitle'
+[163] Biber.pm:132> WARN - Datamodel: incollection entry 'h-child-incoll' (all_synth.bib): Missing mandatory field - one of 'date, year' must be defined
+[163] Biber.pm:132> WARN - Datamodel: incollection entry 'h-child-incoll' (all_synth.bib): Missing mandatory field 'editor'
+[163] Biber.pm:132> WARN - Datamodel: incollection entry 'h-child-incoll' (all_synth.bib): Missing mandatory field 'booktitle'
+[163] Biber.pm:132> WARN - Datamodel: inproceedings entry 'h-child-inproc' (all_synth.bib): Missing mandatory field - one of 'date, year' must be defined
+[163] Biber.pm:132> WARN - Datamodel: inproceedings entry 'h-child-inproc' (all_synth.bib): Missing mandatory field 'booktitle'
+[163] Biber.pm:132> WARN - Datamodel: inbook entry 'h-child-mv' (all_synth.bib): Missing mandatory field - one of 'date, year' must be defined
+[163] Biber.pm:132> WARN - Datamodel: inbook entry 'h-child-mv' (all_synth.bib): Missing mandatory field 'booktitle'
+[163] Biber.pm:132> WARN - Datamodel: book entry 'h-parent-vol' (all_synth.bib): Missing mandatory field - one of 'date, year' must be defined
+[163] Biber.pm:132> WARN - Datamodel: inbook entry 'h-missing-parent' (all_synth.bib): Missing mandatory field - one of 'date, year' must be defined
+[163] Biber.pm:132> WARN - Datamodel: inbook entry 'h-missing-parent' (all_synth.bib): Missing mandatory field 'booktitle'
+[163] Biber.pm:134> INFO - WARNINGS: 56

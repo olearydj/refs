@@ -1,0 +1,689 @@
+[
+  {
+    "DOI": "10.0000/synth.1",
+    "URL": "https://example.org/synthtool",
+    "author": [
+      {
+        "family": "Coder",
+        "given": "Cody"
+      }
+    ],
+    "id": "y-software",
+    "issued": {
+      "date-parts": [
+        [
+          2023,
+          3,
+          1
+        ]
+      ]
+    },
+    "publisher": "Synthetic Labs",
+    "title": "Synthtool",
+    "type": "software",
+    "version": "2.4.1"
+  },
+  {
+    "author": [
+      {
+        "family": "Inventor",
+        "given": "Ivy"
+      }
+    ],
+    "genre": "U.S. patent",
+    "id": "y-patent",
+    "issued": {
+      "date-parts": [
+        [
+          2015,
+          4,
+          7
+        ]
+      ]
+    },
+    "jurisdiction": "United States of America",
+    "number": "US 1234567 B2",
+    "title": "Method for synthetic testing",
+    "type": "patent"
+  },
+  {
+    "author": [
+      {
+        "family": "Inventor",
+        "given": "Ivy"
+      }
+    ],
+    "genre": "patent request",
+    "id": "y-patent-req",
+    "issued": {
+      "date-parts": [
+        [
+          2014,
+          1,
+          2
+        ]
+      ]
+    },
+    "number": "US 2014/0000001 A1",
+    "title": "Method for synthetic testing",
+    "type": "patent"
+  },
+  {
+    "author": [
+      {
+        "family": "Doc",
+        "given": "Dana"
+      }
+    ],
+    "genre": "PhD thesis",
+    "id": "y-thesis-phd",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "publisher": "Synthetic University",
+    "publisher-place": "Auburn, AL",
+    "title": "A synthetic dissertation",
+    "type": "thesis"
+  },
+  {
+    "author": [
+      {
+        "family": "Doc",
+        "given": "Dana"
+      }
+    ],
+    "genre": "PhD thesis",
+    "id": "y-phdthesis",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "publisher": "Synthetic University",
+    "title": "A synthetic dissertation",
+    "type": "thesis"
+  },
+  {
+    "author": [
+      {
+        "family": "Doc",
+        "given": "Dana"
+      }
+    ],
+    "genre": "Habilitation thesis",
+    "id": "y-thesis-literal",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "publisher": "Synthetic University",
+    "title": "A synthetic habilitation",
+    "type": "thesis"
+  },
+  {
+    "author": [
+      {
+        "family": "Doc",
+        "given": "Dana"
+      }
+    ],
+    "genre": "Master’s thesis",
+    "id": "y-masters",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "publisher": "Synthetic University",
+    "title": "A synthetic masters work",
+    "type": "thesis"
+  },
+  {
+    "author": [
+      {
+        "literal": "Synthetic Agency"
+      }
+    ],
+    "genre": "technical report",
+    "id": "y-report",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "number": "SA-TR-42",
+    "publisher": "Synthetic Agency",
+    "publisher-place": "Washington, DC",
+    "title": "Annual synthetic report",
+    "type": "report"
+  },
+  {
+    "author": [
+      {
+        "literal": "Synthetic Agency"
+      }
+    ],
+    "id": "y-techreport",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "number": "SA-TR-42",
+    "publisher": "Synthetic Agency",
+    "title": "Annual synthetic report",
+    "type": "report"
+  },
+  {
+    "author": [
+      {
+        "family": "Roe",
+        "given": "Rae"
+      }
+    ],
+    "genre": "White paper",
+    "id": "y-report-literal",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "number": "7",
+    "publisher": "Synthetic Institute",
+    "title": "A white paper",
+    "type": "report"
+  },
+  {
+    "URL": "https://example.org/page",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          9,
+          1
+        ]
+      ]
+    },
+    "author": [
+      {
+        "literal": "Synthetic Org"
+      }
+    ],
+    "id": "y-online",
+    "issued": {
+      "date-parts": [
+        [
+          2024,
+          5,
+          6
+        ]
+      ]
+    },
+    "publisher": "Synthetic Org",
+    "title": "A synthetic web page",
+    "type": "webpage"
+  },
+  {
+    "DOI": "10.0000/data.3",
+    "author": [
+      {
+        "family": "Data",
+        "given": "Dee"
+      }
+    ],
+    "id": "y-dataset",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "publisher": "Synthetic Repository",
+    "title": "Synthetic measurements",
+    "type": "dataset",
+    "version": "3"
+  },
+  {
+    "URL": "https://arxiv.org/abs/2401.00001",
+    "author": [
+      {
+        "family": "Pre",
+        "given": "Pia"
+      }
+    ],
+    "id": "y-preprint",
+    "issued": {
+      "date-parts": [
+        [
+          2024,
+          1,
+          1
+        ]
+      ]
+    },
+    "publisher": "arXiv",
+    "status": "pre-published",
+    "title": "A synthetic preprint",
+    "type": "manuscript",
+    "version": "2"
+  },
+  {
+    "URL": "https://arxiv.org/abs/2401.00001",
+    "author": [
+      {
+        "family": "Pre",
+        "given": "Pia"
+      }
+    ],
+    "id": "y-article-eprint",
+    "issued": {
+      "date-parts": [
+        [
+          2024,
+          1,
+          1
+        ]
+      ]
+    },
+    "title": "A synthetic preprint",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "Roe",
+        "given": "Rae"
+      }
+    ],
+    "id": "y-misc",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "note": "A note",
+    "publisher": "Pamphlet",
+    "title": "Some miscellaneous thing",
+    "type": ""
+  },
+  {
+    "author": [
+      {
+        "family": "Director",
+        "given": "Dot"
+      }
+    ],
+    "id": "y-movie",
+    "issued": {
+      "date-parts": [
+        [
+          2010
+        ]
+      ]
+    },
+    "publisher": "Synthetic Studios",
+    "title": "A synthetic film",
+    "type": "motion_picture"
+  },
+  {
+    "URL": "https://example.org/v",
+    "author": [
+      {
+        "family": "Vlogger",
+        "given": "Val"
+      }
+    ],
+    "id": "y-video",
+    "issued": {
+      "date-parts": [
+        [
+          2018,
+          2,
+          3
+        ]
+      ]
+    },
+    "title": "A synthetic video",
+    "type": "motion_picture"
+  },
+  {
+    "author": [
+      {
+        "family": "Host",
+        "given": "Hal"
+      }
+    ],
+    "id": "y-audio",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "title": "A synthetic episode",
+    "type": "song"
+  },
+  {
+    "author": [
+      {
+        "family": "Composer",
+        "given": "Cam"
+      }
+    ],
+    "id": "y-music",
+    "issued": {
+      "date-parts": [
+        [
+          2001
+        ]
+      ]
+    },
+    "title": "A synthetic song",
+    "type": "song"
+  },
+  {
+    "author": [
+      {
+        "family": "Writer",
+        "given": "Wes"
+      }
+    ],
+    "id": "y-letter",
+    "issued": {
+      "date-parts": [
+        [
+          1999,
+          12,
+          31
+        ]
+      ]
+    },
+    "title": "Letter to rae roe",
+    "type": "personal_communication"
+  },
+  {
+    "author": [
+      {
+        "family": "Actor",
+        "given": "Ada"
+      }
+    ],
+    "id": "y-performance",
+    "issued": {
+      "date-parts": [
+        [
+          2005
+        ]
+      ]
+    },
+    "title": "A synthetic play",
+    "type": "speech"
+  },
+  {
+    "author": [
+      {
+        "family": "Painter",
+        "given": "Pam"
+      }
+    ],
+    "id": "y-artwork",
+    "issued": {
+      "date-parts": [
+        [
+          1905
+        ]
+      ]
+    },
+    "title": "A synthetic painting",
+    "type": "graphic"
+  },
+  {
+    "author": [
+      {
+        "family": "Painter",
+        "given": "Pam"
+      }
+    ],
+    "id": "y-image",
+    "issued": {
+      "date-parts": [
+        [
+          1905
+        ]
+      ]
+    },
+    "title": "A synthetic image",
+    "type": "graphic"
+  },
+  {
+    "author": [
+      {
+        "family": "Host",
+        "given": "Hal"
+      }
+    ],
+    "id": "y-podcast",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "title": "A synthetic podcast",
+    "type": ""
+  },
+  {
+    "author": [
+      {
+        "literal": "Synthetic Standards Body"
+      }
+    ],
+    "id": "y-standard",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "number": "SSB 1234-2020",
+    "title": "Standard for synthetic things",
+    "type": "legislation"
+  },
+  {
+    "author": [
+      {
+        "literal": "Synthetic Corp"
+      }
+    ],
+    "edition": "3",
+    "id": "y-manual",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "User manual",
+    "type": "book"
+  },
+  {
+    "id": "y-legislation",
+    "issued": {
+      "date-parts": [
+        [
+          1990
+        ]
+      ]
+    },
+    "title": "Synthetic act",
+    "type": "legislation"
+  },
+  {
+    "id": "y-jurisdiction",
+    "issued": {
+      "date-parts": [
+        [
+          1990
+        ]
+      ]
+    },
+    "title": "Roe v. doe",
+    "type": "legal_case"
+  },
+  {
+    "container-title": "Journal of Synthetic Tests",
+    "editor": [
+      {
+        "family": "Editor",
+        "given": "Eve"
+      }
+    ],
+    "id": "y-periodical",
+    "issue": "2",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "Special issue on tests",
+    "type": "article-journal",
+    "volume": "4"
+  },
+  {
+    "author": [
+      {
+        "family": "Critic",
+        "given": "Cris"
+      }
+    ],
+    "container-title": "Journal of Synthetic Tests",
+    "id": "y-review",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "Review of a book",
+    "type": "review"
+  },
+  {
+    "author": [
+      {
+        "family": "Reporter",
+        "given": "Rex"
+      }
+    ],
+    "container-title": "The Synthetic Times",
+    "id": "y-newspaper",
+    "issued": {
+      "date-parts": [
+        [
+          2020,
+          2,
+          2
+        ]
+      ]
+    },
+    "title": "A news story",
+    "type": "article-newspaper"
+  },
+  {
+    "author": [
+      {
+        "family": "Reporter",
+        "given": "Rex"
+      }
+    ],
+    "container-title": "Synthetic Monthly",
+    "id": "y-magazine",
+    "issued": {
+      "date-parts": [
+        [
+          2020,
+          2
+        ]
+      ]
+    },
+    "title": "A magazine story",
+    "type": "article-magazine"
+  },
+  {
+    "author": [
+      {
+        "family": "Ency",
+        "given": "Eli"
+      }
+    ],
+    "container-title": "Encyclopedia of tests",
+    "id": "y-inreference",
+    "issued": {
+      "date-parts": [
+        [
+          2000
+        ]
+      ]
+    },
+    "title": "Synthesis",
+    "type": "entry-encyclopedia"
+  },
+  {
+    "author": [
+      {
+        "family": "Speaker",
+        "given": "Sam"
+      }
+    ],
+    "event": "Synthetic conference",
+    "event-date": {
+      "date-parts": [
+        [
+          2022,
+          6,
+          1
+        ]
+      ]
+    },
+    "event-place": "Springfield",
+    "id": "y-talk",
+    "issued": {
+      "date-parts": [
+        [
+          2022,
+          6,
+          1
+        ]
+      ]
+    },
+    "publisher": "Conference presentation",
+    "title": "A conference talk without proceedings",
+    "type": "speech"
+  }
+]

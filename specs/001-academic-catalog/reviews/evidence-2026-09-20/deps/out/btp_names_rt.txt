@@ -1,0 +1,331 @@
+Parsing of `@article` block (line 52) aborted on line 56 due to syntactical error in bibtex:
+ Unexpected block start: `@article`. Was still looking for field-value closing `}` 
+Parsing of `@article` block (line 61) aborted on line 62 due to syntactical error in bibtex:
+ Expected comma after entry key, but found =
+   {'first': ['Johannes'], 'von': ['van', 'der'], 'last': ['Berg'], 'jr': []}
+   {'first': ['Jean'], 'von': ['de', 'la'], 'last': ['Fontaine'], 'jr': ['Jr.']}
+   {'first': ['Martin', 'Luther'], 'von': [], 'last': ['King'], 'jr': ['Jr']}
+   {'first': [], 'von': [], 'last': ['{World Health Organization}'], 'jr': []}
+   {'first': [], 'von': [], 'last': ['{Barnes and Noble, Inc.}'], 'jr': []}
+   {'first': ['Ludwig'], 'von': ['van'], 'last': ['Beethoven'], 'jr': []}
+   {'first': ['Charles', 'Louis', 'Xavier', 'Joseph'], 'von': ['de', 'la'], 'last': ["Vall{\\'e}e", 'Poussin'], 'jr': []}
+   {'first': ['Jean-Paul'], 'von': [], 'last': ['Sartre'], 'jr': []}
+   {'first': [], 'von': [], 'last': ['others'], 'jr': []}
+##### ROUND TRIP
+===== fx/syntax.bib identical: False len in/out 1441 1594
+--- 
++++ 
+@@ -3,0 +4 @@
++
+@@ -6,3 +7,9 @@
+-@string{jgr = "Journal of Geophysical Research"}
+-@STRING{pub = {Synthetic Press}}
+-@string{sfx = " (Series A)"}
++
++@string{jgr = {Journal of Geophysical Research}}
++
++
++@string{pub = {Synthetic Press}}
++
++
++@string{sfx = { (Series A)}}
++
+@@ -11,0 +19 @@
++
+@@ -14 +22,16 @@
+-1 StaticGroup:Methods\;0\;1\;0x8a8a8aff\;\;\;;
++1 StaticGroup:Methods\;0\;1\;0x8a8a8aff\;\;\;;}
++
++
++@comment{This is a plain explicit comment with {nested {braces}} inside.}
++
++
++@article{macro1,
++	author = {Doe, Jane},
++	title = {Macro Concatenation},
++	journal = jgr # sfx,
++	publisher = {Synthetic Press},
++	month = jan,
++	year = {2020},
++	volume = {12},
++	note = "quoted " # jgr # { and braced},
++	series = undefinedmacro
+@@ -17 +39,0 @@
+-@Comment{This is a plain explicit comment with {nested {braces}} inside.}
+@@ -19,10 +41,5 @@
+-@article{macro1,
+-  author  = "Doe, Jane",
+-  title   = {Macro Concatenation},
+-  journal = jgr # sfx,
+-  publisher = pub,
+-  month   = jan,
+-  year    = 2020,
+-  volume  = 12,
+-  note    = "quoted " # jgr # { and braced},
+-  series  = undefinedmacro,
++@article{CaseKey,
++	AUTHOR = {Smith, John},
++	Title = {Upper Case Field Names},
++	YEAR = {2019},
++	year = {2018}
+@@ -31,5 +48,4 @@
+-@ARTICLE{CaseKey,
+-  AUTHOR = {Smith, John},
+-  Title  = {Upper Case Field Names},
+-  YEAR   = {2019},
+-  year   = {2018},
++
++@article{dupkey,
++	title = {First with this key},
++	year = {2001}
+@@ -38,4 +53,0 @@
+-@article{dupkey,
+-  title = {First with this key},
+-  year = {2001},
+-}
+@@ -42,0 +55 @@
++% WARNING Parsing failed for the following 4 lines.
+@@ -47,0 +61 @@
++
+@@ -49,2 +63,2 @@
+-  title = {Case-variant of dupkey},
+-  year = {2003},
++	title = {Case-variant of dupkey},
++	year = {2003}
+@@ -52,0 +67,2 @@
++
++% WARNING Parsing failed for the following 3 lines.
+@@ -56,0 +73,2 @@
++
++
+@@ -58,2 +76,2 @@
+-  title = {Entry After Broken One},
+-  year = {2005},
++	title = {Entry After Broken One},
++	year = {2005}
+@@ -61,0 +80,2 @@
++
++% WARNING Parsing failed for the following 2 lines.
+@@ -63 +83,4 @@
+-  title = {Missing comma after key},
++  title =
++
++
++{Missing comma after key},
+@@ -66,0 +90 @@
++
+@@ -68,2 +92,2 @@
+-  title = {Missing equals}
+-  year {2007},
++	title = {{Missing equals}
++  year {2007}}
+@@ -71,0 +96 @@
++
+@@ -73,2 +98,2 @@
+-  title = {Last Entry OK},
+-  year = {2008}
++	title = {Last Entry OK},
++	year = {2008}
+@@ -75,0 +101,2 @@
++
++
+===== fx/content.bib identical: False len in/out 1414 1394
+--- 
++++ 
+@@ -2,8 +2,8 @@
+-  author = {M{\"u}ller, J{\"o}rg and Erd\H{o}s, P\'al and {\O}stergaard, S{\o}ren},
+-  title  = {The {NASA} Mission to {{M}ars}: A {\"o} and \"{o} and {\"O}ber Study of $\alpha$-decay \& 50\% Growth in {$\mathrm{CO}_2$}},
+-  journal = "Journal with ""quotes"" {and} \textit{italics}",
+-  year = {2021},
+-  url = {https://example.org/a_b%20c#frag?x=1&y=2~z},
+-  doi = {10.1000/abc_def(2021)1%2F2},
+-  file = {:papers/prot1.pdf:PDF;Supp:papers/prot1\_supp.pdf:application/pdf},
+-  note = {Nested {braces {three {deep}}} and an unbalanced-looking \{ escaped \} pair},
++	author = {M{\"u}ller, J{\"o}rg and Erd\H{o}s, P\'al and {\O}stergaard, S{\o}ren},
++	title = {The {NASA} Mission to {{M}ars}: A {\"o} and \"{o} and {\"O}ber Study of $\alpha$-decay \& 50\% Growth in {$\mathrm{CO}_2$}},
++	journal = "Journal with ""quotes"" {and} \textit{italics}",
++	year = {2021},
++	url = {https://example.org/a_b%20c#frag?x=1&y=2~z},
++	doi = {10.1000/abc_def(2021)1%2F2},
++	file = {:papers/prot1.pdf:PDF;Supp:papers/prot1\_supp.pdf:application/pdf},
++	note = {Nested {braces {three {deep}}} and an unbalanced-looking \{ escaped \} pair}
+@@ -11,0 +12 @@
++
+@@ -13,5 +14,5 @@
+-  author = {Doe, Jane},
+-  title = {Zotero Style File Field},
+-  year = {2022},
+-  file = {Full Text PDF:/Users/example/Zotero/storage/ABCD1234/Doe - 2022 - Title; with semicolon.pdf:application/pdf;Snapshot:/Users/example/Zotero/storage/EFGH5678/index.html:text/html},
+-  abstract = {Line one.
++	author = {Doe, Jane},
++	title = {Zotero Style File Field},
++	year = {2022},
++	file = {Full Text PDF:/Users/example/Zotero/storage/ABCD1234/Doe - 2022 - Title; with semicolon.pdf:application/pdf;Snapshot:/Users/example/Zotero/storage/EFGH5678/index.html:text/html},
++	abstract = {Line one.
+@@ -19 +20 @@
+-Line three after blank line, with   multiple   spaces.},
++Line three after blank line, with   multiple   spaces.}
+@@ -21,0 +23 @@
++
+@@ -23,5 +25,5 @@
+-  author = {van der Berg, Johannes and de la Fontaine, Jr., Jean and King, Jr, Martin Luther and {World Health Organization} and {Barnes and Noble, Inc.} and Ludwig van Beethoven and Charles Louis Xavier Joseph de la Vall{\'e}e Poussin and others},
+-  editor = {family=von Neumann, given=John, prefix=von, useprefix=true and family={Smith Jones}, given=Anne, given-i=A},
+-  title = {Name Parsing},
+-  booktitle = {Proceedings},
+-  year = {2020},
++	author = {van der Berg, Johannes and de la Fontaine, Jr., Jean and King, Jr, Martin Luther and {World Health Organization} and {Barnes and Noble, Inc.} and Ludwig van Beethoven and Charles Louis Xavier Joseph de la Vall{\'e}e Poussin and others},
++	editor = {family=von Neumann, given=John, prefix=von, useprefix=true and family={Smith Jones}, given=Anne, given-i=A},
++	title = {Name Parsing},
++	booktitle = {Proceedings},
++	year = {2020}
+===== fx/biblatex.bib identical: False len in/out 1776 1717
+--- 
++++ 
+@@ -2,2 +2,2 @@
+-  publisher = {Synthetic University Press},
+-  location  = {Springfield},
++	publisher = {Synthetic University Press},
++	location = {Springfield}
+@@ -5,0 +6 @@
++
+@@ -7,2 +8,2 @@
+-  xdata = {xd:press},
+-  series = {Synthetic Series},
++	xdata = {xd:press},
++	series = {Synthetic Series}
+@@ -10,0 +12 @@
++
+@@ -12,5 +14,5 @@
+-  author = {Knuth, Donald E.},
+-  title = {The Multivolume Work},
+-  subtitle = {A Subtitle},
+-  date = {1990/1999},
+-  xdata = {xd:series},
++	author = {Knuth, Donald E.},
++	title = {The Multivolume Work},
++	subtitle = {A Subtitle},
++	date = {1990/1999},
++	xdata = {xd:series}
+@@ -18,0 +21 @@
++
+@@ -20,4 +23,4 @@
+-  crossref = {mv1},
+-  title = {Volume One Title},
+-  volume = {1},
+-  date = {1990},
++	crossref = {mv1},
++	title = {Volume One Title},
++	volume = {1},
++	date = {1990}
+@@ -25,0 +29 @@
++
+@@ -27,3 +31,3 @@
+-  crossref = {vol1},
+-  title = {Chapter Title},
+-  pages = {10--20},
++	crossref = {vol1},
++	title = {Chapter Title},
++	pages = {10--20}
+@@ -31,0 +36 @@
++
+@@ -33,6 +38,6 @@
+-  editor = {Editor, Ellen},
+-  title = {Proceedings of the Synthetic Conference},
+-  subtitle = {SynthConf},
+-  date = {2019-07-01/2019-07-05},
+-  publisher = {ACM},
+-  ids = {oldproc, proc2019},
++	editor = {Editor, Ellen},
++	title = {Proceedings of the Synthetic Conference},
++	subtitle = {SynthConf},
++	date = {2019-07-01/2019-07-05},
++	publisher = {ACM},
++	ids = {oldproc, proc2019}
+@@ -40,0 +46 @@
++
+@@ -42,6 +48,6 @@
+-  author = {Author, Alice},
+-  title = {A Paper},
+-  crossref = {proc1},
+-  pages = {1-9},
+-  langid = {american},
+-  options = {useprefix=true,skipbib=false},
++	author = {Author, Alice},
++	title = {A Paper},
++	crossref = {proc1},
++	pages = {1-9},
++	langid = {american},
++	options = {useprefix=true,skipbib=false}
+@@ -49,0 +56 @@
++
+@@ -51,7 +58,7 @@
+-  author = {Circa, Carl},
+-  title = {Approximate Date},
+-  journaltitle = {Journal of Dates},
+-  date = {2020-05~},
+-  urldate = {2021-03-04},
+-  eventdate = {2019/2020},
+-  origdate = {199X},
++	author = {Circa, Carl},
++	title = {Approximate Date},
++	journaltitle = {Journal of Dates},
++	date = {2020-05~},
++	urldate = {2021-03-04},
++	eventdate = {2019/2020},
++	origdate = {199X}
+@@ -59,0 +67 @@
++
+@@ -61,5 +69,5 @@
+-  author = {Open, Olive},
+-  title = {Open Range and Uncertain},
+-  journaltitle = {Journal of Dates},
+-  date = {2004-22/..},
+-  origdate = {-0044?},
++	author = {Open, Olive},
++	title = {Open Range and Uncertain},
++	journaltitle = {Journal of Dates},
++	date = {2004-22/..},
++	origdate = {-0044?}
+@@ -67,0 +76 @@
++
+@@ -69,6 +78,6 @@
+-  author = {Legacy, Larry},
+-  title = {Legacy Year Month},
+-  journal = {Old Journal},
+-  year = {1998},
+-  month = mar,
+-  number = {3},
++	author = {Legacy, Larry},
++	title = {Legacy Year Month},
++	journal = {Old Journal},
++	year = {1998},
++	month = mar,
++	number = {3}
+@@ -76,0 +86 @@
++
+@@ -78,6 +88,6 @@
+-  author = {Trans, Tina},
+-  title = {Translated Book},
+-  date = {2015},
+-  related = {mv1},
+-  relatedtype = {translationof},
+-  relatedstring = {Translation of},
++	author = {Trans, Tina},
++	title = {Translated Book},
++	date = {2015},
++	related = {mv1},
++	relatedtype = {translationof},
++	relatedstring = {Translation of}
+@@ -85,0 +96 @@
++
+@@ -87,5 +98,5 @@
+-  author = {{World Health Organization}},
+-  title = {Online Thing},
+-  url = {https://example.org/x_y%7Ez#top},
+-  urldate = {2024-02-30},
+-  date = {2024},
++	author = {{World Health Organization}},
++	title = {Online Thing},
++	url = {https://example.org/x_y%7Ez#top},
++	urldate = {2024-02-30},
++	date = {2024}

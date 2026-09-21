@@ -20,18 +20,9 @@ Manage references for one active paper without opening Zotero: import existing r
 
 ## Application Home and Configuration
 
-Recommend one discoverable home, defaulting to `~/.config/refs/` (or `refs/` beneath an explicitly configured XDG configuration directory), with an explicit `REFS_HOME` or invocation-level home override for relocation and testing. Exact precedence belongs in the CLI contract. Project discovery must not silently select a different global catalog.
+The user selected visible data locations /casa/refs/cat and /casa/refs/lib on 2026-09-21. Configuration stays at ~/.config/refs/config.toml and points to canonical /Volumes/Casa/refs/cat and /Volumes/Casa/refs/lib. Catalog, lock and intake staging stay outside sync; only lib may be shared. Missing/unmounted data locations fail explicitly without creating another catalog. This replaces the former single-home/XDG proposal.
 
-```text
-~/.config/refs/
-  config.toml       # editable preferences and resource-root mappings
-  catalog.sqlite    # authoritative records, captures, and relationships
-  .gitignore        # exclude catalog, SQLite sidecars, and runtime artifacts
-```
-
-Any other durable files introduced later must appear in the path inventory and backup manifest. Disposable caches and rebuildable model indexes can live outside this home. Preferences belong in TOML; schema versions, identities, accepted assignments, and project membership belong in SQLite. Persist operation provenance without creating a second authoritative preference store in the database.
-
-The user's `.config` is a dotfiles Git repository. Track preferences only deliberately; do not track the live catalog or SQLite journal/WAL files. Git exclusion must not be mistaken for exclusion from system backups. Initial setup should explain the backup unit and expose its actual resolved path.
+The configuration contract defines explicit config and catalog overrides for testing. Project discovery cannot change catalog identity or roots. Snapshot includes config, consistent database, provenance and resource inventory; excluded external bytes are named explicitly.
 
 Include configuration inspection and validation early: paths, effective values, their origins, and actionable errors for unknown settings. Common preferences, particularly key templates, must be editable without SQL or code changes. Changed preferences apply to future operations unless an explicit migration or normalization operation is requested.
 
@@ -73,7 +64,7 @@ Support multiple attachments of arbitrary type stored anywhere. Keep link-in-pla
 
 **Updated intake requirement:** Offer moving a newly supplied attachment into a configured document library when adding a reference. Agent-collected files currently left in Downloads are at risk of being lost along with the acquisition effort. This intake operation belongs in the initial workflow; it does not bring bulk collection or bulk renaming into the MVP. Moving by default versus only on request remains unresolved. Preserve existing filenames and imported links unless separately instructed. The configured document library may remain external to the application home. Transfer verification, collision handling, and interruption recovery apply to intake as well as any later collection operation.
 
-Include hierarchical collections distinct from projects and subject tags. A source may have several memberships, but each managed attachment has one filing collection. Existing files may stay linked in place or be explicitly adopted into managed placement without an immediate move. Collection changes offer explicit, previewed reorganization of managed files and catalog links; linked-in-place files remain untouched. Preserve filenames. Folder mapping and unfiled placement remain open.
+Include hierarchical collections distinct from projects and subject tags. A source may have several memberships, but each managed attachment has one filing collection. Files recorded by named root inside the library are managed; other files remain linked. Existing library files can receive filing assignments without movement; there is no adopt-without-move state outside the root. Collection changes offer explicit, previewed reorganization of managed files and catalog links; linked-in-place files remain untouched. Preserve filenames. Copy-only intake to Unfiled is in slice 1; collections and move arrive in slice 2.
 
 Defer broad bulk consolidation and bulk renaming beyond the MVP; this does not defer intake or reorganization of managed files. A separately specified collection operation could gather selected or all file-backed attachments into a shared folder. The destination may be outside the application home; no per-reference folder layout is required. Deleting a catalog record must never delete its files.
 
@@ -85,10 +76,10 @@ External note links can break even when refs' own links are updated. Report that
 
 ## Release Sequence
 
-1. **Behavior agreement:** CLI examples, configuration precedence/discovery, key policy, normalization rules, import identity/conflicts, and attachment selection.
-2. **First useful slice:** one verified Zotero migration path, BibTeX/BibLaTeX import as required by actual workflows, structured creation/editing, lexical search including abstracts, attachment linking/opening, project citation selection, and explicit export.
-3. **Trusted daily use:** repeat-import and conflict handling, consistent backup/restore, resource diagnostics, installed CLI checks, and a real paper trial. Inspectable behavior belongs throughout development.
-4. **Follow-on work:** deferred project overrides and other demonstrated daily needs. Broad bulk consolidation, bulk renaming, and built-in identifier lookup remain later-version possibilities. Basic collections, managed intake, and explicit reorganization belong in the early workflow. Agents provide initial metadata capture.
+1. **Slice 1:** agent capture and bibliography ingestion, correction/search, linking/opening, project citation selection and explicit portable BibTeX export, verified copy-only intake to Unfiled, and demonstrated snapshot restoration into a second catalog.
+2. **Slice 2:** collections, folder-based filing assignment without movement, explicit selected reorganize and the accepted new-download move default.
+3. **Slice 3:** one verified Zotero extractor/migration route, imported child-note context and related pairs, with external archive and preserved linked files.
+4. **Slice 4:** full restore tooling, optional file-inclusive backup and logical library export before whole-library cutover.
 
 RIS, semantic search/QMD, Jev tagging, summarization, broad web capture, PDF text indexing, and general extension distribution are deferred. Keep boundaries for later capabilities without requiring all extension infrastructure now.
 

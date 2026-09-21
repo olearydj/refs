@@ -1,112 +1,55 @@
-# Quickstart Validation: Academic Catalog Workflow
+# Slice 1 Validation Guide
 
-**Status**: Runnable acceptance guide for the implementation phase. The CLI, environment, and fixture paths below are planned deliverables, not available application code at the time of planning. Use disposable homes and synthetic/public fixtures until the user selects the real paper and migration sample.
+**Status:** executable acceptance design for the implementation phase; commands and fixtures below are not yet implemented. Use synthetic/public fixtures and disposable paths. Live manuscript replacement, Zotero migration and file movement need their own explicit authorization.
 
-## Prerequisites and Installation
+## Setup and first workflow
 
-Use macOS/Linux, Python 3.14, uv, local storage with the required filesystem primitives, and a SQLite build with FTS5. Quarto is required only for rendered-citation validation. Start from a checkout after implementation supplies `pyproject.toml`, `uv.lock`, tests, and public fixtures. All commands use project-relative fixture paths from the repository root.
-
-```bash
-uv sync --locked
-uv run --locked refs --help
-uv run --locked refs --json schema source-create
-uv run --locked pytest tests/unit tests/contract tests/integration
-uv run --locked ruff check .
-uv run --locked ty check src/refs
-```
-
-Verify the project config retains `exclude-newer = "3 days"` and that a clean `uv sync --locked` succeeds. Do not use `--frozen` to bypass a mismatch. Installed-wheel acceptance is an integration test that builds once, installs into an isolated environment, and invokes the executable in subprocesses; it must not rely solely on importing modules from the working tree.
-
-## Disposable Capture and Search
+Implementation creates the package/lock and fixtures named here. Run uv sync --locked, Ruff, the exact-pinned ty, and pytest contract/integration checks. Verify SQLite capabilities and record Python, SQLite, OS/filesystem, package lock and policy versions.
 
 ```bash
 refs_trial_root=$(mktemp -d)
-mkdir -p "$refs_trial_root/library"
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config init --library-root "$refs_trial_root/library"
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json paths
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json add --input tests/fixtures/public/source-smith.json --request-id capture-smith
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json add --input tests/fixtures/public/source-smith.json --request-id capture-smith
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json search "Turing Trap"
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json show smith-2024-turingTrap
+uv run --locked refs --config "$refs_trial_root/config.toml" --catalog "$refs_trial_root/cat" --no-project-config init --library-root "$refs_trial_root/lib"
+uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config --json add --format refs --input tests/fixtures/public/source.json --request-id capture-example
+uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config project create paper-x
+uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config project cite paper-x smith-2024-turingTrap
+uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config export --project paper-x --output "$refs_trial_root/references.bib" --profile portable-bibtex-v1
 ```
 
-The fixture follows [source creation](contracts/records.md) and has the documented Smith/2024/title values. Expect one source, stable returned identity/key, unchanged second outcome, and recognizable matching context. Capture fixtures must also include a missing-year/editor fallback, an explicit-key URL-only record, corporate names, and non-ASCII names. Check source spelling and key policy in previews; unsupported transliteration yields an override request rather than dropped letters.
+The source fixture supplies author Smith, year 2024 and short title The Turing Trap so the shown key is deterministic. Repeat capture/export; compare IDs and output bytes. Update with a returned revision, then reject a stale revision without changes. Search exact key/identifier and text from title, creator, abstract and context. Collection filters are excluded until slice 2. A removed source can be explicitly reactivated with the same ID/key.
 
-## Correction and Concurrency
+## Cross-route and export gates
+
+For every promoted mapping, exercise refs' actual bibtexparser adapter, agent input and (using the synthetic extractor input adapter) Zotero mapping without requiring live migration. Compare canonical facts, preserve exact originals, edit and clear each modeled field, then export and re-import. Re-import unchanged documented fallbacks using recorded projection evidence and assert no false type conflicts or duplicate sources. Changed projected values and key-only lookalikes must reconcile. A new catalog without projection evidence must report the generic imported type honestly.
+
+Include all 14 design-probe cases and the missing discriminators: free-text/parsedDate disagreement, partial/literal dates, both patent number kinds and priority date, assignee distinct from inventor, journal series versus collection title, numeric/descriptive editions, identifiers, corporate “ and ”, explicit particles, title-term/whole-title protection, accent-command braces, type changes and deliberate clearing. Run the parser corruption fixtures from the preserved audit through the actual adapter. Do not present Pandoc parsing as that test.
+
+Render portable output using Pandoc/APA and IEEE, Biber, and classic BibTeX with elsarticle-num. Keep golden expectations for authors, issued dates, journal/institution, editions, source identity and protected spelling. Case-only keys must block portable export. Known fallbacks warn; actual enumerated meaning loss blocks; unknowns block unless explicitly overridden for the run. Waivers expire on loss/revision/profile changes. All blocked cases report every affected source and leave destination bytes unchanged.
+
+Exercise new-path export, adoption of an existing reconciled bibliography, repeat no-op, external edit conflict, explicit overwrite preservation and crash recovery. No metadata or membership mutation may write a bibliography. The real-paper trial remains a separately authorized release gate.
+
+## Copy intake and failure checks
 
 ```bash
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json update smith-2024-turingTrap --patch tests/fixtures/public/pages-patch.json --if-revision 1
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json update smith-2024-turingTrap --patch tests/fixtures/public/pages-patch.json --if-revision 1
+uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config --json resource intake smith-2024-turingTrap --path tests/fixtures/public/sample.pdf --intake copy --dry-run
+uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config --json resource intake smith-2024-turingTrap --path tests/fixtures/public/sample.pdf --intake copy --request-id copy-example
+uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config --json resource check --verify
 ```
 
-The first changed patch advances revision; the second exits 3 with a stale-revision error and no change. The key remains intact. Subprocess integration cases start four callers to test unique key allocation, duplicate request IDs, changed-request rejection, reserved resources, and bounded lock contention. Typer's in-process test runner is not used to simulate concurrent processes.
+Expect lib/Unfiled/sample.pdf, unchanged basename, matching bytes, a named-root locator and the original still present. Slice 1 move must return unsupported_in_slice. Crash at every prepared/staged/published/catalog-committed boundary. Verify no overwrite even for equal-byte unrelated destinations, source-change detection, metadata warnings, permission failures, absent roots, nonce handling and retry after config repair. A temporary local same-volume fixture does not certify real cross-volume behavior; execute a separate synthetic macOS cross-volume fixture when that storage is available.
 
-## Explicit Bibliography Export and Outside Edits
+## Snapshot and demonstrated restore
 
 ```bash
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config project create paper-x
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config project cite paper-x smith-2024-turingTrap
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config export --project paper-x --output "$refs_trial_root/references.bib" --format biblatex
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config export --project paper-x --output "$refs_trial_root/references.bib" --format biblatex
+uv run --locked refs --config "$refs_trial_root/config.toml" --no-project-config backup --output "$refs_trial_root/snapshot"
+uv run --locked python tools/restore_snapshot.py --input "$refs_trial_root/snapshot" --catalog "$refs_trial_root/restored-cat" --config "$refs_trial_root/restored.toml"
+uv run --locked refs --config "$refs_trial_root/restored.toml" --no-project-config --json show smith-2024-turingTrap
+uv run --locked refs --config "$refs_trial_root/restored.toml" --no-project-config --json resource check --verify
 ```
 
-Expect an adopted new destination and identical repeat bytes. The integration fixture then edits the bibliography externally, verifies export exits 3 and preserves those edits, and exercises explicit overwrite and reconciliation/adoption. A catalog edit alone must not change the file. Use the public manuscript fixture with its referenced fixture bibliography to run:
+The documented slice 1 helper validates manifest/hash/schema/integrity, refuses an existing destination, creates the separate catalog and config, and marks it ready only when verified. It performs no external file effect or operation resumption. Compare all saved identities, keys, canonical metadata, originals, provenance, projections/waivers, projects/selections and resource inventory. Snapshot again with an unresolved copy operation; confirm restoration reports it without touching shared files. Missing/corrupt members and incompatible schemas must fail. The later full restore CLI/bundle format is not required for this proof.
 
-```bash
-cp tests/fixtures/public/citation-paper.qmd "$refs_trial_root/paper.qmd"
-quarto render "$refs_trial_root/paper.qmd" --to html --output-dir "$refs_trial_root/rendered"
-```
+Record explicitly that external bytes are excluded. Do not run both restored and original catalogs as active writers against shared output/library paths. Full logical export, collections, move and Zotero cutover belong to later slices.
 
-The minimal fixture cites `smith-2024-turingTrap` and declares `bibliography: references.bib`; copy it beside the bibliography just exported from the isolated catalog. Broader citation-type rendering is covered by the integration fixtures. Assert selected keys, creator roles, title protection, and absent unselected citations. The later real-paper check follows the same contract with user-selected inputs.
+## Readiness evidence
 
-## Partial Imports and Migration Fidelity
-
-```bash
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json import --format biblatex --input tests/fixtures/public/mixed-conflicts.bib --origin public-mixed --dry-run
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json import --format biblatex --input tests/fixtures/public/mixed-conflicts.bib --origin public-mixed
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json import --format biblatex --input tests/fixtures/public/mixed-conflicts.bib --origin public-mixed
-```
-
-Dry run changes no persistent state. Actual import exits 4 when the prepared fixture includes conflicts, applies every conflict-free entry, and accounts for all inputs. Repeat creates no duplicates. Use the returned batch ID with `import show`, `import reconcile --input`, and `import resume` to verify explicit decisions. Never type a placeholder UUID as if it were a real batch identity.
-
-The Zotero fixture matrix supplies a supported synthetic snapshot with manifest/checksums, pinned keys, ordered roles, collections, absolute/root/storage attachments, notes, and annotations. Import with `--format zotero-snapshot --input tests/fixtures/public/zotero-snapshot --origin public-zotero`. Unknown schema and incomplete snapshot fixtures must fail before source writes. The live sample must be acquired with Zotero closed and inspected read-only; no current path is relocated as part of import.
-
-## Managed Intake and Recovery
-
-```bash
-cp tests/fixtures/public/sample.pdf "$refs_trial_root/download.pdf"
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json resource intake smith-2024-turingTrap --path "$refs_trial_root/download.pdf" --dry-run
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json resource intake smith-2024-turingTrap --path "$refs_trial_root/download.pdf" --request-id intake-sample
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json resource list smith-2024-turingTrap
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config --json resource check
-```
-
-Expect `library/Unfiled/download.pdf`, verified bytes, original removed only after catalog commit, unchanged filename, and a complete operation. Use returned resource IDs to adopt/link/file-under and preview `reorganize`; ordinary collection/project edits must leave files in place.
-
-Integration tests interrupt processes at every documented transfer/export boundary, then run `operations show` and `recover --execute`. Verify collision preservation, changed-source conflicts, cleanup-pending state, export-baseline recovery, and zero deletion of external attachments on source removal. Test unsupported bundle/metadata/storage cases as safe failures. No production fault-injection flag is required; test harnesses inject effects at the file-operation boundary.
-
-## Backup, Full Export, and Restore
-
-```bash
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config backup --output "$refs_trial_root/backup"
-uv run --locked refs --home "$refs_trial_root/home" --no-project-config library export --output "$refs_trial_root/library-export"
-uv run --locked refs --home "$refs_trial_root/restored" --no-project-config restore --input "$refs_trial_root/backup"
-uv run --locked refs --home "$refs_trial_root/restored" --no-project-config --json show smith-2024-turingTrap
-uv run --locked refs --home "$refs_trial_root/restored" --no-project-config --json resource check
-```
-
-Compare 100% of source IDs, keys, current metadata, provenance, overrides, collection/project relationships, unresolved imports, and resource links against the saved snapshot. Do not mutate both homes against shared external files. Verify external contents are listed as excluded, adopted outputs require current-file revalidation, corrupted bundles fail, and incomplete restores cannot be opened normally. Parse the full export without refs to check entity counts and references.
-
-## Completion Evidence
-
-Record the package lock, runtime/SQLite versions, OS/filesystem, fixture versions, reference-machine performance results, and commands/results for SC-001–SC-009. Search performance uses 10,000 sources, 30,000 links, and 100 fixed queries; p95 target is one second after warmup. Finish with the selected active paper, at least 30 representative migration records, and a separate-home restore. Whole-library cutover and claims about annotation portability wait for that evidence.
-
-## Bibliographic profile acceptance
-
-Validate packaged registry fingerprints against the [coverage inventory](contracts/bibliographic-coverage.json) and ensure every baseline type/field/role has a generated schema path and reported coverage status. This is a coverage check, not proof of conversion. Use synthetic/public cases B01–B15 from the [bibliography contract](contracts/bibliography.md) to exercise import → show → patch → export → reimport, comparing canonical values and explicit limitations. Export the complete library and verify structured native fields, supporting-item content, parent references, asserted relationships, and original bytes separately.
-
-Include a three-level title hierarchy; two publisher/place values; corporate names containing “and”; dropping/non-dropping particles; original/issued/submitted dates; a descriptive edition; preprint and later published article; patent versus application number; programmer versus author; and native types sharing one CSL classification. Assert that editing a recognized native field changes its projection and does not resurrect old raw content. The accepted author/editor key fallback stays unchanged for inventor/programmer-only records.
-
-Inheritance cases cover each supported parent/child pair and field transfer, child overrides, parent identifiers never copied as child identity, missing/cyclic parents, unsupported xdata, and a selected child whose parent is not cited. Include unresolved BBT override directives, unknown macros, duplicate/case-colliding fields and unsupported target types; each must report the affected field/key and block publication when citation meaning cannot be preserved.
-
-Check imported child and standalone notes, URL-only attachments, missing attachment paths, annotations attached to attachments, and unresolved related-item targets through read-only inspection and full export. Do not mistake this for rendering/editor or PDF-annotation acceptance. Validate internal CSL projections against the pinned schema and render the supported .bib outputs through the target Quarto workflow, including title-case/protection differences. The real 30-record minimum sample must include every type/construct used by the selected paper, and must expand if 30 records do not cover them. Required unsupported cases need explicit reconciliation or a verified adapter improvement before migration acceptance.
+Record the complete slice 1 test result, consumer/style versions, corruption/interruption results, restore comparison and the 100-query/10,000-source/30,000-link performance measurement. Distinguish synthetic passing checks from actual manuscript acceptance. The metadata design examples and audit annotation evidence do not substitute for these implementation results.

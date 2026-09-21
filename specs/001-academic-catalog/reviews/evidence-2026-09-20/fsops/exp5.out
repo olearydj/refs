@@ -1,0 +1,6 @@
+[DELETE] inserted 12 x 74.7 MB in 4.1s; catalog size = 897 MB
+[DELETE] backup API 1.04s | VACUUM INTO 1.25s | integrity_check=ok 0.18s | concurrent writer: 22 commits, 0 'database is locked', worst latency 1.253s
+[WAL] inserted 12 x 74.7 MB in 5.1s; catalog size = 897 MB
+[WAL] backup API 1.07s | VACUUM INTO 1.24s | integrity_check=ok 0.09s | concurrent writer: 106 commits, 0 'database is locked', worst latency 0.0s
+default SQLITE_LIMIT_LENGTH: 1000000000
+blob over limit -> DataError string or blob too big

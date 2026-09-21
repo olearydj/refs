@@ -1,0 +1,9 @@
+python 3.14.2 sqlite 3.50.4
+[DELETE long_reader=False] writers wall=0.30s ok=800 locked_failures=0 worst_tx=0.239s | readers queries=31 locked=0 worst=0.068s | rows=800
+[WAL    long_reader=False] writers wall=0.11s ok=800 locked_failures=0 worst_tx=0.098s | readers queries=33 locked=0 worst=0.001s | rows=800
+[DELETE long_reader=True] writers wall=8.33s ok=799 locked_failures=1 worst_tx=5.64s | readers queries=30 locked=2 worst=5.378s | rows=799
+[WAL    long_reader=True] writers wall=0.09s ok=800 locked_failures=0 worst_tx=0.079s | readers queries=28 locked=0 worst=0.001s | rows=800
+[keys DELETE immediate] wall=0.13s committed=200/200 rows=200 distinct=200 errors={}
+[keys DELETE deferred ] wall=0.07s committed=175/200 rows=175 distinct=175 errors={'OperationalError:database is locked': 25}
+[keys WAL    immediate] wall=0.06s committed=200/200 rows=200 distinct=200 errors={}
+[keys WAL    deferred ] wall=0.02s committed=16/200 rows=16 distinct=16 errors={'OperationalError:database is locked': 184}

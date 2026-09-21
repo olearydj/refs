@@ -1,0 +1,78 @@
+Installed 1 package in 2ms
+No known latex representation for character: U+0301 - ‘́’
+No known latex representation for character: U+0301 - ‘́’
+No known latex representation for character: U+0301 - ‘́’
+No known latex representation for character: U+0301 - ‘́’
+No known latex representation for character: U+5C71 - ‘山’
+No known latex representation for character: U+7530 - ‘田’
+No known latex representation for character: U+5C71 - ‘山’
+No known latex representation for character: U+7530 - ‘田’
+pylatexenc 2.11 python 3.14.2
+IN   : The {NASA} Mission to {{M}ars}
+  default L->U : 'The NASA Mission to Mars'
+  default U->L : 'The NASA Mission to Mars'   same_as_input=False  U_stable=True
+  keepbr  L->U : 'The {NASA} Mission to {Mars}'
+  keepbr  U->L : 'The \\{NASA\\} Mission to \\{Mars\\}'   same_as_input=False  U_stable=True
+IN   : A {\"o} and \"{o} and \"o and {\"O}ber
+  default L->U : 'A ö and ö and ö and Öber'
+  default U->L : 'A \\"o and \\"o and \\"o and \\"Ober'   same_as_input=False  U_stable=True
+  keepbr  L->U : 'A ö and ö and ö and Öber'
+  keepbr  U->L : 'A \\"o and \\"o and \\"o and \\"Ober'   same_as_input=False  U_stable=True
+IN   : Study of $\alpha$-decay \& 50\% Growth in {$\mathrm{CO}_2$}
+  default L->U : 'Study of α-decay & 50% Growth in CO_2'
+  default U->L : 'Study of \\ensuremath{\\alpha}-decay \\& 50\\% Growth in CO\\_2'   same_as_input=False  U_stable=True
+  keepbr  L->U : 'Study of $\\alpha$-decay & 50% Growth in {$\\mathrm{CO}_2$}'
+  keepbr  U->L : 'Study of \\${\\textbackslash}alpha\\$-decay \\& 50\\% Growth in \\{\\${\\textbackslash}mathrm\\{CO\\}\\_2\\$\\}'   same_as_input=False  U_stable=True
+IN   : M{\"u}ller, J{\"o}rg and Erd\H{o}s, P\'al and {\O}stergaard, S{\o}ren
+  default L->U : 'Müller, Jörg and Erdős, Pál and Østergaard, Søren'
+  default U->L : 'M\\"uller, J\\"org and Erd\\H{o}s, P\\\'al and {\\O}stergaard, S{\\o}ren'   same_as_input=False  U_stable=True
+  keepbr  L->U : 'Müller, Jörg and Erdős, Pál and Østergaard, Søren'
+  keepbr  U->L : 'M\\"uller, J\\"org and Erd\\H{o}s, P\\\'al and {\\O}stergaard, S{\\o}ren'   same_as_input=False  U_stable=True
+IN   : https://example.org/a_b%20c#frag?x=1&y=2~z
+  default L->U : 'https://example.org/a_b'
+  default U->L : 'https://example.org/a\\_b'   same_as_input=False  U_stable=True
+  keepbr  L->U : 'https://example.org/a_b'
+  keepbr  U->L : 'https://example.org/a\\_b'   same_as_input=False  U_stable=True
+IN   : 10.1000/abc_def(2021)1%2F2
+  default L->U : '10.1000/abc_def(2021)1'
+  default U->L : '10.1000/abc\\_def(2021)1'   same_as_input=False  U_stable=True
+  keepbr  L->U : '10.1000/abc_def(2021)1'
+  keepbr  U->L : '10.1000/abc\\_def(2021)1'   same_as_input=False  U_stable=True
+IN   : Journal with {"}quotes{"} {and} \textit{italics} and \emph{emph} --- dash -- en ``q\'\'
+  default L->U : 'Journal with "quotes" and italics and emph — dash – en “q́́'
+  default U->L : "Journal with ''quotes'' and italics and emph {\\textemdash} dash {\\textendash} en {\\textquotedblleft}q́́"   same_as_input=False  U_stable=False
+  keepbr  L->U : 'Journal with "quotes" {and} italics and emph — dash – en “q́́'
+  keepbr  U->L : "Journal with ''quotes'' \\{and\\} italics and emph {\\textemdash} dash {\\textendash} en {\\textquotedblleft}q́́"   same_as_input=False  U_stable=False
+IN   : Nested {braces {three {deep}}} and \{ escaped \}
+  default L->U : 'Nested braces three deep and { escaped }'
+  default U->L : 'Nested braces three deep and \\{ escaped \\}'   same_as_input=False  U_stable=True
+  keepbr  L->U : 'Nested {braces {three {deep}}} and { escaped }'
+  keepbr  U->L : 'Nested \\{braces \\{three \\{deep\\}\\}\\} and \\{ escaped \\}'   same_as_input=False  U_stable=True
+IN   : Vall{\'e}e Poussin, Charles~Louis
+  default L->U : 'Vallée Poussin, Charles\xa0Louis'
+  default U->L : "Vall\\'ee Poussin, Charles~Louis"   same_as_input=False  U_stable=True
+  keepbr  L->U : 'Vallée Poussin, Charles\xa0Louis'
+  keepbr  U->L : "Vall\\'ee Poussin, Charles~Louis"   same_as_input=False  U_stable=True
+IN   : \noopsort{1990}Title with \unknownmacro{arg} and {\sc Small Caps}
+  default L->U : '1990Title with arg and Small Caps'
+  default U->L : '1990Title with arg and Small Caps'   same_as_input=False  U_stable=True
+  keepbr  L->U : '{1990}Title with {arg} and {Small Caps}'
+  keepbr  U->L : '\\{1990\\}Title with \\{arg\\} and \\{Small Caps\\}'   same_as_input=False  U_stable=True
+IN   : Na\"{\i}ve \c{c} \v{s} \ss{} \L{}\'od\'z \aa \ae
+  default L->U : 'Naïve ç š ß Łódź åæ'
+  default U->L : 'Na{\\"\\i}ve \\c{c} \\v{s} {\\ss} {\\L}\\\'od\\\'z \\r{a}{\\ae}'   same_as_input=False  U_stable=True
+  keepbr  L->U : 'Naïve ç š ß Łódź åæ'
+  keepbr  U->L : 'Na{\\"\\i}ve \\c{c} \\v{s} {\\ss} {\\L}\\\'od\\\'z \\r{a}{\\ae}'   same_as_input=False  U_stable=True
+IN   : Unbalanced {brace
+  default L->U : 'Unbalanced brace'
+  default U->L : 'Unbalanced brace'   same_as_input=False  U_stable=True
+  keepbr  L->U : 'Unbalanced {brace}'
+  keepbr  U->L : 'Unbalanced \\{brace\\}'   same_as_input=False  U_stable=True
+IN   : $x_i^2 \leq \frac{1}{2}$ and H$_2$O
+  default L->U : 'x_i^2 ≤1/2 and H_2O'
+  default U->L : 'x\\_i{\\textasciicircum}2 \\ensuremath{\\leq}1/2 and H\\_2O'   same_as_input=False  U_stable=False
+  keepbr  L->U : '$x_i^2 \\leq \\frac{1}{2}$ and H$_2$O'
+  keepbr  U->L : '\\$x\\_i{\\textasciicircum}2 {\\textbackslash}leq {\\textbackslash}frac\\{1\\}\\{2\\}\\$ and H\\$\\_2\\$O'   same_as_input=False  U_stable=False
+##### unicode_to_latex on plain unicode
+'M\\"uller \\& S{\\o}n 50\\% \\_x\\_ \\#1 {\\textasciitilde} \\{NASA\\} \\$5 Erd\\H{o}s {\\L}\\\'od\\\'z {\\textquotedblleft}quoted{\\textquotedblright} {\\textemdash} \\ensuremath{\\alpha} \\ensuremath{\\beta} fi 山田 na{\\"\\i}ve {\\textbackslash}textit\\{x\\}'
+'M\\"uller & S{\\o}n 50% _x_ #1 ~ {NASA} $5 Erd\\H{o}s {\\L}\\\'od\\\'z {\\textquotedblleft}quoted{\\textquotedblright} {\\textemdash} \\ensuremath{\\alpha} \\ensuremath{\\beta} fi 山田 na{\\"\\i}ve \\textit{x}'

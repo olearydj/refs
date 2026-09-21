@@ -1,93 +1,35 @@
-# Import, Bibliography, and Recovery Formats v1
+# Input, Migration and Recovery Formats v1
 
-The [bibliographic profile](bibliography.md) owns type/field coverage, projection semantics, inherited-field rules, supporting records, and fixture obligations. Its explicit rules supersede the earlier broad table below where native subtypes need finer distinctions.
+## Bibliographic input in slice 1
 
-## Common Preservation Rules
+`add --format refs|csljson|bib --input PATH` accepts a single entry; stdin is supported. CSL input is passed through the same bounded canonical validator as refs metadata; external id is origin evidence, not a catalog UUID. `import --format bib --input PATH --origin TEXT` accepts a file and records per-entry outcomes. Input accepts legacy BibTeX plus the supported BibLaTeX aliases per entry, not an assumption that a file extension proves dialect. The parser adapter remains bibtexparser==2.0.1 with a fixed raw-block pipeline; do not use its writer or default decoding middleware as semantic authority.
 
-Every imported artifact is retained byte-for-byte with SHA-256, format, origin namespace, adapter version, and locator metadata. Parsing produces one accountable entry per record or failed raw block. Comments, strings, preambles, unknown fields, and unresolved relationships remain recoverable. Canonical normalized data never replaces original evidence. Unsupported input is visible; no library-wide lossless conversion is claimed.
+Retain each entry's exact bytes, its containing-file digest/locator, relevant definitions/comments and failed-block evidence. For a malformed block whose parser raw text is truncated, use independently retained original input bytes, not that truncated text. Duplicate/case-colliding fields, missing-equals absorption and embedded-entry-marker cases require adapter guards or an explicit unresolved result; never silently accept corrupted fields. No refs-owned general parser is introduced merely to bypass these defects.
 
-`--origin` is a stable user-chosen namespace for the same upstream dataset. The same origin plus artifact digests replays its batch. A changed artifact uses recorded item identities where available, then consistent identifiers; byte identity of a different dataset does not authorize identity merging. Identical retries and per-entry revisions follow [records](records.md).
+Decode only supported non-verbatim text through exact-pinned pylatexenc==2.11 on a working representation. Preserve original syntax, case-protection groups and unknown commands. Never decode DOI/URL/file fields with a generic LaTeX-to-text transform. Export generates canonical values and protection; it does not round-trip old raw TeX. Unsupported commands/math retain original evidence and an unassessed-output limitation.
 
-## BibTeX/BibLaTeX
+Only month macros are resolved natively. Arbitrary strings, concatenation, crossref/xdata and custom inheritance are preserved unresolved. An explicit external Biber/Pandoc flattening pre-step may produce a second input with tool/version and original provenance; do not implement a false subset of inheritance rules. An inbook with booktitle has a part title; without it but with chapter/pages, preserve traditional container-plus-part identification and flag interpretation in preview.
 
-Freeze the parser pipeline rather than inheriting changing defaults: parse raw blocks without middleware; identify parse failures, duplicate keys, and case-colliding field names first; then resolve supported string references and remove only the outer lexical enclosure on a separate working representation. Preserve nested protected groups before LaTeX decoding. Use pylatexenc's parser for supported text/accents and group boundaries, retaining unrecognized macros/math as original syntax with warnings. Do not lower-case fields before detecting `author`/`Author` ambiguity, and do not globally strip braces.
+`--origin` identifies an upstream dataset. Same origin plus input digest replays outcomes. Changed input uses prior origin identities or explicitly reconciled consistent identifiers. Conflicts remain unapplied; conflict-free entries commit individually. Re-importing a refs fallback uses export projection evidence as specified in records.md, not key-only matching. Source corrections and deliberate clears always prevail until explicit reconciliation.
 
-| Imported representation | Normalized handling / output |
-| --- | --- |
-| `article` | Journal article; author/editor roles, title, journal, volume/number, pages/eid, issued date, DOI, URL. |
-| `book`, `inbook`, `incollection` | Book or chapter with title/container distinction, publisher/place, edition, series, pages, ordered contributor roles. Traditional BibTeX inbook is dialect-specific: its title is the book title; apply B15 rather than the BibLaTeX chapter mapping. |
-| `inproceedings`, `conference` | Conference paper with booktitle, event/publication details, editors/organization and pages. |
-| `online`, `software`, `misc` | Explicit webpage/software/document representation; retain native type. An ambiguous miscellaneous entry requires type review before a claim of citation fidelity. |
-| `thesis`, `phdthesis`, `mastersthesis` | Thesis with subtype/genre and institution retained. |
-| `patent`, `report`, `techreport`, `unpublished` | Type-specific jurisdiction/number/institution/status retained; preprint classification requires explicit evidence. |
-| `author`, `editor`, additional contributor fields | Parse order and personal/literal distinctions; fully grouped corporate names remain literals. Unsupported forms retained and flagged. |
-| `shorttitle`, `edition`, version/custom fields | Preserve original text; normalize only unambiguous meanings. Never treat `1.4` as fourteenth edition or split `P1E` automatically. |
-| `file`, keywords, annotation/note fields | File expressions become attachment metadata/resource links only where parsed safely; keywords become legacy tags. Bibliographic note/annotation fields stay distinct from authored child notes and PDF annotations. Supporting records retain identities and parents under the bibliography contract. No moves, fetching, taxonomy promotion, or note overwrite. |
-| Unknown type/field or TeX construct | Retain original and explicit limitation; do not silently manufacture a supported value. |
+## One-time Zotero extraction, slice 3
 
-Supported inheritance is limited to the parent/child pairs and exact field transfers enumerated in the [bibliographic contract](bibliography.md#inheritance-macros-and-better-bibtex-extra). Child values win and inheritance retains field provenance. Other crossref/xref/xdata/custom semantics remain unresolved. Required unresolved facts block export until explicit reconciliation or verified flattening; preserving raw syntax is not usable inheritance support. A selected child does not automatically select its parent.
+The installed runtime does not depend on Zotero's SQLite layout or Better BibTeX database. A separately versioned one-time read-only extractor produces UTF-8 JSON Lines under the published `refs-zotero-input-v1` contract. Each line contains a bibliographic item with original published API-shaped item JSON, library URI, item key, raw dates plus meta.parsedDate when present, ordered creators, tags, collection keys, attachment locators, child-note originals and related endpoints. Lines identify kinds and parents; attachment/relationship-only lines may retain unresolved parent keys without fabricating a source.
 
-Output uses stable binary citation-key order and stable field order, UTF-8, and no run timestamps. BibLaTeX is the default; BibTeX output supports only representable mapped data and reports limitations. Preserve corporate grouping and technical title protection. Do not double-encode already retained TeX. Expand supported string references or emit the required deterministic definitions; undefined macros required for usable output fail visibly. Retained noncitation fields remain in the catalog even when omitted from a project bibliography, with an omission report. Export never silently omits a selected source.
+Snapshot/extraction acquisition is explicit. Archive a dated full Zotero data directory outside the catalog while Zotero is closed or through a verified consistent snapshot procedure. Record archive path, hashes, application/schema/BBT versions and extractor version; do not embed the databases in refs. The observed source is Zotero 6.0.37 (userdata 121/global schema 28) with BBT 7.0.0; certify that concrete route against fixtures. Unknown layouts require another tested extractor, not silent runtime compatibility. BBT 8+ cannot be assumed to have better-bibtex.sqlite.
 
-## Zotero Snapshot Input
+Resolve assigned keys from verified native/Extra/legacy BBT evidence, with disagreements reported rather than precedence hiding a conflict. All 562 observed Extra keys matched BBT in the audit, but that is a historical observation, not a universal invariant. Library/item identities remain provenance and grant no permission to update Zotero objects.
 
-Input is a directory with `manifest.json` and preserved databases. Snapshot acquisition is separate from import and must happen with Zotero closed or an equivalently verified consistent snapshot procedure. This feature's importer does not connect to or modify a running Zotero catalog.
+Child notes become imported searchable context after preview; store original markup and derived inert searchable text with their origin. Do not import attachment outline notes or annotation rows. Preserve simple related pairs and unresolved endpoints. URL-only attachments remain URL metadata; standalone attachments remain extractor records requiring explicit source association or reported preserved-only status. Do not create supporting_items or invent bibliographic parents. Trash and replacement/merge predicates are explicitly reported by the extractor and never silently resurrect removed items.
 
-```json
-{
-  "format": "refs-zotero-snapshot",
-  "version": 1,
-  "captured_at": "2026-09-20T12:00:00Z",
-  "quiescent": true,
-  "library_identity": "local-personal-library",
-  "members": [
-    {"role": "zotero", "path": "zotero.sqlite", "sha256": "actual-member-sha256"},
-    {"role": "better_bibtex", "path": "better-bibtex.sqlite", "sha256": "actual-member-sha256"}
-  ],
-  "original_locations": {"data_directory": "/original/zotero", "linked_base": "/original/documents"}
-}
-```
+Imported files stay where they are. Preserve storage/base/absolute path semantics against the original data directory, not the archive copy. The 511 external files can use one named old-tree root. The user may later authorize moving the whole tree beneath lib and changing that mapping, followed by resolve checks and catalog-only filing assignment. This document authorizes no live movement.
 
-The shown digests are explanatory strings; actual inputs require 64 lowercase hexadecimal digits matching the members. Member paths must be relative, nonescaping, and regular files. Opening databases is read-only, validates integrity, and records schema/version/capability fingerprints. Admission requires the adapter's supported schema fixture matrix; unknown schemas are rejected before source application. Item identity is library identity plus Zotero item key. Better BibTeX keys are joined through verified source IDs/keys, never assumed from row ordering.
+The stale June library-wide .bib may be a slice 1 seed after explicit regeneration outside refs; it is not a verified Zotero migration. Later exact types, collections and identities require reconciliation, with keys as candidates rather than automatic merge authority.
 
-Preserve collections and ordered creator roles. Absolute paths remain absolute; `storage:` paths resolve beneath the original data directory's storage, and base-relative links beneath the original linked base. Do not point links at the snapshot's copied directory. Missing paths remain reported links. Notes, annotations and all attachment metadata are imported as structured supporting items with origin/parent identities, including URL-only or missing-file attachments. Asserted related-item links retain resolved or unresolved endpoint identities. Their inspection and full export are required; editing/rendering remain outside scope. The certified schema matrix and at least 30 representative records are release fixtures; this planning artifact does not certify a live library.
+## Snapshot v1, slice 1
 
-## Backup Bundle v1
+A snapshot directory contains catalog.sqlite, config.toml, resources.jsonl and manifest.json. The manifest states format=refs-snapshot, version=1, catalog/schema/profile identity, each member's hash/size, configuration origin, root inventory, unresolved operation IDs, and external_contents_included=false. It is published from a verified .partial directory. Raw originals and export projection/waiver evidence are in the database. Recovery procedure and separate-home proof are required in quickstart.md.
 
-```text
-backup-directory/
-  manifest.json
-  catalog.sqlite
-  config.toml
-  resources.jsonl
-```
+## Later full export, slice 4
 
-Manifest fields: `format="refs-backup"`, `version=1`, `state="complete"`, catalog ID, catalog schema version, application version, created time, configuration digest, each member's relative path/hash/byte length, resource count, and `external_contents_included=false`. Original artifacts and provenance are inside the snapshot. List excluded external resources with locator, mode, and last observed availability; a link inventory is not content backup.
-
-Unknown versions, extra undocumented executable members, path traversal, symlinks, missing hashes, and inconsistent catalog identities are rejected. Restore uses the schema migration compatibility policy. Bundle checksums verify consistency, not authenticity against a malicious author; bundles are local user-controlled inputs and no content is executed.
-
-## Full Library Export v1
-
-```text
-library-directory/
-  manifest.json
-  sources.jsonl
-  collections.jsonl
-  resources.jsonl
-  supporting-items.jsonl
-  source-relations.jsonl
-  bibliography-profile.json
-  projects.jsonl
-  memberships.jsonl
-  origins.jsonl
-  provenance.jsonl
-  imports.jsonl
-  operations.jsonl
-  export-targets.jsonl
-  config.toml
-  originals/<sha256>
-```
-
-Manifest uses `format="refs-library"`, `version=1`, completion state, catalog identity, counts, member hashes/lengths, and external-content exclusion. Each line is one documented entity object using the field names and relationships in [data model](../data-model.md); UUIDs and order indices are retained. `memberships.jsonl` distinguishes collection/project relationships and citation selection. `imports.jsonl` includes batches/entries and unresolved outcomes. `operations.jsonl` includes durable semantic/recovery state, not transient lock files. Each source record includes state (active or removed tombstone), creators/identifiers, metadata, overrides, and policy provenance; manifests distinguish active counts from retained tombstone counts. `supporting-items.jsonl` retains notes/attachment/annotation content, formats and parent references; `source-relations.jsonl` retains asserted relationships including unresolved endpoints. `bibliography-profile.json` identifies the canonical profile and upstream pins. Every recognized native field remains in the structured source record as well as its original evidence. Original artifacts are opaque unchanged bytes with digest names, never executable scripts.
-
-The runtime `library-export` schema describes each entity type and manifest; consumers can read the UTF-8 records and originals without refs or SQLite. Full export does not itself adopt or overwrite project bibliographies. Externally linked files and managed document-library contents remain excluded and listed. Completion is published only after counts and all references are checked.
+A versioned logical bundle contains documented JSONL sources, resources, collections, projects, memberships, origin identities, field provenance, originals, imports/outcomes, related pairs, operations and export targets/projections/waivers, plus config and manifest hashes/counts. Include removed-source state and retained keys. No supporting-items file exists. Every field can be read without refs or executing SQLite. File-byte inclusion is explicit; inventories alone are not file backup. Restore and logical export are different operations. Unknown versions, invalid references and escaping paths must fail visibly.

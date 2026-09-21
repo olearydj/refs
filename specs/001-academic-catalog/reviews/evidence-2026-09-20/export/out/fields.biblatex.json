@@ -1,0 +1,178 @@
+[
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "Journal of Synthetic Tests",
+    "container-title-short": "J. Synth. Tests",
+    "id": "f-eid",
+    "issue": "3",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "Article with eid only",
+    "title-short": "Eid only",
+    "type": "article-journal",
+    "volume": "12"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "Journal of Synthetic Tests",
+    "id": "f-eid-pages",
+    "issue": "3",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "page": "1-15",
+    "title": "Article with eid and pages",
+    "type": "article-journal",
+    "volume": "12"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "Journal of Synthetic Tests",
+    "id": "f-issue",
+    "issue": "3, Spring",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "page": "1-15",
+    "title": "Article with issue and number",
+    "type": "article-journal",
+    "volume": "12"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "collection-title": "New series",
+    "container-title": "Journal of Synthetic Tests",
+    "id": "f-series",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "page": "1-15",
+    "title": "Article with series",
+    "type": "article-journal",
+    "volume": "12"
+  },
+  {
+    "ISBN": "000-0-00-000000-0",
+    "ISSN": "0000-0000",
+    "abstract": "Synthetic abstract.",
+    "annote": "Synthetic annotation.",
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "call-number": "lib",
+    "edition": "2",
+    "id": "f-custom",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "keyword": "alpha, beta",
+    "language": "en-US",
+    "note": "Synthetic note. Synthetic addendum",
+    "number-of-pages": "321",
+    "title": "Book with custom fields",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "edition": "Revised and Expanded",
+    "id": "f-edition-text",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "Book with literal edition",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "id": "f-ids",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "other-ids": "f-old-key, f-older-key",
+    "title": "Book with ids aliases",
+    "type": "book"
+  },
+  {
+    "DOI": "10.0000/ABC_def",
+    "URL": "https://doi.org/10.0000/ABC_def",
+    "author": [
+      {
+        "family": "Alpha",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "Journal of Synthetic Tests",
+    "id": "f-doi-url",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "title": "Doi and url both",
+    "type": "article-journal"
+  }
+]

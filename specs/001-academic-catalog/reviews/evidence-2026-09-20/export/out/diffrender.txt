@@ -1,0 +1,15 @@
+CASE-ONLY    apa     r-software
+CONTENT-DIFF apa     r-podcast
+CONTENT-DIFF apa     r-talk
+CASE-ONLY    apa     r-title
+CONTENT-DIFF apa     r-eid
+CONTENT-DIFF apa     r-standard
+CONTENT-DIFF apa     r-preprint
+CONTENT-DIFF apa     r-patent
+CONTENT-DIFF chicago r-podcast
+CONTENT-DIFF chicago r-talk
+CONTENT-DIFF chicago r-eid
+CONTENT-DIFF chicago r-standard
+CONTENT-DIFF chicago r-preprint
+CONTENT-DIFF chicago r-patent
+{('apa', 'CASE-ONLY'): 2, ('apa', 'IDENTICAL'): 9, ('apa', 'CONTENT-DIFF'): 6, ('chicago-author-date', 'IDENTICAL'): 11, ('chicago-author-date', 'CONTENT-DIFF'): 6}

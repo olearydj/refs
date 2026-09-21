@@ -1,0 +1,17 @@
+Alpha, A. (2019). The volume title (Vol. 3). First Press and Second Press.
+Alpha, A. (2020a). A history of Alabama and the American south after Darwin: Measuring pH with Python. Journal of Synthetic Tests, 1, 1–2.
+Alpha, A. (2020b). An article numbered not paged. Journal of Synthetic Tests, 12(3), e0123456. https://doi.org/10.0000/eid.1
+Alpha, A. (2021). A seasonal issue article. Synthetic Quarterly.
+Alpha, A. (c. 1850). An approximately dated book. Synthetic Press.
+Coder, C. (2023). Synthtool. Computer software, version 2.4.1, Synthetic Labs. https://example.org/synthtool
+Darwin, C. (2003). On the origin of synthetic species. Reprint Press.
+Data, D. (2022). Synthetic measurements of Alabama rivers. Dataset, version 3, Synthetic Repository. https://doi.org/10.0000/data.3
+Director, D. (2010). A synthetic film. Film, Synthetic Studios.
+Foreword, F. (2019). Introduction. In The collected works (pp. 1–9). Synthetic Press.
+Gogh, V. van, & Beethoven, L. van. (2020). Particles in practice. Synthetic Press.
+Host, H. (2019). Episode 12: The synthetic interview. The Synthetic Podcast, no. 12, Synthetic Audio Network. https://example.org/pod/12
+Inventor, I. (2015). Method for synthetic testing. U.S. Patent US 1234567 B2, Synthetic Holdings and Sons, Inc.
+Pre, P. (2024). A synthetic preprint [Unpublished manuscript].
+Speaker, S. (2022). A talk without proceedings. Conference presentation, Synthetic Conference, Springfield.
+Synthetic Standards Body. (2020). Standard for synthetic things. SSB 1234-2020.
+Writer, W. (1999). Letter to rae roe.

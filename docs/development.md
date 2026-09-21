@@ -1,5 +1,7 @@
 # refs: Development and Evaluation Brief
 
+**Historical proposal notice, 2026-09-21:** Examples and earlier defaults below are source rationale. Audit sections 11–12 and the revised [feature contracts](../specs/001-academic-catalog/contracts/cli.md) supersede the single-home, mode/adopt, broad vocabulary and output-profile proposals. Follow the current [plan](../specs/001-academic-catalog/plan.md) for delivery slices.
+
 
 **Bibliographic standards follow-through (2026-09-20):** The [model decision](bibliographic-model.md) and [feature mapping contract](../specs/001-academic-catalog/contracts/bibliography.md) now define the standards profile, structured field coverage, preservation limits, and acceptance obligations. Earlier proposals below remain source rationale.
 **Feature status (2026-09-20):** This document retains source rationale and earlier review proposals. Current behavior is in the [clarified academic specification](../specs/001-academic-catalog/spec.md); implementation decisions are in its [plan](../specs/001-academic-catalog/plan.md) and [contracts](../specs/001-academic-catalog/contracts/cli.md). Later clarification answers supersede conflicting older defaults below.

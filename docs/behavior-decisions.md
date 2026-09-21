@@ -75,7 +75,7 @@ Derived values update when their source title changes. Manual overrides persist 
 
 ## 4. Citation Keys
 
-**Agreed:** Preserve existing keys. Make the generation template configurable. Title corrections, edition edits, and preference changes must not silently regenerate assigned keys.
+**Requirement (constitution Principle I and the accepted key-policy interpretation; not a verbatim user statement):** Preserve existing keys. Make the generation template configurable. Title corrections, edition edits, and preference changes must not silently regenerate assigned keys.
 
 **Observed:** Better BibTeX currently has `auth.lower+year+title.lower.substring(1,5)` configured. Stored keys include `johnson2023boost`, `brynjolfsson2022turin`, `wotc2014dunge`, and exceptions such as `montgomery2019`. All 562 stored keys are pinned. The formula alone does not establish its exact tokenization or abbreviation semantics.
 
@@ -142,12 +142,30 @@ These complete the first draft without requiring every detail to be settled in t
 
 **Accepted A1 — attachment filenames and scope:** Preserve existing filenames, including existing spaces. When explicitly generating a new filename, use the reviewed no-spaces style: `PracticalVim-2E-2015.pdf`, `TheTuringTrap-2022.pdf`, and `ZeroToSold-v1.2.4-2020.pdf`. Do not enforce that convention by renaming imported or linked files. Shared-folder collection and bulk renaming are later-version possibilities, not MVP requirements. If collection is added, preserve names by default and make renaming a separate explicit option. These naming choices do not settle attachment-role or primary-selection proposals.
 
-**Accepted A2 — collections and managed placement:** Support hierarchical collections distinct from projects and subject tags. A source may belong to multiple collections; a managed attachment has one designated filing collection determining its physical placement beneath a configured document-library root. Linked-in-place files remain untouched by collection changes. Managed placement permits explicit, previewed reorganization that moves files and updates catalog links; membership edits do not automatically move files. Existing Zotero links may be explicitly adopted into managed placement without an immediate move. Reorganization must handle conflicts, interrupted transfers, and reporting of potentially broken external links; it does not promise to repair Obsidian links automatically. Preserve filenames during placement changes. This brings a small collection hierarchy, intake, and managed reorganization into early requirements, refining A1's earlier blanket deferral of collection operations. Broad bulk consolidation and bulk renaming remain later possibilities. The new-file intake default, folder mapping details, and handling of an unfiled source remain open.
+**Accepted A2 — revised 2026-09-21:** The user selected “B: Derive mode from location (Recommended)”. Collections, projects and tags remain distinct. Managed status derives from a named-root locator resolving beneath the library root; other files remain linked and untouched. Each managed file has one effective filing collection, defaulting to Unfiled. There is no stored mode flag or resource adopt command. Previewed bulk assignment from current folders moves nothing; selected reorganize remains explicit, preserves filenames and reports external-link impacts. Membership edits never move files. This supersedes the earlier assistant-added adopt-without-move state outside the library. The corresponding constitution amendment requires explicit authorization. See audit section 11 for the exact question/options and auditor interpretation.
 
 ## Review Sequence
 
 **Accepted C1 — initial source capture:** An external agent obtains bibliographic information and submits it through the CLI. The user already constructs ad hoc bibliographies this way outside Zotero; retaining those references in a reusable catalog is a primary motivation. Built-in identifier lookup is deferred. Existing project bibliographies are also reconciliation inputs, not proof that Zotero already holds all relevant sources and corrections. See the [recovered session evidence](workflow-research.md#agent-supplied-references-in-the-manufacturing-paper). Command syntax, submission schemas, and conflict-resolution details remain proposals.
 
-T1, E1, S1, K1, K2, K3, and K4 are accepted. The component separators and basic camel-case rendering are settled; detailed punctuation, acronym, and transliteration fixtures remain. A1 establishes filename conventions; A2 refines its scope by bringing collections, managed intake, and explicit reorganization into early requirements while deferring bulk renaming. C1 establishes agent-supplied metadata as the initial capture path. Project configuration, the daily workflow, and ambiguous historical edition labels remain review topics, collected in [loose requirements](requirements-review.md). The current discussion stops at requirements collection, before feature specifications.
+T1, E1, S1, K1, K2, K3, and K4 are accepted. The component separators and basic camel-case rendering are settled; detailed punctuation, acronym, and transliteration fixtures remain. A1 establishes filename conventions; A2 refines its scope by bringing collections, managed intake, and explicit reorganization into early requirements while deferring bulk renaming. C1 establishes agent-supplied metadata as the initial capture path. Project configuration, the daily workflow, and ambiguous historical edition labels remain review topics, collected in [loose requirements](requirements-review.md). The active specification and plan now own the executable details; this sheet retains their decision provenance.
 
 Record accepted choices here before promoting them into the feature specification; unanswered recommendations remain proposals. After promotion, the specification owns executable behavior and this sheet should link to it rather than evolve as a parallel contract.
+
+## Audit-session decisions, 2026-09-21
+
+The [audit sections 11–12](../specs/001-academic-catalog/reviews/2026-09-20-independent-design-audit.md#11-addendum-2026-09-21-user-decisions-on-the-open-items) retain each question, offered options, literal selected label and auditor interpretation separately. The [spec Clarifications](../specs/001-academic-catalog/spec.md#clarifications) carries literal replies and their requirement consequences. These supersede earlier conflicting proposals in this sheet. An interpretation is not a quotation, and an earlier short reply is not invalid solely because it was short.
+
+| Decision | Current interpreted convention |
+| --- | --- |
+| D1 breadth | Model used vocabulary in one CSL-shaped core, optional native label, four justified extensions; preserve per-entry originals. |
+| D3 notes | Preview imported child notes into searchable context; exclude attachment outlines/annotation rows; archive Zotero externally; retain related pairs. |
+| D4 export | Four classes; exact revision/profile/loss waiver; unknowns require a single-run override; blocked output writes nothing. |
+| Slice 1 | Capture-to-export plus non-destructive verified copy to Unfiled and demonstrated separate-catalog restore. |
+| A2 | Root-derived ownership and filing assignments without movement; see revised A2 above. |
+| D2 titles | Internal Unicode Title Case, per-title terms and whole-title flag. Citation styles govern output. No offset spans. |
+| D8 profile | Portable BibTeX only in slice 1; richer profiles later by declared compatible consumers, never silent detection. |
+| D6 key names | Latin-only Unicode normalization/table, explicit unsupported-name override, no runtime transliteration dependency. |
+| D5 locations | Config ~/.config/refs/config.toml; data /casa/refs/cat and /casa/refs/lib, canonically /Volumes/Casa/refs/...; only library may be synced. |
+
+The earlier T1/E1/S1 and K2 acceptances are interpretations of the preceding recommendations and short replies, as documented by audit F-S04 and corrected in section 10; they are not claimed as the user's literal prose. Concrete lists introduced during planning remain implementation selections, not retrospective user quotations. Existing key preservation also follows the adopted constitution and never authorizes an automatic rekey.

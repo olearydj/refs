@@ -1,5 +1,7 @@
 # Local Dependency Audit
 
+**2026-09-21 revision:** Sibling-project observations below remain historical evidence. Current selections in plan.md/research.md supersede older recommendations: Typer >=0.27.2, pylatexenc==2.11, no Unidecode, Latin-only policy, cross-volume copy first, no hard-linked backups, and separate config/catalog locations.
+
 **Date**: 2026-09-20. **Purpose**: Ground refs package choices in the user's current development practice, including the explicit preference for Typer.
 
 ## Scope and evidence

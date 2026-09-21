@@ -1,0 +1,7 @@
+pub/2026-insight-dema-llm/references.bib {'title_case': 6, 'sentence_case': 1} langid: {}
+pub/manufacturing-training-media-tradeoffs/references.bib {'title_case': 39, 'too_short': 2} langid: {}
+pub/pipyer-paper/references.bib {'too_short': 1, 'title_case': 10} langid: {}
+pub/dissertation/references.bib {'title_case': 264, 'too_short': 27, 'mixed': 1} langid: {'english': 11, 'american': 1}
+pub/2026-jose-danvas/references.bib {'title_case': 7, 'too_short': 4} langid: {}
+dev/dema-llm/docs/references.bib {'title_case': 27, 'sentence_case': 1, 'too_short': 6} langid: {}
+au/!Research/bib/zotero.bib {'title_case': 480, 'too_short': 81, 'mixed': 1} langid: {'english': 207, 'american': 4, 'bangla': 1}

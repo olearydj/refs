@@ -1,0 +1,3 @@
+publish ok, nlink 2
+second publish -> FileExistsError (no-overwrite holds)
+hardlink of symlink source -> is_symlink: False
