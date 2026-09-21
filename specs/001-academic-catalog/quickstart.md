@@ -1,6 +1,49 @@
 # Slice 1 Acceptance Walkthrough
 
-**Planned checks, not executed implementation evidence.** Use disposable synthetic inputs and explicit test paths; no live Zotero/catalog/PDF/manuscript changes. The [file contract](contracts/files-and-recovery.md#snapshot-and-documented-restore) owns restore safety.
+**Milestone 1 verified on 2026-09-21. The remaining slice 1 checks below are planned.** Use disposable synthetic inputs and explicit test paths; no live Zotero/catalog/PDF/manuscript changes. The [file contract](contracts/files-and-recovery.md#snapshot-and-documented-restore) owns restore safety.
+
+## Milestone 1: One reference from capture to export
+
+From the repository root, run the locked environment checks:
+
+```sh
+uv sync --locked
+uv run --locked pytest
+uv run --locked ruff check .
+uv run --locked ty check src/refs
+```
+
+The milestone run passed 31 tests, including one installed smoke test against real SQLite and bibliography bytes. Ruff and ty reported no findings. The CLI provides init, paths, add, show, project create, project cite and export. The initial migration creates seven tables. Capture currently accepts a supplied citation key and the bounded English journal-article input; unsupported fields fail explicitly. Generated keys and broader inputs arrive in later tasks.
+
+Run the same disposable demonstration used for verification:
+
+```sh
+demo=$(mktemp -d)
+export REFS_CONFIG="$demo/config.toml" REFS_CATALOG="$demo/cat"
+uv run --locked refs init --library-root "$demo/lib"
+uv run --locked refs add --format refs --input tests/fixtures/reference.json
+uv run --locked refs show smith-2024-learningPython
+uv run --locked refs project create demo
+uv run --locked refs project cite demo smith-2024-learningPython
+uv run --locked refs export --project demo --output "$demo/references.bib"
+```
+
+Add and show return the same source ID, key and revision 1, with original-input evidence. IDs, timestamps and temporary paths vary between runs. Export reports count 1 and SHA-256 `9d8b5c99031001aec1cdf42db5973054363f30ed09466dce89b8bbb9f6cf93c4`. The actual output file is:
+
+```bibtex
+@article{smith-2024-learningPython,
+  author = {Smith, Alex},
+  title = {Learning {Python}},
+  journal = {Journal of Synthetic Examples},
+  year = {2024},
+  volume = {12},
+  number = {2},
+  pages = {10--20},
+  doi = {10.5555/synthetic.2024.1},
+}
+```
+
+The smoke test repeats export byte-for-byte and verifies refusal to replace an unrelated file. Focused tests cover unchanged previews, identity conflicts, failure before publication, retry after publication and outside edits. This completes T001–T010; the remaining acceptance workflow is still pending.
 
 ## One installed smoke workflow
 
