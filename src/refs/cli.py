@@ -2,11 +2,13 @@
 
 import sqlite3
 import sys
+from pathlib import Path
 from typing import Annotated
 
 import typer
 
 from refs import catalog as storage
+from refs import sources
 from refs.config import absolute, select
 from refs.results import RefError, emit
 
@@ -43,6 +45,22 @@ def init(ctx: typer.Context, library_root: Annotated[str | None, typer.Option()]
         raise RefError("invalid_invocation", "Choose --library-root or --no-library", 2)
     library = absolute(library_root) if library_root is not None else None if no_library else selected.library
     report(ctx, "init", storage.init(selected, library, dry_run))
+
+
+@app.command()
+def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
+        input: Annotated[str, typer.Option()],
+        dry_run: Annotated[bool, typer.Option()] = False):
+    if format != "refs":
+        raise RefError("unsupported_format", "This milestone accepts --format refs", 2)
+    raw = sys.stdin.buffer.read() if input == "-" else Path(input).read_bytes()
+    locator = "stdin" if input == "-" else str(absolute(input))
+    report(ctx, "add", sources.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run))
+
+
+@app.command()
+def show(ctx: typer.Context, reference: str):
+    report(ctx, "show", sources.show(settings(ctx).catalog_path(), reference))
 
 
 def main() -> None:

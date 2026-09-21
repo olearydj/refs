@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "citation_key": "smith-2024-learningPython",
+  "metadata": {
+    "type": "article-journal",
+    "title": "Learning Python",
+    "author": [{"family": "Smith", "given": "Alex"}],
+    "issued": {"date-parts": [[2024]]},
+    "container-title": "Journal of Synthetic Examples",
+    "volume": "12",
+    "issue": "2",
+    "page": "10-20",
+    "DOI": "10.5555/synthetic.2024.1",
+    "language": "en"
+  },
+  "title_protection": {"title": {"protected_terms": ["Python"], "preserve_case": false}},
+  "context": [{"text": "Synthetic walking-skeleton fixture", "origin": "agent"}],
+  "provenance": [{"origin": "agent", "access": "metadata", "source_identity": {"namespace": "synthetic", "library_uri": "urn:refs:test", "item_key": "article-1"}}]
+}
