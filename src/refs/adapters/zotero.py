@@ -84,6 +84,9 @@ def assign(target: dict, path: str, value) -> None:
 
 
 def date(value: str, parsed: str | None = None) -> dict:
+    multipart = re.fullmatch(r'(\d{4}-\d{2}-\d{2}) (.+)', value)
+    if multipart and not re.fullmatch(r'\d{2}:\d{2}(?::\d{2})?', multipart[2]):
+        value, parsed = multipart[2], parsed or multipart[1]
     candidate = parsed or value
     candidate = re.sub(r'[ T]\d{2}:\d{2}(?::\d{2})?(?:Z|[+-]\d{2}:?\d{2})?$', '', candidate)
     if re.fullmatch(r'\d{4}-\d{2}-\d{2}',candidate):
@@ -124,7 +127,7 @@ def parse(item: dict, manifest: dict) -> dict:
             continue
         path = rows.get(field)
         if path:
-            if field in ('date', 'accessDate', 'filingDate', 'priorityDate'):
+            if field in ('date', 'issueDate', 'accessDate', 'filingDate', 'priorityDate'):
                 value = date(value, item.get('meta', {}).get('parsedDate') if field == 'date' else None)
                 if 'literal' in value:
                     limitations.append(dict(field=field,reason='Date retained literally; verify its precision'))
