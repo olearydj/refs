@@ -97,10 +97,10 @@ def candidate(connection, source: SourceCreate, fingerprint: str) -> str | None:
                    details={"source_ids": sorted(ids)})
 
 
-def add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_run: bool = False) -> dict:
+def add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_run: bool = False, policy: dict | None = None) -> dict:
     from refs.adapters import csl
     source = csl.parse(raw) if format == "csljson" else parse(raw)
-    normalized, warnings = naming.normalize(source.canonical())
+    normalized, warnings = naming.normalize(source.canonical(),policy)
     source = SourceCreate.model_validate(normalized)
     fingerprint = hashlib.sha256(raw).hexdigest()
     with connect(catalog, write=not dry_run) as connection:
@@ -119,12 +119,12 @@ def add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_ru
                            data=dict(outcome="needs_attention", id=None, citation_key=source.citation_key))
         key_provenance = {"origin": "supplied", "policy": None, "table_version": None, "unicode_version": None}
         if source.citation_key is None:
-            base = naming.key(source.canonical())
+            base = naming.key(source.canonical(),policy)
             index = 0
             while connection.execute("SELECT 1 FROM sources WHERE citation_key=?", (base + naming.suffix(index),)).fetchone():
                 index += 1
             source.citation_key = SourceCreate.valid_key(base + naming.suffix(index))
-            key_provenance = naming.provenance()
+            key_provenance = naming.provenance(policy)
         if dry_run:
             return dict(dry_run=True, outcome="created", id=None, citation_key=source.citation_key,
                         record=source.canonical(), key_provenance=key_provenance, warnings=warnings)
@@ -199,7 +199,7 @@ def patch_path(value: dict, path: str, replacement, *, clear: bool) -> None:
         node[parts[-1]] = replacement
 
 
-def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run: bool = False) -> dict:
+def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run: bool = False, policy: dict | None = None) -> dict:
     from refs.models import SourcePatch
     try:
         patch_model = SourcePatch.model_validate(patch)
@@ -218,7 +218,8 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
         preserved_key = canonical.pop("citation_key")
         try:
             canonical = SourceCreate.model_validate(canonical).canonical()
-            canonical, warnings = naming.normalize(canonical)
+            title_fields={field for field in canonical['metadata'] if 'metadata' in patch_model.set or 'metadata.'+field in patch_model.set}
+            canonical, warnings = naming.normalize(canonical,policy,title_fields)
             canonical = SourceCreate.model_validate(canonical).canonical()
         except ValidationError as exc:
             raise RefError('invalid_patch', str(exc), 2) from exc

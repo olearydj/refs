@@ -72,7 +72,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         parsed = bibtex.parse(raw)
         source = parsed['source']
         key = source.citation_key
-        canonical, warnings = naming.normalize(source.canonical())
+        canonical, warnings = naming.normalize(source.canonical(),settings.values if settings else None)
         canonical.pop('citation_key', None)
         canonical['provenance'][0]['source_identity'] = dict(namespace='bibtex', library_uri=locator, item_key=key)
         source = SourceCreate.model_validate(canonical)

@@ -22,8 +22,10 @@ app.add_typer(project_app, name="project")
 def configure(ctx: typer.Context,
               config: Annotated[str | None, typer.Option()] = None,
               catalog: Annotated[str | None, typer.Option()] = None,
+              project_file: Annotated[str | None, typer.Option()] = None,
+              no_project_config: Annotated[bool, typer.Option()] = False,
               json_output: Annotated[bool, typer.Option("--json")] = False):
-    ctx.obj = dict(config=config, catalog=catalog, json_output=json_output)
+    ctx.obj = dict(config=config, catalog=catalog, json_output=json_output, project_file=project_file, no_project_config=no_project_config)
 
 
 def report(ctx: typer.Context, command: str, data: dict, **text_context) -> None:
@@ -31,7 +33,9 @@ def report(ctx: typer.Context, command: str, data: dict, **text_context) -> None
 
 
 def settings(ctx: typer.Context):
-    return select(ctx.obj["config"], ctx.obj["catalog"])
+    if "selected" not in ctx.obj:
+        ctx.obj["selected"] = select(ctx.obj["config"], ctx.obj["catalog"],project_file=ctx.obj["project_file"],no_project_config=ctx.obj["no_project_config"])
+    return ctx.obj["selected"]
 
 
 @app.command()
@@ -66,7 +70,7 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
     if format == 'bib':
         data = importing.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run, settings=settings(ctx))
     else:
-        data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run)
+        data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run,policy=settings(ctx).values)
     if file is not None:
         data = resources.capture_file(settings(ctx),data,file,linked=link,keep_name=keep_name,dry_run=dry_run)
     report(ctx, 'add', data)
@@ -107,13 +111,20 @@ def project_cite(ctx: typer.Context, project: str, reference: str,
 
 
 @app.command("export")
-def export_bibliography(ctx: typer.Context, project: Annotated[str, typer.Option()],
-                       output: Annotated[Path, typer.Option()],
-                       profile: Annotated[str, typer.Option()] = bibliography.PROFILE,
+def export_bibliography(ctx: typer.Context, project: Annotated[str | None, typer.Option()] = None,
+                       output: Annotated[Path | None, typer.Option()] = None,
+                       profile: Annotated[str | None, typer.Option()] = None,
                        allow_unknown_mappings: Annotated[bool, typer.Option()] = False,
                        overwrite: Annotated[bool, typer.Option()] = False,
                        adopt: Annotated[bool, typer.Option()] = False,
                        dry_run: Annotated[bool, typer.Option()] = False):
+    selected = settings(ctx)
+    project = project if project is not None else selected.values.get('project')
+    configured_output = selected.values.get('export',{}).get('output')
+    output = output if output is not None else Path(configured_output) if configured_output else None
+    profile = profile if profile is not None else selected.values['export']['profile']
+    if not project or output is None:
+        raise RefError('invalid_invocation','Supply export project and output options or configured defaults',2)
     try:
         data = bibliography.export(settings(ctx).catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite, adopt=adopt)
     except RefError as exc:
@@ -148,7 +159,7 @@ def update_source(ctx: typer.Context, reference: str,
             value = {"schema_version": "1.0", "set": values}
     except (ValueError, UnicodeError) as exc:
         raise RefError("invalid_patch", str(exc), 2) from exc
-    report(ctx, "update", sources.update(settings(ctx).catalog_path(), reference, value, if_revision, dry_run=dry_run))
+    report(ctx, "update", sources.update(settings(ctx).catalog_path(), reference, value, if_revision, dry_run=dry_run,policy=settings(ctx).values))
 
 
 @key_app.command("set")
@@ -178,7 +189,7 @@ def reactivate(ctx: typer.Context, reference: str, if_revision: Annotated[int, t
 def search_sources(ctx: typer.Context, query: str, project: Annotated[str | None, typer.Option()] = None,
                    limit: Annotated[int, typer.Option(min=1, max=1000)] = 50,
                    offset: Annotated[int, typer.Option(min=0)] = 0):
-    report(ctx, "search", search.retrieve(settings(ctx).catalog_path(), query, project=project, limit=limit, offset=offset))
+    report(ctx, "search", search.retrieve(settings(ctx).catalog_path(), query, project=project or settings(ctx).values.get('project'), limit=limit, offset=offset,policy=settings(ctx).values))
 
 
 @app.command("list")
@@ -186,7 +197,7 @@ def list_sources(ctx: typer.Context, project: Annotated[str | None, typer.Option
                  limit: Annotated[int, typer.Option(min=1, max=1000)] = 50,
                  offset: Annotated[int, typer.Option(min=0)] = 0,
                  sort: Annotated[str, typer.Option()] = "title"):
-    report(ctx, "list", search.retrieve(settings(ctx).catalog_path(), project=project, limit=limit, offset=offset, sort=sort))
+    report(ctx, "list", search.retrieve(settings(ctx).catalog_path(), project=project or settings(ctx).values.get('project'), limit=limit, offset=offset, sort=sort,policy=settings(ctx).values))
 
 
 @app.command("schema")
@@ -260,6 +271,15 @@ def backup_catalog(ctx: typer.Context, output: Annotated[Path, typer.Option()],
     report(ctx,'backup',recovery.backup(settings(ctx),output,dry_run=dry_run))
 
 
+config_app = typer.Typer(no_args_is_help=True)
+app.add_typer(config_app,name='config')
+
+
+@config_app.command('show')
+def config_show(ctx: typer.Context):
+    report(ctx,'config show',settings(ctx).inspect())
+
+
 def main() -> None:
     args = sys.argv[1:]
     try:
@@ -273,8 +293,9 @@ def main() -> None:
         raise SystemExit(exc.exit_code) from None
     except (OSError, sqlite3.Error) as exc:
         locked = isinstance(exc, sqlite3.OperationalError) and "locked" in str(exc)
-        error = RefError("lock_timeout" if locked else "storage_error", str(exc),
-                         6 if locked else 5, retryable=locked)
+        denied = isinstance(exc, PermissionError)
+        error = RefError("home_not_writable" if denied else "lock_timeout" if locked else "storage_error", "Allow access to the selected path and retry" if denied else str(exc),
+                         6 if locked else 5, retryable=locked, path=str(exc.filename) if denied and exc.filename else None)
         emit("invocation", error=error, json_output="--json" in args)
         raise SystemExit(error.exit_code) from None
     except KeyboardInterrupt:

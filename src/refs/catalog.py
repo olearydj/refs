@@ -1,6 +1,7 @@
 """SQLite lifecycle and short application transactions."""
 
 import json
+import os
 import sqlite3
 from contextlib import contextmanager
 from importlib.resources import files
@@ -18,6 +19,8 @@ def connect(catalog: Path, *, write: bool = False):
         raise RefError("catalog_missing", "Selected catalog is missing", path=str(catalog))
     if not (catalog / "ready").is_file():
         raise RefError("recovery_required", "Catalog initialization is incomplete", 5, path=str(catalog))
+    if write and (not os.access(catalog,os.W_OK) or not os.access(db,os.W_OK)):
+        raise RefError('home_not_writable','Allow write access to the selected catalog and its staging directory, then retry',5,path=str(catalog))
     connection = sqlite3.connect(db.as_uri() + ("?mode=rw" if write else "?mode=ro"), uri=True, timeout=5)
     connection.row_factory = sqlite3.Row
     try:

@@ -100,3 +100,31 @@ def test_inspection_and_policy_overrides(initialized,tmp_path):
     assert inspected['origins']['keys.template']==str(config)
     run=subprocess.run(['refs','config','show'],env=dict(os.environ,REFS_CONFIG=str(config),REFS_CATALOG=str(tmp_path/'cat')),text=True,capture_output=True)
     assert run.returncode==0 and run.stdout.startswith('Configuration:')
+
+
+def test_project_export_defaults_and_invocation_override(initialized,tmp_path):
+    record=tmp_path/'record.json'
+    record.write_text(json.dumps({'schema_version':'1.0','citation_key':'one','metadata':{'title':'Example'}}))
+    initialized('add','--format','refs','--input',record)
+    initialized('project','create','one')
+    initialized('project','create','two')
+    initialized('project','cite','one','one')
+    selected=tmp_path/'paper.toml'
+    selected.write_text('project="one"\n[export]\noutput="default.bib"\n')
+    result=initialized('--project-file',selected,'export')['data']
+    assert result['count']==1 and result['output']==str(tmp_path/'default.bib')
+    result=initialized('--project-file',selected,'export','--project','two','--output',tmp_path/'other.bib')['data']
+    assert result['count']==0
+    initialized('--project-file',selected,'--no-project-config','paths',expected=2)
+
+
+def test_changed_policy_does_not_rewrite_existing_correction(initialized,tmp_path,reference_path):
+    record=initialized('add','--format','refs','--input',reference_path)['data']
+    before=record['metadata']['title']
+    config=tmp_path/'config.toml'
+    config.write_text(config.read_text()+'\n[titles]\nminor_words=["python"]\nprotected_terms=[]\n')
+    changed=initialized('update',record['id'],'--if-revision',1,'--set','metadata.volume="42"')['data']
+    assert changed['metadata']['title']==before and changed['citation_key']==record['citation_key']
+    original=config.read_bytes()
+    initialized('init','--library-root',tmp_path/'lib')
+    assert config.read_bytes()==original

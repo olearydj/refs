@@ -96,3 +96,5 @@ Key templates allow author/year/title tokens and literal separators only; withou
 ## Result member names
 
 The source-add outcome member is `data.outcome`, with the names `created`, `already_present` and `needs_attention`. Search and list use `data.items`, `total`, `limit`, `offset` and `catalog_revision`. Each item uses `matches` for its matching-field evidence and `exact_match` for its exact-match indicator. A match has the members `field`, `origin` and `text`. Project inspection uses `items` for the project list, and `sources` and `removed_sources` for a selected project's source lists. Export assessments use `class`, `mapping_id` and `override` inside warning details; blocked-entry details use `entries`, with each entry named by `citation_key`, `code`, `class`, `path` and `message`.
+
+Configuration inspection uses `data.config`, `values`, `origins`, `paths` and `diagnostics`. Effective setting names are dotted keys in `values` and `origins`.

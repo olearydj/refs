@@ -86,3 +86,5 @@ Each finished import emits per-entry outcomes and records one imports row with e
 Resource JSON names the absolute locator `path`, or the named-root pair `root` and `relative`. The verified content hash is `digest`; descriptive members are `label` and `media_type`. Inspection adds `resolved_path` when resolution succeeds and `status` for availability.
 
 Import result fields are named `import_id`, `input`, `file_digest`, `counts` and `entries`. Each entry uses `outcome`, byte offsets `start` and `end`, and the status fields `preserved`, `editable`, `searchable` and `exportable`. Pending file paths are `resource_proposals`; preserved-only mapping issues are `limitations`, with `field` and `reason` members. Copy previews name the planned output path `destination`.
+
+Generated key provenance names its captured key-generation settings `naming_settings`. Import entry results name their classification `status`, alongside the existing `outcome` member.

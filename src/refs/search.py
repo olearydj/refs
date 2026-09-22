@@ -9,7 +9,7 @@ from refs.results import RefError
 
 
 def retrieve(catalog: Path, query: str | None = None, *, project: str | None = None,
-             limit: int = 50, offset: int = 0, sort: str = 'title') -> dict:
+             limit: int = 50, offset: int = 0, sort: str = 'title', policy: dict | None = None) -> dict:
     if not 1 <= limit <= 1000 or offset < 0 or sort not in ('title', 'key'):
         raise RefError('invalid_query', 'Use limit 1–1000, nonnegative offset, and title or key sort', 2)
     with connect(catalog) as connection:
@@ -33,7 +33,7 @@ def retrieve(catalog: Path, query: str | None = None, *, project: str | None = N
                 if not found:
                     continue
             items.append(record | {'matches': found, 'exact_match': exact})
-        items.sort(key=lambda item: (not item['exact_match'], ordering(item, sort)))
+        items.sort(key=lambda item: (not item['exact_match'], ordering(item, sort, policy)))
         revision = connection.execute('SELECT revision FROM catalog_meta').fetchone()[0]
         return dict(items=items[offset:offset + limit], total=len(items), limit=limit, offset=offset, catalog_revision=revision)
 
@@ -44,10 +44,10 @@ def identifier(field: str, value: str) -> str:
     return ''.join(char for char in value.casefold() if char.isalnum())
 
 
-def ordering(record: dict, sort: str):
+def ordering(record: dict, sort: str, policy: dict | None = None):
     if sort == 'key':
         return (record['citation_key'],)
     edition = record['metadata'].get('edition')
     year = naming.issued_year(record)
-    return (naming.sort_title(record), (False, edition) if isinstance(edition, int) else (True, 0),
+    return (naming.sort_title(record,policy), (False, edition) if isinstance(edition, int) else (True, 0),
             (False, int(year)) if year != 'ND' else (True, 0), record['citation_key'])

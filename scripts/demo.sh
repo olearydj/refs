@@ -13,7 +13,7 @@ usage() {
   cat <<'HELP'
 Usage: scripts/demo.sh [--smoke] [--no-pause] [--keep]
 
-Narrated end-to-end test of refs US1 through US4 using synthetic data.
+Narrated end-to-end test of refs US1 through US6 using synthetic data.
   --smoke      Print a compact pass or fail and clean temporary data.
   --no-pause   Never wait between sections.
   --keep       Keep the temporary directory for inspection, even in smoke mode.
@@ -44,7 +44,8 @@ assert_jq() {
   pass "$3"
 }
 command -v jq >/dev/null || fail 'jq must be installed'
-REFS_BIN="$REPO_ROOT/.venv/bin/refs"
+REFS_BIN="${REFS_BIN:-$REPO_ROOT/.venv/bin/refs}"
+REFS_PYTHON="${REFS_PYTHON:-$REPO_ROOT/.venv/bin/python}"
 [[ -x "$REFS_BIN" ]] || fail 'Run uv sync --locked first'
 DEMO_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/refs-demo.XXXXXX")"
 cleanup() {
@@ -189,7 +190,7 @@ run 0 file-capture add --format refs --input "$DEMO_ROOT/file-source.json" --fil
 assert_jq '(.data.resources | length) == 1 and .data.resources[0].copied_from.path != null and .data.resources[0].root == "library"' "$LAST" 'add copies and retargets one resource'
 [[ -f "$DEMO_ROOT/download.pdf" && -f "$DEMO_ROOT/linked.pdf" ]] || fail 'an original disappeared'
 pass 'original files retained'
-"$REPO_ROOT/.venv/bin/python" - "$DEMO_ROOT" "$KEY" >"$DEMO_ROOT/interrupted.result.json" <<'PYCODE'
+"$REFS_PYTHON" - "$DEMO_ROOT" "$KEY" >"$DEMO_ROOT/interrupted.result.json" <<'PYCODE'
 import sys
 from pathlib import Path
 from unittest.mock import patch
@@ -212,4 +213,42 @@ assert original.read_bytes() == (root/'lib/Unfiled/interrupted.pdf').read_bytes(
 PYCODE
 assert_jq '.errors[0].code == "copy_published_unregistered" and .status == "partial"' "$DEMO_ROOT/interrupted.result.json" 'finished interrupted copy and original retained'
 pause_demo
-printf 'PASS refs demo: %s checks (US1, US2, US3, US4)\n' "$CHECKS"
+section 'US5: Back up and restore into a second home'
+explain 'The snapshot contains the catalog and inventory, never attachment bytes.'
+run 0 backup backup --output "$DEMO_ROOT/snapshot"
+assert_jq '.data.external_contents_included == false' "$LAST" 'external bytes explicitly excluded'
+"$REFS_PYTHON" - "$REPO_ROOT" "$DEMO_ROOT" <<'PYCODE'
+import contextlib, io, re, sqlite3, sys
+from pathlib import Path
+repo, root = map(Path, sys.argv[1:])
+text = (repo/'docs/restore.md').read_text()
+code = re.search(r'```python restore\n(.*?)\n```', text, re.S).group(1)
+sys.argv = ['restore', str(root/'snapshot'), str(root/'restored')]
+with contextlib.redirect_stdout(io.StringIO()):
+    exec(compile(code, 'docs/restore.md', 'exec'), {})
+with sqlite3.connect(root/'snapshot/catalog.sqlite') as saved, sqlite3.connect(root/'restored/cat/catalog.sqlite') as restored:
+    for name, in saved.execute("SELECT name FROM sqlite_master WHERE type='table'"):
+        assert saved.execute(f'SELECT * FROM "{name}"').fetchall() == restored.execute(f'SELECT * FROM "{name}"').fetchall(), name
+PYCODE
+pass 'documented restore preserves every table'
+export REFS_CONFIG="$DEMO_ROOT/restored/config.toml" REFS_CATALOG="$DEMO_ROOT/restored/cat"
+run 0 restored-open show "$SOURCE_ID"
+assert_jq '.data.citation_key != null and (.data.resources | length) > 0' "$LAST" 'restored source and resources open'
+run 0 restored-project project show demo
+assert_jq '.data.sources | length == 2' "$LAST" 'restored project selection'
+pause_demo
+
+section 'US6: Inspect settings before initialization'
+export REFS_CONFIG="$DEMO_ROOT/before-init.toml" REFS_CATALOG="$DEMO_ROOT/not-created"
+run 0 before-init-paths paths
+run 0 before-init-config config show
+assert_jq '.data.values["keys.title_words"] == 2 and .data.origins["keys.title_words"] == "default"' "$LAST" 'defaults and origins before init'
+printf '[catalog]\npath="forbidden"\n' >"$DEMO_ROOT/invalid-project.toml"
+run 2 invalid-project --project-file "$DEMO_ROOT/invalid-project.toml" config show
+assert_jq '.errors[0].code == "invalid_config"' "$LAST" 'project cannot change catalog location'
+run 3 missing-catalog list
+assert_jq '.errors[0].code == "catalog_missing"' "$LAST" 'missing location never initializes a fallback'
+[[ ! -e "$DEMO_ROOT/not-created" ]] || fail 'inspection initialized a catalog'
+pass 'inspection left the missing catalog untouched'
+pause_demo
+printf 'PASS refs demo: %s checks (US1, US2, US3, US4, US5, US6)\n' "$CHECKS"
