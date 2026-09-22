@@ -37,6 +37,10 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
         'list': lambda: readable(command, data),
     }
     text = renderers[command]()
+    if command == 'add' and data.get('file_action'):
+        action = data['file_action'] | {'citation_key': key}
+        action.pop('dry_run', None)
+        text += '\n' + render_text('resource add', action, [])
     if data.get('dry_run'):
         text = 'Preview: ' + text
     elif data.get('unchanged') and command != 'add':

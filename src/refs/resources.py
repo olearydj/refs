@@ -247,17 +247,17 @@ def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False) 
     return preview
 
 
-def capture_file(settings: Settings, data: dict, path: Path, *, linked=False, keep_name=False, dry_run=False) -> dict:
+def capture_file(settings: Settings, data: dict, path: Path, *, linked=False, keep_name=False, dry_run=False) -> tuple[dict, dict]:
     if dry_run:
         source = data.get('record',data)
         proposal = locate(settings,path=path) if linked else plan_copy(settings,source,path,keep_name=keep_name)
-        return data | {'resources':[proposal]}
+        return data | {'resources':[proposal]}, proposal
     try:
         resource = link(settings,data['id'],path=path)
         if not linked:
             resource = copy(settings,data['id'],path,resource_id=resource['id'],keep_name=keep_name)
         current = inspect_source(settings,data['id'])
-        return current | dict(outcome=data['outcome'],warnings=data.get('warnings',[])+resource.get('warnings',[]))
+        return current | dict(outcome=data['outcome'],warnings=data.get('warnings',[])+resource.get('warnings',[])), resource
     except (RefError,OSError) as exc:
         current = inspect_source(settings,data['id'])
         details = dict(cause=str(exc),original=str(path))

@@ -71,9 +71,10 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         data = importing.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run, settings=settings(ctx))
     else:
         data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run,policy=settings(ctx).values)
+    file_action = None
     if file is not None:
-        data = resources.capture_file(settings(ctx),data,file,linked=link,keep_name=keep_name,dry_run=dry_run)
-    report(ctx, 'add', data)
+        data, file_action = resources.capture_file(settings(ctx),data,file,linked=link,keep_name=keep_name,dry_run=dry_run)
+    report(ctx, 'add', data, file_action=file_action)
 
 
 @app.command('import')
