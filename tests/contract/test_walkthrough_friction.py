@@ -79,3 +79,11 @@ def test_export_warning_keys_groups_and_info(human, initialized, tmp_path):
     initialized('project','create','single')
     initialized('project','cite','single','one')
     assert 'Warning: one: document is projected as @misc' in human('export','--project','single','--output',tmp_path/'single.bib')
+
+
+def test_paths_and_config_keep_their_distinct_formats(human, tmp_path):
+    assert human('paths').splitlines() == [f'Configuration: {tmp_path/"config.toml"}', f'Catalog: {tmp_path/"cat"}', f'Library: {tmp_path/"lib"}']
+    text = human('config', 'show')
+    assert text.startswith(f'Configuration: {tmp_path/"config.toml"}\n')
+    assert f'catalog.path = {tmp_path/"cat"} (REFS_CATALOG)' in text
+    assert f'resources.library_root = {tmp_path/"lib"} ({tmp_path/"config.toml"})' in text
