@@ -100,13 +100,13 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
     return outcome
 
 
-def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False) -> dict:
+def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str | None = None) -> dict:
     fingerprint = hashlib.sha256(raw).hexdigest()
     run_id = str(uuid4())
     counts = dict(applied=0, unchanged=0, conflict=0, invalid=0)
     if not dry_run:
         with connect(catalog, write=True) as connection:
-            connection.execute('INSERT INTO imports (id,origin,file_digest,started_at) VALUES (?,?,?,?)', (run_id, locator, fingerprint, datetime.now(UTC).isoformat()))
+            connection.execute('INSERT INTO imports (id,origin,file_digest,started_at) VALUES (?,?,?,?)', (run_id, origin or locator, fingerprint, datetime.now(UTC).isoformat()))
             preserve(connection, raw, locator, fingerprint, format='bib-file', origin='import-file')
             changed(connection)
     blocks = bibtex.partition(raw)
@@ -126,3 +126,16 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False) -> dict:
         with connect(catalog, write=True) as connection:
             connection.execute('UPDATE imports SET finished_at=? WHERE id=?', (datetime.now(UTC).isoformat(), run_id))
     return dict(import_id=None if dry_run else run_id, input=locator, file_digest=fingerprint, counts=counts, entries=entries, dry_run=dry_run, warnings=[])
+
+
+def add(catalog: Path, raw: bytes, locator: str, *, dry_run=False) -> dict:
+    blocks = [block for block in bibtex.partition(raw) if block['kind'] == 'entry']
+    if len(blocks) != 1:
+        raise RefError('invalid_bib_input', 'Use add for one entry, or import for a bibliography', 2)
+    result = run(catalog, raw, locator, dry_run=dry_run)
+    entry = result['entries'][0]
+    if entry['outcome'] in ('conflict', 'invalid'):
+        raise RefError(entry.get('code', 'import_conflict'), entry.get('message', 'Inspect conflicting fields and use update'), 2 if entry['outcome'] == 'invalid' else 3, details=entry,
+                       data={'outcome':'needs_attention', 'citation_key':entry.get('citation_key')})
+    record = sources.show(catalog, entry['source_id']) if entry['source_id'] else bibtex.parse(blocks[0]['raw'])['source'].canonical()
+    return record | dict(outcome='created' if entry['outcome'] == 'applied' else 'already_present', warnings=entry.get('warnings', []), dry_run=dry_run, limitations=entry['limitations'])

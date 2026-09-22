@@ -267,9 +267,17 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
     return '\n'.join(entries).encode('utf-8'), warnings
 
 
-def target_state(connection, target: Path, project_id: str, *, overwrite: bool = False) -> tuple[str | None, bool, bool]:
+def target_state(connection, target: Path, project_id: str, *, overwrite: bool = False, adopt: bool = False, candidate_digest: str | None = None) -> tuple[str | None, bool, bool]:
     row = connection.execute("SELECT * FROM export_targets WHERE destination=?", (str(target),)).fetchone()
     current = files.current_digest(target)
+    binding_matches = row is not None and row['project_id'] == project_id and row['profile_fingerprint'] == PROFILE_FINGERPRINT
+    if adopt and current is not None and not binding_matches:
+        proof = connection.execute('SELECT 1 FROM imports WHERE file_digest=? AND finished_at IS NOT NULL', (current,)).fetchone()
+        if not proof:
+            raise RefError('adoption_requires_import', 'Import these exact bytes before adopting this destination', path=str(target))
+        if current != candidate_digest and not overwrite:
+            raise RefError('adoption_requires_overwrite', 'Pass --adopt --overwrite to replace the imported bibliography', path=str(target))
+        return current, False, False
     if row is None:
         if current is not None:
             raise RefError("unadopted_target", "Existing bibliography has not been adopted", path=str(target))
@@ -297,7 +305,7 @@ def finish_export(catalog: Path, target: Path, digest: str) -> None:
         changed(connection)
 
 
-def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROFILE, dry_run: bool = False, allow_unknown: bool = False, overwrite: bool = False) -> dict:
+def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROFILE, dry_run: bool = False, allow_unknown: bool = False, overwrite: bool = False, adopt: bool = False) -> dict:
     if profile != PROFILE:
         raise RefError("unsupported_profile", "This milestone supports portable-bibtex-v1", 2)
     target = files.destination(output)
@@ -315,17 +323,31 @@ def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROF
     # Preview never acquires the file lock, stages bytes or reconciles intent.
     with nullcontext() if dry_run else files.file_lock(catalog):
         with connect(catalog) as connection:
-            current, recoverable, known = target_state(connection, target, project["id"], overwrite=overwrite)
+            current, recoverable, known = target_state(connection, target, project["id"], overwrite=overwrite, adopt=adopt, candidate_digest=candidate_digest)
+            if adopt and current is not None and not known:
+                from refs import importing
+                from refs.adapters import bibtex
+                original = target.read_bytes()
+                if files.digest(original) != current:
+                    raise RefError('outside_edit', 'File changed during adoption; import it again')
+                result['import_conflicts'] = [entry for block in bibtex.partition(original) if block['kind'] == 'entry' and (entry := importing.apply_entry(connection, block, str(target), current, dry_run=True))['outcome'] in ('conflict', 'invalid')]
         if dry_run:
             return result | dict(dry_run=True, recoverable=recoverable)
         if recoverable:
             assert current is not None
             finish_export(catalog, target, current)
         if current == candidate_digest:
+            if not known:
+                with connect(catalog, write=True) as connection:
+                    checked, _, _ = target_state(connection, target, project['id'], overwrite=overwrite, adopt=adopt, candidate_digest=candidate_digest)
+                    if checked != current:
+                        raise RefError('outside_edit', 'File changed during adoption; import it again')
+                    connection.execute('INSERT INTO export_targets VALUES (?,?,?,?,NULL) ON CONFLICT(destination) DO UPDATE SET project_id=excluded.project_id, profile_fingerprint=excluded.profile_fingerprint, baseline_digest=excluded.baseline_digest, pending_digest=NULL', (str(target), project['id'], PROFILE_FINGERPRINT, current))
+                    changed(connection)
             return result | dict(unchanged=True, recovered=recoverable)
         with files.staged(target, data) as temporary:
             with connect(catalog, write=True) as connection:
-                checked, _, _ = target_state(connection, target, project["id"], overwrite=overwrite)
+                checked, _, _ = target_state(connection, target, project["id"], overwrite=overwrite, adopt=adopt, candidate_digest=candidate_digest)
                 if checked != current:
                     raise RefError("outside_edit", "Destination changed while preparing export")
                 if known and overwrite:
@@ -337,7 +359,7 @@ def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROF
                         connection.execute("INSERT OR IGNORE INTO originals (id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator) VALUES (?, ?, ?, ?, 'bib', 'export-overwrite', ?, ?)",
                                            (str(uuid4()), outside, current, len(outside), current, str(target)))
                 if not known:
-                    connection.execute("INSERT INTO export_targets VALUES (?, ?, ?, NULL, ?)", (str(target), project["id"], PROFILE_FINGERPRINT, candidate_digest))
+                    connection.execute("INSERT INTO export_targets VALUES (?, ?, ?, NULL, ?) ON CONFLICT(destination) DO UPDATE SET project_id=excluded.project_id, profile_fingerprint=excluded.profile_fingerprint, baseline_digest=NULL, pending_digest=excluded.pending_digest", (str(target), project["id"], PROFILE_FINGERPRINT, candidate_digest))
                 else:
                     connection.execute("UPDATE export_targets SET pending_digest=? WHERE destination=?", (candidate_digest, str(target)))
                 changed(connection)

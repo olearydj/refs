@@ -8,7 +8,7 @@ from typing import Annotated
 
 import typer
 
-from refs import bibliography, projects, search, sources
+from refs import bibliography, importing, projects, search, sources
 from refs import catalog as storage
 from refs.config import absolute, select
 from refs.results import RefError, emit
@@ -54,11 +54,29 @@ def init(ctx: typer.Context, library_root: Annotated[str | None, typer.Option()]
 def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         input: Annotated[str, typer.Option()],
         dry_run: Annotated[bool, typer.Option()] = False):
-    if format not in ("refs", "csljson"):
-        raise RefError("unsupported_format", "Choose --format refs or csljson", 2)
+    if format not in ("refs", "csljson", "bib"):
+        raise RefError("unsupported_format", "Choose --format refs, csljson or bib", 2)
     raw = sys.stdin.buffer.read() if input == "-" else Path(input).read_bytes()
     locator = "stdin" if input == "-" else str(absolute(input))
-    report(ctx, "add", sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run))
+    if format == 'bib':
+        data = importing.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run)
+    else:
+        data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run)
+    report(ctx, 'add', data)
+
+
+@app.command('import')
+def import_bibliography(ctx: typer.Context, input: Annotated[Path, typer.Option()],
+                        format: Annotated[str, typer.Option()] = "bib",
+                        origin: Annotated[str | None, typer.Option()] = None,
+                        dry_run: Annotated[bool, typer.Option()] = False):
+    path = absolute(str(input))
+    if format != 'bib':
+        raise RefError('unsupported_format', 'Choose --format bib for import', 2)
+    data = importing.run(settings(ctx).catalog_path(), path.read_bytes(), str(path), dry_run=dry_run, origin=origin)
+    if data['counts']['conflict'] or data['counts']['invalid']:
+        raise RefError('import_partial', 'Inspect reported entries and use update to settle conflicts', 4, data=data)
+    report(ctx, 'import', data)
 
 
 @app.command()
@@ -87,9 +105,10 @@ def export_bibliography(ctx: typer.Context, project: Annotated[str, typer.Option
                        profile: Annotated[str, typer.Option()] = bibliography.PROFILE,
                        allow_unknown_mappings: Annotated[bool, typer.Option()] = False,
                        overwrite: Annotated[bool, typer.Option()] = False,
+                       adopt: Annotated[bool, typer.Option()] = False,
                        dry_run: Annotated[bool, typer.Option()] = False):
     try:
-        data = bibliography.export(settings(ctx).catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite)
+        data = bibliography.export(settings(ctx).catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite, adopt=adopt)
     except RefError as exc:
         if exc.issue['code'] == 'export_blocked' and not ctx.obj['json_output']:
             exc.issue['path'] = str(absolute(str(output)))

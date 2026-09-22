@@ -27,6 +27,9 @@ def emit(command: str, data: dict[str, Any] | None = None, *,
     if json_output:
         print(json.dumps(result, ensure_ascii=False))
     elif error:
+        if error.issue['code'] == 'import_partial' and error.data:
+            from refs.render import render_text
+            print(render_text('import', error.data, warnings or []))
         if error.issue['code'] == 'export_blocked':
             print(f"Not written: {error.issue['path'] or '(destination)'}", file=sys.stderr)
             for entry in error.issue['details'].get('entries', []):

@@ -115,3 +115,13 @@ def test_interrupted_run_reruns_without_duplicate(initialized, tmp_path, monkeyp
         assert row['finished_at'] is None and row['applied'] == 1
         assert row['file_digest'] == hashlib.sha256(raw).hexdigest()
     assert importing.run(tmp_path/'cat', raw, 'input.bib')['counts']['unchanged'] == 1
+
+
+def test_cli_formats_and_partial_result(initialized, tmp_path):
+    result = initialized('import', '--format', 'bib', '--input', FIXTURES/'mixed.bib', '--origin', 'synthetic test', expected=4)
+    assert result['status'] == 'partial' and result['data']['counts']['applied'] == 2
+    path = tmp_path/'single.bib'
+    path.write_bytes(GOOD.replace(b'A Python Example', b'A Distinct Example'))
+    result = initialized('add', '--format', 'bib', '--input', path)
+    assert result['data']['outcome'] == 'created'
+    assert initialized('add', '--format', 'bib', '--input', path)['data']['outcome'] == 'already_present'

@@ -23,6 +23,7 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
         'project cite': lambda: f"Cited {key} in {data['project_name']}",
         'project uncite': lambda: f"Uncited {key} from {data['project_name']}",
         'project show': lambda: project_text(data),
+        'import': lambda: f"Imported {data['counts']['applied']}, unchanged {data['counts']['unchanged']}, conflicts {data['counts']['conflict']}, invalid {data['counts']['invalid']} from {data['input']}",
         'export': lambda: f"Wrote {data['output']} ({data['count']} entries, {len(warnings)} warnings)",
         'show': lambda: readable(command, data),
         'search': lambda: readable(command, data),
@@ -33,4 +34,6 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
         text = 'Preview: ' + text
     elif data.get('unchanged') and command != 'add':
         text = 'Unchanged: ' + text
+    for entry in data.get('import_conflicts', []):
+        text += '\nConflict: ' + str(entry.get('citation_key') or entry.get('message') or entry.get('code'))
     return '\n'.join([text, *['Warning: ' + warning['message'] for warning in warnings]])
