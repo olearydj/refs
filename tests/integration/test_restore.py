@@ -59,7 +59,8 @@ def test_corruption_is_refused(initialized,tmp_path,damage):
         (target/'config.toml').symlink_to(selected.config)
     else:
         path=target/'manifest.json'
-        value=json.loads(path.read_text());value['schema_version']=999
+        value=json.loads(path.read_text())
+        value['schema_version']=999
         path.write_text(json.dumps(value))
     with pytest.raises(RefError):
         recovery.validate_snapshot(target)

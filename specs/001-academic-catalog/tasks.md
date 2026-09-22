@@ -124,7 +124,7 @@ uv run --locked refs export --project demo --output "$demo/references.bib"
 
 **Runnable check:** Inspect paths/settings before initialization, select two disposable projects, inspect each value's origin, disable discovery, and reject invalid location or naming overrides without writes.
 
-- [ ] T033 [US6] Write tests/contract/test_config.py for flag/environment/user precedence, nearest .refs.toml discovery including Git worktrees, explicit selection/disable, allowed project keys, invalid values and missing/unwritable locations. Assert no fallback initialization and no mutation from inspection or invalid configuration. Covers FR-043–046 and SC-009.
+- [x] T033 [US6] Write tests/contract/test_config.py for flag/environment/user precedence, nearest .refs.toml discovery including Git worktrees, explicit selection/disable, allowed project keys, invalid values and missing/unwritable locations. Assert no fallback initialization and no mutation from inspection or invalid configuration. Covers FR-043–046 and SC-009.
 - [ ] T034 [US6] Complete src/refs/config.py and full config show; retain the basic paths command from T003 in src/refs/cli.py. Implement the exact precedence, policy defaults and project restrictions in contracts/cli.md; expose effective values and origins before init, and preserve existing data/preferences on repeat init. Validate templates, policy lists, roots and unsupported profiles, and return actionable catalog_missing/home_not_writable diagnostics. Re-run the naming and export tests with permitted overrides; extend tests/integration/test_smoke.py with settings inspection. Covers FR-043–046 and SC-009.
 
 ## Phase 11: Acceptance and packaging
