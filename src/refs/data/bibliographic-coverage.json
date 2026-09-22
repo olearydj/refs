@@ -1,0 +1,4525 @@
+{
+  "profile": "refs-bibliography-v1",
+  "status": "Revised design mapping obligations; not importer certification",
+  "sources": [
+    {
+      "name": "zotero",
+      "url": "https://raw.githubusercontent.com/zotero/zotero-schema/b86c79b56479cadac3288e1f122cf34ef04e8809/schema.json",
+      "sha256": "80014a0bf4aec5f2a82b5b70372d9b820a6d2deae4af9fc403d6aac7fbb8d42f",
+      "retrieved": "2026-09-20"
+    },
+    {
+      "name": "csl",
+      "url": "https://raw.githubusercontent.com/citation-style-language/schema/40b3ce0bbbda517ad14b98c93a2c65ab4cde56a9/schemas/input/csl-data.json",
+      "sha256": "23b2c062d7526060f4631bb04b4b3ba237e488484253e327bd00fa691861b811",
+      "retrieved": "2026-09-20"
+    },
+    {
+      "name": "biblatex",
+      "url": "https://raw.githubusercontent.com/plk/biblatex/v3.22/tex/latex/biblatex/blx-dm.def",
+      "sha256": "caa6b7c0c6db33402fd93d00c01e9f99717f5e80fdf8be2a841c4a987771b115",
+      "retrieved": "2026-09-20"
+    }
+  ],
+  "semantic_review": "../reviews/semantic-row-review-2026-09-21.md",
+  "baseline_archive": "../reviews/baseline-before-revision-2026-09-21.tar.gz",
+  "type_mappings": [
+    {
+      "zotero": "journalArticle",
+      "canonical": "article-journal",
+      "portable": "article",
+      "fixture": "article"
+    },
+    {
+      "zotero": "book",
+      "canonical": "book",
+      "portable": "book",
+      "fixture": "book"
+    },
+    {
+      "zotero": "bookSection",
+      "canonical": "chapter",
+      "portable": "incollection",
+      "fixture": "chapter"
+    },
+    {
+      "zotero": "conferencePaper",
+      "canonical": "paper-conference",
+      "portable": "inproceedings",
+      "fixture": "conference"
+    },
+    {
+      "zotero": "preprint",
+      "canonical": "article",
+      "portable": "unpublished",
+      "fixture": "preprint"
+    },
+    {
+      "zotero": "webpage",
+      "canonical": "webpage",
+      "portable": "misc",
+      "fixture": "web"
+    },
+    {
+      "zotero": "blogPost",
+      "canonical": "post-weblog",
+      "portable": "misc",
+      "fixture": "web"
+    },
+    {
+      "zotero": "magazineArticle",
+      "canonical": "article-magazine",
+      "portable": "article",
+      "fixture": "magazine"
+    },
+    {
+      "zotero": "newspaperArticle",
+      "canonical": "article-newspaper",
+      "portable": "article",
+      "fixture": "magazine"
+    },
+    {
+      "zotero": "thesis",
+      "canonical": "thesis",
+      "portable": "phdthesis|mastersthesis|misc",
+      "fixture": "thesis"
+    },
+    {
+      "zotero": "report",
+      "canonical": "report",
+      "portable": "techreport",
+      "fixture": "report"
+    },
+    {
+      "zotero": "standard",
+      "canonical": "standard",
+      "portable": "misc",
+      "fixture": "standard"
+    },
+    {
+      "zotero": "presentation",
+      "canonical": "speech",
+      "portable": "misc",
+      "fixture": "presentation"
+    },
+    {
+      "zotero": "document",
+      "canonical": "document",
+      "portable": "misc",
+      "fixture": "web"
+    },
+    {
+      "zotero": "patent",
+      "canonical": "patent",
+      "portable": "misc",
+      "fixture": "patent"
+    },
+    {
+      "zotero": "manuscript",
+      "canonical": "manuscript",
+      "portable": "unpublished",
+      "fixture": "preprint"
+    },
+    {
+      "zotero": "computerProgram",
+      "canonical": "software",
+      "portable": "misc",
+      "fixture": "software"
+    }
+  ],
+  "bib_type_aliases": {
+    "article": "article-journal",
+    "book": "book",
+    "incollection": "chapter",
+    "inbook": "chapter",
+    "inproceedings": "paper-conference",
+    "conference": "paper-conference",
+    "phdthesis": "thesis",
+    "mastersthesis": "thesis",
+    "thesis": "thesis",
+    "report": "report",
+    "techreport": "report",
+    "online": "webpage",
+    "www": "webpage",
+    "electronic": "webpage",
+    "misc": "document",
+    "manual": "document",
+    "standard": "standard",
+    "patent": "patent",
+    "software": "software",
+    "unpublished": "manuscript"
+  },
+  "core_fields": {
+    "type": {
+      "schema": {
+        "type": "string",
+        "enum": [
+          "article",
+          "article-journal",
+          "article-magazine",
+          "article-newspaper",
+          "book",
+          "chapter",
+          "document",
+          "manuscript",
+          "paper-conference",
+          "patent",
+          "post-weblog",
+          "report",
+          "software",
+          "speech",
+          "standard",
+          "thesis",
+          "webpage"
+        ]
+      }
+    },
+    "language": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "author": {
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/name-variable"
+        }
+      }
+    },
+    "collection-editor": {
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/name-variable"
+        }
+      }
+    },
+    "container-author": {
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/name-variable"
+        }
+      }
+    },
+    "contributor": {
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/name-variable"
+        }
+      }
+    },
+    "editor": {
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/name-variable"
+        }
+      }
+    },
+    "translator": {
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/name-variable"
+        }
+      }
+    },
+    "accessed": {
+      "schema": {
+        "$ref": "#/definitions/date-variable"
+      }
+    },
+    "event-date": {
+      "schema": {
+        "$ref": "#/definitions/date-variable"
+      }
+    },
+    "issued": {
+      "schema": {
+        "$ref": "#/definitions/date-variable"
+      }
+    },
+    "original-date": {
+      "schema": {
+        "$ref": "#/definitions/date-variable"
+      }
+    },
+    "submitted": {
+      "schema": {
+        "$ref": "#/definitions/date-variable"
+      }
+    },
+    "abstract": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "archive": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "archive-place": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "authority": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "collection-number": {
+      "schema": {
+        "type": [
+          "string",
+          "number"
+        ]
+      }
+    },
+    "collection-title": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "container-title": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "container-title-short": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "DOI": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "edition": {
+      "schema": {
+        "type": [
+          "string",
+          "number"
+        ]
+      }
+    },
+    "event-title": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "event-place": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "genre": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "ISBN": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "ISSN": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "issue": {
+      "schema": {
+        "type": [
+          "string",
+          "number"
+        ]
+      }
+    },
+    "jurisdiction": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "medium": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "note": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "number": {
+      "schema": {
+        "type": [
+          "string",
+          "number"
+        ]
+      }
+    },
+    "number-of-pages": {
+      "schema": {
+        "type": [
+          "string",
+          "number"
+        ]
+      }
+    },
+    "number-of-volumes": {
+      "schema": {
+        "type": [
+          "string",
+          "number"
+        ]
+      }
+    },
+    "page": {
+      "schema": {
+        "type": [
+          "string",
+          "number"
+        ]
+      }
+    },
+    "part-title": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "PMCID": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "PMID": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "publisher": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "publisher-place": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "section": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "title": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "title-short": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "URL": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "version": {
+      "schema": {
+        "type": "string"
+      }
+    },
+    "volume": {
+      "schema": {
+        "type": [
+          "string",
+          "number"
+        ]
+      }
+    },
+    "chapter-number": {
+      "schema": {
+        "type": [
+          "string",
+          "number"
+        ]
+      }
+    }
+  },
+  "extensions": [
+    {
+      "path": "extensions.patent.assignees",
+      "rationale": "Ordered personal/literal names; assignee is not inventor",
+      "fixture": "patent"
+    },
+    {
+      "path": "extensions.patent.application_number",
+      "rationale": "Text distinct from granted patent number and call-number",
+      "fixture": "patent-details"
+    },
+    {
+      "path": "extensions.patent.priority_date",
+      "rationale": "Date distinct from issued/submitted/original-date",
+      "fixture": "patent-details"
+    },
+    {
+      "path": "extensions.journal_series",
+      "rationale": "Text distinct from collection-title",
+      "fixture": "journal-series"
+    }
+  ],
+  "rows": [
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "title",
+      "canonical_path": "metadata.title",
+      "transform": "Dates: raw text plus validated parsedDate aid; identifiers: validated normalization; otherwise Unicode text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "title",
+      "export_class": "value-dependent",
+      "fixture": "titles",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "shortTitle",
+      "canonical_path": "metadata.title-short",
+      "transform": "Dates: raw text plus validated parsedDate aid; identifiers: validated normalization; otherwise Unicode text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "shorttitle",
+      "export_class": "value-dependent",
+      "fixture": "titles",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "abstractNote",
+      "canonical_path": "metadata.abstract",
+      "transform": "Dates: raw text plus validated parsedDate aid; identifiers: validated normalization; otherwise Unicode text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "omit with report",
+      "export_class": "value-dependent",
+      "fixture": "context",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "language",
+      "canonical_path": "metadata.language",
+      "transform": "Dates: raw text plus validated parsedDate aid; identifiers: validated normalization; otherwise Unicode text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "langid",
+      "export_class": "value-dependent",
+      "fixture": "titles",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "url",
+      "canonical_path": "metadata.URL",
+      "transform": "Dates: raw text plus validated parsedDate aid; identifiers: validated normalization; otherwise Unicode text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "url",
+      "export_class": "value-dependent",
+      "fixture": "web",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "DOI",
+      "canonical_path": "metadata.DOI",
+      "transform": "Dates: raw text plus validated parsedDate aid; identifiers: validated normalization; otherwise Unicode text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "doi",
+      "export_class": "value-dependent",
+      "fixture": "identifiers",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "ISBN",
+      "canonical_path": "metadata.ISBN",
+      "transform": "Dates: raw text plus validated parsedDate aid; identifiers: validated normalization; otherwise Unicode text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "isbn",
+      "export_class": "value-dependent",
+      "fixture": "book",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "ISSN",
+      "canonical_path": "metadata.ISSN",
+      "transform": "Dates: raw text plus validated parsedDate aid; identifiers: validated normalization; otherwise Unicode text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "issn",
+      "export_class": "value-dependent",
+      "fixture": "article",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "date",
+      "canonical_path": "metadata.issued",
+      "transform": "Dates: raw text plus validated parsedDate aid; identifiers: validated normalization; otherwise Unicode text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "year and month",
+      "export_class": "value-dependent",
+      "fixture": "dates",
+      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful year/month mapping. Full day: preserve supplementary date as well as year/month and validate declared consumers. Unrepresentable supplied precision/range/uncertainty: issued_date_lost_or_changed block; unassessed syntax: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "accessDate",
+      "canonical_path": "metadata.accessed",
+      "transform": "Dates: raw text plus validated parsedDate aid; identifiers: validated normalization; otherwise Unicode text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "urldate",
+      "export_class": "value-dependent",
+      "fixture": "dates",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "thesis"
+      ],
+      "source_field": "university",
+      "canonical_path": "metadata.publisher",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "school",
+      "export_class": "value-dependent",
+      "fixture": "thesis",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "thesis"
+      ],
+      "source_field": "thesisType",
+      "canonical_path": "metadata.genre",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "type",
+      "export_class": "value-dependent",
+      "fixture": "thesis",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "report"
+      ],
+      "source_field": "institution",
+      "canonical_path": "metadata.publisher",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "institution",
+      "export_class": "value-dependent",
+      "fixture": "report",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "report"
+      ],
+      "source_field": "reportType",
+      "canonical_path": "metadata.genre",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "type",
+      "export_class": "value-dependent",
+      "fixture": "report",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "report"
+      ],
+      "source_field": "reportNumber",
+      "canonical_path": "metadata.number",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "number",
+      "export_class": "value-dependent",
+      "fixture": "report",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "magazineArticle",
+        "newspaperArticle"
+      ],
+      "source_field": "publicationTitle",
+      "canonical_path": "metadata.container-title",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "journal",
+      "export_class": "value-dependent",
+      "fixture": "article",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "magazineArticle",
+        "newspaperArticle"
+      ],
+      "source_field": "issue",
+      "canonical_path": "metadata.issue",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "number",
+      "export_class": "value-dependent",
+      "fixture": "article",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "bookSection"
+      ],
+      "source_field": "bookTitle",
+      "canonical_path": "metadata.container-title",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "booktitle",
+      "export_class": "value-dependent",
+      "fixture": "chapter",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "conferencePaper"
+      ],
+      "source_field": "proceedingsTitle",
+      "canonical_path": "metadata.container-title",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "booktitle",
+      "export_class": "value-dependent",
+      "fixture": "conference",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "conferencePaper"
+      ],
+      "source_field": "conferenceName",
+      "canonical_path": "metadata.event-title",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "howpublished/note with report",
+      "export_class": "value-dependent",
+      "fixture": "conference",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "presentation"
+      ],
+      "source_field": "meetingName",
+      "canonical_path": "metadata.event-title",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "howpublished",
+      "export_class": "value-dependent",
+      "fixture": "presentation",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "preprint"
+      ],
+      "source_field": "archiveID",
+      "canonical_path": "metadata.number",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "eprint",
+      "export_class": "value-dependent",
+      "fixture": "preprint",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "preprint"
+      ],
+      "source_field": "repository",
+      "canonical_path": "metadata.archive",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "archiveprefix",
+      "export_class": "value-dependent",
+      "fixture": "preprint",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "patent"
+      ],
+      "source_field": "patentNumber",
+      "canonical_path": "metadata.number",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "howpublished",
+      "export_class": "value-dependent",
+      "fixture": "patent",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "patent"
+      ],
+      "source_field": "country",
+      "canonical_path": "metadata.jurisdiction",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "howpublished",
+      "export_class": "value-dependent",
+      "fixture": "patent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "patent"
+      ],
+      "source_field": "issuingAuthority",
+      "canonical_path": "metadata.authority",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "howpublished",
+      "export_class": "value-dependent",
+      "fixture": "patent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "standard"
+      ],
+      "source_field": "organization",
+      "canonical_path": "metadata.authority",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "howpublished",
+      "export_class": "value-dependent",
+      "fixture": "standard",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "standard",
+        "manuscript"
+      ],
+      "source_field": "number",
+      "canonical_path": "metadata.number",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "howpublished",
+      "export_class": "value-dependent",
+      "fixture": "standard",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "book",
+        "report"
+      ],
+      "source_field": "series",
+      "canonical_path": "metadata.collection-title",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "series",
+      "export_class": "value-dependent",
+      "fixture": "book",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "book",
+        "report"
+      ],
+      "source_field": "seriesNumber",
+      "canonical_path": "metadata.collection-number",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "number",
+      "export_class": "value-dependent",
+      "fixture": "book",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "document",
+        "journalArticle",
+        "magazineArticle",
+        "newspaperArticle",
+        "standard",
+        "webpage"
+      ],
+      "source_field": "publisher",
+      "canonical_path": "metadata.publisher",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "publisher",
+      "export_class": "value-dependent",
+      "fixture": "article",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "book",
+        "bookSection",
+        "computerProgram",
+        "conferencePaper",
+        "document",
+        "journalArticle",
+        "magazineArticle",
+        "manuscript",
+        "newspaperArticle",
+        "patent",
+        "preprint",
+        "presentation",
+        "report",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "place",
+      "canonical_path": "metadata.publisher-place",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "address",
+      "export_class": "value-dependent",
+      "fixture": "article",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "journalArticle",
+        "magazineArticle",
+        "newspaperArticle"
+      ],
+      "source_field": "volume",
+      "canonical_path": "metadata.volume",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "volume",
+      "export_class": "value-dependent",
+      "fixture": "article",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "bookSection",
+        "conferencePaper",
+        "journalArticle",
+        "magazineArticle",
+        "newspaperArticle",
+        "patent",
+        "report"
+      ],
+      "source_field": "pages",
+      "canonical_path": "metadata.page",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "pages",
+      "export_class": "value-dependent",
+      "fixture": "article",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "book",
+        "bookSection",
+        "newspaperArticle",
+        "standard"
+      ],
+      "source_field": "edition",
+      "canonical_path": "metadata.edition",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "edition",
+      "export_class": "value-dependent",
+      "fixture": "book",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "book",
+        "manuscript",
+        "standard",
+        "thesis"
+      ],
+      "source_field": "numPages",
+      "canonical_path": "metadata.number-of-pages",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "omit with report",
+      "export_class": "value-dependent",
+      "fixture": "article",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle"
+      ],
+      "source_field": "journalAbbreviation",
+      "canonical_path": "metadata.container-title-short",
+      "transform": "Retain text",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "shortjournal",
+      "export_class": "value-dependent",
+      "fixture": "article",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "title",
+      "canonical_path": "metadata.title",
+      "transform": "Decode supported title except traditional inbook branch: without booktitle and with chapter/pages map to metadata.container-title instead; preserve explicit key.",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "title",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "shorttitle",
+      "canonical_path": "metadata.title-short",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "shorttitle",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "doi",
+      "canonical_path": "metadata.DOI",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "doi",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "isbn",
+      "canonical_path": "metadata.ISBN",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "isbn",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "issn",
+      "canonical_path": "metadata.ISSN",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "issn",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "url",
+      "canonical_path": "metadata.URL",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "url",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "pmid",
+      "canonical_path": "metadata.PMID",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "pmid",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "pmcid",
+      "canonical_path": "metadata.PMCID",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "pmcid",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "abstract",
+      "canonical_path": "metadata.abstract",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "omit with report",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "langid",
+      "canonical_path": "metadata.language",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "langid",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "language",
+      "canonical_path": "metadata.language",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "langid",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "publisher",
+      "canonical_path": "metadata.publisher",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "publisher",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "address",
+      "canonical_path": "metadata.publisher-place",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "address",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "location",
+      "canonical_path": "metadata.publisher-place",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "address",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "edition",
+      "canonical_path": "metadata.edition",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "edition",
+      "export_class": "value-dependent",
+      "fixture": "book",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "volume",
+      "canonical_path": "metadata.volume",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "volume",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "pages",
+      "canonical_path": "metadata.page",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "pages",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "version",
+      "canonical_path": "metadata.version",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "howpublished with report",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "note",
+      "canonical_path": "metadata.note",
+      "transform": "Decode supported syntax; retain original",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "note",
+      "export_class": "value-dependent",
+      "fixture": "common",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article"
+      ],
+      "source_field": "journal",
+      "canonical_path": "metadata.container-title",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "journal",
+      "export_class": "value-dependent",
+      "fixture": "article",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article"
+      ],
+      "source_field": "journaltitle",
+      "canonical_path": "metadata.container-title",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "journal",
+      "export_class": "value-dependent",
+      "fixture": "article",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article"
+      ],
+      "source_field": "number",
+      "canonical_path": "metadata.issue",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "number",
+      "export_class": "value-dependent",
+      "fixture": "article",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "incollection",
+        "inbook",
+        "inproceedings",
+        "conference"
+      ],
+      "source_field": "booktitle",
+      "canonical_path": "metadata.container-title",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "booktitle",
+      "export_class": "value-dependent",
+      "fixture": "chapter",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "thesis",
+        "phdthesis",
+        "mastersthesis"
+      ],
+      "source_field": "school",
+      "canonical_path": "metadata.publisher",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "school",
+      "export_class": "value-dependent",
+      "fixture": "thesis",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport"
+      ],
+      "source_field": "institution",
+      "canonical_path": "metadata.publisher",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "school or institution by type",
+      "export_class": "value-dependent",
+      "fixture": "thesis",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "report",
+        "techreport",
+        "patent",
+        "standard"
+      ],
+      "source_field": "number",
+      "canonical_path": "metadata.number",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "number or howpublished by type",
+      "export_class": "value-dependent",
+      "fixture": "report",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "book"
+      ],
+      "source_field": "number",
+      "canonical_path": "metadata.collection-number",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "number",
+      "export_class": "value-dependent",
+      "fixture": "book",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "book"
+      ],
+      "source_field": "series",
+      "canonical_path": "metadata.collection-title",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "series",
+      "export_class": "value-dependent",
+      "fixture": "book",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "unpublished"
+      ],
+      "source_field": "eprint",
+      "canonical_path": "metadata.number",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "eprint",
+      "export_class": "value-dependent",
+      "fixture": "preprint",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "unpublished"
+      ],
+      "source_field": "archiveprefix",
+      "canonical_path": "metadata.archive",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "archiveprefix",
+      "export_class": "value-dependent",
+      "fixture": "preprint",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "unpublished"
+      ],
+      "source_field": "eprinttype",
+      "canonical_path": "metadata.archive",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "archiveprefix",
+      "export_class": "value-dependent",
+      "fixture": "preprint",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "inproceedings",
+        "conference"
+      ],
+      "source_field": "eventtitle",
+      "canonical_path": "metadata.event-title",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "note",
+      "export_class": "value-dependent",
+      "fixture": "conference",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport"
+      ],
+      "source_field": "type",
+      "canonical_path": "metadata.genre",
+      "transform": "Type scoped; book number requires series; eprint requires known repository and preprint evidence",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "type",
+      "export_class": "value-dependent",
+      "fixture": "thesis",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "year",
+      "canonical_path": "metadata.issued",
+      "transform": "Parse calendar precision; jan..dec macros only; compare date with year/month, conflict on disagreement",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "year and month",
+      "export_class": "value-dependent",
+      "fixture": "dates",
+      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful year/month mapping. Full day: preserve supplementary date as well as year/month and validate declared consumers. Unrepresentable supplied precision/range/uncertainty: issued_date_lost_or_changed block; unassessed syntax: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "month",
+      "canonical_path": "metadata.issued",
+      "transform": "Parse calendar precision; jan..dec macros only; compare date with year/month, conflict on disagreement",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "year and month",
+      "export_class": "value-dependent",
+      "fixture": "dates",
+      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful year/month mapping. Full day: preserve supplementary date as well as year/month and validate declared consumers. Unrepresentable supplied precision/range/uncertainty: issued_date_lost_or_changed block; unassessed syntax: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "date",
+      "canonical_path": "metadata.issued",
+      "transform": "Parse calendar precision; jan..dec macros only; compare date with year/month, conflict on disagreement",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "year and month",
+      "export_class": "value-dependent",
+      "fixture": "dates",
+      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful year/month mapping. Full day: preserve supplementary date as well as year/month and validate declared consumers. Unrepresentable supplied precision/range/uncertainty: issued_date_lost_or_changed block; unassessed syntax: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "urldate",
+      "canonical_path": "metadata.accessed",
+      "transform": "Validate calendar precision",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "urldate",
+      "export_class": "value-dependent",
+      "fixture": "dates",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "creators.author",
+      "canonical_path": "metadata.author",
+      "transform": "Ordered CSL personal/literal names; original role is provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "author",
+      "export_class": "value-dependent",
+      "fixture": "names",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "creators.editor",
+      "canonical_path": "metadata.editor",
+      "transform": "Ordered CSL personal/literal names; original role is provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "editor",
+      "export_class": "value-dependent",
+      "fixture": "names",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "creators.translator",
+      "canonical_path": "metadata.translator",
+      "transform": "Ordered CSL personal/literal names; original role is provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
+      "export_class": "value-dependent",
+      "fixture": "names",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "creators.bookAuthor",
+      "canonical_path": "metadata.container-author",
+      "transform": "Ordered CSL personal/literal names; original role is provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
+      "export_class": "value-dependent",
+      "fixture": "names",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "creators.seriesEditor",
+      "canonical_path": "metadata.collection-editor",
+      "transform": "Ordered CSL personal/literal names; original role is provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
+      "export_class": "value-dependent",
+      "fixture": "names",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle",
+        "book",
+        "bookSection",
+        "conferencePaper",
+        "preprint",
+        "webpage",
+        "blogPost",
+        "magazineArticle",
+        "newspaperArticle",
+        "thesis",
+        "report",
+        "standard",
+        "presentation",
+        "document",
+        "patent",
+        "manuscript",
+        "computerProgram"
+      ],
+      "source_field": "creators.contributor",
+      "canonical_path": "metadata.contributor",
+      "transform": "Ordered CSL personal/literal names; original role is provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
+      "export_class": "value-dependent",
+      "fixture": "names",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "patent"
+      ],
+      "source_field": "creators.inventor",
+      "canonical_path": "metadata.author",
+      "transform": "Ordered CSL personal/literal names; original role is provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "author",
+      "export_class": "value-dependent",
+      "fixture": "names",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "presentation"
+      ],
+      "source_field": "creators.presenter",
+      "canonical_path": "metadata.author",
+      "transform": "Ordered CSL personal/literal names; original role is provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "author",
+      "export_class": "value-dependent",
+      "fixture": "names",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "computerProgram"
+      ],
+      "source_field": "creators.programmer",
+      "canonical_path": "metadata.author",
+      "transform": "Ordered CSL personal/literal names; original role is provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "author",
+      "export_class": "value-dependent",
+      "fixture": "names",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "author",
+      "canonical_path": "metadata.author",
+      "transform": "Parse ordered names and explicit von parts; fully grouped corporate names remain literals",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "author",
+      "export_class": "value-dependent",
+      "fixture": "names",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "editor",
+      "canonical_path": "metadata.editor",
+      "transform": "Parse ordered names and explicit von parts; fully grouped corporate names remain literals",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "editor",
+      "export_class": "value-dependent",
+      "fixture": "names",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "translator",
+      "canonical_path": "metadata.translator",
+      "transform": "Parse ordered names and explicit von parts; fully grouped corporate names remain literals",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
+      "export_class": "value-dependent",
+      "fixture": "names",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "inbook",
+        "incollection",
+        "inproceedings",
+        "conference",
+        "unpublished",
+        "online",
+        "electronic",
+        "www",
+        "misc",
+        "thesis",
+        "phdthesis",
+        "mastersthesis",
+        "report",
+        "techreport",
+        "standard",
+        "manual",
+        "patent",
+        "software"
+      ],
+      "source_field": "bookauthor",
+      "canonical_path": "metadata.container-author",
+      "transform": "Parse ordered names and explicit von parts; fully grouped corporate names remain literals",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
+      "export_class": "value-dependent",
+      "fixture": "names",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "patent"
+      ],
+      "source_field": "assignee",
+      "canonical_path": "extensions.patent.assignees",
+      "transform": "Ordered personal/literal names; assignee is not inventor",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "omit with explicit unknown-mapping report unless registered projection is demonstrated",
+      "export_class": "value-dependent",
+      "fixture": "patent",
+      "assessment_rule": "No implemented portable projection: unknown, never automatic omission. A later explicitly registered fixture-backed mapping may assess the omission or faithful rendering."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "patent"
+      ],
+      "source_field": "holder",
+      "canonical_path": "extensions.patent.assignees",
+      "transform": "Ordered personal/literal names; assignee is not inventor",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "omit with explicit unknown-mapping report",
+      "export_class": "value-dependent",
+      "fixture": "patent",
+      "assessment_rule": "No implemented portable projection: unknown, never automatic omission. A later explicitly registered fixture-backed mapping may assess the omission or faithful rendering."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "patent"
+      ],
+      "source_field": "applicationNumber",
+      "canonical_path": "extensions.patent.application_number",
+      "transform": "Text distinct from granted patent number and call-number",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "omit with explicit unknown-mapping report unless registered projection is demonstrated",
+      "export_class": "value-dependent",
+      "fixture": "patent-details",
+      "assessment_rule": "No implemented portable projection: unknown, never automatic omission. A later explicitly registered fixture-backed mapping may assess the omission or faithful rendering."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "patent"
+      ],
+      "source_field": "priorityDate",
+      "canonical_path": "extensions.patent.priority_date",
+      "transform": "Date distinct from issued/submitted/original-date",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "omit with explicit unknown-mapping report unless registered projection is demonstrated",
+      "export_class": "value-dependent",
+      "fixture": "patent-details",
+      "assessment_rule": "No implemented portable projection: unknown, never automatic omission. A later explicitly registered fixture-backed mapping may assess the omission or faithful rendering."
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "journalArticle"
+      ],
+      "source_field": "series",
+      "canonical_path": "extensions.journal_series",
+      "transform": "Text distinct from collection-title",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "omit with explicit unknown-mapping report unless registered projection is demonstrated",
+      "export_class": "value-dependent",
+      "fixture": "journal-series",
+      "assessment_rule": "No implemented portable projection: unknown, never automatic omission. A later explicitly registered fixture-backed mapping may assess the omission or faithful rendering."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "type",
+      "canonical_path": "metadata.type",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use explicit type table. Known subtype downgrade: documented fallback. Observed changed author/year citation: in_text_citation_changed block. Unregistered mapping: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "title",
+      "canonical_path": "metadata.title",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "title-short",
+      "canonical_path": "metadata.title-short",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "chapter",
+        "paper-conference",
+        "webpage",
+        "post-weblog"
+      ],
+      "source_field": "container-title",
+      "canonical_path": "metadata.container-title",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article-journal",
+        "article-magazine",
+        "article-newspaper"
+      ],
+      "source_field": "container-title-short",
+      "canonical_path": "metadata.container-title-short",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "book",
+        "chapter",
+        "report",
+        "paper-conference"
+      ],
+      "source_field": "collection-title",
+      "canonical_path": "metadata.collection-title",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "book",
+        "chapter",
+        "report",
+        "paper-conference"
+      ],
+      "source_field": "collection-number",
+      "canonical_path": "metadata.collection-number",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "author",
+      "canonical_path": "metadata.author",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "author",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "editor",
+      "canonical_path": "metadata.editor",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "editor",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "translator",
+      "canonical_path": "metadata.translator",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "chapter"
+      ],
+      "source_field": "container-author",
+      "canonical_path": "metadata.container-author",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "book",
+        "chapter",
+        "report",
+        "paper-conference"
+      ],
+      "source_field": "collection-editor",
+      "canonical_path": "metadata.collection-editor",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "contributor",
+      "canonical_path": "metadata.contributor",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "issued",
+      "canonical_path": "metadata.issued",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful year/month mapping. Full day: preserve supplementary date as well as year/month and validate declared consumers. Unrepresentable supplied precision/range/uncertainty: issued_date_lost_or_changed block; unassessed syntax: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "accessed",
+      "canonical_path": "metadata.accessed",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "patent",
+        "manuscript"
+      ],
+      "source_field": "submitted",
+      "canonical_path": "metadata.submitted",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "book",
+        "chapter",
+        "article",
+        "article-journal",
+        "manuscript"
+      ],
+      "source_field": "original-date",
+      "canonical_path": "metadata.original-date",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "paper-conference",
+        "speech"
+      ],
+      "source_field": "event-date",
+      "canonical_path": "metadata.event-date",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "book",
+        "chapter",
+        "document",
+        "standard"
+      ],
+      "source_field": "edition",
+      "canonical_path": "metadata.edition",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "software",
+        "article",
+        "document",
+        "standard"
+      ],
+      "source_field": "version",
+      "canonical_path": "metadata.version",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "DOI",
+      "canonical_path": "metadata.DOI",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "ISBN",
+      "canonical_path": "metadata.ISBN",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "ISSN",
+      "canonical_path": "metadata.ISSN",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "URL",
+      "canonical_path": "metadata.URL",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "PMID",
+      "canonical_path": "metadata.PMID",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "PMCID",
+      "canonical_path": "metadata.PMCID",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "abstract",
+      "canonical_path": "metadata.abstract",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "language",
+      "canonical_path": "metadata.language",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "book",
+        "chapter",
+        "paper-conference",
+        "report",
+        "thesis",
+        "software",
+        "document"
+      ],
+      "source_field": "publisher",
+      "canonical_path": "metadata.publisher",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "book",
+        "chapter",
+        "paper-conference",
+        "report",
+        "thesis",
+        "software",
+        "document"
+      ],
+      "source_field": "publisher-place",
+      "canonical_path": "metadata.publisher-place",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "book",
+        "chapter",
+        "paper-conference",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper"
+      ],
+      "source_field": "volume",
+      "canonical_path": "metadata.volume",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article-journal",
+        "article-magazine",
+        "article-newspaper"
+      ],
+      "source_field": "issue",
+      "canonical_path": "metadata.issue",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "chapter",
+        "paper-conference"
+      ],
+      "source_field": "page",
+      "canonical_path": "metadata.page",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "report",
+        "standard",
+        "patent",
+        "manuscript"
+      ],
+      "source_field": "number",
+      "canonical_path": "metadata.number",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Representable current value: faithful; stated type fallback: documented fallback; altered work identifier/edition/version: work_identity_changed block; unassessed form: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "book",
+        "thesis",
+        "report",
+        "document"
+      ],
+      "source_field": "number-of-pages",
+      "canonical_path": "metadata.number-of-pages",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "book"
+      ],
+      "source_field": "number-of-volumes",
+      "canonical_path": "metadata.number-of-volumes",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "genre",
+      "canonical_path": "metadata.genre",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "medium",
+      "canonical_path": "metadata.medium",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "patent",
+        "standard"
+      ],
+      "source_field": "authority",
+      "canonical_path": "metadata.authority",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "patent"
+      ],
+      "source_field": "jurisdiction",
+      "canonical_path": "metadata.jurisdiction",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "manuscript"
+      ],
+      "source_field": "archive",
+      "canonical_path": "metadata.archive",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "manuscript"
+      ],
+      "source_field": "archive-place",
+      "canonical_path": "metadata.archive-place",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "paper-conference",
+        "speech"
+      ],
+      "source_field": "event-title",
+      "canonical_path": "metadata.event-title",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "paper-conference",
+        "speech"
+      ],
+      "source_field": "event-place",
+      "canonical_path": "metadata.event-place",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article-journal",
+        "article-newspaper"
+      ],
+      "source_field": "section",
+      "canonical_path": "metadata.section",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article-journal",
+        "standard"
+      ],
+      "source_field": "part-title",
+      "canonical_path": "metadata.part-title",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "manuscript",
+        "standard"
+      ],
+      "source_field": "status",
+      "canonical_path": "metadata.status",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "book",
+        "chapter",
+        "document",
+        "manuscript",
+        "paper-conference",
+        "patent",
+        "post-weblog",
+        "report",
+        "software",
+        "speech",
+        "standard",
+        "thesis",
+        "webpage"
+      ],
+      "source_field": "note",
+      "canonical_path": "metadata.note",
+      "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
+      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
+      "portable_projection": "By canonical field/type rows and bibliography contract",
+      "export_class": "value-dependent",
+      "fixture": "agent",
+      "assessment_rule": "Use stated portable field/text projection where assessed. Known noncitation omission: faithful-incomplete warning. Unsupported value syntax or unassessed omission: unknown; any enumerated loss upgrades to blocking."
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "inbook",
+        "incollection"
+      ],
+      "source_field": "chapter",
+      "canonical_path": "metadata.chapter-number",
+      "transform": "Retain supplied textual part number; no title inference",
+      "conflict": "Unequal aliases require reconciliation",
+      "portable_projection": "chapter",
+      "export_class": "value-dependent",
+      "assessment_rule": "Faithful part identifier when supported; changed identifying part blocks work_identity_changed; unknown syntax blocks unless single-run override.",
+      "fixture": "traditional-inbook"
+    },
+    {
+      "input_format": "csljson",
+      "type_scope": [
+        "chapter"
+      ],
+      "source_field": "chapter-number",
+      "canonical_path": "metadata.chapter-number",
+      "transform": "Validate core textual/numeric part identifier",
+      "conflict": "Unequal aliases require reconciliation",
+      "portable_projection": "chapter",
+      "export_class": "value-dependent",
+      "assessment_rule": "Faithful supported part identifier; otherwise assess work_identity_changed or unknown.",
+      "fixture": "traditional-inbook"
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "webpage"
+      ],
+      "source_field": "websiteTitle",
+      "canonical_path": "metadata.container-title",
+      "transform": "Retain supplied meaning; no invented facts",
+      "conflict": "Competing aliases require explicit reconciliation; absence is no proposal.",
+      "portable_projection": "howpublished or note with source title retained",
+      "export_class": "value-dependent",
+      "assessment_rule": "Supported stated projection is faithful or documented fallback; assessed noncitation omissions warn; enumerated semantic loss blocks; unassessed values block as unknown.",
+      "fixture": "web"
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "blogPost"
+      ],
+      "source_field": "blogTitle",
+      "canonical_path": "metadata.container-title",
+      "transform": "Retain supplied meaning; no invented facts",
+      "conflict": "Competing aliases require explicit reconciliation; absence is no proposal.",
+      "portable_projection": "howpublished or note",
+      "export_class": "value-dependent",
+      "assessment_rule": "Supported stated projection is faithful or documented fallback; assessed noncitation omissions warn; enumerated semantic loss blocks; unassessed values block as unknown.",
+      "fixture": "web"
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "presentation"
+      ],
+      "source_field": "presentationType",
+      "canonical_path": "metadata.genre",
+      "transform": "Retain supplied meaning; no invented facts",
+      "conflict": "Competing aliases require explicit reconciliation; absence is no proposal.",
+      "portable_projection": "howpublished",
+      "export_class": "value-dependent",
+      "assessment_rule": "Supported stated projection is faithful or documented fallback; assessed noncitation omissions warn; enumerated semantic loss blocks; unassessed values block as unknown.",
+      "fixture": "presentation"
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "manuscript"
+      ],
+      "source_field": "manuscriptType",
+      "canonical_path": "metadata.genre",
+      "transform": "Retain supplied meaning; no invented facts",
+      "conflict": "Competing aliases require explicit reconciliation; absence is no proposal.",
+      "portable_projection": "note",
+      "export_class": "value-dependent",
+      "assessment_rule": "Supported stated projection is faithful or documented fallback; assessed noncitation omissions warn; enumerated semantic loss blocks; unassessed values block as unknown.",
+      "fixture": "preprint"
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "computerProgram"
+      ],
+      "source_field": "company",
+      "canonical_path": "metadata.publisher",
+      "transform": "Retain supplied meaning; no invented facts",
+      "conflict": "Competing aliases require explicit reconciliation; absence is no proposal.",
+      "portable_projection": "howpublished",
+      "export_class": "value-dependent",
+      "assessment_rule": "Supported stated projection is faithful or documented fallback; assessed noncitation omissions warn; enumerated semantic loss blocks; unassessed values block as unknown.",
+      "fixture": "software"
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "computerProgram"
+      ],
+      "source_field": "versionNumber",
+      "canonical_path": "metadata.version",
+      "transform": "Retain supplied meaning; no invented facts",
+      "conflict": "Competing aliases require explicit reconciliation; absence is no proposal.",
+      "portable_projection": "howpublished",
+      "export_class": "value-dependent",
+      "assessment_rule": "Supported stated projection is faithful or documented fallback; assessed noncitation omissions warn; enumerated semantic loss blocks; unassessed values block as unknown.",
+      "fixture": "software"
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "bookSection"
+      ],
+      "source_field": "series",
+      "canonical_path": "metadata.collection-title",
+      "transform": "Retain supplied meaning; no invented facts",
+      "conflict": "Competing aliases require explicit reconciliation; absence is no proposal.",
+      "portable_projection": "series",
+      "export_class": "value-dependent",
+      "assessment_rule": "Supported stated projection is faithful or documented fallback; assessed noncitation omissions warn; enumerated semantic loss blocks; unassessed values block as unknown.",
+      "fixture": "chapter"
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "bookSection"
+      ],
+      "source_field": "seriesNumber",
+      "canonical_path": "metadata.collection-number",
+      "transform": "Retain supplied meaning; no invented facts",
+      "conflict": "Competing aliases require explicit reconciliation; absence is no proposal.",
+      "portable_projection": "number",
+      "export_class": "value-dependent",
+      "assessment_rule": "Supported stated projection is faithful or documented fallback; assessed noncitation omissions warn; enumerated semantic loss blocks; unassessed values block as unknown.",
+      "fixture": "chapter"
+    },
+    {
+      "input_format": "zotero-json",
+      "type_scope": [
+        "patent"
+      ],
+      "source_field": "filingDate",
+      "canonical_path": "metadata.submitted",
+      "transform": "Retain supplied meaning; no invented facts",
+      "conflict": "Competing aliases require explicit reconciliation; absence is no proposal.",
+      "portable_projection": "assessed date note or explicit loss report",
+      "export_class": "value-dependent",
+      "assessment_rule": "Supported stated projection is faithful or documented fallback; assessed noncitation omissions warn; enumerated semantic loss blocks; unassessed values block as unknown.",
+      "fixture": "patent-details"
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "incollection",
+        "inbook",
+        "inproceedings",
+        "conference",
+        "phdthesis",
+        "mastersthesis",
+        "thesis",
+        "report",
+        "techreport",
+        "online",
+        "www",
+        "electronic",
+        "misc",
+        "manual",
+        "standard",
+        "patent",
+        "software",
+        "unpublished"
+      ],
+      "source_field": "howpublished",
+      "canonical_path": "metadata.note",
+      "transform": "Decode inert text; compose howpublished then note with newline and separate provenance. Do not infer type/event/institution from labels. Projection-matched generated text is evidence, not a new note proposal.",
+      "conflict": "Competing aliases require explicit reconciliation; absence is no proposal.",
+      "portable_projection": "note once; known profile howpublished is separately derived",
+      "export_class": "value-dependent",
+      "assessment_rule": "Supported stated projection is faithful or documented fallback; assessed noncitation omissions warn; enumerated semantic loss blocks; unassessed values block as unknown.",
+      "fixture": "web"
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article"
+      ],
+      "source_field": "issue",
+      "canonical_path": "metadata.issue",
+      "transform": "Retain supplied meaning; no invented facts",
+      "conflict": "Competing aliases require explicit reconciliation; absence is no proposal.",
+      "portable_projection": "number",
+      "export_class": "value-dependent",
+      "assessment_rule": "Supported stated projection is faithful or documented fallback; assessed noncitation omissions warn; enumerated semantic loss blocks; unassessed values block as unknown.",
+      "fixture": "article"
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "incollection",
+        "inbook",
+        "inproceedings",
+        "conference",
+        "phdthesis",
+        "mastersthesis",
+        "thesis",
+        "report",
+        "techreport",
+        "online",
+        "www",
+        "electronic",
+        "misc",
+        "manual",
+        "standard",
+        "patent",
+        "software",
+        "unpublished"
+      ],
+      "source_field": "keywords",
+      "canonical_path": "legacy_tags",
+      "transform": "Parse supported keyword list; preserve ambiguous raw form; never approve taxonomy",
+      "conflict": "Competing aliases require explicit reconciliation; absence is no proposal.",
+      "portable_projection": "omit as assessed noncitation metadata",
+      "export_class": "value-dependent",
+      "assessment_rule": "Supported stated projection is faithful or documented fallback; assessed noncitation omissions warn; enumerated semantic loss blocks; unassessed values block as unknown.",
+      "fixture": "context"
+    },
+    {
+      "input_format": "bib",
+      "type_scope": [
+        "article",
+        "book",
+        "incollection",
+        "inbook",
+        "inproceedings",
+        "conference",
+        "phdthesis",
+        "mastersthesis",
+        "thesis",
+        "report",
+        "techreport",
+        "online",
+        "www",
+        "electronic",
+        "misc",
+        "manual",
+        "standard",
+        "patent",
+        "software",
+        "unpublished"
+      ],
+      "source_field": "file",
+      "canonical_path": "resources.proposals",
+      "transform": "Parse known file grammar into explicit link proposals only; never move/copy/fetch; unsupported expressions remain originals",
+      "conflict": "Competing aliases require explicit reconciliation; absence is no proposal.",
+      "portable_projection": "omit from bibliography; inventory resource limitations",
+      "export_class": "value-dependent",
+      "assessment_rule": "Supported stated projection is faithful or documented fallback; assessed noncitation omissions warn; enumerated semantic loss blocks; unassessed values block as unknown.",
+      "fixture": "resources"
+    }
+  ],
+  "unmapped_policy": "Preserve per-entry original and report unassessed. Do not create native editable paths. Output uses four-class policy, never unknown-as-safe.",
+  "fixture_status": "Probe IDs demonstrate only stated examples. common, names, dates, identifiers, titles, context, software, patent-details, journal-series and agent are required implementation fixture families, not passing test claims.",
+  "field_applicability": {
+    "type": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "language": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "author": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "collection-editor": [
+      "book",
+      "chapter",
+      "report",
+      "paper-conference"
+    ],
+    "container-author": [
+      "chapter"
+    ],
+    "contributor": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "editor": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "translator": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "accessed": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "event-date": [
+      "paper-conference",
+      "speech"
+    ],
+    "issued": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "original-date": [
+      "book",
+      "chapter",
+      "article",
+      "article-journal",
+      "manuscript"
+    ],
+    "submitted": [
+      "article",
+      "article-journal",
+      "patent",
+      "manuscript"
+    ],
+    "abstract": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "archive": [
+      "article",
+      "manuscript"
+    ],
+    "archive-place": [
+      "article",
+      "manuscript"
+    ],
+    "authority": [
+      "patent",
+      "standard"
+    ],
+    "collection-number": [
+      "book",
+      "chapter",
+      "report",
+      "paper-conference"
+    ],
+    "collection-title": [
+      "book",
+      "chapter",
+      "report",
+      "paper-conference"
+    ],
+    "container-title": [
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "chapter",
+      "paper-conference",
+      "webpage",
+      "post-weblog"
+    ],
+    "container-title-short": [
+      "article-journal",
+      "article-magazine",
+      "article-newspaper"
+    ],
+    "DOI": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "edition": [
+      "book",
+      "chapter",
+      "document",
+      "standard"
+    ],
+    "event-title": [
+      "paper-conference",
+      "speech"
+    ],
+    "event-place": [
+      "paper-conference",
+      "speech"
+    ],
+    "genre": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "ISBN": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "ISSN": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "issue": [
+      "article-journal",
+      "article-magazine",
+      "article-newspaper"
+    ],
+    "jurisdiction": [
+      "patent"
+    ],
+    "medium": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "note": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "number": [
+      "article",
+      "report",
+      "standard",
+      "patent",
+      "manuscript"
+    ],
+    "number-of-pages": [
+      "book",
+      "thesis",
+      "report",
+      "document"
+    ],
+    "number-of-volumes": [
+      "book"
+    ],
+    "page": [
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "chapter",
+      "paper-conference"
+    ],
+    "part-title": [
+      "article-journal",
+      "standard"
+    ],
+    "PMCID": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "PMID": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "publisher": [
+      "book",
+      "chapter",
+      "paper-conference",
+      "report",
+      "thesis",
+      "software",
+      "document"
+    ],
+    "publisher-place": [
+      "book",
+      "chapter",
+      "paper-conference",
+      "report",
+      "thesis",
+      "software",
+      "document"
+    ],
+    "section": [
+      "article-journal",
+      "article-newspaper"
+    ],
+    "status": [
+      "article",
+      "article-journal",
+      "manuscript",
+      "standard"
+    ],
+    "title": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "title-short": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "URL": [
+      "article",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper",
+      "book",
+      "chapter",
+      "document",
+      "manuscript",
+      "paper-conference",
+      "patent",
+      "post-weblog",
+      "report",
+      "software",
+      "speech",
+      "standard",
+      "thesis",
+      "webpage"
+    ],
+    "version": [
+      "software",
+      "article",
+      "document",
+      "standard"
+    ],
+    "volume": [
+      "book",
+      "chapter",
+      "paper-conference",
+      "article-journal",
+      "article-magazine",
+      "article-newspaper"
+    ],
+    "chapter-number": [
+      "chapter"
+    ]
+  },
+  "extension_applicability": {
+    "extensions.patent.assignees": [
+      "patent"
+    ],
+    "extensions.patent.application_number": [
+      "patent"
+    ],
+    "extensions.patent.priority_date": [
+      "patent"
+    ],
+    "extensions.journal_series": [
+      "article-journal"
+    ]
+  },
+  "row_admission": "An input row applies only when both its input type_scope and canonical field_applicability hold. Otherwise preserve original and report unassessed; never write an inapplicable field.",
+  "schema_note": "core_fields contains pinned upstream property fragments, not a standalone JSON Schema. Implementation must package the complete pinned CSL schema and definitions, then enforce this narrower enum/applicability and records contract. Unknown schema versions fail.",
+  "extension_schemas": {
+    "extensions.patent.assignees": {
+      "type": "array",
+      "items": {
+        "$ref": "pinned-csl#/definitions/name-variable"
+      }
+    },
+    "extensions.patent.application_number": {
+      "type": "string",
+      "minLength": 1
+    },
+    "extensions.patent.priority_date": {
+      "$ref": "pinned-csl#/definitions/date-variable"
+    },
+    "extensions.journal_series": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "traditional_inbook_branch": {
+    "condition": "type=inbook, booktitle absent, chapter or pages present",
+    "title_target": "metadata.container-title",
+    "chapter_target": "metadata.chapter-number",
+    "source_title": "absent",
+    "key": "preserve explicit supplied key; require override if none",
+    "reverse": "inbook title=container-title; chapter/pages retained",
+    "fixture": "traditional-inbook"
+  }
+}

@@ -56,3 +56,8 @@ def test_patch_is_strict_and_clear_is_explicit():
                   {'schema_version': '1.0', 'set': {'metadata.title': 'X'}, 'clear': ['metadata.title']}]:
         with pytest.raises(ValidationError):
             SourcePatch.model_validate(value)
+
+
+def test_metadata_model_matches_packaged_registry():
+    from refs.models import REGISTRY, Metadata
+    assert {field.alias or name for name, field in Metadata.model_fields.items()} == set(REGISTRY['core_fields'])

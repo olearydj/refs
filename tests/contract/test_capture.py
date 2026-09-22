@@ -47,8 +47,8 @@ def test_repeat_is_noop_and_conflict_never_overwrites(initialized, tmp_path, ref
 @pytest.mark.parametrize("edit", [
     {"surprise": True},
     {"citation_key": "bad key"},
-    {"metadata": {"type": "book", "title": "Unsupported Early Type"}},
-    {"metadata": {"type": "article-journal", "title": "Test", "volume": 12}},
+    {"metadata": {"type": "unknown-type", "title": "Unsupported Type"}},
+    {"metadata": {"type": "article-journal", "title": "Test", "volume": True}},
     {"provenance": [{"origin": "agent", "access": "metadata", "identity": {}}]},
 ])
 def test_unsupported_input_is_explicit(initialized, tmp_path, reference_path, edit):
