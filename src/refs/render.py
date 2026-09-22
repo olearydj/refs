@@ -70,7 +70,9 @@ def import_text(command: str, data: dict) -> str:
         if binding.get('bound') and (binding.get('incoming_key') != binding.get('catalog_key') or binding.get('filled')):
             lines.append(f"  Bound {key} to {binding['catalog_key']}" + ('; filled '+', '.join(binding['filled']) if binding.get('filled') else ''))
         for decision in entry.get('decisions',[]):
-            lines.append(f"  Take incoming {decision['path']}: {json.dumps(decision['incoming'],ensure_ascii=False)}")
+            keeping = decision['action']=='keep_current'
+            label, value = ('Keep current',decision['current']) if keeping else ('Take incoming',decision['incoming'])
+            lines.append(f"  {label} {decision['path']}: {json.dumps(value,ensure_ascii=False)}")
         for limitation in entry.get('limitations',[]):
             lines.append(f"  {key}: {limitation['field']}: {limitation['reason']}")
         for warning in entry.get('warnings',[]):

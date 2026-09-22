@@ -92,7 +92,7 @@ def match(connection, source: SourceCreate, fingerprint: str, *, isbn_groups=Non
     return source_id, differences(source.canonical(), current)
 
 
-def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False, isbn_groups=None) -> tuple[str | None, dict]:
+def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False, isbn_groups=None, origin=None) -> tuple[str | None, dict]:
     source_id, paths = match(connection, source, hashlib.sha256(raw).hexdigest(),isbn_groups=isbn_groups)
     if not source_id:
         return None, {}
@@ -111,11 +111,17 @@ def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False
     canonical = {key: current[key] for key in SourceCreate.model_fields if key in current}
     canonical = json.loads(json.dumps(canonical))
     fills, conflicts = [], []
+    kept = []
+    if origin is not None:
+        for row in connection.execute('SELECT e.decisions_json FROM import_entries e JOIN imports i ON i.id=e.import_id WHERE e.source_id=? AND i.origin=?', (source_id,origin)):
+            kept.extend(decision for decision in json.loads(row[0]) if decision['action']=='keep_current')
     for path in paths:
         if path.startswith('native_type.') and current.get('native_type') and incoming['metadata']['type'] == current['metadata']['type']:
             continue
         before, after = value_at(current,path), value_at(incoming,path)
         if path in ('metadata.DOI','metadata.ISBN') and before and identifier(path.split('.')[1],str(before)) == identifier(path.split('.')[1],str(after)):
+            continue
+        if any(decision['path']==path and decision['current']==before and decision['incoming']==after for decision in kept):
             continue
         corrected = any(path == marker or path.startswith(marker+'.') or marker.startswith(path+'.') for marker in current['corrected_fields'])
         if compatible and before in (None,[],{}) and not corrected:
@@ -143,7 +149,7 @@ def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False
     return source_id, dict(bound=compatible, incoming_key=source.citation_key, catalog_key=current['citation_key'], filled=fills, conflicts=conflicts)
 
 
-def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None) -> dict:
+def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None, origin=None) -> dict:
     raw = block['raw']
     parsed = None
     incoming = None
@@ -162,7 +168,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         source = SourceCreate.model_validate(canonical)
         source.citation_key = key
         incoming = source.canonical()
-        source_id, binding = bind_and_fill(connection, source, raw, dry_run=dry_run,isbn_groups=isbn_groups)
+        source_id, binding = bind_and_fill(connection, source, raw, dry_run=dry_run,isbn_groups=isbn_groups,origin=origin or locator)
         conflicts = [item['path'] for item in binding.get('conflicts', [])]
         if conflicts:
             outcome = dict(outcome='conflict', code='value_conflict', source_id=source_id, citation_key=key, conflicts=conflicts)
@@ -221,7 +227,7 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
         if block['kind'] != 'entry':
             continue
         with connect(catalog, write=not dry_run) as connection:
-            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings, import_id=run_id,isbn_groups=isbn_groups)
+            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings, import_id=run_id,isbn_groups=isbn_groups,origin=origin or locator)
             outcome = result['outcome']
             counts[outcome] += 1
             if not dry_run:
@@ -256,7 +262,7 @@ def save_entry(connection, batch: str, locator: str, result: dict) -> None:
                        (str(uuid4()), batch, locator, result['status'], json.dumps(candidates), json.dumps(result.get('conflicts', [])), source_id, revision, json.dumps(result)))
 
 
-def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, dry_run=False, settings=None, batch=None, isbn_groups=None) -> dict:
+def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, dry_run=False, settings=None, batch=None, isbn_groups=None, origin=None) -> dict:
     incoming, source_id = None, None
     result: dict = {}
     try:
@@ -268,7 +274,7 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
         source = SourceCreate.model_validate(incoming)
         source.citation_key = key
         incoming = source.canonical()
-        source_id, binding = bind_and_fill(connection, source, entry['raw'], dry_run=dry_run,isbn_groups=isbn_groups)
+        source_id, binding = bind_and_fill(connection, source, entry['raw'], dry_run=dry_run,isbn_groups=isbn_groups,origin=origin)
         conflicts = [item['path'] for item in binding.get('conflicts', [])]
         if source_id:
             result = dict(status='conflict' if conflicts else 'applied' if binding.get('filled') else 'unchanged', source_id=source_id, conflicts=conflicts)
@@ -327,7 +333,7 @@ def run_zotero(catalog: Path, directory: Path, *, dry_run=False, origin=None, se
             continue
         entry['context'] = child_context(bundle, entry['key'])
         with connect(catalog, write=not dry_run) as connection:
-            result = apply_zotero(connection, entry, manifest, fingerprint, dry_run=dry_run, settings=settings, batch=batch,isbn_groups=isbn_groups)
+            result = apply_zotero(connection, entry, manifest, fingerprint, dry_run=dry_run, settings=settings, batch=batch,isbn_groups=isbn_groups,origin=origin or str(directory))
             if result.get('source_id') and result['status'] in ('applied','unchanged'):
                 result['resources'], notices = associate(connection,bundle,entry,result['source_id'],collections,settings=settings,dry_run=dry_run)
                 result.setdefault('warnings', []).extend(notices)
@@ -432,6 +438,11 @@ def inspect_batch(connection, batch: str, status=None) -> dict:
         revisions.append((row['id'], row['source_id'], revision))
         entry.update(entry_id=row['id'], status=row['status'], source_revision=revision,
                      candidates=json.loads(row['candidates_json']), decisions=json.loads(row['decisions_json']))
+        if 'binding' in entry:
+            conflicts = json.loads(row['conflicts_json'])
+            original = {item['path']:item for item in entry['binding'].get('conflicts',[])}
+            entry['binding']['conflicts'] = [original[item] if isinstance(item,str) else item for item in conflicts]
+            entry['conflicts'] = [item['path'] for item in entry['binding']['conflicts']]
         if status is None or status == row['status']:
             entries.append(entry)
     # A read-only review token binds the persisted batch version and observed sources.
@@ -445,17 +456,18 @@ def show(catalog: Path, batch: str, status=None) -> dict:
         return inspect_batch(connection,batch,status)
 
 
-def reconcile(catalog: Path, batch: str, selectors: list[str], *, execute=False, revision=None) -> dict:
-    if not selectors:
-        raise RefError('invalid_selection', 'Supply at least one --take-incoming KEY[.field]', 2)
+def reconcile(catalog: Path, batch: str, selectors: list[str], *, keep_current=None, execute=False, revision=None) -> dict:
+    if not selectors and not keep_current:
+        raise RefError('invalid_selection', 'Supply --take-incoming or --keep-current KEY[.field]', 2)
     if execute and revision is None:
         raise RefError('revision_required', 'Preview the batch and supply --if-batch-revision', 2)
     with connect(catalog,write=execute) as connection:
         review = inspect_batch(connection,batch)
         if execute and review['batch_revision'] != revision:
             raise RefError('stale_revision', 'Preview the batch again; its entries or source revisions changed', details={'expected':revision,'actual':review['batch_revision']})
-        selected: dict[str, set[str]] = {}
-        for selector in selectors:
+        selected: dict[str, dict[str,str]] = {}
+        choices = [(selector,'take_incoming') for selector in selectors] + [(selector,'keep_current') for selector in keep_current or []]
+        for selector, action in choices:
             exact = [entry for entry in review['entries'] if entry.get('citation_key') == selector]
             candidates = exact or [entry for entry in review['entries'] if entry.get('citation_key') and selector.startswith(entry['citation_key']+'.')]
             if len(candidates) != 1:
@@ -470,7 +482,11 @@ def reconcile(catalog: Path, batch: str, selectors: list[str], *, execute=False,
             requested = available if exact else [selector[len(entry['citation_key'])+1:]]
             if any(path not in available for path in requested):
                 raise RefError('invalid_selection', 'Select a conflicting canonical path from import show', 2)
-            selected.setdefault(entry['entry_id'],set()).update(requested)
+            target = selected.setdefault(entry['entry_id'],{})
+            for path in requested:
+                if path in target and target[path] != action:
+                    raise RefError('invalid_selection', 'Choose one decision per field', 2)
+                target[path] = action
         proposals = []
         for entry in review['entries']:
             if entry['entry_id'] not in selected:
@@ -482,19 +498,22 @@ def reconcile(catalog: Path, batch: str, selectors: list[str], *, execute=False,
             for path in sorted(selected[entry['entry_id']]):
                 incoming, previous = value_at(entry['incoming'],path), value_at(current,path)
                 if incoming != previous:
-                    sources.patch_path(canonical,path,incoming,clear=False)
-                    decisions.append(dict(path=path,current=previous,incoming=incoming,action='take_incoming'))
+                    action = selected[entry['entry_id']][path]
+                    if action == 'take_incoming':
+                        sources.patch_path(canonical,path,incoming,clear=False)
+                    decisions.append(dict(path=path,current=previous,incoming=incoming,action=action))
             key = canonical.pop('citation_key')
             try:
                 canonical = SourceCreate.model_validate(canonical).canonical()
             except ValidationError as exc:
                 raise RefError('invalid_selection', 'Selected values do not form a valid source; inspect dependent fields', 2) from exc
             canonical['citation_key'] = key
-            remaining = [item for item in entry.get('binding',{}).get('conflicts',[]) if value_at(canonical,item['path']) != item['incoming']]
+            remaining = [item for item in entry.get('binding',{}).get('conflicts',[]) if item['path'] not in selected[entry['entry_id']] and value_at(canonical,item['path']) != item['incoming']]
             proposals.append(dict(citation_key=entry['citation_key'],source_id=current['id'],source_revision=current['revision'],decisions=decisions,remaining_conflicts=remaining))
             if execute and (decisions or entry['status']=='conflict' and not remaining):
-                if decisions:
-                    sources.store_record(connection,current,canonical,list(dict.fromkeys(current['corrected_fields']+[item['path'] for item in decisions])))
+                taken = [item['path'] for item in decisions if item['action']=='take_incoming']
+                if taken:
+                    sources.store_record(connection,current,canonical,list(dict.fromkeys(current['corrected_fields']+taken)))
                 if entry.get('original_ref'):
                     original = connection.execute('SELECT * FROM originals WHERE id=?',(entry['original_ref'],)).fetchone()
                     preserve(connection,original['raw_bytes'],original['locator'],original['file_digest'],source_id=current['id'],format=original['format'],origin='import-reconciled',definitions=json.loads(original['definitions_json']))

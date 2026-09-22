@@ -336,9 +336,10 @@ def import_show(ctx: typer.Context, batch: str, status: Annotated[str | None, ty
 @import_app.command('reconcile')
 def import_reconcile(ctx: typer.Context, batch: str,
                      take_incoming: Annotated[list[str] | None, typer.Option()] = None,
+                     keep_current: Annotated[list[str] | None, typer.Option()] = None,
                      execute: Annotated[bool, typer.Option()] = False,
                      if_batch_revision: Annotated[int | None, typer.Option()] = None):
-    report(ctx,'import reconcile',importing.reconcile(settings(ctx).catalog_path(),batch,take_incoming or [],execute=execute,revision=if_batch_revision))
+    report(ctx,'import reconcile',importing.reconcile(settings(ctx).catalog_path(),batch,take_incoming or [],keep_current=keep_current,execute=execute,revision=if_batch_revision))
 
 
 collection_app = typer.Typer(no_args_is_help=True)
