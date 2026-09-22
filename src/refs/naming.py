@@ -52,7 +52,8 @@ def title_case(text: str, protection: dict, boundary: int | None = None, minor_w
     for index, match in enumerate(words):
         word = match.group()
         if not any(a <= match.start() and match.end() <= b for a, b in spans):
-            first_after_boundary = boundary is not None and match.start() >= boundary and (index == 0 or words[index - 1].start() < boundary)
+            after_colon = index > 0 and any(char in ':!?' for char in text[words[index - 1].end():match.start()])
+            first_after_boundary = after_colon or boundary is not None and match.start() >= boundary and (index == 0 or words[index - 1].start() < boundary)
             word = word.lower() if word.lower() in (MINOR if minor_words is None else {word.casefold() for word in minor_words}) and index not in (0, len(words)-1) and not first_after_boundary else word[0].upper() + word[1:]
         pieces.extend([text[end:match.start()], word])
         end = match.end()

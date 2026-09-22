@@ -57,3 +57,15 @@ def test_title_language_warning_requires_unknown_nonascii_letters(text, language
     assert normalized['metadata']['title'] == expected
     assert any(item['code'] == 'title_language_unknown_or_nonenglish' for item in warnings) == warns
     assert normalized['metadata'].get('language') == language
+
+
+@pytest.mark.parametrize('raw, expected', [
+    ('Workflow: a Scalable Engine', 'Workflow: A Scalable Engine'),
+    ('A Dynamic Make-like Function-oriented Toolkit', 'A Dynamic Make-Like Function-Oriented Toolkit'),
+    ('Recipes: a Lightweight Pipeline', 'Recipes: A Lightweight Pipeline'),
+    ('Compiler: calls into State-of-the-Art Pipelines', 'Compiler: Calls Into State-of-the-Art Pipelines'),
+    ('Blueprint First, Model Second: a Framework', 'Blueprint First, Model Second: A Framework'),
+])
+def test_subtitles_and_hyphenated_words(raw, expected):
+    from refs.naming import title_case
+    assert title_case(raw, {}) == expected
