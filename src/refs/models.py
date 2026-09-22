@@ -19,6 +19,7 @@ from pydantic import (
     model_validator,
 )
 
+from refs import languages
 from refs.results import RefError
 
 Text = Annotated[str, StringConstraints(min_length=1, pattern=r"\S")]
@@ -106,6 +107,8 @@ class MetadataBase(StrictModel):
         value = dict(value)
         if isinstance(value.get("DOI"), str):
             value["DOI"] = normalize_doi(value["DOI"])
+        if isinstance(value.get("language"), str):
+            value["language"] = languages.normalize(value["language"])
         kind = value.setdefault("type", "document")
         if kind not in REGISTRY["core_fields"]["type"]["schema"]["enum"]:
             raise ValueError("Unsupported source type")

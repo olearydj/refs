@@ -99,8 +99,9 @@ def test_empty_and_cleared_values():
 def test_nonenglish_language_and_unassessed_language():
     data, _ = bibliography.serialize([record(language='fr')])
     assert b'langid = {french}' in data
-    with pytest.raises(RefError):
-        bibliography.serialize([record(language='zz')], allow_unknown=True)
+    output, warnings = bibliography.serialize([record(language='zz')])
+    assert b'langid' not in output
+    assert any(warning['code']=='language_unrecognized' for warning in warnings)
 
 
 @pytest.mark.parametrize('kind, field', [('book', 'publisher'), ('report', 'institution'), ('thesis', 'school')])

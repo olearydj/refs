@@ -8,7 +8,7 @@ from uuid import uuid4
 
 from pydantic import ValidationError
 
-from refs import naming
+from refs import languages, naming
 from refs.adapters.search_sqlite import refresh
 from refs.catalog import changed, connect
 from refs.models import REGISTRY, SourceCreate, normalize_doi, parse
@@ -27,7 +27,7 @@ def record(connection, source_id: str) -> dict:
     result["originals"] = [dict(r) for r in connection.execute(
         "SELECT id, sha256, byte_length, format, origin, locator FROM originals WHERE source_id=? ORDER BY id",
         (source_id,))]
-    result['limitations'] = []
+    result['limitations'] = languages.limitations(result['metadata'])
     for original in connection.execute("SELECT definitions_json FROM originals WHERE source_id=? AND origin LIKE 'import-%'", (source_id,)):
         for limitation in json.loads(original[0]).get('limitations', []):
             paths = [row['canonical_path'] for row in REGISTRY['rows'] if row['input_format']=='bib' and row['source_field']==limitation['field']]

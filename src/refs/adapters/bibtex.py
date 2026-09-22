@@ -210,7 +210,8 @@ def parse(raw: bytes) -> dict:
                 else:
                     incoming = decode(contents)
                     if field in ('language', 'langid'):
-                        incoming = {'english':'en', 'american':'en-US', 'british':'en-GB', 'german':'de', 'french':'fr', 'spanish':'es'}.get(incoming.lower(), incoming)
+                        from refs.languages import normalize
+                        incoming = normalize(incoming)
                 assign(path, incoming)
                 if 'title' in path:
                     protection_text = re.sub(r'\\(?:[A-Za-z]+|[^A-Za-z])\s*\{[^{}]*\}', '', contents)

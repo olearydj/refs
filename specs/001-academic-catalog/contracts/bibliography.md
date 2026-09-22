@@ -14,7 +14,7 @@ The original four extensions are patent.assignees (ordered personal/literal name
 
 ## Portable output in slice 1
 
-`portable-bibtex-v1` is the only implemented slice 1 profile. It uses UTF-8, classic names and types, year/month, journal, address, school/institution, and doi/url/urldate when supplied. Non-English titles require langid. Text emits current Unicode values through a deterministic tested TeX serializer; verbatim URI fields are handled separately. Preserve corporate names and publisher/institution strings containing “ and ” by grouping the entire literal. Never execute or pass through arbitrary TeX from originals.
+`portable-bibtex-v1` is the only implemented slice 1 profile. It uses UTF-8, classic names and types, year/month, journal, address, school/institution, and doi/url/urldate when supplied. Recognized language tags emit langid; unknown literal values stay in the catalog with a documented omission and never block export. Text emits current Unicode values through a deterministic tested TeX serializer; verbatim URI fields are handled separately. Preserve corporate names and publisher/institution strings containing “ and ” by grouping the entire literal. Never execute or pass through arbitrary TeX from originals.
 
 | Canonical type | Portable entry and decisions |
 | --- | --- |
@@ -45,7 +45,7 @@ Known subtype downgrades warn and are itemized in the export report; no projecti
 
 Closed blocking-loss codes are `cited_authors_changed`, `issued_date_lost_or_changed`, `work_identity_changed` (source/container/edition/version/identifying locator altered), `in_text_citation_changed` (a tested transformation changes who/year is cited), and `protected_spelling_changed`. Omitting an access date is not equivalent to dropping issued date. Merely unprotected capitalization warns under the explicit user decision. A type downgrade alone is documented fallback; an observed consequence in this list upgrades it to blocking. A type or field mapping without a registry assessment belongs to unknown. Preserving an unmapped input field verbatim is an assessed omission, not an unknown transformation.
 
-Structural errors cannot be overridden: invalid/unserializable key/value, case-insensitive duplicate portable keys, malformed output, missing required non-English langid, or unsafe target. The command reports every affected entry in one pass. Blocked exports create no target/staging file and do not advance adoption. There is no stored loss waiver in slice 1. Unknown overrides cannot waive a known blocking loss; correct the record, change project selection explicitly, or leave the export blocked. The earlier scoped-waiver design is deferred, not silently replaced with a blanket override.
+Structural errors cannot be overridden: invalid/unserializable key/value, case-insensitive duplicate portable keys, malformed output, or unsafe target. The command reports every affected entry in one pass. Blocked exports create no target/staging file and do not advance adoption. There is no stored loss waiver in slice 1. Unknown overrides cannot waive a known blocking loss; correct the record, change project selection explicitly, or leave the export blocked. The earlier scoped-waiver design is deferred, not silently replaced with a blanket override.
 
 ## Titles, dates and originals
 

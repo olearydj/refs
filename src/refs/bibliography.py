@@ -9,7 +9,7 @@ from uuid import uuid4
 
 from pydantic import ValidationError
 
-from refs import files, projects, sources
+from refs import files, languages, projects, sources
 from refs.catalog import changed, connect
 from refs.models import SourceCreate, doi_arxiv, normalize_arxiv, normalize_doi
 from refs.results import RefError
@@ -45,7 +45,6 @@ def warning(key: str, code: str, message: str, **details) -> dict:
 
 
 BLOCKING_CODES = {'cited_authors_changed', 'issued_date_lost_or_changed', 'work_identity_changed', 'in_text_citation_changed', 'protected_spelling_changed'}
-LANGUAGES = {'en': 'english', 'en-us': 'american', 'en-gb': 'british', 'fr': 'french', 'de': 'german', 'es': 'spanish', 'it': 'italian', 'pt': 'portuguese', 'nl': 'dutch', 'ja': 'japanese', 'zh': 'chinese'}
 MONTHS = 'jan feb mar apr may jun jul aug sep oct nov dec'.split()
 
 
@@ -100,7 +99,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
         for notice in record.get('_projection_notices', []):
             assess(notice['code'], 'info' if notice['code'] == 'title_protection_added' else 'documented_fallback', notice['message'], notice['path'])
         for limitation in record.get('limitations', []):
-            if limitation['reason'].startswith('Preserved from import:'):
+            if limitation['field']=='language' or limitation['reason'].startswith('Preserved from import:'):
                 continue
             if limitation['field'] == 'year' and metadata.get('issued', {}).get('literal'):
                 continue
@@ -207,14 +206,17 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                     notes.append('Issued: ' + iso)
                     assess('issued_day_in_note', 'documented_fallback', 'Supplementary date and note retain the day for portable consumers', 'metadata.issued')
             used.add('language')
-            language = metadata.get('language', '').casefold()
-            if language:
-                if language not in LANGUAGES:
-                    assess('missing_langid', 'structural', 'No tested langid mapping for supplied language', 'metadata.language')
-                else:
-                    put('langid', LANGUAGES[language])
-            elif any(char.isalpha() and not char.isascii() for char in metadata.get('title', '')):
-                assess('language_unspecified', 'faithful_incomplete', 'Language was not supplied')
+            language = metadata.get('language', '')
+            langid = languages.portable(language)
+            if langid:
+                put('langid', langid)
+                if not language.casefold().startswith('en') and all(char.isascii() for char in metadata.get('title','')):
+                    assess('title_language_review', 'faithful_incomplete', f'Non-English language tag {language} accompanies an ASCII title; verify the language', 'metadata.language')
+            else:
+                if language:
+                    assess('language_unrecognized', 'documented_fallback', 'Unrecognized language retained literally in catalog; no langid emitted', 'metadata.language')
+                if any(char.isalpha() and not char.isascii() for char in metadata.get('title', '')):
+                    assess('language_unspecified', 'faithful_incomplete', 'Title language is unknown; supply it when known', 'metadata.language')
             for source, target in [('volume', 'volume'), ('issue', 'number'), ('publisher-place', 'address'), ('edition', 'edition'), ('collection-title', 'series'), ('collection-number', 'number'), ('container-title-short', 'shortjournal'), ('chapter-number', 'chapter')]:
                 copy(source, target)
             used.add('page')

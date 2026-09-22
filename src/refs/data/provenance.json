@@ -22,5 +22,9 @@
       "sha256": "caa6b7c0c6db33402fd93d00c01e9f99717f5e80fdf8be2a841c4a987771b115",
       "retrieved": "2026-09-20"
     }
-  ]
+  ],
+  "languages": {
+    "source": "https://www.loc.gov/standards/iso639-2/ISO-639-2_utf-8.txt",
+    "sha256": "9cb18142c40912e398cccae4f7969322b937e1572298f1f60950c8b46e04b5b2"
+  }
 }

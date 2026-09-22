@@ -7,6 +7,7 @@ import unicodedata
 from importlib.resources import files
 from pathlib import Path
 
+from refs import languages
 from refs.results import RefError
 
 LATIN_BYTES = files('refs').joinpath('data/creator-latin-v1.json').read_bytes()
@@ -74,7 +75,7 @@ def normalize(record: dict, policy: dict | None = None, fields: set[str] | None 
         for term in protection['protected_terms']:
             if not protected_spans(text, [term]):
                 warnings.append({'code': 'protected_term_missing', 'message': f'Protected term is absent: {term}', 'path': f'metadata.{field}', 'details': {}, 'retryable': False})
-        language = metadata.get('language', '').lower()
+        language = (languages.tag(metadata.get('language', '')) or '').lower()
         if not language and any(char.isalpha() and not char.isascii() for char in text):
             warnings.append({'code': 'title_language_unknown_or_nonenglish', 'message': 'Title language is unknown; spelling retained', 'path': f'metadata.{field}', 'details': {}, 'retryable': False})
             continue

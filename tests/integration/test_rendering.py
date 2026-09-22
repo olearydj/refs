@@ -171,3 +171,18 @@ def test_arxiv_identifier_extension_render(consumer,tmp_path,record_property):
     text=render_with_consumer(consumer,bib,tmp_path,record_property)
     assert '2407.01502' in text
     assert 'Smith' in text and '2024' in text
+
+
+@pytest.mark.parametrize('consumer', ['pandoc','biber','bibtex'])
+def test_language_aliases_and_valid_mislabel_render(consumer,tmp_path,record_property):
+    from refs.models import SourceCreate
+    records=[]
+    for index,language in enumerate(('English','eng','en','en-US','Uncatalogued Language','bn')):
+        records.append(SourceCreate.model_validate({'schema_version':'1.0','citation_key':f'language{index}','metadata':{'type':'book','title':f'Synthetic Language Example {index}','author':[{'family':'Smith','given':'Alex'}],'issued':{'date-parts':[[2020+index]]},'publisher':'Example Press','language':language}}).canonical())
+    output,warnings=serialize(records)
+    assert any(w['code']=='language_unrecognized' for w in warnings)
+    assert any(w['code']=='title_language_review' for w in warnings)
+    text=render_with_consumer(consumer,output,tmp_path,record_property)
+    for year in range(2020,2026):
+        assert str(year) in text
+    assert 'Smith' in text
