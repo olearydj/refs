@@ -44,14 +44,14 @@ def paths(ctx: typer.Context):
 
 
 @app.command()
-def init(ctx: typer.Context, library_root: Annotated[str | None, typer.Option()] = None,
+def init(ctx: typer.Context, reuse_config: Annotated[bool, typer.Option()] = False, library_root: Annotated[str | None, typer.Option()] = None,
          no_library: Annotated[bool, typer.Option()] = False,
          dry_run: Annotated[bool, typer.Option()] = False):
     selected = settings(ctx)
     if no_library and library_root is not None:
         raise RefError("invalid_invocation", "Choose --library-root or --no-library", 2)
     library = absolute(library_root) if library_root is not None else None if no_library else selected.library
-    report(ctx, "init", storage.init(selected, library, dry_run), catalog_path=str(selected.catalog_path()), library=str(library) if library else None)
+    report(ctx, "init", storage.init(selected, library, dry_run, reuse_config=reuse_config), catalog_path=str(selected.catalog_path()), library=str(library) if library else None)
 
 
 @app.command()

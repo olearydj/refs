@@ -93,3 +93,13 @@ print("SQLite recovery and integrity checks passed")
 ```
 
 SQLite performs rollback recovery when the database is opened and read. If recovery fails, preserve the failed database and journal, then restore a verified snapshot into a second home. This is distinct from snapshot restoration and does not authorize changes to external files.
+
+## Explicit schema upgrade
+
+Stop writers and retain a verified snapshot before upgrading a schema-1 catalog. Ordinary commands never migrate it. Use the installed project environment and an explicit path:
+
+```sh
+uv run --locked python -c 'from pathlib import Path; import sys; from refs.catalog import migrate; migrate(Path(sys.argv[1]))' "$CATALOG"
+```
+
+Migration 002 applies atomically and leaves 001 unchanged. A failed transaction rolls back; inspect the reported failure before retrying. New catalogs start at schema 2. The slice 2 cutover instead resets the trial catalog as authorized and uses `refs init --reuse-config` to preserve its configuration and library settings.

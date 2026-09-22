@@ -48,9 +48,9 @@ def populated(initialized, tmp_path, zotero_fixture):
 
     uri, items, collections = GATE["expected"](zotero_fixture, zotero_fixture.parent / "base")
     with sqlite3.connect(tmp_path / "cat/catalog.sqlite") as c:
-        c.execute("CREATE TABLE collections (id TEXT,library_uri TEXT,path TEXT)")
-        c.execute("CREATE TABLE source_collections (source_id TEXT,collection_id TEXT)")
-        c.executemany("INSERT INTO collections VALUES (?,?,?)", [(p, uri, p) for p in collections])
+        c.execute("CREATE TABLE IF NOT EXISTS collections (id TEXT,library_uri TEXT,path TEXT)")
+        c.execute("CREATE TABLE IF NOT EXISTS source_collections (source_id TEXT,collection_id TEXT)")
+        c.executemany("INSERT INTO collections (id,library_uri,item_key,name,path) VALUES (?,?,?,?,?)", [(p, uri, p, p, p) for p in collections])
     for key, e in items.items():
         value = {
             "schema_version": "1.0",
