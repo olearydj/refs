@@ -1,0 +1,6 @@
+[
+  {"schema_version":"1.0","citation_key":"smith-2024-python","metadata":{"type":"article-journal","title":"Learning Python","language":"en","author":[{"family":"Smith","given":"Alex"}],"issued":{"date-parts":[[2024]]},"container-title":"Synthetic Journal","volume":"12","issue":"2","page":"10-20"},"title_protection":{"title":{"protected_terms":["Python"]}}},
+  {"schema_version":"1.0","citation_key":"jones-2023-research","metadata":{"type":"book","title":"Synthetic Research","language":"en","author":[{"family":"Jones","given":"Bea"}],"issued":{"date-parts":[[2023]]},"publisher":"Example Press","edition":2}},
+  {"schema_version":"1.0","citation_key":"lab-2022-standard","metadata":{"type":"standard","title":"Synthetic Standard","language":"en","author":[{"literal":"Research and Development"}],"issued":{"date-parts":[[2022]]},"number":"STD-7","authority":"Synthetic Standards Institute"}},
+  {"schema_version":"1.0","citation_key":"doe-2021-thesis","metadata":{"type":"thesis","title":"Synthetic Dissertation","language":"en","author":[{"family":"Doe","given":"Casey"}],"issued":{"date-parts":[[2021]]},"publisher":"Example University","genre":"PhD"}}
+]
