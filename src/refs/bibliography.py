@@ -128,36 +128,52 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             else:
                 put(target, metadata[source])
 
+        def render_names(role, names):
+            output_names = []
+            if any(name.get('dropping-particle') or name.get('non-dropping-particle') for name in names):
+                assess('name_particle_fallback', 'documented_fallback', 'Portable names retain the particle before the family name; consumers determine dropping behavior', 'metadata.' + role)
+            for name in names:
+                if 'literal' in name:
+                    output_names.append('{' + tex(name['literal']) + '}')
+                    continue
+                if any(name.get(flag) for flag in ('static-ordering', 'comma-suffix', 'parse-names')):
+                    assess('name_projection_unassessed', 'unknown', 'Consumer handling of this name flag is unassessed', 'metadata.' + role)
+                family = ' '.join(name[part] for part in ('dropping-particle', 'non-dropping-particle', 'family') if name.get(part))
+                if not family:
+                    assess('given_only_name', 'unknown', 'Given-only personal names have unassessed citation behavior', 'metadata.' + role)
+                    family = name.get('given', '')
+                    output_names.append('{' + tex(family) + '}')
+                    continue
+                grouped_family = not name.get('dropping-particle') and not name.get('non-dropping-particle') and (len(family.split()) > 1 or family[:1].islower())
+                if grouped_family or ' and ' in family or ',' in family:
+                    family = '{' + tex(family) + '}'
+                else:
+                    family = tex(family)
+                suffix = tex(name.get('suffix', ''))
+                given = tex(name.get('given', ''))
+                output_names.append(family + (', ' + suffix + ', ' + given if suffix else ', ' + given if given else ''))
+            return ' and '.join(output_names)
+
         try:
             for role in ('author', 'editor'):
                 used.add(role)
-                names = metadata.get(role, [])
+                names = list(metadata.get(role, []))
+                if role == 'editor' and entry_type in ('book', 'collection'):
+                    for name in metadata.get('collection-editor', []):
+                        if name not in names:
+                            names.append(name)
                 if names:
-                    output_names = []
-                    if any(name.get('dropping-particle') or name.get('non-dropping-particle') for name in names):
-                        assess('name_particle_fallback', 'documented_fallback', 'Portable names retain the particle before the family name; consumers determine dropping behavior', 'metadata.' + role)
-                    for name in names:
-                        if 'literal' in name:
-                            output_names.append('{' + tex(name['literal']) + '}')
-                            continue
-                        if any(name.get(flag) for flag in ('static-ordering', 'comma-suffix', 'parse-names')):
-                            assess('name_projection_unassessed', 'unknown', 'Consumer handling of this name flag is unassessed', 'metadata.' + role)
-                        family = ' '.join(name[part] for part in ('dropping-particle', 'non-dropping-particle', 'family') if name.get(part))
-                        if not family:
-                            assess('given_only_name', 'unknown', 'Given-only personal names have unassessed citation behavior', 'metadata.' + role)
-                            family = name.get('given', '')
-                            output_names.append('{' + tex(family) + '}')
-                            continue
-                        grouped_family = not name.get('dropping-particle') and not name.get('non-dropping-particle') and (len(family.split()) > 1 or family[:1].islower())
-                        if grouped_family or ' and ' in family or ',' in family:
-                            family = '{' + tex(family) + '}'
-                        else:
-                            family = tex(family)
-                        suffix = tex(name.get('suffix', ''))
-                        given = tex(name.get('given', ''))
-                        output_names.append(family + (', ' + suffix + ', ' + given if suffix else ', ' + given if given else ''))
-                    put(role, ' and '.join(output_names), literal=True)
-            if not metadata.get('author') and not metadata.get('editor'):
+                    put(role, render_names(role, names), literal=True)
+            used.update(('collection-editor', 'container-author', 'contributor'))
+            if metadata.get('contributor'):
+                assess('contributor_omission', 'documented_fallback', 'Contributors remain in the catalog; portable output omits this non-cited role', 'metadata.contributor')
+            if metadata.get('collection-editor'):
+                assess('collection_editor_fallback', 'documented_fallback', 'Collection editors are emitted as editors on books; their distinct role remains in the catalog', 'metadata.collection-editor')
+            if metadata.get('container-author'):
+                if entry_type in ('incollection', 'inbook'):
+                    put('bookauthor', render_names('container-author', metadata['container-author']), literal=True)
+                assess('container_author_omission', 'documented_fallback', 'Container authors are retained in bookauthor on book parts; classic styles may omit this field', 'metadata.container-author')
+            if not metadata.get('author') and not fields.get('editor'):
                 assess('missing_author', 'faithful_incomplete', 'No author or editor was supplied')
             copy('title', 'title')
             copy('title-short', 'shorttitle')
@@ -285,8 +301,17 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                         assess('arxiv_fallback', 'documented_fallback', 'arXiv identifier retained in eprint fields and a classic-consumer note where needed', 'extensions.identifiers.arxiv')
                     if extension.get('oclc'):
                         assess('oclc_omission', 'documented_fallback', 'OCLC identifier retained in catalog', 'extensions.identifiers.oclc')
+                elif field == 'journal_series':
+                    put('series', extension)
+                    assess('journal_series_fallback', 'documented_fallback', 'Journal series is retained in series; consumer support varies', 'extensions.journal_series')
                 elif field == 'patent':
                     for member in extension:
+                        if member == 'assignees':
+                            names = extension[member]
+                            labels = [name.get('literal') or ' '.join(name[part] for part in ('given','dropping-particle','non-dropping-particle','family','suffix') if name.get(part)) for name in names]
+                            notes.append('Assignee: ' + '; '.join(labels))
+                            assess('assignee_in_note', 'documented_fallback', 'Patent assignees are retained in note, separately from inventors', 'extensions.patent.assignees')
+                            continue
                         assess('unassessed_extension', 'unknown', f'No registered projection for patent.{member}', 'extensions.patent.' + member)
                 else:
                     assess('unassessed_extension', 'unknown', f'No registered projection for {field}', 'extensions.' + field)

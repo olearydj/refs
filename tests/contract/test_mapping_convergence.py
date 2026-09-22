@@ -125,8 +125,12 @@ def test_extension_edits_and_clears(initialized,tmp_path,kind,extension,value,re
     source=sources.add(tmp_path/'cat',json.dumps(canonical).encode(),'extension.json')
     path='extensions.'+extension
     changed=sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','set':{path:replacement}},source['revision'])
-    with pytest.raises(RefError):
-        bibliography.serialize([changed])
+    if extension in ('patent.assignees','journal_series'):
+        output,_=bibliography.serialize([changed])
+        assert b'@' in output
+    else:
+        with pytest.raises(RefError):
+            bibliography.serialize([changed])
     cleared=sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','clear':[path]},changed['revision'])
     assert path in cleared['corrected_fields']
     if kind=='patent':

@@ -2300,10 +2300,10 @@
       "canonical_path": "metadata.container-author",
       "transform": "Ordered CSL personal/literal names; original role is provenance",
       "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
-      "export_class": "value-dependent",
-      "fixture": "names",
-      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+      "portable_projection": "Book parts: bookauthor; documented omission by classic styles. Other types: documented omission.",
+      "export_class": "documented_fallback",
+      "fixture": "rehearsal-projections",
+      "assessment_rule": "Registered projection or documented omission; never unknown for this role or extension. Other unsupported name flags remain separately assessed."
     },
     {
       "input_format": "zotero-json",
@@ -2330,10 +2330,10 @@
       "canonical_path": "metadata.collection-editor",
       "transform": "Ordered CSL personal/literal names; original role is provenance",
       "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
-      "export_class": "value-dependent",
-      "fixture": "names",
-      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+      "portable_projection": "Books: editor, retaining existing editors; documented role fallback. Other types: documented omission.",
+      "export_class": "documented_fallback",
+      "fixture": "rehearsal-projections",
+      "assessment_rule": "Registered projection or documented omission; never unknown for this role or extension. Other unsupported name flags remain separately assessed."
     },
     {
       "input_format": "zotero-json",
@@ -2360,10 +2360,10 @@
       "canonical_path": "metadata.contributor",
       "transform": "Ordered CSL personal/literal names; original role is provenance",
       "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
-      "export_class": "value-dependent",
-      "fixture": "names",
-      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+      "portable_projection": "Omitted non-cited contributor role; retained in the catalog.",
+      "export_class": "documented_fallback",
+      "fixture": "rehearsal-projections",
+      "assessment_rule": "Documented omission, never unknown."
     },
     {
       "input_format": "zotero-json",
@@ -2534,10 +2534,10 @@
       "canonical_path": "metadata.container-author",
       "transform": "Parse ordered names and explicit von parts; fully grouped corporate names remain literals",
       "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
-      "export_class": "value-dependent",
-      "fixture": "names",
-      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+      "portable_projection": "Book parts: bookauthor; documented omission by classic styles. Other types: documented omission.",
+      "export_class": "documented_fallback",
+      "fixture": "rehearsal-projections",
+      "assessment_rule": "Registered projection or documented omission; never unknown for this role or extension. Other unsupported name flags remain separately assessed."
     },
     {
       "input_format": "zotero-json",
@@ -2548,10 +2548,10 @@
       "canonical_path": "extensions.patent.assignees",
       "transform": "Ordered personal/literal names; assignee is not inventor",
       "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "omit with explicit unknown-mapping report unless registered projection is demonstrated",
-      "export_class": "value-dependent",
-      "fixture": "patent",
-      "assessment_rule": "No implemented portable projection: unknown, never automatic omission. A later explicitly registered fixture-backed mapping may assess the omission or faithful rendering."
+      "portable_projection": "note: Assignee: names; documented fallback, never citation authors.",
+      "export_class": "documented_fallback",
+      "fixture": "rehearsal-projections",
+      "assessment_rule": "Registered projection or documented omission; never unknown for this role or extension. Other unsupported name flags remain separately assessed."
     },
     {
       "input_format": "bib",
@@ -2562,10 +2562,10 @@
       "canonical_path": "extensions.patent.assignees",
       "transform": "Ordered personal/literal names; assignee is not inventor",
       "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "omit with explicit unknown-mapping report",
-      "export_class": "value-dependent",
-      "fixture": "patent",
-      "assessment_rule": "No implemented portable projection: unknown, never automatic omission. A later explicitly registered fixture-backed mapping may assess the omission or faithful rendering."
+      "portable_projection": "note: Assignee: names; documented fallback, never citation authors.",
+      "export_class": "documented_fallback",
+      "fixture": "rehearsal-projections",
+      "assessment_rule": "Registered projection or documented omission; never unknown for this role or extension. Other unsupported name flags remain separately assessed."
     },
     {
       "input_format": "zotero-json",
@@ -2604,10 +2604,10 @@
       "canonical_path": "extensions.journal_series",
       "transform": "Text distinct from collection-title",
       "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "omit with explicit unknown-mapping report unless registered projection is demonstrated",
-      "export_class": "value-dependent",
-      "fixture": "journal-series",
-      "assessment_rule": "No implemented portable projection: unknown, never automatic omission. A later explicitly registered fixture-backed mapping may assess the omission or faithful rendering."
+      "portable_projection": "series",
+      "export_class": "documented_fallback",
+      "fixture": "rehearsal-projections",
+      "assessment_rule": "Registered projection or documented omission; never unknown for this role or extension. Other unsupported name flags remain separately assessed."
     },
     {
       "input_format": "csljson",
@@ -2868,10 +2868,10 @@
       "canonical_path": "metadata.container-author",
       "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
       "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "By canonical field/type rows and bibliography contract",
-      "export_class": "value-dependent",
-      "fixture": "agent",
-      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+      "portable_projection": "Book parts: bookauthor; documented omission by classic styles. Other types: documented omission.",
+      "export_class": "documented_fallback",
+      "fixture": "rehearsal-projections",
+      "assessment_rule": "Registered projection or documented omission; never unknown for this role or extension. Other unsupported name flags remain separately assessed."
     },
     {
       "input_format": "csljson",
@@ -2885,10 +2885,10 @@
       "canonical_path": "metadata.collection-editor",
       "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
       "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "By canonical field/type rows and bibliography contract",
-      "export_class": "value-dependent",
-      "fixture": "agent",
-      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+      "portable_projection": "Books: editor, retaining existing editors; documented role fallback. Other types: documented omission.",
+      "export_class": "documented_fallback",
+      "fixture": "rehearsal-projections",
+      "assessment_rule": "Registered projection or documented omission; never unknown for this role or extension. Other unsupported name flags remain separately assessed."
     },
     {
       "input_format": "csljson",
@@ -2915,10 +2915,10 @@
       "canonical_path": "metadata.contributor",
       "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
       "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "By canonical field/type rows and bibliography contract",
-      "export_class": "value-dependent",
-      "fixture": "agent",
-      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+      "portable_projection": "Omitted non-cited contributor role; retained in the catalog.",
+      "export_class": "documented_fallback",
+      "fixture": "rehearsal-projections",
+      "assessment_rule": "Documented omission, never unknown."
     },
     {
       "input_format": "csljson",
