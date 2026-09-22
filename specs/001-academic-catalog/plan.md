@@ -1,6 +1,6 @@
 # Implementation Plan: Slice 1
 
-**2026-09-21 — trimmed design.** Constitution 2.0.0 is applied. The owner passed the second right-sizing checkpoint and requested the intake corrections and checklist archival before tasks. Those updates are committed. The owner has authorized slice 1 task generation; tasks.md now groups the work by runnable user stories. Analysis follows before implementation. No implementation or live migration has run.
+**2026-09-22 — slice 1 delivered.** Constitution 2.0.0 applies. All 37 tasks are complete; the code-complete checkpoint and the owner's real-paper trial are recorded in [slice 1 acceptance](reviews/slice-1-acceptance.md). Two polish batches driven by real-input trials followed (commits through `132d806`). This plan remains the record of the design as built and of deferred work; it is not updated for slice 2 until the owner's use-list exists. No Zotero migration has run.
 
 ## Delivery boundary
 

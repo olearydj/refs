@@ -1,6 +1,6 @@
 # refs Design Packet
 
-**Current stage, 2026-09-21:** The owner-approved slice 1 trim is applied. Constitution 2.0.0 is in force; no amendment is pending. The owner passed the second right-sizing checkpoint. The intake defaults, simplified copy protocol and checklist archival are complete. Slice 1 [tasks](../specs/001-academic-catalog/tasks.md) are generated, beginning with a one-reference walking skeleton. Analyze and implementation have not run. No application or live migration has run.
+**Current stage, 2026-09-22:** Slice 1 is built, verified and in first use. All 37 [tasks](../specs/001-academic-catalog/tasks.md) are complete, including the code-complete checkpoint (T036) and the owner's real-paper trial (T037, the Pipyer paper, 2026-09-22): capture, correction, citation, adopted export, Quarto render matching the previous build, outside-edit guard and backup, all at the real locations. Two polish batches from real-input trials are merged. The owner's catalog lives at `/Volumes/Casa/refs`; `refs` is installed with `uv tool install -e .`. Nothing from slice 2 is specified; the owner is using the tool and keeping a list of what is reached for and missing. No Zotero migration has run.
 
 ## Authority and read order
 
@@ -12,4 +12,4 @@ Explicit owner decisions take precedence. Read [vision](vision.md), [accepted de
 
 The [archive](archive/README.md) contains historical drafts/research, not extra requirements. Git preserves audited baseline 3f9447e, revision 4209e5d and constitution 8435765. [Semantic review](../specs/001-academic-catalog/reviews/semantic-row-review-2026-09-21.md) and [mapping examples](../specs/001-academic-catalog/reviews/model-examples-2026-09-21/README.md) support the model without certifying a runtime importer. Earlier checklist assessments are in [docs/archive/checklists](archive/checklists/requirements.md); they remain historical and do not certify this trim.
 
-See the [trim measurement](../specs/001-academic-catalog/reviews/2026-09-21-slice-1-trim.md) for the checkpoint. The next step is analyze against the generated slice 1 tasks, before implementation. [Quickstart](../specs/001-academic-catalog/quickstart.md) owns implementation acceptance. No slice 2 specification work until slice 1 is used on one real paper.
+[Slice 1 acceptance](../specs/001-academic-catalog/reviews/slice-1-acceptance.md) records the checkpoint measurements and the real-paper trial; the [trim measurement](../specs/001-academic-catalog/reviews/2026-09-21-slice-1-trim.md) records the earlier checkpoint. The real-input harness in `tests/fixtures/real-trial/` reproduces the trials. The next step is use, then a one-page slice 2 brief from the owner's list, per [right-sizing](right-sizing.md).

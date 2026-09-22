@@ -1,6 +1,6 @@
 # Feature Specification: Academic Catalog, Slice 1
 
-Created 2026-09-20. Rewritten in plain language 2026-09-21; scope unchanged from the owner-approved trim in commit b10db29. Branch: main. Status: design with slice 1 tasks generated. No application code exists yet.
+Created 2026-09-20. Rewritten in plain language 2026-09-21; scope unchanged from the owner-approved trim in commit b10db29. Branch: main. Status: implemented and accepted for slice 1 on 2026-09-22; this document remains the requirement record for that slice.
 
 ## What slice 1 delivers
 

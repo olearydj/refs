@@ -1,6 +1,6 @@
 # Slice 1 Acceptance Walkthrough
 
-T001–T020 are implemented. The US1 and US2 demonstration uses synthetic inputs and a fresh temporary configuration, catalog and library. It does not access the owner's catalog, Zotero data, PDFs or manuscript bibliographies.
+Slice 1 is implemented. The six-story demonstration uses synthetic inputs and a fresh temporary configuration, catalog and library. It does not access the owner's catalog, Zotero data, PDFs or manuscript bibliographies.
 
 ## Run the demonstration
 

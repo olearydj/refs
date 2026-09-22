@@ -1,6 +1,6 @@
 # Independent Design Audit: Academic Catalog Workflow
 
-*Date:* 2026-09-20. *Reviewer:* independent audit agent (Claude Code session), at the user's request. *Stage:* after `$speckit-plan` and `$speckit-checklist`, before `$speckit-tasks`. *Companion:* the evaluated [bibliographic checklist](../checklists/bibliography.md).
+*Date:* 2026-09-20. *Reviewer:* independent audit agent (Claude Code session), at the user's request. *Stage:* after `$speckit-plan` and `$speckit-checklist`, before `$speckit-tasks`. *Companion:* the evaluated [bibliographic checklist](../../../docs/archive/checklists/bibliography.md).
 
 This report reviews a baseline and proposes changes. It does not modify any audited document. The only files written by this audit are this report and the assessment annotations in the custom checklist.
 

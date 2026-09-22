@@ -101,4 +101,4 @@ scripts/demo.sh --smoke
 
 Tests use synthetic inputs and temporary homes. Rendering checks use Pandoc, Biber and classic BibTeX with `elsarticle-num`. Dependency pins and the three-day cooldown remain in force. Unsupported Bib macros, inheritance and TeX constructs remain preserved with limitations. Copies protect against process interruption and ordinary I/O failures; they do not promise native filesystem metadata preservation or power-loss durability.
 
-The owner's code-complete checkpoint and real-paper trial are pending. No later-slice work or real-library migration has been performed.
+The code-complete checkpoint and the owner's real-paper trial were completed on 2026-09-22 (see `specs/001-academic-catalog/reviews/slice-1-acceptance.md`). No later-slice work or real-library migration has been performed.
