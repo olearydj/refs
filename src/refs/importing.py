@@ -38,26 +38,89 @@ def differences(incoming: dict, current: dict, prefix='') -> list[str]:
     return result
 
 
+def value_at(record: dict, path: str):
+    value = record
+    for part in path.split('.'):
+        if not isinstance(value, dict):
+            return None
+        value = value.get(part)
+    return value
+
+
 def match(connection, source: SourceCreate, fingerprint: str) -> tuple[str | None, list[str]]:
+    from refs.search import identifier
     ids = {row[0] for row in connection.execute('SELECT id FROM sources WHERE citation_key=?', (source.citation_key,))}
     ids.update(row[0] for row in connection.execute('SELECT source_id FROM originals WHERE sha256=? AND source_id IS NOT NULL', (fingerprint,)))
     for row in connection.execute('SELECT id,metadata_json FROM sources'):
         metadata = json.loads(row['metadata_json'])
-        if source.metadata.DOI and metadata.get('DOI') and sources.doi_identity(source.metadata.DOI) == sources.doi_identity(metadata['DOI']):
-            ids.add(row['id'])
+        for field in ('DOI','ISBN'):
+            incoming = getattr(source.metadata, field)
+            if incoming and metadata.get(field) and identifier(field,incoming) == identifier(field,metadata[field]):
+                ids.add(row['id'])
     for binding in sources.bindings(source):
         row = connection.execute('SELECT source_id FROM origin_identities WHERE namespace=? AND library_uri=? AND item_key=?', binding).fetchone()
         if row:
             ids.add(row[0])
     if len(ids) > 1:
         raise RefError('identity_conflict', 'Identity signals disagree; inspect the sources', details={'source_ids': sorted(ids)})
-    if ids:
-        source_id = next(iter(ids))
-        current = sources.record(connection, source_id)
-        if current['state'] != 'active':
-            raise RefError('source_removed', 'Matched source is removed; inspect it before reactivating', details={'source_id': source_id})
-        return source_id, differences(source.canonical(), current)
-    return None, []
+    if not ids:
+        return None, []
+    source_id = next(iter(ids))
+    current = sources.record(connection, source_id)
+    if current['state'] != 'active':
+        raise RefError('source_removed', 'Matched source is removed; inspect it before reactivating', details={'source_id': source_id})
+    return source_id, differences(source.canonical(), current)
+
+
+def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False) -> tuple[str | None, dict]:
+    source_id, paths = match(connection, source, hashlib.sha256(raw).hexdigest())
+    if not source_id:
+        return None, {}
+    from refs.search import identifier
+    current = sources.record(connection, source_id)
+    incoming = source.canonical()
+    compatible = True
+    for field in ('type','edition','DOI','ISBN'):
+        before, after = current['metadata'].get(field), incoming['metadata'].get(field)
+        if before is None or after is None:
+            continue
+        if field in ('DOI','ISBN'):
+            before, after = identifier(field,str(before)), identifier(field,str(after))
+        if before != after:
+            compatible = False
+    canonical = {key: current[key] for key in SourceCreate.model_fields if key in current}
+    canonical = json.loads(json.dumps(canonical))
+    fills, conflicts = [], []
+    for path in paths:
+        if path.startswith('native_type.') and current.get('native_type') and incoming['metadata']['type'] == current['metadata']['type']:
+            continue
+        before, after = value_at(current,path), value_at(incoming,path)
+        if path in ('metadata.DOI','metadata.ISBN') and before and identifier(path.split('.')[1],str(before)) == identifier(path.split('.')[1],str(after)):
+            continue
+        corrected = any(path == marker or path.startswith(marker+'.') or marker.startswith(path+'.') for marker in current['corrected_fields'])
+        if compatible and before in (None,[],{}) and not corrected:
+            sources.patch_path(canonical,path,after,clear=False)
+            fills.append(path)
+        else:
+            conflicts.append(dict(path=path,current=before,incoming=after))
+    if compatible:
+        for entry in incoming.get('provenance',[]):
+            imported = entry | {'origin':'import'}
+            if entry not in canonical['provenance'] and imported not in canonical['provenance']:
+                canonical['provenance'].append(imported)
+        if fills and not any(p.get('origin')=='import' for p in canonical['provenance']):
+            canonical['provenance'].append(dict(origin='import',access='unknown'))
+        if not dry_run:
+            # Validate the combined record before binding the incoming identity.
+            key = canonical.pop('citation_key')
+            canonical = SourceCreate.model_validate(canonical).canonical()
+            canonical['citation_key'] = key
+            before = {key: current[key] for key in SourceCreate.model_fields if key in current}
+            if canonical != before:
+                sources.store_record(connection,current,canonical,current['corrected_fields'])
+            for binding in sources.bindings(source):
+                connection.execute('INSERT OR IGNORE INTO origin_identities VALUES (?,?,?,?,?)', (*binding,source_id,hashlib.sha256(raw).hexdigest()))
+    return source_id, dict(bound=compatible, incoming_key=source.citation_key, catalog_key=current['citation_key'], filled=fills, conflicts=conflicts)
 
 
 def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None) -> dict:
@@ -79,11 +142,12 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         source = SourceCreate.model_validate(canonical)
         source.citation_key = key
         incoming = source.canonical()
-        source_id, conflicts = match(connection, source, hashlib.sha256(raw).hexdigest())
+        source_id, binding = bind_and_fill(connection, source, raw, dry_run=dry_run)
+        conflicts = [item['path'] for item in binding.get('conflicts', [])]
         if conflicts:
             outcome = dict(outcome='conflict', code='value_conflict', source_id=source_id, citation_key=key, conflicts=conflicts)
         elif source_id:
-            outcome = dict(outcome='unchanged', source_id=source_id, citation_key=key)
+            outcome = dict(outcome='applied' if binding.get('filled') else 'unchanged', source_id=source_id, citation_key=key)
         else:
             likely = connection.execute("SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json,'$.title'))=lower(?)", (source.metadata.title,)).fetchall()
             if likely:
@@ -92,7 +156,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
                 created = sources.insert_source(connection, source, raw, evidence_locator, format='bib', warnings=warnings, key_provenance={'origin':'supplied', 'policy':None, 'table_version':None, 'unicode_version':None})
                 source_id = created['id']
             outcome = dict(outcome='applied', source_id=source_id, citation_key=key)
-        outcome.update(warnings=warnings, limitations=parsed['limitations'], resource_proposals=parsed['resource_proposals'])
+        outcome.update(binding=binding, warnings=warnings, limitations=parsed['limitations'], resource_proposals=parsed['resource_proposals'])
         if settings is not None and source_id and outcome['outcome'] in ('applied','unchanged'):
             from refs.resources import import_links
             outcome['resources'], resource_warnings = import_links(connection,settings,source_id,parsed['resource_proposals'],locator,dry_run=dry_run)
@@ -171,9 +235,10 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
         incoming, warnings = naming.normalize(parsed['source'].canonical(), settings.values if settings else None)
         incoming['context'] = entry.get('context', [])
         source = SourceCreate.model_validate(incoming)
-        source_id, conflicts = match(connection, source, hashlib.sha256(entry['raw']).hexdigest())
+        source_id, binding = bind_and_fill(connection, source, entry['raw'], dry_run=dry_run)
+        conflicts = [item['path'] for item in binding.get('conflicts', [])]
         if source_id:
-            result = dict(status='conflict' if conflicts else 'unchanged', source_id=source_id, conflicts=conflicts)
+            result = dict(status='conflict' if conflicts else 'applied' if binding.get('filled') else 'unchanged', source_id=source_id, conflicts=conflicts)
         else:
             provenance = dict(origin='supplied', policy=None, table_version=None, unicode_version=None)
             if source.citation_key is None:
@@ -185,7 +250,7 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
             if not dry_run:
                 source_id = sources.insert_source(connection, source, entry['raw'], entry['locator'], format='zotero-json', warnings=warnings, key_provenance=provenance)['id']
             result = dict(status='applied', source_id=source_id)
-        result.update(citation_key=source.citation_key, warnings=warnings, limitations=parsed['limitations'])
+        result.update(binding=binding, citation_key=source.citation_key, warnings=warnings, limitations=parsed['limitations'])
     except RefError as exc:
         result = dict(status='conflict' if exc.issue['code'] in ('identity_conflict', 'source_removed', 'alias_conflict') else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'])
     result.update(outcome=result['status'], incoming=incoming, item_key=entry['key'], preserved=True)

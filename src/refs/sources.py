@@ -77,46 +77,32 @@ def bindings(source: SourceCreate) -> list[tuple[str, str, str]]:
     ))
 
 
-def candidate(connection, source: SourceCreate, fingerprint: str) -> str | None:
-    ids = {r["id"] for r in connection.execute("SELECT id FROM sources WHERE citation_key=?", (source.citation_key,))}
-    ids.update(r[0] for r in connection.execute("SELECT source_id FROM originals WHERE sha256=? AND source_id IS NOT NULL", (fingerprint,)))
-    for binding in bindings(source):
-        row = connection.execute("SELECT source_id FROM origin_identities WHERE namespace=? AND library_uri=? AND item_key=?", binding).fetchone()
-        if row:
-            ids.add(row["source_id"])
-    if source.metadata.DOI:
-        for row in connection.execute("SELECT id, metadata_json FROM sources"):
-            doi = json.loads(row["metadata_json"]).get("DOI")
-            if doi and doi_identity(doi) == doi_identity(source.metadata.DOI):
-                ids.add(row["id"])
-    if not ids:
-        return None
-    if len(ids) == 1:
-        source_id = next(iter(ids))
-        state = connection.execute("SELECT state FROM sources WHERE id=?", (source_id,)).fetchone()[0]
-        if state == "removed":
-            raise RefError("source_removed", "Matched source is removed", details={"source_id": source_id})
-        prior = connection.execute("SELECT 1 FROM originals WHERE source_id=? AND sha256=?", (source_id, fingerprint)).fetchone()
-        if prior:
-            return source_id
-    raise RefError("identity_conflict", "Input matches existing identity evidence; inspect it before creating another source",
-                   details={"source_ids": sorted(ids)})
+def add(catalog: Path, raw: bytes, locator: str, **options) -> dict:
+    result = _add(catalog,raw,locator,**options)
+    if result['outcome'] == 'needs_attention':
+        raise RefError('identity_conflict', 'Inspect differing incoming values and use update or import reconcile', data=result, details=result['binding'] | {'source_ids':[result['id']]})
+    return result
 
 
-def add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_run: bool = False, policy: dict | None = None) -> dict:
+def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_run: bool = False, policy: dict | None = None) -> dict:
     from refs.adapters import csl
     source = csl.parse(raw) if format == "csljson" else parse(raw)
     normalized, warnings = naming.normalize(source.canonical(),policy)
     source = SourceCreate.model_validate(normalized)
-    fingerprint = hashlib.sha256(raw).hexdigest()
     with connect(catalog, write=not dry_run) as connection:
         try:
-            existing = candidate(connection, source, fingerprint)
+            from refs.importing import bind_and_fill, preserve
+            existing, binding = bind_and_fill(connection, source, raw, dry_run=dry_run)
         except RefError as exc:
             exc.data = dict(outcome="needs_attention", id=None, citation_key=source.citation_key)
             raise
         if existing:
-            return record(connection, existing) | {"unchanged": True, "dry_run": dry_run, "outcome": "already_present", "warnings": warnings}
+            if not dry_run and not connection.execute('SELECT 1 FROM originals WHERE source_id=? AND sha256=?', (existing,hashlib.sha256(raw).hexdigest())).fetchone():
+                preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key})
+            current = record(connection,existing)
+            if binding['conflicts']:
+                return current | dict(outcome='needs_attention', binding=binding, warnings=warnings, dry_run=dry_run)
+            return current | dict(unchanged=not binding['filled'], dry_run=dry_run, outcome='already_present', warnings=warnings, binding=binding)
         likely = [dict(row) for row in connection.execute(
             "SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json, '$.title'))=lower(?)",
             (source.metadata.title,))]

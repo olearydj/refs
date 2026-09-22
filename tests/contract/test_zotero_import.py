@@ -56,7 +56,10 @@ def test_libraries_cannot_steal_binding(initialized,zotero_fixture,tmp_path):
     result=initialized('import','--format','zotero','--input',directory,expected=4)['data']
     assert result['counts']['conflict']==6
     with connect(tmp_path/'cat') as c:
-        assert {r[0] for r in c.execute('SELECT library_uri FROM origin_identities')} == {'users/123'}
+        original = {r['item_key']:r['source_id'] for r in c.execute("SELECT * FROM origin_identities WHERE library_uri='users/123'")}
+        assert len(original) == 6
+        for row in c.execute("SELECT * FROM origin_identities WHERE library_uri='users/456'"):
+            assert row['source_id'] == original[row['item_key']]
 
 
 def test_interrupted_run_keeps_accounting_and_reruns(initialized,zotero_fixture,tmp_path,monkeypatch):

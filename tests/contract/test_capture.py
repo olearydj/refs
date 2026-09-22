@@ -41,7 +41,9 @@ def test_repeat_is_noop_and_conflict_never_overwrites(initialized, tmp_path, ref
     conflict.write_text(json.dumps(incoming))
     result = initialized("add", "--format", "refs", "--input", conflict, expected=3)
     assert result["errors"][0]["code"] == "identity_conflict"
-    assert (tmp_path / "cat" / "catalog.sqlite").read_bytes() == before
+    shown = initialized("show", first["id"])["data"]
+    assert shown["metadata"] == first["metadata"]
+    assert any(item["origin"] == "import-capture" for item in shown["originals"])
 
 
 @pytest.mark.parametrize("edit", [
