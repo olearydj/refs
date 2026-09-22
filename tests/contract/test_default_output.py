@@ -100,3 +100,13 @@ def test_paths_has_three_readable_lines_before_init(tmp_path):
     assert result.returncode == 0
     assert result.stdout.splitlines() == [f"Configuration: {tmp_path/'config.toml'}", f"Catalog: {tmp_path/'cat'}", 'Library: (not configured)']
     assert not (tmp_path/'cat').exists()
+
+
+
+def test_open_help_explains_effects(tmp_path):
+    env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(tmp_path/'cat'))
+    result=subprocess.run(['refs','open','--help'],env=env,capture_output=True,text=True)
+    assert result.returncode==0
+    text=' '.join(result.stdout.split())
+    assert 'default application' in text and 'Never modifies the file' in text
+    assert not (tmp_path/'cat').exists()

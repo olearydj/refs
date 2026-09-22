@@ -262,6 +262,7 @@ def resource_check(ctx: typer.Context, source: Annotated[str | None, typer.Optio
 @app.command('open')
 def open_resource(ctx: typer.Context, reference: str,
                   resource: Annotated[str | None, typer.Option()] = None):
+    """Launch the selected file in its default application. Never modifies the file."""
     report(ctx,'open',resources.open_source(settings(ctx),reference,resource_id=resource))
 
 
