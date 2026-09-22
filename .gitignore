@@ -19,3 +19,7 @@ htmlcov/
 *.swp
 .vscode/
 .idea/
+tests/fixtures/real-trial/papers/
+tests/fixtures/real-trial/inputs/
+tests/fixtures/real-trial/downloads/
+tests/fixtures/real-trial/out/
