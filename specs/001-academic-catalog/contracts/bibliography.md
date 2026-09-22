@@ -38,12 +38,12 @@ Known subtype downgrades warn and are itemized in the export report; no projecti
 
 | Class | Outcome |
 | --- | --- |
-| Faithful but incomplete | Warn about missing facts or assessed noncitation omissions; never invent values. |
-| Documented fallback | Warn with mapping ID and describe the emitted fallback, including type downgrade, in this run's report. |
+| Faithful but incomplete | Warn about missing citation facts; never invent values. Abstracts, context and tags retained in the catalog produce no report. Missing language warns only for titles containing non-ASCII letters. |
+| Documented fallback | Warn with mapping ID and describe the fallback or documented omission, including preserved unmapped import fields, in this run's report. |
 | Enumerated meaning-changing loss | Block. Stored waivers and export waive are backlog. |
 | Unknown or unassessed | Block by default; `--allow-unknown-mappings` is a single-run override, listed per entry/loss in the report. |
 
-Closed blocking-loss codes are `cited_authors_changed`, `issued_date_lost_or_changed`, `work_identity_changed` (source/container/edition/version/identifying locator altered), `in_text_citation_changed` (a tested transformation changes who/year is cited), and `protected_spelling_changed`. Omitting an access date is not equivalent to dropping issued date. Merely unprotected capitalization warns under the explicit user decision. A type downgrade alone is documented fallback; an observed consequence in this list upgrades it to blocking. Any transformation not assessed by a registered rule belongs to unknown, never an implicit safe remainder.
+Closed blocking-loss codes are `cited_authors_changed`, `issued_date_lost_or_changed`, `work_identity_changed` (source/container/edition/version/identifying locator altered), `in_text_citation_changed` (a tested transformation changes who/year is cited), and `protected_spelling_changed`. Omitting an access date is not equivalent to dropping issued date. Merely unprotected capitalization warns under the explicit user decision. A type downgrade alone is documented fallback; an observed consequence in this list upgrades it to blocking. A type or field mapping without a registry assessment belongs to unknown. Preserving an unmapped input field verbatim is an assessed omission, not an unknown transformation.
 
 Structural errors cannot be overridden: invalid/unserializable key/value, case-insensitive duplicate portable keys, malformed output, missing required non-English langid, or unsafe target. The command reports every affected entry in one pass. Blocked exports create no target/staging file and do not advance adoption. There is no stored loss waiver in slice 1. Unknown overrides cannot waive a known blocking loss; correct the record, change project selection explicitly, or leave the export blocked. The earlier scoped-waiver design is deferred, not silently replaced with a blanket override.
 

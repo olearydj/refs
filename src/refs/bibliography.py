@@ -90,7 +90,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
         if entry_type == 'misc' or kind in ('article', 'article-magazine', 'article-newspaper'):
             assess('type_fallback', 'documented_fallback', f'{kind} is projected as @{entry_type}', 'metadata.type')
         for limitation in record.get('limitations', []):
-            assess('unassessed_import', 'unknown', limitation['reason'], limitation['field'])
+            assess('unassessed_import', 'documented_fallback', limitation['reason'], limitation['field'])
         fields, notes, howpublished, used = {}, [], [], {'type'}
         protection = value.get('title_protection', {})
 
@@ -173,7 +173,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                     assess('missing_langid', 'structural', 'No tested langid mapping for supplied language', 'metadata.language')
                 else:
                     put('langid', LANGUAGES[language])
-            else:
+            elif any(char.isalpha() and not char.isascii() for char in metadata.get('title', '')):
                 assess('language_unspecified', 'faithful_incomplete', 'Language was not supplied')
             for source, target in [('volume', 'volume'), ('issue', 'number'), ('publisher-place', 'address'), ('edition', 'edition'), ('collection-title', 'series'), ('collection-number', 'number'), ('container-title-short', 'shortjournal'), ('chapter-number', 'chapter')]:
                 copy(source, target)
@@ -239,7 +239,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                     assess('accessed_unassessed', 'unknown', 'Access-date projection is unassessed', 'metadata.accessed')
             for field in ('abstract', 'number-of-pages', 'number-of-volumes'):
                 used.add(field)
-                if field in metadata:
+                if field != 'abstract' and field in metadata:
                     assess('noncitation_omission', 'faithful_incomplete', f'{field} is retained in the catalog', 'metadata.' + field)
             used.add('note')
             if metadata.get('note'):
@@ -253,8 +253,6 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                         assess('unassessed_extension', 'unknown', f'No registered projection for patent.{member}', 'extensions.patent.' + member)
                 else:
                     assess('unassessed_extension', 'unknown', f'No registered projection for {field}', 'extensions.' + field)
-            if value.get('legacy_tags') or value.get('context'):
-                assess('noncitation_context', 'faithful_incomplete', 'Context and tags remain in the catalog')
             if howpublished:
                 put('howpublished', '; '.join(howpublished))
             if notes:

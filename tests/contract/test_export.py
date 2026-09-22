@@ -133,3 +133,25 @@ def test_adoption_requires_exact_completed_import(initialized, tmp_path):
     result = bibliography.export(catalog, 'adoption', path, adopt=True, overwrite=True)
     assert result['count'] == 1
     assert path.read_bytes() != raw
+
+
+def test_catalog_only_facts_and_ascii_language_are_quiet():
+    value = record('book', abstract='Long abstract', title='Agents: An ASCII Title 2024')
+    del value['metadata']['language']
+    value.update(context=[{'text':'Research note','origin':'user'}], legacy_tags=['tag'])
+    _, warnings = bibliography.serialize([value])
+    assert not warnings
+    value['metadata']['title'] = 'Café Research'
+    assert [w['code'] for w in bibliography.serialize([value])[1]] == ['language_unspecified']
+    value['metadata']['title'] = 'Research — 2024'
+    assert not bibliography.serialize([value])[1]
+
+
+@pytest.mark.parametrize('field', ['pagetotal', 'eprint', 'organization'])
+def test_preserved_import_field_is_documented_omission(field):
+    value = record()
+    value['limitations'] = [{'field': field, 'reason':'Unmapped field preserved verbatim'}]
+    _, warnings = bibliography.serialize([value])
+    assert warnings[0]['code'] == 'unassessed_import'
+    assert warnings[0]['details']['class'] == 'documented_fallback'
+    assert not warnings[0]['details']['override']
