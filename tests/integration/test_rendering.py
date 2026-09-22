@@ -36,13 +36,10 @@ def expected_facts(text):
     assert re.search(r'(?:2nd|2|second)\s*(?:ed|edition)', normalized, re.I), normalized
 
 
-@pytest.mark.parametrize('consumer', ['pandoc', 'biber', 'bibtex'])
-def test_actual_rendering(consumer, tmp_path, record_property):
+def render_with_consumer(consumer, bib, tmp_path, record_property):
     executable = tool(consumer)
     version = run([executable, '--version'], tmp_path).splitlines()[0]
     record_property('consumer_version', version)
-    records = json.loads((ROOT/'tests/fixtures/rendering/sources.json').read_text())
-    bib, _ = serialize(records)
     (tmp_path/'references.bib').write_bytes(bib)
     if consumer == 'pandoc':
         (tmp_path/'paper.md').write_text('---\nnocite: "@*"\n---\n\n# References\n')
@@ -62,7 +59,14 @@ def test_actual_rendering(consumer, tmp_path, record_property):
         run([latex, '-interaction=nonstopmode', '-halt-on-error', 'paper.tex'], tmp_path)
         text = run([extract, 'paper.pdf', '-'], tmp_path)
     (tmp_path/'rendered.txt').write_text(text)
-    expected_facts(text)
+    return text
+
+
+@pytest.mark.parametrize('consumer', ['pandoc', 'biber', 'bibtex'])
+def test_actual_rendering(consumer, tmp_path, record_property):
+    records = json.loads((ROOT/'tests/fixtures/rendering/sources.json').read_text())
+    bib, _ = serialize(records)
+    expected_facts(render_with_consumer(consumer, bib, tmp_path, record_property))
 
 
 @pytest.mark.parametrize('howpublished', ['arXiv:2407.01502', 'Python software, version 1.106', None])
@@ -131,3 +135,26 @@ def test_online_documentation_reports_portable_quotation_change(initialized, tmp
     assert 'Service API Documentation.' in texts[1]
     assert any('quotation marks' in warning['message'] for warning in report['warnings'])
     assert 'Web page' not in texts[1]
+
+
+@pytest.mark.parametrize('consumer', ['pandoc', 'biber', 'bibtex'])
+@pytest.mark.parametrize('route', ['bib', 'csl'])
+@pytest.mark.parametrize('particle', ['dropping-particle', 'non-dropping-particle'])
+def test_particle_names_export_and_render(consumer, route, particle, tmp_path, record_property):
+    from refs.adapters import bibtex, csl
+    if route == 'bib':
+        flag = 'true' if particle == 'non-dropping-particle' else 'false'
+        raw = ('@article{particle,title={Synthetic Particle Study},journal={Synthetic Journal},year={2020},author={family=Lopik, given=Katherine, prefix=van, useprefix='+flag+' and Smith, Alex}}').encode()
+        record = bibtex.parse(raw)['source'].canonical()
+    else:
+        record = csl.parse(json.dumps({'type':'article-journal','title':'Synthetic Particle Study','container-title':'Synthetic Journal','issued':{'date-parts':[[2020]]},'author':[{'family':'Lopik','given':'Katherine',particle:'van'},{'family':'Smith','given':'Alex'}]}).encode()).canonical()
+        record['citation_key'] = 'particle'
+    assert record['metadata']['author'][0][particle] == 'van'
+    bib, notices = serialize([record])
+    assert b'author = {van Lopik, Katherine and Smith, Alex}' in bib
+    assert not any(w['details']['class']=='unknown' for w in notices)
+    assert [w['code'] for w in notices if w['code'].startswith('name_')] == ['name_particle_fallback']
+    text = render_with_consumer(consumer, bib, tmp_path, record_property)
+    line = ' '.join(text.split())
+    assert re.search(r'(?:[Vv]an Lopik|Lopik, (?:Katherine|K[.]) van)', line), line
+    record_property('rendered_particle_line', line)

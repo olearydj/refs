@@ -128,13 +128,15 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                 names = metadata.get(role, [])
                 if names:
                     output_names = []
+                    if any(name.get('dropping-particle') or name.get('non-dropping-particle') for name in names):
+                        assess('name_particle_fallback', 'documented_fallback', 'Portable names retain the particle before the family name; consumers determine dropping behavior', 'metadata.' + role)
                     for name in names:
                         if 'literal' in name:
                             output_names.append('{' + tex(name['literal']) + '}')
                             continue
-                        if any(name.get(flag) for flag in ('static-ordering', 'comma-suffix', 'parse-names')) or name.get('non-dropping-particle'):
-                            assess('name_projection_unassessed', 'unknown', 'Consumer handling of this name flag or particle is unassessed', 'metadata.' + role)
-                        family = ' '.join(name.get(part, '') for part in ('dropping-particle', 'non-dropping-particle', 'family')).strip()
+                        if any(name.get(flag) for flag in ('static-ordering', 'comma-suffix', 'parse-names')):
+                            assess('name_projection_unassessed', 'unknown', 'Consumer handling of this name flag is unassessed', 'metadata.' + role)
+                        family = ' '.join(name[part] for part in ('dropping-particle', 'non-dropping-particle', 'family') if name.get(part))
                         if not family:
                             assess('given_only_name', 'unknown', 'Given-only personal names have unassessed citation behavior', 'metadata.' + role)
                             family = name.get('given', '')
