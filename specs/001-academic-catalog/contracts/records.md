@@ -24,7 +24,7 @@
 }
 ```
 
-Unknown envelope keys and wrong primitive types fail; no general string-to-number coercion. Creation needs a nonblank title or absolute HTTP(S) URL, or a container-title plus page or chapter-number identification for a traditional title-less part. It needs no tags, project or file. Generic casually captured records may use type document; unknown explicitly supplied types remain unapplied originals with a diagnostic. Generated keys require usable title tokens or an explicit key. URLs are not invented into titles.
+Unknown envelope keys and wrong primitive types fail; no general string-to-number coercion. Creation needs a nonblank title or absolute HTTP(S) URL, or a container-title plus page or chapter-number identification for a traditional title-less part. It needs no tags, project or file. Generic casually captured records may use type document; unknown explicitly supplied types remain unapplied originals with a diagnostic. Generated keys require usable title tokens or an explicit key. URLs are not invented into titles. During Bib import, an invalid or relative URL remains in the original with a limitation; other usable metadata is applied.
 
 `metadata` is the sole authority for bibliographic variables in the pinned CSL schema. No parallel creators, identifiers, publication object, citation_fields or editable native-fields namespace exists. Creator arrays use CSL roles and ordered personal/literal names. Standard identifiers occupy DOI/ISBN/ISSN/PMID/PMCID; normalized lookup indexes are derived. Additional scheme/value identifiers can be preserved in originals until a justified extension is registered. Native type is optional `{namespace,value}`, validated against the type crosswalk; it cannot contradict the canonical type. Origin-system identity belongs to provenance, not this label.
 
@@ -54,7 +54,7 @@ Record explicit sets, clearing and type supersession in the source-row corrected
 
 ## Identity and non-overwriting import
 
-Check all identity evidence: explicit UUID, prior origin binding and consistent persistent identifiers. Contradictory signals, editions or versions stop that entry. A key alone proposes a match; title similarity never authorizes one. Exact previously applied entry evidence or a unique consistent identity permits a repeat, not replacement of current values. New entries commit source/evidence/identity together. Repeats never duplicate sources/resources; differences are reported without overwriting, including previously empty or deliberately cleared fields.
+Check all identity evidence: explicit UUID, prior origin binding and consistent persistent identifiers. Contradictory signals, editions or versions stop that entry. A key alone proposes a match; title similarity never authorizes one or blocks creation. It produces a warning on the separately applied entry. Exact previously applied entry evidence or a unique consistent identity permits a repeat, not replacement of current values. New entries commit source/evidence/identity together. Repeats never duplicate sources/resources; differences are reported without overwriting, including previously empty or deliberately cleared fields.
 
 Plain update settles value conflicts and records corrected paths. If the source retains a deliberate different value, later imports may report the conflict again. There is no batch reconcile command or per-entry status table. Identity collisions require inspection and, where appropriate, ordinary add with a distinct key; no automatic merge or rekey. Removed-source matches report source_removed.
 
@@ -85,6 +85,6 @@ Each finished import emits per-entry outcomes and records one imports row with e
 
 Resource JSON names the absolute locator `path`, or the named-root pair `root` and `relative`. The verified content hash is `digest`; descriptive members are `label` and `media_type`. Inspection adds `resolved_path` when resolution succeeds and `status` for availability.
 
-Import result fields are named `import_id`, `input`, `file_digest`, `counts` and `entries`. Each entry uses `outcome`, byte offsets `start` and `end`, and the status fields `preserved`, `editable`, `searchable` and `exportable`. Pending file paths are `resource_proposals`; preserved-only mapping issues are `limitations`, with `field` and `reason` members. Copy previews name the planned output path `destination`.
+Import result fields are named `import_id`, `input`, `file_digest`, `counts` and `entries`. Each entry includes `citation_key` and uses `outcome`, byte offsets `start` and `end`, and the status fields `preserved`, `editable`, `searchable` and `exportable`. Pending file paths are `resource_proposals`; preserved-only mapping issues are `limitations`, with `field` and `reason` members. Copy previews name the planned output path `destination`.
 
 Generated key provenance names its captured key-generation settings `naming_settings`. Import entry results name their classification `status`, alongside the existing `outcome` member.

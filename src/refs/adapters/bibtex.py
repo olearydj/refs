@@ -1,6 +1,7 @@
 """Guarded library parsing with independent byte framing and scoped mappings."""
 
 import re
+from urllib.parse import urlparse
 
 import bibtexparser
 from bibtexparser.model import Entry
@@ -194,6 +195,9 @@ def parse(raw: bytes) -> dict:
                 if field in ('author', 'editor', 'translator', 'bookauthor', 'holder'):
                     incoming = names(contents)
                 elif field in ('doi', 'url'):
+                    if field == 'url' and (urlparse(contents).scheme not in ('http', 'https') or not urlparse(contents).netloc):
+                        limitations.append(dict(field='url', reason='Non-HTTP(S) or relative URL preserved verbatim; supply an absolute URL to use it'))
+                        continue
                     incoming = contents
                 elif field == 'urldate':
                     incoming = date(decode(contents))

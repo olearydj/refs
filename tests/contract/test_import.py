@@ -150,3 +150,18 @@ def test_import_entry_status_and_human_order(initialized,tmp_path):
     assert run.returncode==4
     assert run.stdout.splitlines()[0].startswith('Imported 0, unchanged 2, conflicts 0, invalid 1')
     assert 'Inspect reported entries' in run.stdout.splitlines()[1]
+
+
+
+def test_report_keys_title_similarity_and_relative_url(initialized, tmp_path):
+    from refs import importing, sources
+    raw = b'@book{one,title={Same Study},author={Smith, Alex},url={relative/book}}\n@book{two,title={Same Study},author={Jones, Lee}}\n@book{bad,title={Bad},broken,year={2024}}'
+    result = importing.run(tmp_path/'cat',raw,'synthetic.bib')
+    assert result['counts'] == dict(applied=2,unchanged=0,conflict=0,invalid=1)
+    assert [e['citation_key'] for e in result['entries']] == ['one','two','bad']
+    assert any(w['code']=='likely_match' for w in result['entries'][1]['warnings'])
+    stored = sources.show(tmp_path/'cat','one')
+    assert 'URL' not in stored['metadata']
+    assert stored['limitations'][0]['field'] == 'url'
+    again = importing.run(tmp_path/'cat',raw,'synthetic.bib')
+    assert again['counts'] == dict(applied=0,unchanged=2,conflict=0,invalid=1)

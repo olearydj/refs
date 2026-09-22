@@ -115,8 +115,7 @@ def add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_ru
             "SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json, '$.title'))=lower(?)",
             (source.metadata.title,))]
         if likely:
-            raise RefError("likely_match", "A source has this title; inspect the candidates", details={"candidates": likely},
-                           data=dict(outcome="needs_attention", id=None, citation_key=source.citation_key))
+            warnings.append(dict(code="likely_match", message="Similar title found; created separately because title alone is not identity", path=None, details={"candidates": likely}, retryable=False))
         key_provenance = {"origin": "supplied", "policy": None, "table_version": None, "unicode_version": None}
         if source.citation_key is None:
             base = naming.key(source.canonical(),policy)

@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import re
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -56,15 +57,14 @@ def match(connection, source: SourceCreate, fingerprint: str) -> tuple[str | Non
         if current['state'] != 'active':
             raise RefError('source_removed', 'Matched source is removed; inspect it before reactivating', details={'source_id': source_id})
         return source_id, differences(source.canonical(), current)
-    likely = connection.execute("SELECT id FROM sources WHERE lower(json_extract(metadata_json,'$.title'))=lower(?)", (source.metadata.title,)).fetchall()
-    if likely:
-        raise RefError('likely_match', 'Title matches existing sources; inspect before adding', details={'source_ids':[row[0] for row in likely]})
     return None, []
 
 
 def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None) -> dict:
     raw = block['raw']
     parsed = None
+    header = re.match(rb'@\w+\s*[{(]\s*([^,]+),', raw)
+    key = header[1].decode('utf-8', errors='replace').strip() if header else '(unreadable key)'
     outcome: dict
     source_id = None
     evidence_locator = f"{locator}#bytes={block['start']}:{block['end']}"
@@ -83,6 +83,9 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         elif source_id:
             outcome = dict(outcome='unchanged', source_id=source_id, citation_key=key)
         else:
+            likely = connection.execute("SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json,'$.title'))=lower(?)", (source.metadata.title,)).fetchall()
+            if likely:
+                warnings.append(dict(code='likely_match', message='Similar title found; imported separately because title alone is not identity', path=None, details={'candidates':[dict(row) for row in likely]}, retryable=False))
             if not dry_run:
                 created = sources.insert_source(connection, source, raw, evidence_locator, format='bib', warnings=warnings, key_provenance={'origin':'supplied', 'policy':None, 'table_version':None, 'unicode_version':None})
                 source_id = created['id']
@@ -98,6 +101,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
             exc = RefError('invalid_bib_entry', 'Entry cannot satisfy the record profile; inspect its preserved original', 2)
         conflict = exc.issue['code'] in ('identity_conflict', 'source_removed', 'likely_match')
         outcome = dict(outcome='conflict' if conflict else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'], limitations=exc.issue['details'].get('limitations', []))
+    outcome['citation_key'] = key
     outcome['status'] = outcome['outcome']
     outcome.update(start=block['start'], end=block['end'], preserved=True, editable=outcome['outcome'] in ('applied','unchanged'), searchable=outcome['outcome'] in ('applied','unchanged'), exportable='requires export assessment')
     if not dry_run:
