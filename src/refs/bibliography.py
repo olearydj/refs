@@ -65,7 +65,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
         def assess(code: str, category: str, message: str, path: str = '') -> None:
             loss = dict(code=code, citation_key=key, **{'class': category}, path=path, message=message)
             losses.append(loss)
-            if category in ('faithful_incomplete', 'documented_fallback') or category == 'unknown' and allow_unknown:
+            if category in ('faithful_incomplete', 'documented_fallback', 'info') or category == 'unknown' and allow_unknown:
                 warnings.append(warning(key, code, message, **{'class': category}, mapping_id=path, override=category == 'unknown'))
 
         if key.casefold() in seen:
@@ -98,7 +98,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                 message += '; Pandoc may change title quotation marks and emphasis for this portable type'
             assess('type_fallback', 'documented_fallback', message, 'metadata.type')
         for notice in record.get('_projection_notices', []):
-            assess(notice['code'], 'documented_fallback', notice['message'], notice['path'])
+            assess(notice['code'], 'info' if notice['code'] == 'title_protection_added' else 'documented_fallback', notice['message'], notice['path'])
         for limitation in record.get('limitations', []):
             if limitation['reason'].startswith('Preserved from import:'):
                 continue
@@ -374,10 +374,12 @@ def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROF
             record.update(preserved_bib_fields(connection, record))
         revision = connection.execute("SELECT revision FROM catalog_meta").fetchone()[0]
     data, warnings = serialize(selected, allow_unknown=allow_unknown)
+    info = [notice for notice in warnings if notice['details'].get('class') == 'info']
+    warnings = [notice for notice in warnings if notice['details'].get('class') != 'info']
     candidate_digest = files.digest(data)
     result = dict(output=str(target), profile=profile, count=len(selected),
                   keys=[record["citation_key"] for record in selected], sha256=candidate_digest,
-                  catalog_revision=revision, warnings=warnings)
+                  catalog_revision=revision, warnings=warnings, info=info)
     # Preview never acquires the file lock, stages bytes or reconciles intent.
     with nullcontext() if dry_run else files.file_lock(catalog):
         with connect(catalog) as connection:

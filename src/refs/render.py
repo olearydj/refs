@@ -9,6 +9,40 @@ def project_text(data: dict) -> str:
     return f"Project: {data['name']}\n" + readable('list', {'items': data['sources']})
 
 
+
+def warning_lines(command: str, warnings: list[dict]) -> list[str]:
+    if command != 'export':
+        return ['Warning: ' + warning['message'] for warning in warnings]
+    groups = {}
+    for warning in warnings:
+        if warning.get('details', {}).get('class') == 'info':
+            continue
+        group = warning['code'] if warning.get('details', {}).get('class') == 'documented_fallback' else str(len(groups))
+        groups.setdefault(group, []).append(warning)
+    lines = []
+    descriptions = {
+        'unassessed_import': 'have imported fields preserved only in the catalog',
+        'field_omitted': 'have fields without a portable slot',
+        'name_particle_fallback': 'use portable names with consumer-defined particle behavior',
+        'literal_issued_year': 'use literal issued dates; check the rendered dates',
+        'container_title_case': 'use catalog casing for container titles; check proper names',
+        'tex_decoded': 'use decoded TeX name forms; check the rendered spelling',
+        'literal_publisher': 'treat the publisher as one institution',
+        'issued_day_in_note': 'retain the issued day in a note',
+        'field_in_note': 'retain citation fields in notes',
+    }
+    for group, notices in groups.items():
+        keys = sorted({notice.get('details', {}).get('citation_key', '(selection)') for notice in notices})
+        if len(notices) == 1:
+            lines.append(f"Warning: {keys[0]}: {notices[0]['message']}")
+            continue
+        description = descriptions.get(group, 'use a documented fallback: ' + group.replace('_', ' '))
+        if group == 'type_fallback':
+            description = 'use the portable @misc fallback' if all('@misc' in notice['message'] for notice in notices) else 'use portable type fallbacks'
+        noun = 'entry' if len(keys) == 1 else 'entries'
+        lines.append(f"Warning: {len(keys)} {noun} {description} ({', '.join(keys)})")
+    return lines
+
 def render_text(command: str, data: dict, warnings: list[dict]) -> str:
     key = data.get('citation_key', '')
     revision = data.get('revision', '')
@@ -47,4 +81,4 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
         text = 'Unchanged: ' + text
     for entry in data.get('import_conflicts', []):
         text += '\nConflict: ' + str(entry.get('citation_key') or entry.get('message') or entry.get('code'))
-    return '\n'.join([text, *['Warning: ' + warning['message'] for warning in warnings]])
+    return '\n'.join([text, *warning_lines(command, warnings)])

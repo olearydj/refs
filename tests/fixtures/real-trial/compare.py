@@ -51,7 +51,7 @@ def references(name):
 original, exported = references('original'), references('exported')
 report = json.loads((folder/'export.json').read_text())
 warnings = {}
-for item in report['warnings']:
+for item in report['warnings'] + report['data'].get('info', []):
     warnings.setdefault(item['details']['citation_key'], []).append(item)
 differences = []
 for key in sorted(original.keys() | exported.keys()):

@@ -60,3 +60,22 @@ def test_project_show_uses_key_sorted_list_rows(human, initialized, tmp_path, re
         initialized('project','cite','paper',key)
     assert human('project','show','paper').splitlines()[1:] == human('list','--sort','key').splitlines()
     assert human('project','show','paper').splitlines()[1].startswith('alpha | Alex Jones | 2025 | Zebra Study')
+
+
+
+def test_export_warning_keys_groups_and_info(human, initialized, tmp_path):
+    path=tmp_path/'entries.bib'
+    path.write_text('\n'.join('@misc{'+key+',title={The R Package '+key+'},author={Smith, Alex},year={2024}}' for key in ('four','one','three','two')))
+    initialized('import','--input',path)
+    initialized('project','create','paper')
+    for key in ('four','one','three','two'):
+        initialized('project','cite','paper',key)
+    text=human('export','--project','paper','--output',tmp_path/'out.bib')
+    assert text.splitlines()[1:] == ['Warning: 4 entries use the portable @misc fallback (four, one, three, two)']
+    data=initialized('export','--project','paper','--output',tmp_path/'out.bib')
+    assert len(data['warnings']) == 4
+    assert len(data['data']['info']) == 4
+    assert all(item['details']['class']=='info' for item in data['data']['info'])
+    initialized('project','create','single')
+    initialized('project','cite','single','one')
+    assert 'Warning: one: document is projected as @misc' in human('export','--project','single','--output',tmp_path/'single.bib')

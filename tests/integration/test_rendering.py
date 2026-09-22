@@ -114,7 +114,8 @@ def test_added_protection_and_publisher_grouping_are_reported(initialized, tmp_p
     projects.cite(tmp_path/'cat','paper','x')
     result = bibliography.export(tmp_path/'cat','paper',tmp_path/'out.bib')
     codes = [item['code'] for item in result['warnings']]
-    assert codes.count('title_protection_added') == 1
+    assert [item['code'] for item in result['info']].count('title_protection_added') == 1
+    assert 'title_protection_added' not in codes
     assert codes.count('literal_publisher') == 1
 
 
