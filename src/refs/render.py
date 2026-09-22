@@ -13,6 +13,7 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
     key = data.get('citation_key', '')
     revision = data.get('revision', '')
     renderers = {
+        'backup': lambda: f"Wrote snapshot {data['output']} (external file bytes excluded)",
         'init': lambda: f"Initialized catalog at {data['catalog_path']} (library: {data.get('library') or 'none'})",
         'add': lambda: f"Already present: {key} (revision {revision})" if data.get('outcome') == 'already_present' else f"Created {key}",
         'update': lambda: f"Updated {key} (revision {revision})",

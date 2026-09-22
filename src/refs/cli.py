@@ -8,7 +8,7 @@ from typing import Annotated
 
 import typer
 
-from refs import bibliography, importing, projects, resources, search, sources
+from refs import bibliography, importing, projects, recovery, resources, search, sources
 from refs import catalog as storage
 from refs.config import absolute, select
 from refs.results import RefError, emit
@@ -252,6 +252,12 @@ def resource_check(ctx: typer.Context, source: Annotated[str | None, typer.Optio
 def open_resource(ctx: typer.Context, reference: str,
                   resource: Annotated[str | None, typer.Option()] = None):
     report(ctx,'open',resources.open_source(settings(ctx),reference,resource_id=resource))
+
+
+@app.command('backup')
+def backup_catalog(ctx: typer.Context, output: Annotated[Path, typer.Option()],
+                   dry_run: Annotated[bool, typer.Option()] = False):
+    report(ctx,'backup',recovery.backup(settings(ctx),output,dry_run=dry_run))
 
 
 def main() -> None:
