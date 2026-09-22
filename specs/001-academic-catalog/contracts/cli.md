@@ -1,6 +1,6 @@
 # CLI and Configuration Contract v1
 
-**Implementation proposal, 2026-09-21.** This is the full slice 1 command surface approved in audit §14. Deferred commands have no placeholders.
+**Scope:** Delivered slice 1 commands and the slice 2 additions below. Later file-organization commands remain deferred.
 
 ## Invocation and results
 
@@ -35,7 +35,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | search QUERY | Exact key/normalized identifier match first, then literal lexical query; --project PROJECT, --limit N, --offset N; matched fields and source identities. |
 | list | Same filters/pagination; --sort title\|key. |
 | key set REF | --key TEXT --if-revision N --execute; preview otherwise, warn external citations remain unchanged. |
-| import | --format bib --input PATH --origin TEXT; preview or apply .bib with per-entry report and aggregate run counts. No subcommands. |
+| import | --format bib --input PATH --origin TEXT; preview or apply .bib with per-entry report and aggregate run counts. |
 | resource add REF | --path PATH or --root NAME --relative PATH; optional --copy, --keep-name, label/media type. Default links in place; --copy uses Unfiled. |
 | resource unlink RESOURCE | --if-revision N --execute; association only, never file deletion. |
 | resource check | Optional --source REF, --verify; availability/digest/root diagnostics, no repair/write. |
@@ -50,6 +50,18 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | backup | --output NEW_DIRECTORY; consistent catalog/config snapshot and external-file inventory. |
 
 --keep-name is valid with add --file unless --link is supplied. For resource add, it requires --copy. It is invalid without a file. Repeated resource linking of the same source/locator is a no-op. Add with a duplicate candidate reports the identity rather than silently creating another or merging differences. Search/list default limit=50, offset=0; limit 1–1000, nonnegative offset. Report total/catalog revision; separate pages need not share a snapshot. All project associations are cited, so no --cited flag is needed.
+
+## Slice 2 commands
+
+| Invocation | Inputs and effect |
+| --- | --- |
+| import --format zotero --input DIR --origin TEXT | Apply or preview the [JSON directory](interchange.md); preserve input and persist per-entry accounting. Existing Bib invocation remains supported. |
+| import show BATCH [--status STATUS] | Show the saved run and entries, optionally filtered by applied, unchanged, conflict or invalid. |
+| import reconcile BATCH --take-incoming KEY[.field]... | Preview or apply the [explicit incoming-value decisions](records.md#identity-and-non-overwriting-import); report remaining conflicts. |
+| collection list | Show imported hierarchy and membership counts. |
+| list/search --collection PATH | Filter active sources by membership in the selected imported collection; retain existing project filters, sorting and pagination. |
+
+BATCH is the saved import ID. Collection paths identify the imported hierarchy; ambiguous paths fail visibly. No collection editing, filing or movement is included.
 
 ## Configuration and paths
 

@@ -1,10 +1,10 @@
-# Implementation Plan: Slice 1
+# Implementation Plan: Slices 1 and 2
 
-**2026-09-22, slice 1 delivered.** Constitution 2.0.0 applies. All 37 tasks are complete; the code-complete checkpoint and the owner's real-paper trial are recorded in [slice 1 acceptance](reviews/slice-1-acceptance.md). Two polish batches driven by real-input trials followed (commits through `132d806`). This plan remains the record of the design as built and of deferred work; it is not updated for slice 2 until the owner's use-list exists. No Zotero migration has run.
+**2026-09-22:** Slice 1 is delivered; [acceptance](reviews/slice-1-acceptance.md) records its checkpoint and real-paper trial. Constitution 2.0.0 applies. Slice 2 is specified below; tasks are next. No Zotero migration has run.
 
 ## Delivery boundary
 
-Deliver all six [slice 1 stories](spec.md#user-stories-and-acceptance): capture/correction/search, cited-only projects and portable export, .bib import, linking/copy into Unfiled, snapshot plus demonstrated manual restore, and configuration. All active FR/SC clauses in the trimmed spec apply; its deferred-ID ledger is excluded from task coverage. No partial US1-only release substitutes for capture-to-export and restore. The first development milestone is a walking skeleton: init, add, show and export for one supplied-key reference, with project create/cite to select it. The tasks split US1 and US2 into an early pass and a completion pass so this demonstration precedes the full importer and file intake. It is not the slice 1 acceptance gate.
+Slice 1 delivered all six [stories](spec.md#user-stories-and-acceptance). Its tasks cover the slice 1 clauses; the marked slice 2 additions and deferred identifiers are outside that completed work. The walking skeleton demonstrated init, add, show and export before completing import, file intake and restore.
 
 The owner approved the keep/fold/defer list in [audit §14](reviews/2026-09-20-independent-design-audit.md#14-addendum-2026-09-21-first-right-sizing-checkpoint-and-the-slice-1-trim). That specific list supersedes the rough command budget; measure its actual size at the checkpoint rather than disguising subcommands as one operation. Architecture stays: application-owned boundaries, stable identities, revisions, schema versioning, per-entry originals and a lightweight correction marker.
 
@@ -14,7 +14,7 @@ These are **implementation proposals**, not additional owner quotations. Python 
 
 Use uv_build >=0.12.1,<0.13, committed uv.lock, exclude-newer="3 days", and uv sync --locked. pytest/pytest-cov and Ruff are development tools; pin the evaluated ty version when creating the environment. These selections retain the prior research; no new dependency evaluation is implied by the trim.
 
-SQLite rollback journal, foreign keys, synchronous FULL and short BEGIN IMMEDIATE writes protect revisions and key allocation. A five-second busy timeout produces an actionable retry result. Ten logical tables including one FTS projection; SQLite's internal FTS shadow tables are not additional domain tables. Config stays separate from cat/lib. macOS is first; Linux support requires the same affected contract checks.
+SQLite rollback journal, foreign keys, synchronous FULL and short BEGIN IMMEDIATE writes protect revisions and key allocation. A five-second busy timeout produces an actionable retry result. Slice 1 has ten logical tables including one FTS projection; SQLite's internal FTS shadow tables are not additional domain tables. Config stays separate from cat/lib. macOS is first; Linux support requires the same affected contract checks.
 
 ## Structure and capability boundary
 
@@ -27,6 +27,7 @@ The internal read-only search boundary takes literal query/filter/limit/offset a
 | Contract | Responsibility |
 | --- | --- |
 | [CLI and configuration](contracts/cli.md) | Exact approved command surface, four schemas, envelope, locations and policy defaults. |
+| [Zotero input](contracts/interchange.md) | Slice 2 extraction directory, admission, identity and attachment resolution. |
 | [Records and input](contracts/records.md) | Canonical ownership, names/dates/titles, mutation, import and originals. |
 | [Bibliography](contracts/bibliography.md) | Type-scoped mappings, portable projection, losses and consumer fidelity. |
 | [Files and recovery](contracts/files-and-recovery.md) | Copy, export publication/adoption, backup and manual restore. |
@@ -45,7 +46,7 @@ Keep one installed end-to-end smoke test and one two-process key-allocation test
 
 ## Slice 2 brief: bring the library across
 
-**Owner decision, 2026-09-22.** Slice 1 works on one paper but cannot replace Zotero until the library is in it; daily use, not more specification, will show what refs needs. Slice 2 is therefore the Zotero ingest and whole-library use. Organizing files (relocating the tree, filing, move-by-default, reorganize) moves to slice 3, because it is the destructive part and gets the full protocol treatment. This brief is the slice's specification; the requirements it delivers already exist in [spec.md](spec.md) as deferred clauses and are un-deferred in place, not rewritten.
+**Owner decision, 2026-09-22.** Slice 1 works on one paper but cannot replace Zotero until the library is in it; daily use, not more specification, will show what refs needs. Slice 2 is therefore the Zotero ingest and whole-library use. Organizing files (relocating the tree, filing, move-by-default, reorganize) moves to slice 3, because it is the destructive part and gets the full protocol treatment. This brief and its linked contracts specify the slice; the corresponding [requirements](spec.md) are marked slice 2.
 
 ### Outcome
 
@@ -55,24 +56,19 @@ Observed inputs (read-only inspection, 2026-09-20 to 22): Zotero 6.0.37, userdat
 
 ### Delivered requirements
 
-FR-018 (the Zotero route), FR-022 (collections as memberships, tags as legacy tags, links in place), FR-023 (preservation reported separately from usability), FR-024 (per-entry accounting with `import show`), FR-028 (collection hierarchy and membership, read from the import; creation and editing wait for slice 3), FR-049 (notes to context, related pairs, origin identities). Each clause is marked "slice 2" in `spec.md` when un-deferred. Design already recorded and binding: the input contract is Zotero API v3 item and collection JSON with a manifest carrying the derived library identity (audit F-I06); key precedence is native `citationKey`, then Extra `Citation Key:`, then the legacy table; the Zotero item key and library URI are provenance, never write authority; whole databases are never stored as BLOBs; notes fold into context (audit section 11, item 2); annotations are not imported.
+FR-018, FR-022, FR-023, FR-024, FR-028 and FR-049 are active for slice 2. FR-020/021 gain D3 binding and gap filling for every import format. The [Clarifications table](spec.md#clarifications) records D1–D4 with literal replies separately from interpretations.
 
 ### What is built
 
-1. A one-time extractor, `tools/zotero_extract/`, outside the installed package: reads `zotero.sqlite` (preferably the `.bak` Zotero maintains) read-only, locked to userdata 121, and writes per-item and per-collection JSON in the published API v3 shape plus `manifest.json`. It is a migration script, not a maintained adapter, and says so.
-2. `import --format zotero --input DIR` over that directory: same identity, conflict and originals rules as `.bib` import; one original JSON document per item; collections created as a hierarchy with memberships; tags as legacy tags; linked-file and stored-file attachments as resources linked in place (stored files resolve under the original Zotero `storage/<itemKey>/`); URL-only attachments retained as context, not resources; child notes as context entries with origin `import`; attachment notes handled per decision D2 below; related links as source relations; every Extra line parsed into key, identifiers, or residual context.
-3. `import show BATCH`, with per-entry status persisted for this and later batches (the slice 1 `imports` row grows an entries table), so a 562-record import's conflicts can be listed and settled with ordinary `update` or an explicit `import reconcile` decision.
-4. `collection list` (read-only hierarchy with counts) and a `--collection` filter on `list` and `search`, so memberships are usable. No filing, no folder mapping, no moves.
-5. The acceptance harness, written before the importer: `tests/fixtures/real-trial/zotero_gate.py` (committed 2026-09-22) compares a refs catalog with the Zotero database item by item: every non-deleted regular item bound through `origin_identities`, citation key (native field, then Extra), native type, ordered creators, tags, collection paths, linked and stored file attachments, and the six identifier schemes parsed from Extra. Against an empty catalog it reports 562 missing items and 58 collections; the importer is done when it reports zero findings. The whole-library export check (portable `.bib` rendered through Pandoc against the Better BibTeX export) uses the existing `run.sh` render comparison.
+1. The one-time extractor and published JSON directory follow [Zotero input](contracts/interchange.md).
+2. Import, inspection, reconciliation and collection filtering follow [CLI](contracts/cli.md#slice-2-commands) and [records](contracts/records.md#identity-and-non-overwriting-import). The [data model](data-model.md) defines their four tables.
+3. `tests/fixtures/real-trial/zotero_gate.py` and the existing `run.sh` render comparison establish acceptance before real import. The empty-catalog baseline is 562 missing items across 58 Zotero collections.
 
-Not built in slice 2: any file move, rename, filing or reorganize; annotation import; a Zotero writer; `reconcile` beyond per-entry accept-incoming or keep-current; a general relationship editor. The 4.2 GB tree stays where it is; new downloads keep copying into `lib/Unfiled` until slice 3 unifies the roots.
+File organization is slice 3. The 4.2 GB tree stays in place; new downloads keep copying into lib/Unfiled. There is no Zotero writer, annotation importer or general relationship editor.
 
-### Decisions needed from the owner
+### Decision evidence
 
-- D1, decided 2026-09-22 (literal reply "A: Verbatim (Recommended)"): every collection, name, parent and membership exactly as in Zotero; renaming and merging wait for slice 3's reorganize.
-- D2, decided 2026-09-22 (literal reply "A, but check more closely to confirm not infer"): checked, not inferred. All 246 attachment notes contain the heading "Contents"; 245 consist entirely of `zotero://open-pdf/...?page=N` links, the form ZotFile writes; in a 40-file sample the list-item count matched the PDF's own bookmark count within 10 percent in 40 of 40 cases and no sampled PDF lacked an outline; no prose outside list structure was found. They are ZotFile tables of contents, regenerable from PDFs that still carry them. Skipped on import; they remain in the archived Zotero database.
-- D3, decided 2026-09-22 (literal replies: "the current refs catalog is just from testing and will duplicate things. I recommend resetting it before proceeding with post slice 2 work."; then, on binding by identifier: "I agree that doi / isbn can and should serve as a unique identifier, but will note that the quality of citation information varies wildly ... sometimes a new citation will be better than the existing one."; reset confirmed "Yes, reset before the library import"). Interpretation: the catalog at `/Volumes/Casa/refs/cat` and its backups are deleted and re-initialized before the library import, so the library lands in an empty catalog; the Pipyer paper and the Attention record return afterwards by the slice 1 walkthrough. For every later import into a catalog holding the library: an entry sharing a normalized DOI or ISBN with an existing source, with no contradicting type or edition, binds to that source, keeps its key, and records the incoming key as provenance; every bind is listed in the report. Binding never discards incoming values: fields the existing record lacks are filled from the incoming entry with origin `import`; fields that differ are reported side by side and applied only by an explicit `import reconcile BATCH --take-incoming KEY[.field]`, recorded as a correction. Title-only matches stay separate records.
-- D4, decided 2026-09-22 (literal reply: "it seems like only the identifiers. arxiv, doi, pmid, pmcid, oclc, issn are potentially / debatable useful. I would scrub the rest."). Checked first: the Scite plugin is installed but wrote nothing into Extra, notes or tags; the 206 lines are translator output (google-books-id 130, arxiv 21, publisher 19, section 11, oclc 6, doi 5, conference name 4, tex.urldate 4, issn 3, singletons; 6 prose lines). Interpretation: parse `arxiv`, `doi`, `pmid`, `pmcid`, `oclc` and `issn` lines into the source's identifiers (CSL variables where they exist, the identifiers extension otherwise), searchable and usable for D3 binding. Every other Extra line is not modeled: not a field, not context. The complete Extra survives in the per-item original JSON (`originals`) and in the archived Zotero database; `show` reports `Preserved from import: extra` for sources whose Extra held unmodeled lines.
+D1 preserves collections verbatim. D2's outline verification is recorded in FR-023. D3 authorizes resetting the trial catalog before migration and governs later binding and explicit corrections. D4 retains only the six named identifier schemes as modeled Extra data. Inspection found translator output, not Scite output: 206 labeled Extra lines, mainly Google Books IDs, arXiv IDs and publishers, plus six prose lines. Unmodeled lines remain original evidence. The decisions and their literal replies are owned by the spec, not repeated here.
 
 ### What must never break
 
@@ -84,7 +80,7 @@ Run against the owner's real library only after the harness passes on synthetic 
 
 ### Process
 
-Light loop, per [right-sizing](../../docs/right-sizing.md): this brief; `$speckit-clarify` to record D1 to D4 as literal replies in `spec.md`; un-defer the listed clauses and the interchange contract's Zotero section in place, keeping governing text net-flat; write the harness; `$speckit-tasks` appending slice 2 phases; `$speckit-analyze`; build; the real import under authorization. Right-sizing budget for the slice: about 6 new invocations, 4 tables (`import_entries`, `collections`, `source_collections`, `source_relations`; the owner approved four on 2026-09-22 after the brief miscounted two), no new runtime dependency, roughly 800 source lines. Exceeding any figure prompts the usual question.
+Follow the [light loop](../../docs/right-sizing.md): specify, append slice 2 tasks, analyze, build, then perform the real import under owner authorization. The extractor and synthetic gate come first; the real import is the last task. Budget: about six new invocations, four tables (import_entries, collections, source_collections, source_relations), no new runtime dependency and roughly 800 source lines. These are tests of proportion, not caps that distort the schema. Governing text stays net-flat or smaller.
 
 ## Deferred work
 
@@ -92,7 +88,6 @@ This is a boundary ledger, not a later-slice specification.
 
 | Destination | Deferred surface |
 | --- | --- |
-| Slice 2: bring the library across (brief above) | One-time Zotero extraction and import; collections and memberships (read-only hierarchy, `--collection` filter); child-note context and related pairs; source_relations; per-entry import status and `import show`; minimal `import reconcile`. |
 | Slice 3: organize files | Relocating the library tree; filing from folders without movement; move default and explicit reorganize; operations/file-operations journals, operations list/show, recover, request-ID replay; native metadata adapter, attribute verification, forced flushes and directory syncing; renaming by convention; sync setup. |
 | Later recovery/exit | Full restore command, file-inclusive backup/bundle validation and logical library export. |
 | Backlog | export_projections, export_waivers/export waive, field_provenance table, normalize, index rebuild, background project membership, primary-resource administration, 10,000-source gate and four-process matrix. |

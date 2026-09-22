@@ -1,23 +1,12 @@
-# Feature Specification: Academic Catalog, Slice 1
+# Feature Specification: Academic Catalog, Slices 1 and 2
 
-Created 2026-09-20. Rewritten in plain language 2026-09-21; scope unchanged from the owner-approved trim in commit b10db29. Branch: main. Status: implemented and accepted for slice 1 on 2026-09-22; this document remains the requirement record for that slice.
+Slice 1 was accepted on 2026-09-22 after the Pipyer trial. Slice 2 brings the Zotero library across under the [plan's brief](plan.md#slice-2-brief-bring-the-library-across). Clauses marked **slice 2** are the new work; existing requirements continue to apply.
 
-## What slice 1 delivers
-
-refs is a personal, offline catalog of references with a command-line interface that coding agents and the owner both use. Slice 1 is the first usable version. With it the owner can:
-
-- save a reference that an agent has researched, and correct it later;
-- find a saved reference by key, identifier, or words;
-- mark references as cited in a paper and export that paper's bibliography as a `.bib` file, only when asked;
-- import a paper's existing `.bib` file without losing or overwriting anything;
-- link a PDF where it already sits, or copy it into the library folder with a tidy name;
-- take a snapshot of the catalog and prove that it restores.
-
-This document covers slice 1 only. The [plan](plan.md) lists what comes later without designing it. No specification work for slice 2 starts until slice 1 has been used on one real paper.
+refs is a personal, offline reference catalog for the owner and coding agents. Slice 1 delivers capture, correction, search, cited-only projects, portable bibliography export, Bib import, linked or copied files, and snapshot restoration. Slice 2 adds Zotero ingest, imported collections, and persisted import decisions. File organization belongs to slice 3.
 
 ## Authority
 
-The [constitution, version 2.0.0](../../.specify/memory/constitution.md), the [accepted conventions](../../docs/behavior-decisions.md), and the owner's recorded decisions decide what refs must do. The four contracts linked from the plan are implementation proposals: they make these requirements testable, and their exact syntax and algorithms are not owner decisions. Requirement numbers are the ones this feature has always used, so history in Git stays traceable. Numbers that belong to later slices are listed near the end.
+The [constitution, version 2.0.0](../../.specify/memory/constitution.md), the [accepted conventions](../../docs/behavior-decisions.md), and the owner's recorded decisions decide what refs must do. The contracts linked from the plan are implementation proposals: they make these requirements testable, and their exact syntax and algorithms are not owner decisions. Requirement numbers are the ones this feature has always used, so history in Git stays traceable. Numbers that belong to later slices are listed near the end.
 
 ## Words used here
 
@@ -33,7 +22,7 @@ The [constitution, version 2.0.0](../../.specify/memory/constitution.md), the [a
 
 ## Clarifications
 
-The [audit sections 11–14](reviews/2026-09-20-independent-design-audit.md#11-addendum-2026-09-21-user-decisions-on-the-open-items) preserve questions, options, literal replies and interpretations separately. In particular:
+The slice 2 replies below were recorded on 2026-09-22. Earlier [audit sections 11–14](reviews/2026-09-20-independent-design-audit.md#11-addendum-2026-09-21-user-decisions-on-the-open-items) preserve questions, options, literal replies and interpretations separately. In particular:
 
 | Question/topic | Literal owner reply | Interpretation applied here |
 | --- | --- | --- |
@@ -50,8 +39,12 @@ The [audit sections 11–14](reviews/2026-09-20-independent-design-audit.md#11-a
 | Background project membership | “No, cited only for now (Recommended)” | A project's sources are its citations; keep a cited column as a future seam. |
 | Rename on intake | “Rename by default” | New copy intake renames by convention unless --keep-name; linked files and later reorganize keep names. |
 | Trim | “I'm satisfied with changes based on my answers” | The keep/fold/defer list in audit §14 supersedes earlier delivery commitments. |
+| D1: Imported collections | “A: Verbatim (Recommended)” | Slice 2 preserves names, parents and memberships. Editing waits for slice 3. |
+| D2: Attachment notes | “A, but check more closely to confirm not infer” | Verified PDF outlines are skipped; FR-023 records the evidence. |
+| D3: Reset and binding | “the current refs catalog is just from testing and will duplicate things. I recommend resetting it before proceeding with post slice 2 work.”; “I agree that doi / isbn can and should serve as a unique identifier, but will note that the quality of citation information varies wildly ... sometimes a new citation will be better than the existing one.”; “Yes, reset before the library import” | Reset the trial catalog and backups before library import. Reintroduce Pipyer and Attention afterwards; bind overlaps, fill gaps and explicitly reconcile differences under FR-020/021. |
+| D4: Extra | “it seems like only the identifiers. arxiv, doi, pmid, pmcid, oclc, issn are potentially / debatable useful. I would scrub the rest.” | Model the six identifier schemes; preserve other Extra lines only in originals, not context. |
 
-In the first clarification session the owner answered five multiple-choice questions with the letters `b`, `a`, `a`, `b`, and the sentence `a - use a library / package if something small and proven exists and is beneficial. seems like this could be more problematic than it seems on face`. Those letters chose: move a newly downloaded file into the library by default; put it in `Unfiled` when no collection is chosen; import the entries that have no conflicts and report the rest; let an explicit export replace a bibliography that refs wrote earlier and that nobody has edited since; and handle accented names with care. Moving files arrives in slice 2; until then the closest safe equivalent, copying, is used. The later no-dependency decision settled name handling. Keeping existing citation keys unchanged comes from constitution principle I, not from a quoted owner statement.
+In the first clarification session the owner answered five multiple-choice questions with the letters `b`, `a`, `a`, `b`, and the sentence `a - use a library / package if something small and proven exists and is beneficial. seems like this could be more problematic than it seems on face`. Those letters chose: move a newly downloaded file into the library by default; put it in `Unfiled` when no collection is chosen; import the entries that have no conflicts and report the rest; let an explicit export replace a bibliography that refs wrote earlier and that nobody has edited since; and handle accented names with care. Moving files arrives in slice 3; until then the closest safe equivalent, copying, is used. The later no-dependency decision settled name handling. Keeping existing citation keys unchanged comes from constitution principle I, not from a quoted owner statement.
 
 ## User stories and acceptance
 
@@ -59,7 +52,7 @@ In the first clarification session the owner answered five multiple-choice quest
 | --- | --- | --- |
 | US1 Keep and find references | P1 | Starting with an empty catalog, add one complete and one incomplete reference, correct a field, search for both, and read back their keys, with no project and no network service. A correction based on an out-of-date revision is refused. |
 | US2 Use a bibliography in one paper | P1 | Create a project, cite and uncite sources, export, and render the paper while the catalog is unavailable. Editing the catalog afterwards leaves the exported file untouched until the next export. |
-| US3 Import an existing bibliography | P2 | Import a prepared `.bib` file that contains clean entries, a conflict, and a malformed entry. Every original is kept, the conflict and the malformed entry are reported, importing again creates no duplicates, and an ordinary update settles the conflict. The input file is never changed. |
+| US3 Import references | P2 | Import a prepared `.bib` file that contains clean entries, a conflict, and a malformed entry. Every original is kept, the conflict and the malformed entry are reported, importing again creates no duplicates, and an ordinary update settles the conflict. The input file is never changed. **Slice 2:** the Zotero gate checks the imported library, a repeat creates no duplicates, and persisted conflicts can be inspected and reconciled. |
 | US4 Keep research files | P2 | Link one file without touching it. Copy another into `Unfiled` and see it renamed by the convention. Try the keep-name option, a name collision, a source file that changes during the copy, and an interrupted copy. The original file survives every case. |
 | US5 Recover the catalog | P2 | Take a snapshot, restore it into a second, empty location, open it, and compare IDs, keys, corrections, projects, and the list of files. The snapshot says plainly that the PDFs themselves are not inside it. |
 | US6 See the settings in force | P2 | Show the configuration, catalog, and library locations and every effective setting, even before the catalog exists. An invalid project setting is rejected. If the Casa volume is not mounted, refs reports that and does not create a catalog somewhere else. |
@@ -91,18 +84,20 @@ In the first clarification session the owner answered five multiple-choice quest
 
 ### Importing a bibliography
 
-- FR-018: refs imports `.bib` files, whether they use traditional BibTeX field names (`journal`, `year`, `address`, `school`) or BibLaTeX ones. The exact text of every entry is kept as its original entry. The imported file is never modified.
+- FR-018: refs imports traditional BibTeX and BibLaTeX `.bib` files, preserving exact entry bytes and leaving inputs untouched. **Slice 2:** Zotero input is published API v3 JSON produced by a one-time read-only extractor. Assigned-key precedence is native `citationKey`, Extra `Citation Key:`, then the legacy Better BibTeX table. Extra contributes only the six D4 identifier schemes and the key; all remaining lines stay unmodeled in the original, reported as `Preserved from import: extra`.
 - FR-019: Importing with `--dry-run` shows, entry by entry, the key that will be kept, how the title will be normalized, possible matches with existing sources, conflicts, and anything refs cannot represent. A type of entry that refs does not support is reported as such and is not quietly turned into a different type.
-- FR-020: refs decides that an incoming entry is an existing source only from real evidence, such as the same DOI or ISBN. A similar title is never enough. If the evidence is contradictory, for example the same key with a different DOI, that entry is not applied and the report explains the decision the owner needs to make.
-- FR-021: Importing the same file again creates no duplicate sources or file links. An import never overwrites a value already in the catalog, including a value a person corrected or deliberately cleared. To accept an incoming value, the owner runs an ordinary update. If a bibliography that refs itself exported is imported again, an entry that was simplified on the way out, such as a web page written as `@misc`, may be reported as a conflict; the catalog's richer value is kept.
-- FR-022: Keywords in an imported entry are kept as imported tags. File paths in an entry become links to those files where they are. An import never assigns sources to a project.
-- FR-024: Entries without conflicts are imported straight away. Entries with conflicts and malformed entries are kept as originals, reported with reasons, and left unapplied. The report accounts for every entry in the file, and a partly applied import is reported as partial, not as success. refs records each import run with the file's digest and the counts. After an interruption, importing the same file again is safe.
+- FR-020: Identity evidence, never title similarity alone, establishes a match. Contradictory evidence is reported without automatic merging. **Slice 2, all import formats:** a normalized DOI or ISBN shared with one source binds the entry when type and edition do not contradict. Keep the existing key, record the incoming key as provenance, and report every binding. Title-only matches remain separate sources.
+- FR-021: Re-import creates no duplicate sources or file links. **Slice 2, all import formats:** a bound entry fills absent fields with origin `import`, except deliberate clears. Differing values are reported side by side and retained as incoming evidence; only an explicit update or `import reconcile BATCH --take-incoming KEY[.field]` replaces current values and records a correction. A lossy refs export may still produce a conflict on re-import; richer catalog values remain until an explicit decision.
+- FR-022: Imported keywords remain legacy tags; file paths become links in place. Import never assigns project membership. **Slice 2:** preserve Zotero collection names, hierarchy and memberships verbatim. Link file attachments where they sit, including stored files under the original `storage/<itemKey>/`. URL-only attachments become context, not resources.
+- FR-023: **Slice 2:** Report preservation separately from editable, searchable and exportable content. Do not import annotations or attachment-note outlines; retain them in the archived Zotero data. D2 checked all 246 outline notes for Contents structure and absence of prose, found 245 made entirely of PDF-page links, and confirmed bookmark counts within 10 percent in all 40 sampled PDFs.
+- FR-024: Import accounts for every entry and preserves rejected evidence with reasons. Partial application is reported as partial, not success; interrupted input can be rerun safely. **Slice 2:** persist per-entry status, candidates, conflicts and applied source alongside run counts. `import show` retrieves that report; `import reconcile --take-incoming` applies explicit decisions under FR-021. Nonconflicting entries and safe gap fills can commit while differing values await a decision.
 
 ### Files
 
 - FR-025: A source can have several files of any type, each with a label. A file's location is recorded either as a full path or as a named folder plus a relative path, so that a whole folder can be relocated later by changing one setting.
 - FR-026: refs shows where each file is and whether it can currently be found. Removing a file's link removes only the catalog record. A missing file or folder is reported and nothing is moved or deleted in response.
 - FR-027: `refs open` opens a source's only file, or a file chosen explicitly. When there are several and none was chosen, it lists them instead of guessing. Files are opened in their usual application and never modified.
+- FR-028: **Slice 2:** Import collection hierarchy and source memberships. `collection list` shows the hierarchy with counts; `list` and `search` accept `--collection PATH`. Collection creation, renaming, filing and file moves wait for slice 3.
 - FR-030: In this slice every copy goes into the library's `Unfiled` folder, with no filing decision required.
 - FR-031: A file is either linked where it is or copied into the library. A file supplied together with a new reference is copied into the library by default, which is the slice 1 form of the owner's choice to bring new downloads into the library; an option links it in place instead. Adding a file to an existing source links it by default, and an option copies it in. Before a copy, refs shows the destination and the new name. If the library is not set up or cannot be reached, the command fails and the original file is untouched.
 - FR-032: A file inside the library is managed. A file anywhere else is linked, and refs never moves, renames, or deletes it. Changing where a named folder points never moves a file.
@@ -122,12 +117,14 @@ In the first clarification session the owner answered five multiple-choice quest
 - FR-044: Setting up a catalog is an explicit command, and running it again never overwrites anything. If the chosen catalog location is missing, for example because the volume is not mounted, refs reports that and never starts a catalog elsewhere. If the location cannot be written to, which is normal for a sandboxed agent, the error names the exact path that needs write access. The catalog and its working files are never placed in a folder that a sync service copies.
 - FR-045: A small `.refs.toml` file in a paper's folder may name the project and the export's output file and options. It cannot change the catalog location, the library, or the naming rules.
 - FR-046: An unknown or invalid setting is reported, with the file it came from, before anything is changed. Changed preferences apply from then on; keys, filenames, and hand-made corrections already in the catalog stay as they are.
-- FR-047: Every bibliographic fact has exactly one place where it is stored and edited, in a structure shaped like CSL-JSON, whichever route it arrived by. A source may also carry a label with its more specific original type, such as a Zotero or BibLaTeX type. Four extra fields exist because CSL has no place for them: a patent's assignees, its application number, its priority date, and a journal's series. Everything else from an import remains readable in the original entry.
+- FR-047: Every bibliographic fact has exactly one place where it is stored and edited, in a structure shaped like CSL-JSON, whichever route it arrived by. A source may also carry a label with its more specific original type, such as a Zotero or BibLaTeX type. Four extra fields exist because CSL has no place for them: a patent's assignees, its application number, its priority date, and a journal's series. **Slice 2** adds arXiv and OCLC identifiers through the identifiers extension under D4. Other unmodeled input remains in the original entry.
 - FR-048: Each supported field mapping states which input format and which type of entry it applies to, the field it reads, how the value is transformed, what happens on a conflict, how it is written in the portable bibliography, and the test that proves it. The same reference entered by different routes must end up as the same record. A correction or a deliberately cleared field always wins over the original entry.
+
+- FR-049: **Slice 2:** Import child notes as searchable context with origin `import` and keep related-item pairs in `source_relations`. Zotero item key and library URI are provenance only, never authority to write to Zotero.
 
 ## Deferred identifiers
 
-These requirement numbers belong to later slices and are not part of slice 1: FR-023 and FR-049 (Zotero migration, including notes and related items), FR-028 and FR-029 (collections), FR-042 (a complete export of the library in an open format), and the parts of FR-018, FR-022, FR-030 to FR-034, FR-040, and FR-041 that concern Zotero, collections, moving files, and a restore command. Their earlier text is in Git commit 4209e5d. The [plan](plan.md#deferred-work) keeps the list of deferred work.
+FR-029 and the filing, move and reorganize portions of FR-030–034 belong to slice 3. FR-042 (logical library export), file-inclusive backup in FR-040 and a restore command in FR-041 remain deferred. See the [ledger](plan.md#deferred-work).
 
 ## Success criteria
 
@@ -147,4 +144,4 @@ These requirement numbers belong to later slices and are not part of slice 1: FR
 - A-04: How the configuration file, the catalog location, and a project's `.refs.toml` take precedence over one another is defined in the [CLI and configuration contract](contracts/cli.md).
 - A-12: Agents may submit CSL-JSON now. Writing CSL-JSON, and writing Zotero's JSON format, are on the backlog.
 
-This is a design, not software that has passed these criteria. Nothing here authorizes migrating the real Zotero library, moving or renaming real files, or replacing a real manuscript's bibliography. The owner chooses the paper for the first trial. refs is designed to survive being interrupted or killed at any moment on a local disk; protection against sudden power loss is best effort and its limits are stated in the [files and recovery contract](contracts/files-and-recovery.md).
+The real slice 2 import is a later, owner-authorized execution step. This document does not execute D3’s reset or authorize file movement. refs is designed to survive being interrupted or killed at any moment on a local disk; protection against sudden power loss is best effort and its limits are stated in the [files and recovery contract](contracts/files-and-recovery.md).

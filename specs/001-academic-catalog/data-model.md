@@ -1,6 +1,6 @@
-# Data Model: Slice 1
+# Data Model: Slices 1 and 2
 
-**Implementation proposal, 2026-09-21.** SQLite is the sole authority. Ten logical tables; no operations, per-entry status, collection, waiver, projection-history or field-provenance tables. FTS shadow tables are implementation internals.
+SQLite is the sole authority. Slice 1 has ten logical tables. Slice 2 adds four: import_entries, collections, source_collections and source_relations. FTS shadow tables are internal. No new runtime dependency is needed.
 
 | Table | Stored values and invariants |
 | --- | --- |
@@ -12,8 +12,12 @@
 | projects | Stable ID, unique nonblank name, description and revision. |
 | project_sources | Unique project/source pair and cited boolean. Every slice 1 row has cited=true. Cite inserts, uncite deletes; repeats are no-ops. Keep the column for future background membership. |
 | export_targets | Unique canonical destination, project/profile fingerprint and last successful byte digest. A nullable pending_digest records the intended output before publication. The baseline is nullable until first publication. Promote a matching pending digest on the next export; otherwise advance the baseline only after verified publication. No operation ID or per-source projection. |
-| imports | One row per actual import run: ID, origin, exact file digest, start/finish timestamps and aggregate counts (applied/unchanged/conflict/invalid); incomplete finish stays visible after interruption. No per-entry state or saved replay outcome. |
+| imports | One row per actual import run: ID, origin, exact file digest, start/finish timestamps and aggregate counts (applied/unchanged/conflict/invalid); incomplete finish stays visible after interruption. Slice 2 entry accounting is in import_entries; reruns classify input again rather than replaying saved responses. |
 | search projection | Derived FTS5 metadata/context/legacy-tag text keyed by source ID; matching fields returned with current source revision. Rebuildable, never an authority or file-content index. |
+| import_entries — slice 2 | Run ID and entry locator reference preserved input; status is applied, unchanged, conflict or invalid. Store candidate source IDs, conflicting current/incoming values, reviewed revision and applied source ID. Persist reconciliation decisions without changing originals. |
+| collections — slice 2 | ID, parent ID, verbatim name, hierarchy path and revision. Preserve the imported library/item identity. No folder mapping or filing until slice 3. |
+| source_collections — slice 2 | Unique source/collection pair, preserving every imported membership independently of projects and file placement. |
+| source_relations — slice 2 | Deduplicated related-item pairs with origin identities; retain unresolved endpoints as evidence rather than inventing sources. No relationship editor. |
 
 ## Authority and mutations
 
@@ -25,9 +29,9 @@ Read-only commands do not create/migrate or perform writable hot-journal recover
 
 ## Import identity and re-runs
 
-Inspect explicit source/origin identity and persistent identifiers together; contradictory signals or distinct editions conflict. A key alone is a candidate, not authority to overwrite. Exact previously applied original-entry association or a unique consistent identity establishes a repeat. A new accepted entry, its evidence association and identities commit together. Conflicts/invalid entries retain raw evidence without changing current source values; the run report supplies per-entry reasons and may be saved by the caller. Aggregate counts commit with each processed entry. After interruption rerun the file and classify entries again; do not replay saved results.
+The [record contract](contracts/records.md#identity-and-non-overwriting-import) governs binding, gap filling and explicit corrections for every input format. Origin identity is unique by namespace, library_uri and item_key. Slice 2 preserves per-entry accounting in the same transaction as source changes and aggregate counts. Interrupted runs retain their completed entries; reruns classify the input without duplicating evidence or associations. Removed sources never reactivate through import.
 
-Plain update settles a metadata disagreement, marking corrected fields. Re-running never reverses the correction. A same-key identity collision can be addressed through ordinary add with a distinct explicit key or key set after inspection; no general merge/reconcile surface is implied. A removed-source match reports source_removed, never recreates it.
+Reconciliation rechecks the candidate and reviewed revision, applies only selected incoming values, and marks corrections. Preserve both original evidence and the decision. Collections describe source membership, not filing; imported files remain linked where they are.
 
 ## Ownership, removal and recovery
 
