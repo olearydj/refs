@@ -375,3 +375,89 @@ def associate(connection, bundle: dict, entry: dict, source_id: str, collections
         except RefError as exc:
             warnings.append(exc.issue)
     return resources, warnings
+
+
+def inspect_batch(connection, batch: str, status=None) -> dict:
+    run = connection.execute('SELECT * FROM imports WHERE id=?', (batch,)).fetchone()
+    if run is None:
+        raise RefError('import_missing', 'Use the import_id returned by import')
+    if status is not None and status not in ('applied','unchanged','conflict','invalid'):
+        raise RefError('invalid_status', 'Choose applied, unchanged, conflict or invalid', 2)
+    entries, revisions = [], []
+    for row in connection.execute('SELECT * FROM import_entries WHERE import_id=? ORDER BY rowid', (batch,)):
+        entry = json.loads(row['payload_json'])
+        current = sources.record(connection,row['source_id']) if row['source_id'] else None
+        revision = current['revision'] if current else None
+        revisions.append((row['id'], row['source_id'], revision))
+        entry.update(entry_id=row['id'], status=row['status'], source_revision=revision,
+                     candidates=json.loads(row['candidates_json']), decisions=json.loads(row['decisions_json']))
+        if status is None or status == row['status']:
+            entries.append(entry)
+    # A read-only review token binds the persisted batch version and observed sources.
+    token = int.from_bytes(hashlib.sha256(json.dumps([run['revision'],revisions]).encode()).digest()[:8], 'big')
+    return dict(import_id=batch, origin=run['origin'], batch_revision=token, entries=entries,
+                counts={name:run[name] for name in ('applied','unchanged','conflict','invalid')})
+
+
+def show(catalog: Path, batch: str, status=None) -> dict:
+    with connect(catalog) as connection:
+        return inspect_batch(connection,batch,status)
+
+
+def reconcile(catalog: Path, batch: str, selectors: list[str], *, execute=False, revision=None) -> dict:
+    if not selectors:
+        raise RefError('invalid_selection', 'Supply at least one --take-incoming KEY[.field]', 2)
+    if execute and revision is None:
+        raise RefError('revision_required', 'Preview the batch and supply --if-batch-revision', 2)
+    with connect(catalog,write=execute) as connection:
+        review = inspect_batch(connection,batch)
+        if execute and review['batch_revision'] != revision:
+            raise RefError('stale_revision', 'Preview the batch again; its entries or source revisions changed', details={'expected':revision,'actual':review['batch_revision']})
+        selected: dict[str, set[str]] = {}
+        for selector in selectors:
+            exact = [entry for entry in review['entries'] if entry.get('citation_key') == selector]
+            candidates = exact or [entry for entry in review['entries'] if entry.get('citation_key') and selector.startswith(entry['citation_key']+'.')]
+            if len(candidates) != 1:
+                raise RefError('ambiguous_selection', 'Use one unambiguous batch citation key and canonical field path', details={'selector':selector})
+            entry = candidates[0]
+            if not entry.get('source_id') or not entry.get('incoming') or not entry.get('binding',{}).get('bound'):
+                raise RefError('identity_conflict', 'Inspect identity or invalid-entry conflicts before accepting metadata', details={'selector':selector})
+            current = sources.record(connection,entry['source_id'])
+            if current['state'] != 'active':
+                raise RefError('source_removed', 'Reactivate the source before reconciling')
+            available = [item['path'] for item in entry.get('binding',{}).get('conflicts',[])]
+            requested = available if exact else [selector[len(entry['citation_key'])+1:]]
+            if any(path not in available for path in requested):
+                raise RefError('invalid_selection', 'Select a conflicting canonical path from import show', 2)
+            selected.setdefault(entry['entry_id'],set()).update(requested)
+        proposals = []
+        for entry in review['entries']:
+            if entry['entry_id'] not in selected:
+                continue
+            current = sources.record(connection,entry['source_id'])
+            canonical = {key:current[key] for key in SourceCreate.model_fields if key in current}
+            canonical = json.loads(json.dumps(canonical))
+            decisions = []
+            for path in sorted(selected[entry['entry_id']]):
+                incoming, previous = value_at(entry['incoming'],path), value_at(current,path)
+                if incoming != previous:
+                    sources.patch_path(canonical,path,incoming,clear=False)
+                    decisions.append(dict(path=path,current=previous,incoming=incoming,action='take_incoming'))
+            key = canonical.pop('citation_key')
+            try:
+                canonical = SourceCreate.model_validate(canonical).canonical()
+            except ValidationError as exc:
+                raise RefError('invalid_selection', 'Selected values do not form a valid source; inspect dependent fields', 2) from exc
+            canonical['citation_key'] = key
+            remaining = [item for item in entry.get('binding',{}).get('conflicts',[]) if value_at(canonical,item['path']) != item['incoming']]
+            proposals.append(dict(citation_key=entry['citation_key'],source_id=current['id'],source_revision=current['revision'],decisions=decisions,remaining_conflicts=remaining))
+            if execute and (decisions or entry['status']=='conflict' and not remaining):
+                if decisions:
+                    sources.store_record(connection,current,canonical,list(dict.fromkeys(current['corrected_fields']+[item['path'] for item in decisions])))
+                status = 'conflict' if remaining else 'applied'
+                saved = json.loads(connection.execute('SELECT decisions_json FROM import_entries WHERE id=?',(entry['entry_id'],)).fetchone()[0])
+                connection.execute('UPDATE import_entries SET status=?,conflicts_json=?,source_revision=?,decisions_json=? WHERE id=?',
+                                   (status,json.dumps(remaining),sources.record(connection,current['id'])['revision'],json.dumps(saved+decisions),entry['entry_id']))
+                connection.execute(f'UPDATE imports SET {entry["status"]}={entry["status"]}-1, {status}={status}+1, revision=revision+1 WHERE id=?' if status != entry['status'] else 'UPDATE imports SET revision=revision+1 WHERE id=?', (batch,))
+                changed(connection)
+        return dict(import_id=batch,batch_revision=inspect_batch(connection,batch)['batch_revision'],dry_run=not execute,entries=proposals)

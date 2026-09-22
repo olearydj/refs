@@ -317,3 +317,16 @@ def main() -> None:
         raise SystemExit(error.exit_code) from None
     except KeyboardInterrupt:
         raise SystemExit(130) from None
+
+
+@import_app.command('show')
+def import_show(ctx: typer.Context, batch: str, status: Annotated[str | None, typer.Option()] = None):
+    report(ctx,'import show',importing.show(settings(ctx).catalog_path(),batch,status))
+
+
+@import_app.command('reconcile')
+def import_reconcile(ctx: typer.Context, batch: str,
+                     take_incoming: Annotated[list[str] | None, typer.Option()] = None,
+                     execute: Annotated[bool, typer.Option()] = False,
+                     if_batch_revision: Annotated[int | None, typer.Option()] = None):
+    report(ctx,'import reconcile',importing.reconcile(settings(ctx).catalog_path(),batch,take_incoming or [],execute=execute,revision=if_batch_revision))

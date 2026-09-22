@@ -67,6 +67,8 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
         'resource unlink': lambda: f"Resource {data['id']} is already unlinked" if data.get('unchanged') else f"Unlinked {data.get('resolved_path') or data.get('path') or data.get('relative')} from {key}",
         'resource check': lambda: '\n'.join(f"{item['status']}: {item.get('resolved_path') or item.get('relative') or item['id']}" for item in data['items']) or '(no resources)',
         'open': lambda: 'Choose a resource with --resource:\n' + '\n'.join(f"{item['id']}: {item.get('resolved_path') or item.get('relative')}" for item in data['choices']) if 'choices' in data else f"Opened {data['path']} for {key}",
+        'import show': lambda: f"Import {data['import_id']} ({len(data['entries'])} entries)",
+        'import reconcile': lambda: f"Reconciled import {data['import_id']} ({len(data['entries'])} selected entries)",
         'import': lambda: f"Imported {data['counts']['applied']}, unchanged {data['counts']['unchanged']}, conflicts {data['counts']['conflict']}, invalid {data['counts']['invalid']} from {data['input']}",
         'export': lambda: f"Wrote {data['output']} (0 entries)" if not data['count'] else f"Wrote {data['output']} ({data['count']} entries, {len(warnings)} warnings)",
         'show': lambda: readable(command, data),
