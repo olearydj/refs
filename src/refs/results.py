@@ -33,7 +33,7 @@ def emit(command: str, data: dict[str, Any] | None = None, *,
         if error.issue['code'] == 'export_blocked':
             print(f"Not written: {error.issue['path'] or '(destination)'}", file=sys.stderr)
             for entry in error.issue['details'].get('entries', []):
-                print(f"{entry.get('details', {}).get('citation_key', '(source)')}: {entry['message']}", file=sys.stderr)
+                print(f"{entry.get('citation_key') or entry.get('details', {}).get('citation_key', '(source)')}: {entry['message']}", file=sys.stderr)
         if error.data and error.data.get('outcome') == 'needs_attention':
             print(f"Needs attention: {error.data.get('citation_key') or '(input)'}", file=sys.stderr)
         print(' '.join(error.issue['message'].splitlines()), file=sys.stderr)

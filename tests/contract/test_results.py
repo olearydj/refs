@@ -24,3 +24,11 @@ def test_error_envelope(exit_code, capsys):
 def test_human_output(capsys):
     emit("project create", {"name": "café"})
     assert "café" in capsys.readouterr().out
+
+
+
+def test_export_block_names_the_citation_key(capsys):
+    from refs.results import RefError, emit
+    error = RefError('export_blocked','Correct the date',path='synthetic.bib',details={'entries':[{'citation_key':'smith-2024','message':'Issued range cannot be projected'}]})
+    emit('export',error=error)
+    assert 'smith-2024: Issued range cannot be projected' in capsys.readouterr().err
