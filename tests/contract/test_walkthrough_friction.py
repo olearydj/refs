@@ -33,3 +33,17 @@ def test_show_exposes_all_populated_metadata(human, initialized, reference_path)
         assert f'{field}: {value}' in lines
     labels=[line.split(':')[0] for line in lines[5:lines.index('Files: (none)')]]
     assert labels == sorted(labels)
+
+
+
+def test_show_reports_preserved_howpublished(human, initialized, tmp_path):
+    path=tmp_path/'entry.bib'
+    path.write_text('@misc{example,title={Study},howpublished={arXiv:2407.01502},year={2024},author={Smith, Alex}}')
+    initialized('import','--input',path)
+    text=human('show','example')
+    assert 'Limitations:\n  Preserved from import: howpublished' in text
+    initialized('project','create','paper')
+    initialized('project','cite','paper','example')
+    report=initialized('export','--project','paper','--output',tmp_path/'out.bib')
+    assert 'howpublished = {arXiv:2407.01502}' in (tmp_path/'out.bib').read_text()
+    assert not any(w['code']=='unassessed_import' for w in report['warnings'])

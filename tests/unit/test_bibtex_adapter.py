@@ -67,7 +67,7 @@ def test_show_surfaces_import_limitations():
     from refs.display import readable
     value = parse(b'@book{x,title={Study},organization={Institute}}')
     record = value['source'].canonical() | {'limitations':value['limitations']}
-    assert 'Limitations: organization:' in readable('show', record)
+    assert 'Limitations:\n  organization:' in readable('show', record)
 
 
 def test_relax_in_accented_creator_is_not_a_lost_name():

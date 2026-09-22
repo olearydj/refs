@@ -100,6 +100,8 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
         for notice in record.get('_projection_notices', []):
             assess(notice['code'], 'documented_fallback', notice['message'], notice['path'])
         for limitation in record.get('limitations', []):
+            if limitation['reason'].startswith('Preserved from import:'):
+                continue
             if limitation['field'] == 'year' and metadata.get('issued', {}).get('literal'):
                 continue
             assess('unassessed_import', 'documented_fallback', f"{limitation['field']}: {limitation['reason']}", limitation['field'])

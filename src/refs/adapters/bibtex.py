@@ -65,6 +65,10 @@ def partition(raw: bytes) -> list[dict]:
     return result
 
 
+
+def preserved_fields(raw: bytes) -> set[str]:
+    return {field.key.lower() for entry in bibtexparser.parse_string(raw.decode('utf-8')).entries for field in entry.fields if field.key.lower() == 'howpublished'}
+
 def decode(value: str) -> str:
     # Unknown macros must not disappear through the text decoder.
     allowed = {'relax', 'textit', 'textbf', 'emph', 'textrm', 'texttt', 'textnormal', 'LaTeX', 'TeX', 'ae', 'AE', 'oe', 'OE', 'aa', 'AA', 'o', 'O', 'l', 'L', 'ss', 'i', 'j', 'textbackslash', 'textasciitilde', 'textasciicircum', 'textbraceleft', 'textbraceright', 'c', 'v', 'u', 'H', 'k', 'r', 'b', 'd', 't'}

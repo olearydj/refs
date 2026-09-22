@@ -32,7 +32,8 @@ def readable(command: str, data: dict) -> str:
             if metadata[field] not in (None, '', [], {}):
                 lines.append(f'{field}: {metadata_text(metadata[field])}')
         if data.get('limitations'):
-            lines.append('Limitations: ' + '; '.join(f"{item['field']}: {item['reason']}" for item in data['limitations']))
+            lines.append('Limitations:')
+            lines.extend('  ' + (item['reason'] if item['reason'].startswith('Preserved from import:') else f"{item['field']}: {item['reason']}") for item in data['limitations'])
         resources = data.get('resources', [])
         lines.append('Files:' if resources else 'Files: (none)')
         for resource in resources:
