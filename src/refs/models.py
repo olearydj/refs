@@ -24,6 +24,20 @@ from refs.results import RefError
 Text = Annotated[str, StringConstraints(min_length=1, pattern=r"\S")]
 
 
+def normalize_doi(value: str) -> str:
+    return re.sub(r'^(?:https?://(?:dx\.)?doi\.org/|doi:\s*)', '', value.strip(), flags=re.I).lower()
+
+
+def normalize_arxiv(value: str) -> str:
+    value = re.sub(r'^arxiv:\s*','',value.strip(),flags=re.I)
+    return re.sub(r'\s*\[[^\]]+\]\s*$','',value).strip()
+
+
+def doi_arxiv(value: str) -> str | None:
+    doi = normalize_doi(value)
+    return normalize_arxiv(doi[len('10.48550/arxiv.'):]) if doi.startswith('10.48550/arxiv.') else None
+
+
 class StrictModel(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
 
@@ -90,6 +104,8 @@ class MetadataBase(StrictModel):
         if not isinstance(value, dict):
             return value
         value = dict(value)
+        if isinstance(value.get("DOI"), str):
+            value["DOI"] = normalize_doi(value["DOI"])
         kind = value.setdefault("type", "document")
         if kind not in REGISTRY["core_fields"]["type"]["schema"]["enum"]:
             raise ValueError("Unsupported source type")
@@ -229,6 +245,11 @@ class Identifiers(StrictModel):
     arxiv: Text | None = None
     oclc: Text | None = None
 
+    @field_validator('arxiv',mode='before')
+    @classmethod
+    def normalized_arxiv(cls,value):
+        return normalize_arxiv(value) if isinstance(value,str) else value
+
 
 class Extensions(StrictModel):
     identifiers: Identifiers | None = None
@@ -284,6 +305,35 @@ class SourceCreate(StrictModel):
     title_parts: TitleParts = Field(default_factory=TitleParts)
     legacy_tags: list[Text] = Field(default_factory=list)
     key_author: Text | None = None
+
+    @model_validator(mode='before')
+    @classmethod
+    def collapse_identifier_aliases(cls,value):
+        if not isinstance(value,dict) or not isinstance(value.get('metadata'),dict):
+            return value
+        value = dict(value)
+        metadata = value['metadata'] = dict(value['metadata'])
+        if not isinstance(value.get('extensions',{}),dict):
+            return value
+        extensions = value['extensions'] = dict(value.get('extensions',{}))
+        if not isinstance(extensions.get('identifiers',{}),dict):
+            return value
+        identifiers = dict(extensions.get('identifiers',{}))
+        explicit = identifiers.get('arxiv')
+        if isinstance(explicit,str):
+            identifiers['arxiv'] = normalize_arxiv(explicit)
+        number = metadata.get('number')
+        if metadata.get('type') in ('article','manuscript') and isinstance(number,str) and str(metadata.get('archive','')).casefold()=='arxiv':
+            number = metadata['number'] = normalize_arxiv(number)
+            if not explicit or identifiers.get('arxiv') == number:
+                identifiers['arxiv'] = number
+                metadata.pop('number')
+        doi = metadata.get('DOI')
+        if isinstance(doi,str) and (derived := doi_arxiv(doi)) and not identifiers.get('arxiv'):
+            identifiers['arxiv'] = derived
+        if identifiers:
+            extensions['identifiers'] = identifiers
+        return value
 
     @field_validator("key_author")
     @classmethod

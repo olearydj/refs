@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import re
 import sqlite3
 from pathlib import Path
 
@@ -21,6 +22,16 @@ SCHEMES = {"arxiv", "doi", "pmid", "pmcid", "oclc", "issn"}
 
 def ro(path):
     return sqlite3.connect(Path(path).resolve().as_uri() + "?mode=ro", uri=True)
+
+
+def normalized_identifier(scheme, value):
+    # Independent gate oracle for the owner's normalization decision.
+    if scheme == 'doi':
+        return re.sub(r'^(?:https?://(?:dx\.)?doi\.org/|doi:\s*)', '', value.strip(), flags=re.I).lower()
+    if scheme == 'arxiv':
+        value = re.sub(r'^arxiv:\s*', '', value.strip(), flags=re.I)
+        return re.sub(r'\s*\[[^]]+\]$', '', value).strip()
+    return value
 
 
 def expected(database, base_path=None, legacy=None):
@@ -115,7 +126,7 @@ def expected(database, base_path=None, legacy=None):
                 files=set(files),
                 urls=urls,
                 notes=notes,
-                ids={(k, v) for k, v in extra.items() if k in SCHEMES},
+                ids={(k, normalized_identifier(k,v)) for k, v in extra.items() if k in SCHEMES},
             )
         return uri, result, set(paths.values())
 

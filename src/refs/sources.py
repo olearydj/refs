@@ -11,7 +11,7 @@ from pydantic import ValidationError
 from refs import naming
 from refs.adapters.search_sqlite import refresh
 from refs.catalog import changed, connect
-from refs.models import REGISTRY, SourceCreate, parse
+from refs.models import REGISTRY, SourceCreate, normalize_doi, parse
 from refs.results import RefError
 
 
@@ -61,11 +61,7 @@ def show(catalog: Path, reference: str) -> dict:
 
 
 def doi_identity(value: str) -> str:
-    value = value.strip().casefold()
-    for prefix in ("https://doi.org/", "http://doi.org/", "doi:"):
-        if value.startswith(prefix):
-            return value[len(prefix):].strip()
-    return value
+    return normalize_doi(value)
 
 
 def bindings(source: SourceCreate) -> list[tuple[str, str, str]]:
@@ -198,7 +194,7 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
         raise RefError('invalid_patch', str(exc), 2) from exc
     with connect(catalog, write=not dry_run) as connection:
         current = checked_record(connection, reference, revision)
-        canonical = {name: current[name] for name in SourceCreate.model_fields if name in current}
+        canonical = json.loads(json.dumps({name: current[name] for name in SourceCreate.model_fields if name in current}))
         original = json.loads(json.dumps(canonical))
         for path, value in patch_model.set.items():
             patch_path(canonical, path, value, clear=False)

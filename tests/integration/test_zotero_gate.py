@@ -167,3 +167,20 @@ def test_complete_extractor_importer_gate(initialized,tmp_path,zotero_fixture):
     repeated=importing.run_zotero(tmp_path/'cat',folder,settings=selected)
     assert repeated['counts']==dict(applied=0,unchanged=6,conflict=0,invalid=0)
     print(gate)
+
+
+def test_gate_normalization_preserves_version_and_identity(initialized,tmp_path,zotero_fixture):
+    with sqlite3.connect(zotero_fixture) as c:
+        row=c.execute("SELECT d.valueID,v.value FROM itemData d JOIN fields f USING(fieldID) JOIN itemDataValues v USING(valueID) WHERE d.itemID=1 AND f.fieldName='extra'").fetchone()
+        lines=[line for line in row[1].splitlines() if not line.lower().startswith(('arxiv:','doi:'))]
+        c.execute('UPDATE itemDataValues SET value=? WHERE valueID=?',('\n'.join(lines+['arxiv: arXiv:2407.01502v2 [cs.AI]','doi: https://doi.org/10.1234/Mixed']),row[0]))
+    catalog=populated(initialized,tmp_path,zotero_fixture)
+    def check():
+        return GATE['compare'](catalog,zotero_fixture,zotero_fixture.parent/'base')
+    assert check()['summary']['findings']==0
+    with sqlite3.connect(catalog/'catalog.sqlite') as c:
+        c.execute("UPDATE sources SET details_json=json_set(details_json,'$.extensions.identifiers.arxiv','2407.01502') WHERE citation_key='native1'")
+    assert 'identifier_arxiv' in {item['kind'] for item in check()['findings']}
+    with sqlite3.connect(catalog/'catalog.sqlite') as c:
+        c.execute("UPDATE sources SET metadata_json=json_set(metadata_json,'$.DOI','10.1234/different') WHERE citation_key='native1'")
+    assert 'identifier_doi' in {item['kind'] for item in check()['findings']}

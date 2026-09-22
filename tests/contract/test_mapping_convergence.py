@@ -20,6 +20,10 @@ def test_bib_refs_csl_convergence_and_clear(initialized, tmp_path, case):
         assert 'note' not in proposal['metadata']
         assert case['expected'] in case['bib']  # Preserved-only; actual export is tested with original bytes.
         return
+    if case['field'] == 'eprint':
+        assert proposal['extensions']['identifiers']['arxiv'] == case['expected']
+        assert 'number' not in proposal['metadata']
+        return
     assert proposal['metadata'][case['path']] == case['expected']
     expected = proposal['metadata']
     assert csl.parse(json.dumps(expected).encode()).canonical()['metadata'] == expected
@@ -28,7 +32,7 @@ def test_bib_refs_csl_convergence_and_clear(initialized, tmp_path, case):
     proposal['metadata']['URL'] = 'https://example.org/recognizable'
     created = sources.add(tmp_path/'cat', json.dumps(proposal).encode(), 'fixture.json')
     field = 'metadata.'+case['path']
-    replacement = {'date-parts': [[2025]]} if isinstance(case['expected'], dict) else [{'family':'Changed'}] if isinstance(case['expected'], list) else 3 if isinstance(case['expected'], int) else 'https://example.org/changed' if case['path']=='URL' else 'de' if case['path']=='language' else 'Changed Value'
+    replacement = {'date-parts': [[2025]]} if isinstance(case['expected'], dict) else [{'family':'Changed'}] if isinstance(case['expected'], list) else 3 if isinstance(case['expected'], int) else 'https://example.org/changed' if case['path']=='URL' else 'de' if case['path']=='language' else '10.1000/changed' if case['path']=='DOI' else 'Changed Value'
     edited = sources.update(tmp_path/'cat', created['id'], {'schema_version':'1.0','set':{field:replacement}}, created['revision'])
     assert edited['metadata'][case['path']] == replacement
     created = edited

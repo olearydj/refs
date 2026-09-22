@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 
 from pydantic import ValidationError
 
-from refs.models import REGISTRY, Date, SourceCreate
+from refs.models import REGISTRY, Date, SourceCreate, normalize_arxiv, normalize_doi
 from refs.results import RefError
 
 CHILDREN = {'attachment', 'note', 'annotation'}
@@ -71,6 +71,10 @@ def read(directory: Path) -> dict:
 
 
 def assign(target: dict, path: str, value) -> None:
+    if path == 'metadata.DOI':
+        value = normalize_doi(value)
+    elif path == 'extensions.identifiers.arxiv':
+        value = normalize_arxiv(value)
     parts = path.split('.')
     for part in parts[:-1]:
         target = target.setdefault(part, {})

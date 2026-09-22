@@ -11,7 +11,7 @@ from pydantic import ValidationError
 
 from refs import files, projects, sources
 from refs.catalog import changed, connect
-from refs.models import SourceCreate
+from refs.models import SourceCreate, doi_arxiv, normalize_arxiv, normalize_doi
 from refs.results import RefError
 
 PROFILE = "portable-bibtex-v1"
@@ -109,6 +109,10 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
         protection = value.get('title_protection', {})
 
         def put(target: str, text, *, literal: bool = False) -> None:
+            if target == 'doi':
+                text = normalize_doi(str(text))
+            elif target == 'eprint' and (str(metadata.get('archive','')).casefold()=='arxiv' or value.get('extensions',{}).get('identifiers',{}).get('arxiv')):
+                text = normalize_arxiv(str(text))
             rendered = str(text) if literal else tex(str(text))
             if target in fields and fields[target] != rendered:
                 assess('work_identity_changed', 'blocking', f'Two facts compete for {target}', target)
@@ -218,7 +222,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             if kind in ('article', 'manuscript'):
                 copy('archive', 'archiveprefix')
                 copy('number', 'eprint')
-                if metadata.get('archive') or metadata.get('number'):
+                if (metadata.get('archive') or metadata.get('number')) and not (str(metadata.get('archive','')).casefold()=='arxiv' and value.get('extensions',{}).get('identifiers',{}).get('arxiv')):
                     notes.append(' '.join(str(metadata.get(field, '')) for field in ('archive', 'number')).strip())
                 if metadata.get('genre'):
                     notes.append(str(metadata['genre']))
@@ -273,6 +277,8 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                     if extension.get('arxiv'):
                         arxiv = extension['arxiv']
                         put('eprint', arxiv)
+                        if (derived := doi_arxiv(str(metadata.get('DOI','')))):
+                            put('eprint',derived)
                         put('eprinttype', 'arxiv')
                         if entry_type in ('misc', 'unpublished') and arxiv not in record.get('_howpublished', ''):
                             notes.append('arXiv:' + arxiv)

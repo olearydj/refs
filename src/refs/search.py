@@ -5,6 +5,7 @@ from pathlib import Path
 from refs import collections, naming, projects, sources
 from refs.adapters.search_sqlite import matches
 from refs.catalog import connect
+from refs.models import normalize_arxiv
 from refs.results import RefError
 
 
@@ -37,7 +38,7 @@ def retrieve(catalog: Path, query: str | None = None, *, project: str | None = N
                         found.insert(0, dict(field='metadata.' + field, origin='metadata', text=stored))
                         exact = True
                 for scheme, stored in record.get('extensions', {}).get('identifiers', {}).items():
-                    if query == stored:
+                    if (normalize_arxiv(query) if scheme=='arxiv' else query) == stored:
                         found.insert(0, dict(field='extensions.identifiers.' + scheme, origin='metadata', text=stored))
                         exact = True
                 if not found:

@@ -199,8 +199,8 @@
     "field": "eprint",
     "type": "unpublished",
     "path": "number",
-    "expected": "Distinct Value",
-    "bib": "@unpublished{fixture,title={Fixture Title},archiveprefix={arXiv},eprint={Distinct Value}}"
+    "expected": "2407.01502v2",
+    "bib": "@unpublished{fixture,title={Fixture Title},archiveprefix={arXiv},eprint={2407.01502v2}}"
   },
   {
     "field": "archiveprefix",
