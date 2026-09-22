@@ -142,3 +142,14 @@ def test_unlink_previews_without_revision_and_is_idempotent(human, initialized, 
     assert initialized('show',source['id'])['data']['resources']==[]
     assert 'already unlinked' in human('resource','unlink',resource['id'],'--execute')
     assert path.read_bytes()==b'untouched original'
+
+
+def test_shared_configuration_writer_preserves_nested_values():
+    import tomllib
+
+    from refs.config import toml_text
+    values={'schema_version':1, 'catalog':{'path':'/temporary/catalog'}, 'keys':{'stopwords':['a','is'], 'corporate_aliases':{'Research and Design':'rnd','Üniversity':'uni'}}}
+    text=toml_text(values)
+    assert text.startswith('schema_version = 1\n[catalog]\npath = ')
+    assert '[keys.corporate_aliases]' in text
+    assert tomllib.loads(text)==values

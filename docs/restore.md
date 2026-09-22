@@ -11,12 +11,12 @@ uv run --locked python restore_snapshot.py "$SNAPSHOT" "$SECOND_HOME"
 ```
 
 ```python restore
-import json
 import shutil
 import sys
 import tomllib
 from pathlib import Path
 from refs import files, recovery
+from refs.config import toml_text
 
 snapshot = Path(sys.argv[1]).absolute()
 home = Path(sys.argv[2]).absolute()
@@ -48,17 +48,9 @@ if files.hash_file(database) != manifest["members"]["catalog.sqlite"]["sha256"]:
 recovery.validate_database(database)
 values.setdefault("catalog", {})["path"] = str(catalog)
 
-def toml_lines(table, prefix=()):
-    lines = ["[" + ".".join(json.dumps(key) for key in prefix) + "]"] if prefix else []
-    lines += [json.dumps(key) + " = " + json.dumps(value) for key, value in table.items() if not isinstance(value, dict)]
-    for key, value in table.items():
-        if isinstance(value, dict):
-            lines += toml_lines(value, (*prefix, key))
-    return lines
-
 with (home / "config.toml").open("x") as output:
     (home / "config.toml").chmod(0o600)
-    output.write("\n".join(toml_lines(values)) + "\n")
+    output.write(toml_text(values))
 (catalog / "files.lock").touch(mode=0o600, exist_ok=False)
 (catalog / "ready").touch(mode=0o600, exist_ok=False)
 print("Restored catalog at", catalog)

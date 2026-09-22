@@ -1,6 +1,7 @@
 """Explicit path selection without creating data directories."""
 
 import copy
+import json
 import os
 import re
 import tomllib
@@ -9,6 +10,22 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from refs.results import RefError
+
+
+def toml_text(values: dict) -> str:
+    """Write refs configuration tables with bare keys wherever TOML permits."""
+    def key(value):
+        return value if re.fullmatch(r'[A-Za-z0-9_-]+', value) else json.dumps(value)
+
+    def lines(table, prefix=()):
+        output = ['[' + '.'.join(key(part) for part in prefix) + ']'] if prefix else []
+        output += [key(name) + ' = ' + json.dumps(value, ensure_ascii=False) for name, value in table.items() if not isinstance(value, dict)]
+        for name, value in table.items():
+            if isinstance(value, dict):
+                output += lines(value, (*prefix, name))
+        return output
+
+    return '\n'.join(lines(values)) + '\n'
 
 
 def absolute(value: str, base: Path | None = None) -> Path:

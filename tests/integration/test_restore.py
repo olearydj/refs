@@ -36,6 +36,7 @@ def test_documented_restore_and_all_tables(initialized,tmp_path,reference_path):
     home=tmp_path/'restored'
     result=run_restore(snapshot,home)
     assert result.returncode==0,result.stderr
+    assert (home/'config.toml').read_text()==(snapshot/'config.toml').read_text().replace(str(tmp_path/'cat'),str(home/'cat'))
     with sqlite3.connect(snapshot/'catalog.sqlite') as saved,sqlite3.connect(home/'cat'/'catalog.sqlite') as restored:
         for (name,) in saved.execute("SELECT name FROM sqlite_master WHERE type='table'"):
             assert saved.execute(f'SELECT * FROM "{name}"').fetchall()==restored.execute(f'SELECT * FROM "{name}"').fetchall(),name

@@ -1,6 +1,5 @@
 """SQLite lifecycle and short application transactions."""
 
-import json
 import os
 import sqlite3
 from contextlib import contextmanager
@@ -8,7 +7,7 @@ from importlib.resources import files
 from pathlib import Path
 from uuid import uuid4
 
-from refs.config import Settings
+from refs.config import Settings, toml_text
 from refs.results import RefError
 
 
@@ -93,12 +92,12 @@ def init(settings: Settings, library: Path | None, dry_run: bool = False) -> dic
         connection.commit()
         if connection.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
             raise RefError("recovery_required", "New catalog failed integrity check", 5)
-    text = f"schema_version = 1\n[catalog]\npath = {json.dumps(str(catalog))}\n"
+    values: dict = dict(schema_version=1, catalog=dict(path=str(catalog)))
     if library:
-        text += f"[resources]\nlibrary_root = {json.dumps(str(library))}\n[resources.roots]\nlibrary = {json.dumps(str(library))}\n"
+        values['resources'] = dict(library_root=str(library), roots=dict(library=str(library)))
     with config.open("x") as stream:
         config.chmod(0o600)
-        stream.write(text)
+        stream.write(toml_text(values))
     (catalog / "files.lock").touch(mode=0o600, exist_ok=False)
     (catalog / "ready").touch(mode=0o600, exist_ok=False)
     return dict(catalog_id=catalog_id, unchanged=False, paths=settings.describe(), library=str(library) if library else None)
