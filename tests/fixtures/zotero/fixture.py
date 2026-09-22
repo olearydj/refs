@@ -10,7 +10,7 @@ def build(folder):
     database = folder / "zotero.sqlite.bak"
     with sqlite3.connect(database) as c:
         c.executescript(Path(__file__).with_name("userdata.sql").read_text())
-        c.executemany("INSERT INTO version VALUES (?,?)", [("userdata", 121), ("global", 28)])
+        c.executemany("INSERT INTO version VALUES (?,?)", [("userdata", 121), ("globalSchema", 28)])
         c.execute("INSERT INTO settings VALUES ('account','userID','123')")
         c.execute(
             "INSERT INTO libraries (libraryID,type,editable,filesEditable) VALUES (1,'user',1,1)"

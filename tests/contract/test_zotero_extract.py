@@ -25,6 +25,10 @@ def test_extraction_matches_independent_oracle(zotero_fixture, tmp_path):
     sample = json.loads((output/'items/ITEM0001.json').read_text())
     assert sample['data']['date'] == 'May 4, 2020'
     assert sample['meta']['parsedDate'] == '2020-05-04'
+    with sqlite3.connect(zotero_fixture) as c:
+        assert c.execute("SELECT version FROM version WHERE schema='globalSchema'").fetchone() == (28,)
+        assert c.execute("SELECT version FROM version WHERE schema='global'").fetchone() is None
+    assert manifest['global_version'] == 28
     assert manifest["library_uri"] == uri
     assert manifest["legacy_keys"]["ITEM0006"] == "legacy6"
     assert manifest["skipped"] == {"trash": 1, "annotations": 1}

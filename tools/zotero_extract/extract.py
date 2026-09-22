@@ -148,7 +148,7 @@ def extract(
             library_uri=uri,
             zotero_version="6.0.37",
             userdata_version=121,
-            global_version=versions.get("global"),
+            global_version=versions.get("globalSchema"),
             extractor_version=VERSION,
             data_directory=str(data_dir.resolve()),
             base_path=str(base_path.resolve()) if base_path else None,
