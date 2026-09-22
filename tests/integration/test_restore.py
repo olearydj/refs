@@ -87,3 +87,45 @@ os._exit(0)
     assert result.returncode==0,result.stderr
     with sqlite3.connect(database) as connection:
         assert connection.execute('SELECT value FROM synthetic_padding LIMIT 1').fetchone()[0]==b'a'*4096
+
+
+def test_zotero_decisions_and_fourteen_tables_restore(initialized,zotero_fixture,tmp_path):
+    import json
+    import runpy
+
+    from refs import importing
+    from refs.catalog import connect
+
+    directory=tmp_path/'input'
+    runpy.run_path('tools/zotero_extract/extract.py')['extract'](zotero_fixture,directory,zotero_fixture.parent,zotero_fixture.parent/'base',zotero_fixture.parent/'better-bibtex.sqlite')
+    initialized('import','--format','zotero','--input',directory)
+    path=directory/'items/ITEM0002.json'
+    value=json.loads(path.read_bytes())
+    value['data']['title']='Explicitly Revised Book'
+    path.write_text(json.dumps(value))
+    batch=initialized('import','--format','zotero','--input',directory,expected=4)['data']['import_id']
+    preview=importing.reconcile(tmp_path/'cat',batch,['extra2.metadata.title'])
+    importing.reconcile(tmp_path/'cat',batch,['extra2.metadata.title'],execute=True,revision=preview['batch_revision'])
+    selected=select(str(tmp_path/'config.toml'),str(tmp_path/'cat'))
+    snapshot=tmp_path/'snapshot'
+    recovery.backup(selected,snapshot)
+    assert recovery.validate_snapshot(snapshot)['external_contents_included'] is False
+    result=run_restore(snapshot,tmp_path/'restored')
+    assert result.returncode==0,result.stderr
+    with connect(tmp_path/'cat') as original, connect(tmp_path/'restored/cat') as restored:
+        tables=[row[0] for row in original.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'search_projection_%'")]
+        assert len(tables)==14
+        for name in tables:
+            assert [tuple(r) for r in original.execute(f'SELECT * FROM "{name}"')]==[tuple(r) for r in restored.execute(f'SELECT * FROM "{name}"')],name
+        for name in ('import_entries','collections','source_collections','source_relations','origin_identities','originals'):
+            assert restored.execute(f'SELECT count(*) FROM {name}').fetchone()[0]>0
+        assert restored.execute("SELECT count(*) FROM import_entries WHERE decisions_json<>'[]'").fetchone()[0]==1
+    assert importing.show(tmp_path/'restored/cat',batch)['entries'][1]['decisions']
+
+
+def test_schema_two_table_damage_is_refused(initialized,tmp_path):
+    database=tmp_path/'cat/catalog.sqlite'
+    with sqlite3.connect(database) as c:
+        c.execute('ALTER TABLE import_entries RENAME COLUMN decisions_json TO wrong')
+    with pytest.raises(RefError,match='schema'):
+        recovery.validate_database(database)

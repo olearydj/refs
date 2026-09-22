@@ -21,7 +21,10 @@ def validate_database(path: Path) -> dict:
             raise RefError('snapshot_invalid','Database integrity failed; retain the snapshot and choose another backup',5)
         with sqlite3.connect(':memory:') as expected:
             expected.executescript(package_files('refs').joinpath('migrations/001_initial.sql').read_text())
-            version=connection.execute('SELECT schema_version FROM catalog_meta').fetchone()[0]
+            version_row=connection.execute('SELECT schema_version FROM catalog_meta WHERE singleton=1').fetchone()
+            if version_row is None or version_row[0] not in (1,2):
+                raise RefError('unsupported_schema','Use a supported catalog schema',5)
+            version=version_row[0]
             if version==2:
                 expected.executescript(package_files('refs').joinpath('migrations/002_zotero_ingest.sql').read_text())
             for name, in expected.execute("SELECT name FROM sqlite_master WHERE type='table'"):

@@ -241,7 +241,7 @@ The owner accepted the brief and D1–D4. T038–T050 use synthetic fixtures and
 
 **Runnable check:** Back up the synthetic imported catalog, restore it into a second temporary home, and compare all fourteen logical tables.
 
-- [ ] T049 [US5] Update schema-aware snapshot validation in src/refs/recovery.py and the tested procedure in docs/restore.md for migration 002. Extend tests/integration/test_restore.py to compare import decisions, original JSON, identities, collections, memberships and relations alongside existing data. Refuse unsupported schemas and damaged snapshots; include no file bytes and add no restore CLI. Covers FR-040–041 and SC-008.
+- [x] T049 [US5] Update schema-aware snapshot validation in src/refs/recovery.py and the tested procedure in docs/restore.md for migration 002. Extend tests/integration/test_restore.py to compare import decisions, original JSON, identities, collections, memberships and relations alongside existing data. Refuse unsupported schemas and damaged snapshots; include no file bytes and add no restore CLI. Covers FR-040–041 and SC-008.
 
 ## Phase 17: Synthetic acceptance and proportion
 

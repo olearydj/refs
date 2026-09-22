@@ -56,6 +56,8 @@ with (home / "config.toml").open("x") as output:
 print("Restored catalog at", catalog)
 ```
 
+Schema-2 snapshots restore all fourteen logical tables, including saved import entries and decisions, collection hierarchy and memberships, and related-source pairs. Schema-1 snapshots are also validated and restored unchanged; apply the explicit schema upgrade below to that restored home before opening it with this version of refs.
+
 Open the restored catalog without launching any resource viewer:
 
 ```bash
@@ -66,7 +68,7 @@ refs --config "$SECOND_HOME/config.toml" --catalog "$SECOND_HOME/cat" --no-proje
 refs --config "$SECOND_HOME/config.toml" --catalog "$SECOND_HOME/cat" --no-project-config resource check
 ```
 
-Compare the saved and restored IDs, keys (including removed sources), revisions, corrections, originals, projects, imports, export baselines and resources. The integration test compares every table, including the search projection. Missing external files remain recorded and appear as missing in `resource check`. Remap roots by editing the separate restored configuration if necessary; doing so moves no files.
+Compare the saved and restored IDs, keys (including removed sources), revisions, corrections, originals, projects, import entries and decisions, Zotero identities, collections, memberships, related pairs, export baselines and resources. The integration test compares every table, including the search projection. Missing external files remain recorded and appear as missing in `resource check`. Remap roots by editing the separate restored configuration if necessary; doing so moves no files.
 
 The ready marker is written last. If validation or copying fails, retain the incomplete destination for inspection and retry into another empty home. Never initialize over it.
 
