@@ -26,3 +26,13 @@ with sqlite3.connect((root/'out/library/cat/catalog.sqlite').resolve().as_uri()+
             unnamed += 1
             assert not value.get('author'), f'Invented author: {entry.key}'
 print(f'Library creator coverage: {declared_authors} supplied author lists retained; {editors_only} editor-only; {unnamed} without supplied creators')
+
+export = json.loads((root/'out/library/export.json').read_text())
+retained = {'issued_day_in_note','noncitation_omission','literal_publisher','field_in_note','container_in_note','assignee_in_note'}
+assert export['status']=='ok' and export['data']['count']==562
+assert not retained.intersection(notice['code'] for notice in export['warnings'])
+assert {'issued_day_in_note','literal_publisher'} <= {notice['code'] for notice in export['data']['info']}
+assert all(notice['details']['class']=='info' for notice in export['data']['info'])
+text = (root/'out/library/export.txt').read_text()
+assert len(text.splitlines()) <= 1 + len({notice['code'] for notice in export['warnings']})
+print(f"Library export reporting: {len(export['warnings'])} warnings, {len(export['data']['info'])} info; {len(text.splitlines())} text lines, {len(text.split())} words")

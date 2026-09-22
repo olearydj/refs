@@ -17,7 +17,8 @@ def test_assessed_rehearsal_projections(kind,metadata,extensions,expected,code):
     assert expected in output
     assert all(w['details']['class']!='unknown' for w in warnings)
     if code:
-        assert any(w['code']==code and w['details']['class']=='documented_fallback' for w in warnings)
+        category = 'info' if code == 'assignee_in_note' else 'documented_fallback'
+        assert any(w['code']==code and w['details']['class']==category for w in warnings)
     if metadata.get('contributor'):
         assert b'Contributor' not in output
     if kind=='patent':

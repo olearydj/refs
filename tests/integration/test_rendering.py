@@ -116,7 +116,8 @@ def test_added_protection_and_publisher_grouping_are_reported(initialized, tmp_p
     codes = [item['code'] for item in result['warnings']]
     assert [item['code'] for item in result['info']].count('title_protection_added') == 1
     assert 'title_protection_added' not in codes
-    assert codes.count('literal_publisher') == 1
+    assert 'literal_publisher' not in codes
+    assert [item['code'] for item in result['info']].count('literal_publisher') == 1
 
 
 def test_online_documentation_reports_portable_quotation_change(initialized, tmp_path):

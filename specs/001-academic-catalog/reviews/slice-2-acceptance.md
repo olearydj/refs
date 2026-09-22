@@ -83,6 +83,34 @@ The following readings were made concrete:
 
 The broader role-omission classification attempted during acceptance was removed after an existing regression exposed it. Unassessed translator/contributor export behavior still blocks under the existing contract; this work does not declare whole-library rendering safe without the T051 comparison.
 
+## Pre-cutover export reporting correction
+
+The owner requested informational reporting for facts retained without an action to take. `issued_day_in_note`, `noncitation_omission`, `literal_publisher`, `field_in_note`, `container_in_note` and `assignee_in_note` now appear in JSON `data.info` and are absent from human output. Abstracts and tags remain unreported as before. Missing fields, consumer-dependent fallbacks, citation-field omissions and date-range projections remain warnings. Repeated warnings group by code; groups show up to five keys and direct the reader to `--json` for the remaining keys.
+
+The existing temporary Zotero rehearsal, not the owner's catalog, exported 562 entries with 132 warnings and 445 informational notices instead of 577 warnings. Its text summary is 16 lines and 223 words. Informational counts are 227 issued-day projections, 168 noncitation omissions, 24 fields in notes, 16 literal publishers, 9 containers in notes and 1 assignee in a note.
+
+| Warning code | Entries |
+| --- | ---: |
+| `arxiv_fallback` | 21 |
+| `collection_editor_fallback` | 2 |
+| `container_author_omission` | 3 |
+| `contributor_omission` | 1 |
+| `date_range_projected` | 2 |
+| `field_omitted` | 3 |
+| `journal_series_fallback` | 2 |
+| `literal_issued_year` | 7 |
+| `missing_author` | 4 |
+| `missing_issued` | 6 |
+| `missing_journal` | 3 |
+| `oclc_omission` | 6 |
+| `title_language_review` | 1 |
+| `type_fallback` | 64 |
+| `unassessed_import` | 7 |
+
+Verification: `uv sync --locked` passed; 500 pytest tests passed; Ruff and ty reported no findings. The smoke result was `PASS refs demo: 109 checks (US1, US2, US3, US4, US5, US6)`. Regression fixtures cover the severity changes, grouped missing-field notices and short text for large groups. The real-trial harness now exports the whole BBT library and checks that retained facts appear as JSON info, not warnings. Its Pandoc comparison explicitly reports already-approved DOI lowercasing when that is the sole rendering difference.
+
+The complete real-trial harness finished with `Trial failures: 0`. All five paper comparisons had zero unexplained differences. The separate BBT-input library export reported `Library export reporting: 757 warnings, 257 info; 13 text lines, 204 words`. That count differs from the Zotero-JSON rehearsal above: BBT's preserved-only input fields produce 598 `unassessed_import` notices. No mappings or import behavior changed in this reporting fix.
+
 ## T051 owner-assisted cutover
 
 Not started. The owner must participate in identifying the reset paths and running reset/extraction. The real gate and whole-library rendering remain required. Existing schema-1 catalogs need the documented explicit migration, or the separately authorized reset and `init --reuse-config`; ordinary commands do not silently upgrade them.

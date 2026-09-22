@@ -1,5 +1,6 @@
 """Assert per-entry Pandoc equality or a specifically reported change."""
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -56,7 +57,11 @@ for item in report['warnings'] + report['data'].get('info', []):
 differences = []
 for key in sorted(original.keys() | exported.keys()):
     if original.get(key) != exported.get(key):
-        notices = warnings.get(key, [])
+        notices = list(warnings.get(key, []))
+        def fold_doi(text):
+            return re.sub(r'https://doi[.]org/\S+', lambda match: match[0].lower(), text or '')
+        if original.get(key) and exported.get(key) and fold_doi(original[key]) == fold_doi(exported[key]):
+            notices.append({'code': 'doi_normalized', 'message': 'DOI lowercased by the accepted identifier normalization rule'})
         differences.append({'citation_key': key, 'reported_changes': notices,
                             'original': original.get(key), 'exported': exported.get(key)})
 (folder/'render-differences.json').write_text(json.dumps(differences, ensure_ascii=False, indent=2)+'\n')

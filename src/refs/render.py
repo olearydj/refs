@@ -22,7 +22,7 @@ def warning_lines(command: str, warnings: list[dict]) -> list[str]:
             warning['message'] = 'No cited active sources were selected'
         if warning.get('details', {}).get('class') == 'info':
             continue
-        group = warning['code'] if warning.get('details', {}).get('class') == 'documented_fallback' else str(len(groups))
+        group = warning['code']
         groups.setdefault(group, []).append(warning)
     lines = []
     descriptions = {
@@ -32,9 +32,16 @@ def warning_lines(command: str, warnings: list[dict]) -> list[str]:
         'literal_issued_year': 'use literal issued dates; check the rendered dates',
         'container_title_case': 'use catalog casing for container titles; check proper names',
         'tex_decoded': 'use decoded TeX name forms; check the rendered spelling',
-        'literal_publisher': 'treat the publisher as one institution',
-        'issued_day_in_note': 'retain the issued day in a note',
-        'field_in_note': 'retain citation fields in notes',
+        'missing_author': 'have no supplied author or editor',
+        'missing_journal': 'have no supplied journal',
+        'missing_issued': 'have no supplied issued date',
+        'language_unspecified': 'need their title language checked',
+        'date_range_projected': 'project issued ranges to the start year and shared month',
+        'arxiv_fallback': 'use portable arXiv fields',
+        'journal_series_fallback': 'use series with consumer-dependent support',
+        'collection_editor_fallback': 'emit collection editors as editors',
+        'oclc_omission': 'retain OCLC identifiers only in the catalog',
+        'container_author_omission': 'use bookauthor, which classic styles may omit',
     }
     for group, notices in groups.items():
         keys = sorted({notice.get('details', {}).get('citation_key', '(selection)') for notice in notices})
@@ -45,7 +52,10 @@ def warning_lines(command: str, warnings: list[dict]) -> list[str]:
         if group == 'type_fallback':
             description = 'use the portable @misc fallback' if all('@misc' in notice['message'] for notice in notices) else 'use portable type fallbacks'
         noun = 'entry' if len(keys) == 1 else 'entries'
-        lines.append(f"Warning: {len(keys)} {noun} {description} ({', '.join(keys)})")
+        examples = ', '.join(keys[:5])
+        if len(keys)>5:
+            examples += f'; {len(keys)-5} more, see --json'
+        lines.append(f"Warning: {len(keys)} {noun} {description} ({examples})")
     return lines
 
 def import_text(command: str, data: dict) -> str:

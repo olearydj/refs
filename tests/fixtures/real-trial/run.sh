@@ -62,6 +62,11 @@ R --json import --format bib --input "$T/inputs/zotero-bbt-export.bib" --origin 
 jq -c '{status, counts: .data.counts, errors: [.errors[].code]|unique}' "$OUT/library/import.json" 2>/dev/null || head -3 "$OUT/library/import.err"
 jq -r '[.data.entries[]? | .limitations[]? | .field] | group_by(.) | map("\(.[0]) x\(length)") | .[]' "$OUT/library/import.json" 2>/dev/null | sed 's/^/  limitation: /'
 jq -r '[.data.entries[]? | select(.status=="invalid" or .status=="conflict") | "\(.status) \(.citation_key): \(.reason // (.conflicts[0].code? // ""))"] | .[]' "$OUT/library/import.json" 2>/dev/null | head -10 | sed 's/^/  /'
+# Whole-library reporting: retained facts are JSON info, not human warnings.
+R project create library >/dev/null
+R project cite library --from-import zotero >/dev/null
+R --json export --project library --output "$OUT/library/exported.bib" > "$OUT/library/export.json"
+R export --project library --output "$OUT/library/exported.bib" > "$OUT/library/export.txt"
 echo "===== files"; 
 key=$(R --json list | jq -r '.data.items[0].citation_key'); cp "$T/downloads/00265218.pdf" "$OUT/library/dl.pdf"
 R resource add "$key" --path "$OUT/library/dl.pdf" --copy; ls "$OUT/library/lib/Unfiled" 2>/dev/null

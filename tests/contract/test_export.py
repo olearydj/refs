@@ -156,3 +156,39 @@ def test_preserved_import_field_is_documented_omission(field):
     assert warnings[0]['code'] == 'unassessed_import'
     assert warnings[0]['details']['class'] == 'documented_fallback'
     assert not warnings[0]['details']['override']
+
+
+@pytest.mark.parametrize(('kind','metadata','code'),[
+    ('book', {'issued': {'date-parts': [[2024,3,19]]}}, 'issued_day_in_note'),
+    ('book', {'number-of-pages': 168}, 'noncitation_omission'),
+    ('book', {'publisher': 'Research and Development'}, 'literal_publisher'),
+    ('paper-conference', {'event-title': 'Synthetic Meeting'}, 'field_in_note'),
+    ('webpage', {'container-title': 'Synthetic Site'}, 'container_in_note'),
+])
+def test_documented_retention_is_info(kind,metadata,code):
+    from refs.render import warning_lines
+    _, notices = bibliography.serialize([record(kind, **metadata)])
+    selected = [notice for notice in notices if notice['code']==code]
+    assert selected and all(notice['details']['class']=='info' for notice in selected)
+    assert warning_lines('export',selected)==[]
+
+
+def test_missing_metadata_warnings_collapse_by_code():
+    from refs.render import warning_lines
+    first=record('book',author=[])
+    second=record('book',author=[])
+    second['citation_key']='second'
+    _, notices=bibliography.serialize([first,second])
+    lines=warning_lines('export',notices)
+    assert len(lines)==1
+    assert '2 entries' in lines[0] and 'second' in lines[0]
+
+
+def test_large_warning_groups_keep_text_short():
+    from refs.render import warning_lines
+    notices=[{'code':'type_fallback','message':'Portable @misc','details':{'class':'documented_fallback','citation_key':f'key{i:03}'}} for i in range(64)]
+    lines=warning_lines('export',notices)
+    assert len(lines)==1 and '64 entries' in lines[0]
+    assert '59 more, see --json' in lines[0]
+    assert 'key063' not in lines[0]
+    assert len(notices)==64

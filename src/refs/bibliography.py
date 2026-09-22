@@ -185,7 +185,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             elif 'container-title' in metadata:
                 notes.append('Website: ' + str(metadata['container-title']))
                 used.add('container-title')
-                assess('container_in_note', 'documented_fallback', 'Website name is retained in note', 'metadata.container-title')
+                assess('container_in_note', 'info', 'Website name is retained in note', 'metadata.container-title')
             used.add('issued')
             issued = metadata.get('issued')
             if not issued:
@@ -211,7 +211,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                     iso = '-'.join([str(parts[0]), *[f'{number:02d}' for number in parts[1:]]])
                     put('date', iso)
                     notes.append('Issued: ' + iso)
-                    assess('issued_day_in_note', 'documented_fallback', 'Supplementary date and note retain the day for portable consumers', 'metadata.issued')
+                    assess('issued_day_in_note', 'info', 'Supplementary date and note retain the day for portable consumers', 'metadata.issued')
             used.add('language')
             language = metadata.get('language', '')
             langid = languages.portable(language)
@@ -233,7 +233,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             if 'publisher' in metadata:
                 publisher = tex(str(metadata['publisher']))
                 if ' and ' in str(metadata['publisher']):
-                    assess('literal_publisher', 'documented_fallback', 'Publisher is one institution; BibLaTeX consumers will not split it on and', 'metadata.publisher')
+                    assess('literal_publisher', 'info', 'Publisher is one institution; BibLaTeX consumers will not split it on and', 'metadata.publisher')
                     publisher = '{' + publisher + '}'
                 if entry_type in ('phdthesis', 'mastersthesis'):
                     put('school', publisher, literal=True)
@@ -269,7 +269,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                 used.add(field)
                 if field in metadata:
                     notes.append(label + ': ' + str(metadata[field]))
-                    assess('field_in_note', 'documented_fallback', f'{field} is retained in note', 'metadata.' + field)
+                    assess('field_in_note', 'info', f'{field} is retained in note', 'metadata.' + field)
             for source, target in [('DOI', 'doi'), ('URL', 'url'), ('ISBN', 'isbn'), ('ISSN', 'issn'), ('PMID', 'pmid'), ('PMCID', 'pmcid')]:
                 used.add(source)
                 if source not in metadata:
@@ -290,7 +290,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             for field in ('abstract', 'number-of-pages', 'number-of-volumes'):
                 used.add(field)
                 if field != 'abstract' and field in metadata:
-                    assess('noncitation_omission', 'faithful_incomplete', f'{field} is retained in the catalog', 'metadata.' + field)
+                    assess('noncitation_omission', 'info', f'{field} is retained in the catalog', 'metadata.' + field)
             used.add('note')
             if metadata.get('note'):
                 notes.insert(0, str(metadata['note']))
@@ -319,7 +319,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                             names = extension[member]
                             labels = [name.get('literal') or ' '.join(name[part] for part in ('given','dropping-particle','non-dropping-particle','family','suffix') if name.get(part)) for name in names]
                             notes.append('Assignee: ' + '; '.join(labels))
-                            assess('assignee_in_note', 'documented_fallback', 'Patent assignees are retained in note, separately from inventors', 'extensions.patent.assignees')
+                            assess('assignee_in_note', 'info', 'Patent assignees are retained in note, separately from inventors', 'extensions.patent.assignees')
                             continue
                         assess('unassessed_extension', 'unknown', f'No registered projection for patent.{member}', 'extensions.patent.' + member)
                 else:
