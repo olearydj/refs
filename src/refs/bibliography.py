@@ -81,6 +81,11 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
         kind = metadata['type']
         types = {row['canonical']: row['portable'] for row in REGISTRY['type_mappings']}
         entry_type = types[kind]
+        for field in list(metadata):
+            applicable = REGISTRY['field_applicability'].get(field)
+            if applicable is not None and kind not in applicable:
+                assess('field_omitted', 'documented_fallback', f'{field} has no portable slot for {kind}; retained in catalog', 'metadata.' + field)
+                del metadata[field]
         if kind == 'thesis':
             native = value.get('native_type', {}).get('value', '')
             degree = str(metadata.get('genre', '')).casefold().replace('.', '')

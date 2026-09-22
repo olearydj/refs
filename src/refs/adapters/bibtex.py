@@ -183,9 +183,6 @@ def parse(raw: bytes) -> dict:
             path = row['canonical_path']
             if field == 'title' and traditional:
                 path = 'metadata.container-title'
-            if path.startswith('metadata.') and canonical not in REGISTRY['field_applicability'].get(path[9:], []):
-                limitations.append(dict(field=field, reason='Field is not applicable to this type'))
-                continue
             if kind == 'book' and field == 'number' and 'series' not in fields:
                 limitations.append(dict(field=field, reason='Series number requires series evidence'))
                 continue

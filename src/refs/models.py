@@ -94,8 +94,6 @@ class MetadataBase(StrictModel):
         if kind not in REGISTRY["core_fields"]["type"]["schema"]["enum"]:
             raise ValueError("Unsupported source type")
         for key, item in value.items():
-            if key in REGISTRY["field_applicability"] and kind not in REGISTRY["field_applicability"][key]:
-                raise ValueError(f"{key} is not applicable to {kind}")
             if item is None:
                 raise ValueError(f"{key} cannot be null; omit or explicitly clear it")
             if isinstance(item, float) and not math.isfinite(item):
@@ -166,6 +164,55 @@ class Metadata(MetadataBase):
     version: Text | None = None
     volume: Text | int | float | None = None
     chapter_number: Text | int | float | None = Field(default=None, alias='chapter-number')
+
+    # Remaining variables from the pinned CSL schema; export coverage is separate.
+    chair: list[Name] | None = None
+    compiler: list[Name] | None = None
+    composer: list[Name] | None = None
+    curator: list[Name] | None = None
+    director: list[Name] | None = None
+    editorial_director: list[Name] | None = Field(default=None, alias='editorial-director')
+    executive_producer: list[Name] | None = Field(default=None, alias='executive-producer')
+    guest: list[Name] | None = None
+    host: list[Name] | None = None
+    interviewer: list[Name] | None = None
+    illustrator: list[Name] | None = None
+    narrator: list[Name] | None = None
+    organizer: list[Name] | None = None
+    original_author: list[Name] | None = Field(default=None, alias='original-author')
+    performer: list[Name] | None = None
+    producer: list[Name] | None = None
+    recipient: list[Name] | None = None
+    reviewed_author: list[Name] | None = Field(default=None, alias='reviewed-author')
+    script_writer: list[Name] | None = Field(default=None, alias='script-writer')
+    series_creator: list[Name] | None = Field(default=None, alias='series-creator')
+    available_date: Date | None = Field(default=None, alias='available-date')
+    annote: Text | None = None
+    archive_collection: Text | None = None
+    archive_location: Text | None = None
+    call_number: Text | None = Field(default=None, alias='call-number')
+    citation_number: Text | int | float | None = Field(default=None, alias='citation-number')
+    citation_label: Text | None = Field(default=None, alias='citation-label')
+    dimensions: Text | None = None
+    division: Text | None = None
+    first_reference_note_number: Text | int | float | None = Field(default=None, alias='first-reference-note-number')
+    keyword: Text | None = None
+    locator: Text | int | float | None = None
+    original_publisher: Text | None = Field(default=None, alias='original-publisher')
+    original_publisher_place: Text | None = Field(default=None, alias='original-publisher-place')
+    original_title: Text | None = Field(default=None, alias='original-title')
+    page_first: Text | int | float | None = Field(default=None, alias='page-first')
+    part: Text | int | float | None = None
+    printing: Text | int | float | None = None
+    references: Text | None = None
+    reviewed_genre: Text | None = Field(default=None, alias='reviewed-genre')
+    reviewed_title: Text | None = Field(default=None, alias='reviewed-title')
+    scale: Text | None = None
+    source: Text | None = None
+    supplement: Text | int | float | None = None
+    volume_title: Text | None = Field(default=None, alias='volume-title')
+    volume_title_short: Text | None = Field(default=None, alias='volume-title-short')
+    year_suffix: Text | None = Field(default=None, alias='year-suffix')
 
 class NativeType(StrictModel):
     namespace: Text
@@ -262,7 +309,7 @@ class SourceCreate(StrictModel):
             raise ValueError("Patent extensions require type patent")
         if self.extensions.journal_series is not None and kind != "article-journal":
             raise ValueError("Journal series requires article-journal")
-        allowed = {name for name in REGISTRY["core_fields"] if "title" in name}
+        allowed = {field.alias or name for name, field in Metadata.model_fields.items() if "title" in (field.alias or name)}
         if set(self.title_protection) - allowed:
             raise ValueError("Protection applies only to supported title fields")
         main = self.title_parts.main_title

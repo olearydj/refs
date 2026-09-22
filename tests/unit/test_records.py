@@ -31,7 +31,6 @@ def test_valid_values(metadata):
     {'issued': {'date-parts': [['2024']]}},
     {'author': [{'family': 'Smith', 'literal': 'Company'}]},
     {'author': [{'family': 'Smith', 'parse-names': 'yes'}]},
-    {'type': 'speech', 'edition': 2},
     {'type': 'mystery'},
     {'unexpected': 'value'},
 ])
@@ -62,4 +61,28 @@ def test_patch_is_strict_and_clear_is_explicit():
 
 def test_metadata_model_matches_packaged_registry():
     from refs.models import REGISTRY, Metadata
-    assert {field.alias or name for name, field in Metadata.model_fields.items()} == set(REGISTRY['core_fields'])
+    assert {field.alias or name for name, field in Metadata.model_fields.items()} >= set(REGISTRY['core_fields'])
+
+
+@pytest.mark.parametrize('kind, field, value', [('article','publisher','Repository'), ('book','page','17–42'), ('speech','edition',2)])
+def test_csl_variables_are_not_restricted_by_type(kind, field, value):
+    assert source(type=kind, **{field:value}).canonical()['metadata'][field] == value
+
+
+def test_all_pinned_csl_variables_have_a_model_field():
+    import json
+    from pathlib import Path
+
+    from refs.models import Metadata
+    properties = json.loads((Path(__file__).parents[1]/'fixtures/mappings/csl-data.json').read_text())['items']['properties']
+    auxiliary = {'id','citation-key','categories','custom','journalAbbreviation','shortTitle','event'}
+    assert set(properties)-auxiliary == {field.alias or name for name,field in Metadata.model_fields.items()}
+
+
+def test_datacite_producer_fields_do_not_reject_capture():
+    import json
+
+    from refs.adapters import csl
+    value = {'type':'article','title':'Attention Study','publisher':'Repository','categories':['Computing'],'copyright':'Owner','license':'CC0'}
+    metadata = csl.parse(json.dumps(value).encode()).canonical()['metadata']
+    assert metadata == {'type':'article','title':'Attention Study','publisher':'Repository'}

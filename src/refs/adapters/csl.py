@@ -4,7 +4,7 @@ import json
 
 from pydantic import ValidationError
 
-from refs.models import SourceCreate
+from refs.models import Metadata, SourceCreate
 from refs.results import RefError
 
 
@@ -18,6 +18,13 @@ def parse(raw: bytes) -> SourceCreate:
         external_id = metadata.pop('id', None)
         if external_id is not None and (isinstance(external_id, bool) or not isinstance(external_id, (str, int))):
             raise ValueError('CSL id must be a string or integer')
+        for alias, canonical in [('shortTitle', 'title-short'), ('journalAbbreviation', 'container-title-short'), ('event', 'event-title')]:
+            if alias in metadata:
+                if canonical in metadata and metadata[canonical] != metadata[alias]:
+                    raise ValueError(f'Conflicting aliases for {canonical}')
+                metadata[canonical] = metadata.pop(alias)
+        fields = {field.alias or name for name, field in Metadata.model_fields.items()}
+        metadata = {key: value for key, value in metadata.items() if key in fields}
         provenance = {'origin': 'import', 'access': 'unknown'}
         if external_id is not None:
             provenance['source_identity'] = {'namespace': 'csljson', 'item_key': str(external_id)}
