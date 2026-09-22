@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
+from refs import naming
 from refs.catalog import changed, connect
 from refs.models import SourceCreate, parse
 from refs.results import RefError
@@ -59,6 +60,7 @@ def bindings(source: SourceCreate) -> list[tuple[str, str, str]]:
 
 def candidate(connection, source: SourceCreate, fingerprint: str) -> str | None:
     ids = {r["id"] for r in connection.execute("SELECT id FROM sources WHERE citation_key=?", (source.citation_key,))}
+    ids.update(r[0] for r in connection.execute("SELECT source_id FROM originals WHERE sha256=? AND source_id IS NOT NULL", (fingerprint,)))
     for binding in bindings(source):
         row = connection.execute("SELECT source_id FROM origin_identities WHERE namespace=? AND library_uri=? AND item_key=?", binding).fetchone()
         if row:
@@ -84,18 +86,34 @@ def candidate(connection, source: SourceCreate, fingerprint: str) -> str | None:
 
 def add(catalog: Path, raw: bytes, locator: str, *, dry_run: bool = False) -> dict:
     source = parse(raw)
+    normalized, warnings = naming.normalize(source.canonical())
+    source = SourceCreate.model_validate(normalized)
     fingerprint = hashlib.sha256(raw).hexdigest()
     with connect(catalog, write=not dry_run) as connection:
-        existing = candidate(connection, source, fingerprint)
+        try:
+            existing = candidate(connection, source, fingerprint)
+        except RefError as exc:
+            exc.data = dict(outcome="needs_attention", id=None, citation_key=source.citation_key)
+            raise
         if existing:
-            return record(connection, existing) | {"unchanged": True, "dry_run": dry_run}
+            return record(connection, existing) | {"unchanged": True, "dry_run": dry_run, "outcome": "already_present", "warnings": warnings}
         likely = [dict(row) for row in connection.execute(
             "SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json, '$.title'))=lower(?)",
             (source.metadata.title,))]
         if likely:
-            raise RefError("likely_match", "A source has this title; inspect the candidates", details={"candidates": likely})
+            raise RefError("likely_match", "A source has this title; inspect the candidates", details={"candidates": likely},
+                           data=dict(outcome="needs_attention", id=None, citation_key=source.citation_key))
+        key_provenance = {"origin": "supplied", "policy": None, "table_version": None, "unicode_version": None}
+        if source.citation_key is None:
+            base = naming.key(source.canonical())
+            index = 0
+            while connection.execute("SELECT 1 FROM sources WHERE citation_key=?", (base + naming.suffix(index),)).fetchone():
+                index += 1
+            source.citation_key = SourceCreate.valid_key(base + naming.suffix(index))
+            key_provenance = naming.provenance()
         if dry_run:
-            return dict(dry_run=True, citation_key=source.citation_key, record=source.canonical())
+            return dict(dry_run=True, outcome="created", id=None, citation_key=source.citation_key,
+                        record=source.canonical(), key_provenance=key_provenance, warnings=warnings)
         source_id = str(uuid4())
         now = datetime.now(UTC).isoformat()
         details = source.canonical()
@@ -104,11 +122,11 @@ def add(catalog: Path, raw: bytes, locator: str, *, dry_run: bool = False) -> di
         connection.execute(
             "INSERT INTO sources (id, citation_key, created_at, updated_at, metadata_json, details_json, key_provenance_json) VALUES (?, ?, ?, ?, ?, ?, ?)",
             (source_id, source.citation_key, now, now, json.dumps(metadata), json.dumps(details),
-             json.dumps({"origin": "supplied", "policy": None, "table_version": None, "unicode_version": None})))
+             json.dumps(key_provenance)))
         connection.execute(
             "INSERT INTO originals (id, source_id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator) VALUES (?, ?, ?, ?, ?, 'refs', 'add', ?, ?)",
             (str(uuid4()), source_id, raw, fingerprint, len(raw), fingerprint, locator))
         for binding in bindings(source):
             connection.execute("INSERT INTO origin_identities VALUES (?, ?, ?, ?, ?)", (*binding, source_id, fingerprint))
         changed(connection)
-        return record(connection, source_id)
+        return record(connection, source_id) | {"outcome": "created", "warnings": warnings}

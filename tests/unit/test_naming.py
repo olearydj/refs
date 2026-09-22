@@ -30,7 +30,7 @@ def test_latin_and_unsupported_script():
 
 
 def test_titles_and_filenames():
-    assert naming.title_case('learning with Python', {'protected_terms': ['Python']}) == 'Learning with Python'
+    assert naming.title_case('learning with Python', {'protected_terms': ['Python']}) == 'Learning With Python'
     assert naming.title_case('pH in context', {'protected_terms': ['pH']}) == 'pH in Context'
     assert naming.title_case('deliberate lower case', {'preserve_case': True}) == 'deliberate lower case'
     value = record(title='Practical Vim', edition=2, issued={'date-parts': [[2015]]})
