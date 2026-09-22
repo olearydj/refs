@@ -54,3 +54,16 @@ def test_title_edit_retires_old_protection_but_checks_supplied_terms(initialized
     assert not any(w['code']=='protected_term_missing' for w in changed['warnings'])
     supplied = sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','set':{'title_protection.title.protected_terms':['Missing']}},2)
     assert any(w['code']=='protected_term_missing' for w in supplied['warnings'])
+
+
+
+def test_key_preview_and_revision_optional_reactivation(initialized, reference_path):
+    source = initialized('add','--format','refs','--input',reference_path)['data']
+    preview = initialized('key','set',source['citation_key'],'--key','preview-key','--if-revision',1)['data']
+    assert preview['dry_run'] and preview['citation_key']=='preview-key'
+    assert initialized('show',source['id'])['data']['citation_key']==source['citation_key']
+    initialized('remove',source['id'],'--if-revision',1,'--execute')
+    assert initialized('reactivate',source['id'])['data']['dry_run']
+    assert initialized('reactivate',source['id'],'--if-revision',1,'--execute',expected=3)['errors'][0]['code']=='stale_revision'
+    assert initialized('reactivate',source['id'],'--execute')['data']['state']=='active'
+    assert initialized('schema')['data']['schemas']==['source-create','source-patch','source-record','result']

@@ -179,7 +179,7 @@ def remove(ctx: typer.Context, reference: str, if_revision: Annotated[int, typer
 
 
 @app.command()
-def reactivate(ctx: typer.Context, reference: str, if_revision: Annotated[int, typer.Option(min=1)],
+def reactivate(ctx: typer.Context, reference: str, if_revision: Annotated[int | None, typer.Option(min=1)] = None,
                execute: Annotated[bool, typer.Option()] = False,
                dry_run: Annotated[bool, typer.Option()] = False):
     report(ctx, "reactivate", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="active", execute=execute and not dry_run))
@@ -201,9 +201,9 @@ def list_sources(ctx: typer.Context, project: Annotated[str | None, typer.Option
 
 
 @app.command("schema")
-def inspect_schema(ctx: typer.Context, name: str):
+def inspect_schema(ctx: typer.Context, name: Annotated[str | None, typer.Argument()] = None):
     from refs.models import schema
-    report(ctx, "schema", schema(name))
+    report(ctx, "schema", schema(name) if name else {"schemas": ["source-create", "source-patch", "source-record", "result"]})
 
 
 @project_app.command("show")

@@ -238,10 +238,12 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
         return store_record(connection, current, canonical, corrections) | {'warnings': warnings}
 
 
-def change_identity(catalog: Path, reference: str, revision: int, *, new_key: str | None = None,
+def change_identity(catalog: Path, reference: str, revision: int | None, *, new_key: str | None = None,
                     state: str | None = None, execute: bool = False) -> dict:
     with connect(catalog, write=execute) as connection:
-        current = checked_record(connection, reference, revision)
+        if revision is None and (state != 'active' or new_key is not None):
+            raise RefError('revision_required', 'Supply the current revision', 2)
+        current = record(connection, resolve(connection, reference)) if revision is None else checked_record(connection, reference, revision)
         warnings = []
         if new_key is not None:
             try:
