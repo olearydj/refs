@@ -54,7 +54,7 @@ def test_actual_rendering(consumer, tmp_path, record_property):
         else:
             style = EVIDENCE/'fixtures/natbib/elsarticle-num.bst'
             shutil.copyfile(style, tmp_path/'elsarticle-num.bst')
-            body = r'\usepackage{natbib}\begin{document}\nocite{*}\bibliographystyle{elsarticle-num}\bibliography{references}\end{document}'
+            body = r'\usepackage[numbers]{natbib}\begin{document}\nocite{*}\bibliographystyle{elsarticle-num}\bibliography{references}\end{document}'
         (tmp_path/'paper.tex').write_text(r'\documentclass{article}' + body)
         run([latex, '-interaction=nonstopmode', '-halt-on-error', 'paper.tex'], tmp_path)
         run([executable, 'paper'], tmp_path)

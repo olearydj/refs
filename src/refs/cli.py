@@ -83,8 +83,9 @@ def project_cite(ctx: typer.Context, project: str, reference: str,
 def export_bibliography(ctx: typer.Context, project: Annotated[str, typer.Option()],
                        output: Annotated[Path, typer.Option()],
                        profile: Annotated[str, typer.Option()] = bibliography.PROFILE,
+                       allow_unknown_mappings: Annotated[bool, typer.Option()] = False,
                        dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, "export", bibliography.export(settings(ctx).catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run))
+    report(ctx, "export", bibliography.export(settings(ctx).catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run, allow_unknown=allow_unknown_mappings))
 
 
 key_app = typer.Typer(no_args_is_help=True)

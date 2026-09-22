@@ -43,56 +43,224 @@ def warning(key: str, code: str, message: str, **details) -> dict:
     return dict(code=code, message=message, path=None, details={"citation_key": key, **details}, retryable=False)
 
 
-def serialize(records: list[dict]) -> tuple[bytes, list[dict]]:
-    entries, warnings, errors = [], [], []
+BLOCKING_CODES = {'cited_authors_changed', 'issued_date_lost_or_changed', 'work_identity_changed', 'in_text_citation_changed', 'protected_spelling_changed'}
+LANGUAGES = {'en': 'english', 'en-us': 'american', 'en-gb': 'british', 'fr': 'french', 'de': 'german', 'es': 'spanish', 'it': 'italian', 'pt': 'portuguese', 'nl': 'dutch', 'ja': 'japanese', 'zh': 'chinese'}
+MONTHS = 'jan feb mar apr may jun jul aug sep oct nov dec'.split()
+
+
+def enforce_losses(losses: list[dict], *, allow_unknown: bool = False) -> None:
+    blocked = [loss for loss in losses if loss['code'] in BLOCKING_CODES or loss['class'] in ('blocking', 'structural') or loss['class'] == 'unknown' and not allow_unknown]
+    if blocked:
+        raise RefError('export_blocked', 'Export has unapplied losses; correct records or explicitly allow unknown mappings', details={'entries': losses})
+
+
+def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[bytes, list[dict]]:
+    from refs.models import REGISTRY
+    entries, warnings, losses = [], [], []
     seen = set()
-    for record in sorted(records, key=lambda row: row["citation_key"]):
-        key = record["citation_key"]
+    for record in sorted(records, key=lambda row: row['citation_key']):
+        key = record['citation_key']
+
+        def assess(code: str, category: str, message: str, path: str = '') -> None:
+            loss = dict(code=code, citation_key=key, **{'class': category}, path=path, message=message)
+            losses.append(loss)
+            if category in ('faithful_incomplete', 'documented_fallback') or category == 'unknown' and allow_unknown:
+                warnings.append(warning(key, code, message, **{'class': category}, mapping_id=path, override=category == 'unknown'))
+
         if key.casefold() in seen:
-            errors.append(dict(citation_key=key, code="case_colliding_key"))
+            assess('case_colliding_key', 'structural', 'Portable keys differ only by case')
         seen.add(key.casefold())
-        # Revalidate stored values: unknown facts never disappear during export.
         create = {name: record[name] for name in SourceCreate.model_fields if name in record}
         try:
             value = SourceCreate.model_validate(create).canonical()
-            metadata = value["metadata"]
-            protection = value["title_protection"]
-            fields = []
-            if metadata.get("author"):
-                names = ["{" + tex(name["literal"]) + "}" if "literal" in name
-                         else tex(name["family"]) + (", " + tex(name["given"]) if "given" in name else "")
-                         for name in metadata["author"]]
-                fields.append(("author", " and ".join(names)))
+        except ValidationError as exc:
+            assess('unsupported_record', 'structural', str(exc))
+            continue
+        metadata = value['metadata']
+        kind = metadata['type']
+        types = {row['canonical']: row['portable'] for row in REGISTRY['type_mappings']}
+        entry_type = types[kind]
+        if kind == 'thesis':
+            native = value.get('native_type', {}).get('value', '')
+            degree = str(metadata.get('genre', '')).casefold().replace('.', '')
+            entry_type = 'phdthesis' if native == 'phdthesis' or degree in ('phd', 'doctoral thesis', 'dissertation') else 'mastersthesis' if native == 'mastersthesis' or degree in ('masters', "master's thesis", 'master thesis', 'msc', 'ma') else 'misc'
+        if kind == 'chapter' and not metadata.get('title'):
+            entry_type = 'inbook'
+        if entry_type == 'misc' or kind in ('article-magazine', 'article-newspaper'):
+            assess('type_fallback', 'documented_fallback', f'{kind} is projected as @{entry_type}', 'metadata.type')
+        fields, notes, howpublished, used = {}, [], [], {'type'}
+        protection = value.get('title_protection', {})
+
+        def put(target: str, text, *, literal: bool = False) -> None:
+            rendered = str(text) if literal else tex(str(text))
+            if target in fields and fields[target] != rendered:
+                assess('work_identity_changed', 'blocking', f'Two facts compete for {target}', target)
             else:
-                warnings.append(warning(key, "missing_author", "No author was supplied"))
-            fields.append(("title", title(metadata["title"], protection.get("title", {}))))
-            if "container-title" in metadata:
-                fields.append(("journal", title(metadata["container-title"], protection.get("container-title", {}))))
+                fields[target] = rendered
+
+        def copy(source: str, target: str) -> None:
+            used.add(source)
+            if source not in metadata:
+                return
+            if 'title' in source:
+                put(target, title(str(metadata[source]), protection.get(source, {})), literal=True)
             else:
-                warnings.append(warning(key, "missing_journal", "No journal was supplied"))
-            if "issued" in metadata:
-                fields.append(("year", str(metadata["issued"]["date-parts"][0][0])))
+                put(target, metadata[source])
+
+        try:
+            for role in ('author', 'editor'):
+                used.add(role)
+                names = metadata.get(role, [])
+                if names:
+                    output_names = []
+                    for name in names:
+                        if 'literal' in name:
+                            output_names.append('{' + tex(name['literal']) + '}')
+                            continue
+                        if any(name.get(flag) for flag in ('static-ordering', 'comma-suffix', 'parse-names')) or name.get('non-dropping-particle'):
+                            assess('name_projection_unassessed', 'unknown', 'Consumer handling of this name flag or particle is unassessed', 'metadata.' + role)
+                        family = ' '.join(name.get(part, '') for part in ('dropping-particle', 'non-dropping-particle', 'family')).strip()
+                        if not family:
+                            assess('given_only_name', 'unknown', 'Given-only personal names have unassessed citation behavior', 'metadata.' + role)
+                            family = name.get('given', '')
+                            output_names.append('{' + tex(family) + '}')
+                            continue
+                        if ' and ' in family or ',' in family:
+                            family = '{' + tex(family) + '}'
+                        else:
+                            family = tex(family)
+                        suffix = tex(name.get('suffix', ''))
+                        given = tex(name.get('given', ''))
+                        output_names.append(family + (', ' + suffix + ', ' + given if suffix else ', ' + given if given else ''))
+                    put(role, ' and '.join(output_names), literal=True)
+            if not metadata.get('author') and not metadata.get('editor'):
+                assess('missing_author', 'faithful_incomplete', 'No author or editor was supplied')
+            copy('title', 'title')
+            copy('title-short', 'shorttitle')
+            if kind in ('article-journal', 'article-magazine', 'article-newspaper'):
+                copy('container-title', 'journal')
+                if not metadata.get('container-title'):
+                    assess('missing_journal', 'faithful_incomplete', 'No journal was supplied')
+            elif kind in ('chapter', 'paper-conference'):
+                copy('container-title', 'title' if entry_type == 'inbook' else 'booktitle')
+            elif 'container-title' in metadata:
+                notes.append('Website: ' + str(metadata['container-title']))
+                used.add('container-title')
+                assess('container_in_note', 'documented_fallback', 'Website name is retained in note', 'metadata.container-title')
+            used.add('issued')
+            issued = metadata.get('issued')
+            if not issued:
+                assess('missing_issued', 'faithful_incomplete', 'No issued date was supplied')
+            elif not issued.get('date-parts') or len(issued['date-parts']) != 1 or any(issued.get(name) for name in ('literal', 'circa', 'season')):
+                assess('issued_date_lost_or_changed', 'blocking', 'Portable year/month cannot preserve this issued precision', 'metadata.issued')
             else:
-                warnings.append(warning(key, "missing_issued", "No issued year was supplied"))
-            for source, target in (("volume", "volume"), ("issue", "number"), ("page", "pages")):
-                if source in metadata:
-                    text = metadata[source]
-                    if source == "page":
-                        text = re.sub(r"(?<=\d)[-–](?=\d)", "--", text)
-                    fields.append((target, tex(text)))
-            # These URI fields retain literal bytes, without generic TeX decoding.
-            for source, target in (("DOI", "doi"), ("URL", "url")):
-                if source in metadata:
-                    text = metadata[source]
-                    if re.search(r"[{}\\\s\x00-\x1f\x7f]", text):
-                        raise RefError("invalid_export_value", "URI contains unsafe characters")
-                    fields.append((target, text))
-            entries.append("@article{" + key + ",\n" + "".join(f"  {name} = {{{text}}},\n" for name, text in fields) + "}\n")
-        except (ValidationError, RefError) as exc:
-            errors.append(dict(citation_key=key, code="unsupported_record", message=str(exc)))
-    if errors:
-        raise RefError("export_blocked", "All unsupported entries must be corrected before export", details={"entries": errors})
-    return "\n".join(entries).encode("utf-8"), warnings
+                parts = issued['date-parts'][0]
+                put('year', parts[0])
+                if len(parts) > 1:
+                    put('month', MONTHS[parts[1]-1], literal=True)
+                if len(parts) > 2:
+                    iso = '-'.join([str(parts[0]), *[f'{number:02d}' for number in parts[1:]]])
+                    put('date', iso)
+                    notes.append('Issued: ' + iso)
+                    assess('issued_day_in_note', 'documented_fallback', 'Supplementary date and note retain the day for portable consumers', 'metadata.issued')
+            used.add('language')
+            language = metadata.get('language', '').casefold()
+            if language:
+                if language not in LANGUAGES:
+                    assess('missing_langid', 'structural', 'No tested langid mapping for supplied language', 'metadata.language')
+                else:
+                    put('langid', LANGUAGES[language])
+            else:
+                assess('language_unspecified', 'faithful_incomplete', 'Language was not supplied')
+            for source, target in [('volume', 'volume'), ('issue', 'number'), ('publisher-place', 'address'), ('edition', 'edition'), ('collection-title', 'series'), ('collection-number', 'number'), ('container-title-short', 'shortjournal'), ('chapter-number', 'chapter')]:
+                copy(source, target)
+            used.add('page')
+            if 'page' in metadata:
+                put('pages', re.sub(r'(?<=\d)[-–](?=\d)', '--', str(metadata['page'])))
+            used.add('publisher')
+            if 'publisher' in metadata:
+                if entry_type in ('phdthesis', 'mastersthesis'):
+                    put('school', metadata['publisher'])
+                elif entry_type == 'techreport':
+                    put('institution', metadata['publisher'])
+                elif entry_type == 'misc':
+                    howpublished.append(str(metadata['publisher']))
+                else:
+                    put('publisher', metadata['publisher'])
+            used.update(('number', 'archive', 'genre'))
+            if kind in ('article', 'manuscript'):
+                copy('archive', 'archiveprefix')
+                copy('number', 'eprint')
+                if metadata.get('archive') or metadata.get('number'):
+                    notes.append(' '.join(str(metadata.get(field, '')) for field in ('archive', 'number')).strip())
+                if metadata.get('genre'):
+                    notes.append(str(metadata['genre']))
+            elif kind in ('patent', 'standard'):
+                howpublished.extend(str(metadata[field]) for field in ('genre', 'number') if metadata.get(field))
+            else:
+                copy('number', 'number')
+                if entry_type in ('techreport', 'phdthesis', 'mastersthesis'):
+                    copy('genre', 'type')
+                elif metadata.get('genre'):
+                    howpublished.append(str(metadata['genre']))
+            if kind in ('webpage', 'post-weblog', 'document'):
+                howpublished.insert(0, {'webpage': 'Web page', 'post-weblog': 'Blog post', 'document': 'Document'}[kind])
+            for field, label in [('authority', ''), ('jurisdiction', ''), ('version', 'Version')]:
+                used.add(field)
+                if metadata.get(field):
+                    howpublished.append((label + ' ' + str(metadata[field])).strip())
+            for field, label in [('event-title', 'Event'), ('event-place', 'Event location'), ('section', 'Section'), ('part-title', 'Part'), ('medium', 'Medium'), ('archive-place', 'Archive location'), ('status', 'Status')]:
+                used.add(field)
+                if field in metadata:
+                    notes.append(label + ': ' + str(metadata[field]))
+                    assess('field_in_note', 'documented_fallback', f'{field} is retained in note', 'metadata.' + field)
+            for source, target in [('DOI', 'doi'), ('URL', 'url'), ('ISBN', 'isbn'), ('ISSN', 'issn'), ('PMID', 'pmid'), ('PMCID', 'pmcid')]:
+                used.add(source)
+                if source not in metadata:
+                    continue
+                text = str(metadata[source])
+                if re.search(r'[{}\\\x00-\x1f\x7f]', text):
+                    assess('invalid_identifier', 'structural', 'Identifier contains unsafe characters', 'metadata.' + source)
+                else:
+                    put(target, text, literal=True)
+            used.add('accessed')
+            if 'accessed' in metadata:
+                date = metadata['accessed']
+                if date.get('date-parts') and len(date['date-parts']) == 1 and not any(date.get(field) for field in ('literal', 'circa', 'season')):
+                    parts = date['date-parts'][0]
+                    put('urldate', '-'.join([str(parts[0]), *[f'{number:02d}' for number in parts[1:]]]))
+                else:
+                    assess('accessed_unassessed', 'unknown', 'Access-date projection is unassessed', 'metadata.accessed')
+            for field in ('abstract', 'number-of-pages', 'number-of-volumes'):
+                used.add(field)
+                if field in metadata:
+                    assess('noncitation_omission', 'faithful_incomplete', f'{field} is retained in the catalog', 'metadata.' + field)
+            used.add('note')
+            if metadata.get('note'):
+                notes.insert(0, str(metadata['note']))
+            for field in sorted(set(metadata) - used):
+                if metadata[field]:
+                    assess('unassessed_mapping', 'unknown', f'No assessed portable projection for {field}', 'metadata.' + field)
+            for field, extension in value.get('extensions', {}).items():
+                if field == 'patent':
+                    for member in extension:
+                        assess('unassessed_extension', 'unknown', f'No registered projection for patent.{member}', 'extensions.patent.' + member)
+                else:
+                    assess('unassessed_extension', 'unknown', f'No registered projection for {field}', 'extensions.' + field)
+            if value.get('legacy_tags') or value.get('context'):
+                assess('noncitation_context', 'faithful_incomplete', 'Context and tags remain in the catalog')
+            if howpublished:
+                put('howpublished', '; '.join(howpublished))
+            if notes:
+                put('note', '; '.join(notes))
+            entry = '@' + entry_type + '{' + key + ',\n'
+            for name, text in fields.items():
+                entry += f'  {name} = {text},\n' if name == 'month' else f'  {name} = {{{text}}},\n'
+            entries.append(entry + '}\n')
+        except RefError as exc:
+            assess('invalid_export_value', 'structural', str(exc))
+    enforce_losses(losses, allow_unknown=allow_unknown)
+    return '\n'.join(entries).encode('utf-8'), warnings
 
 
 def target_state(connection, target: Path, project_id: str) -> tuple[str | None, bool, bool]:
@@ -123,7 +291,7 @@ def finish_export(catalog: Path, target: Path, digest: str) -> None:
         changed(connection)
 
 
-def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROFILE, dry_run: bool = False) -> dict:
+def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROFILE, dry_run: bool = False, allow_unknown: bool = False) -> dict:
     if profile != PROFILE:
         raise RefError("unsupported_profile", "This milestone supports portable-bibtex-v1", 2)
     target = files.destination(output)
@@ -133,7 +301,7 @@ def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROF
             "SELECT s.id FROM sources s JOIN project_sources ps ON s.id=ps.source_id WHERE ps.project_id=? AND ps.cited=1 AND s.state='active' ORDER BY s.citation_key",
             (project["id"],))]
         revision = connection.execute("SELECT revision FROM catalog_meta").fetchone()[0]
-    data, warnings = serialize(selected)
+    data, warnings = serialize(selected, allow_unknown=allow_unknown)
     candidate_digest = files.digest(data)
     result = dict(output=str(target), profile=profile, count=len(selected),
                   keys=[record["citation_key"] for record in selected], sha256=candidate_digest,

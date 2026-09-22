@@ -1,4 +1,3 @@
-import json
 
 import pytest
 
@@ -85,7 +84,7 @@ def test_extensions_are_explicit_unknowns():
     value['extensions'] = {'patent': {'assignees': [{'literal': 'Owner Company'}], 'application_number': 'APP1', 'priority_date': {'date-parts': [[2020]]}}}
     with pytest.raises(RefError) as error:
         bibliography.serialize([value])
-    assert len(error.value.issue['details']['entries']) == 3
+    assert len([item for item in error.value.issue['details']['entries'] if item['class'] == 'unknown']) == 3
 
 
 def test_empty_and_cleared_values():
