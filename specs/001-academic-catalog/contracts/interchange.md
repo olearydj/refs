@@ -1,6 +1,6 @@
 # Zotero Input Contract
 
-## Zotero input — slice 2
+## Zotero input (slice 2)
 
 `tools/zotero_extract/` is a versioned, one-time migration script outside the installed package. It reads Zotero SQLite read-only, preferably the maintained `.bak`, and accepts userdata schema 121. The observed route is Zotero 6.0.37, global schema 28 and Better BibTeX 7.0.0. Unsupported layouts require another tested extractor. Archive a dated, consistent Zotero data directory outside the catalog before cutover; whole databases are never stored in refs.
 

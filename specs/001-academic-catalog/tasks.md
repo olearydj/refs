@@ -1,6 +1,6 @@
-# Tasks: Academic Catalog, Slice 1
+# Tasks: Academic Catalog, Slices 1 and 2
 
-**Input:** [spec.md](spec.md), [plan.md](plan.md), [data-model.md](data-model.md), the four contracts, research.md and quickstart.md. **Status:** generated 2026-09-21; nothing implemented or checked off. Tests are included because the spec and plan require them.
+**Input:** [spec.md](spec.md), [plan.md](plan.md), [data-model.md](data-model.md), the contracts, research.md and quickstart.md. **Status:** T001–T037 complete; slice 2 tasks appended 2026-09-22. Tests are included because the spec and plan require them.
 
 The first milestone is a walking skeleton: initialize a disposable catalog, add one reference, show it, and export it. Export still uses a project, so the skeleton includes project create and cite. It uses a supplied citation key and one English journal article. It is a working increment, not acceptance of the complete slice.
 
@@ -10,7 +10,7 @@ Tasks remain grouped by user story. US1 and US2 each have an early pass for the 
 
 Each task has an ID, an optional `[P]` marker and, in story phases, a story label. Paths are relative to the repository root. `[P]` means the task can run alongside the other marked task in that phase once earlier phases are complete; it does not authorize skipping dependencies. Tasks without that marker run in listed order. Shared files such as src/refs/cli.py are edited sequentially.
 
-Keep ordinary modules and application-owned values/errors. Add tables to src/refs/migrations/001_initial.sql as their stories arrive; before release these are iterations of the initial schema, exercised in fresh disposable catalogs, not implicit upgrades of a real catalog. No milestone authorizes live migration. Write the named risk tests before the corresponding implementation, confirm they fail for the missing behavior, then make them pass. Extend one installed smoke test through the milestones rather than creating a second end-to-end suite.
+Keep ordinary modules and application-owned values/errors. The completed slice 1 tasks built src/refs/migrations/001_initial.sql. Slice 2 uses a new numbered migration; never edit 001 or upgrade on ordinary open. No milestone authorizes live migration. Write the named risk tests before the corresponding implementation, confirm they fail for the missing behavior, then make them pass. Extend one installed smoke test through the milestones rather than creating a second end-to-end suite.
 
 ## Phase 1: Setup
 
@@ -164,7 +164,7 @@ Parallelism is optional. No agent delegation or extra review round is implied.
 
 ## Requirement coverage
 
-Each individual active identifier is listed to keep traceability intact. SC-001 is an owner-assisted acceptance task, not a claim of build-time completion.
+This table records slice 1 coverage; the appended slice 2 coverage supplements it. SC-001 is an owner-assisted acceptance task, not a claim of build-time completion.
 
 | ID | Tasks | ID | Tasks |
 | --- | --- | --- | --- |
@@ -196,4 +196,77 @@ Each individual active identifier is listed to keep traceability intact. SC-001 
 | SC-007 | T026–T029 | SC-008 | T030–T032 |
 | SC-009 | T002–T003, T012, T017, T033–T035 | SC-010 | T013, T017–T019, T022, T025 |
 
-Deferred FR-023, FR-028, FR-029, FR-042 and FR-049 have no implementation tasks. There are no tasks for collection tables, moves, journals, native filesystem metadata preservation, request replay, import administration, saved export waivers/projections, plugin selection, full restore CLI, or the deferred performance/process matrix.
+FR-029 and FR-042 remain deferred. Slice 2 below activates Zotero import and imported collections; moves, journals, filing, request replay, saved export waivers/projections, plugin selection and exit tooling remain outside this list.
+
+## Slice 2 boundary
+
+The owner accepted the brief and D1–D4. T038–T050 use synthetic fixtures and explicit temporary homes only. They never access the owner's catalog, Zotero data, Box tree or manuscripts. T051 is the separate, owner-authorized real execution task; its destructive reset is limited to the confirmed trial catalog and its backups. No earlier task authorizes it. Keep the four runtime dependencies, locked environment and three-day cooldown. The estimate is about 800 added source lines; explain a named workflow need before exceeding it.
+
+## Phase 12: Synthetic extraction and gate foundation
+
+**Outcome:** A one-time extractor produces the published directory from a realistic synthetic database, with an independent expected-data oracle established first.
+
+- [ ] T038 Build the synthetic userdata-121 database fixture in tests/fixtures/zotero/ from pinned Zotero schema SQL stored there, recording upstream version/hash and license in tests/fixtures/zotero/README.md. Include native/Extra/legacy key precedence, all supported creator roles and ordering, corporate names, raw/parsed dates, six Extra identifier schemes and residual lines, local/user library identities, nested collections, multiple memberships, related pairs, missing parents, trash, linked/base-relative/stored/URL-only attachments, notes, outlines and annotations. Extend tests/fixtures/real-trial/zotero_gate.py and tests/integration/test_zotero_gate.py so negative controls detect wrong library bindings, role/order loss, empty collections, each attachment locator and note/identifier losses; comparisons remain read-only and disclose skipped D2 content. Covers FR-018, FR-022–024, FR-028, FR-049 and SC-010.
+- [ ] T039 Implement the one-time read-only extractor in tools/zotero_extract/extract.py with usage and limits in tools/zotero_extract/README.md, outside the installed package. Test in tests/contract/test_zotero_extract.py against T038's database and independent expectations. Emit items/*.json, collections.json and manifest.json per contracts/interchange.md, including versions, derived library URI, original data/base paths and legacy keys. Refuse unsupported schema and unsafe/inconsistent acquisition; preserve native roles, original JSON values and skipped-item accounting. Verify source bytes are unchanged and the extracted fixture agrees with the gate's source oracle. The full refs round-trip follows at T050. Covers FR-018, FR-023 and FR-049.
+
+## Phase 13: Persistence foundation
+
+**Outcome:** Disposable existing and fresh catalogs support the four new relations without changing 001.
+
+- [ ] T040 Add src/refs/migrations/002_zotero_ingest.sql and an explicitly invoked migration runner in src/refs/catalog.py; document its invocation in docs/restore.md. Add and test init --reuse-config per contracts/cli.md; retain existing configuration values and refuse ready catalogs. Exercise upgrade, interrupted rollback and fresh initialization in tests/contract/test_migrations.py. Preserve IDs, keys, originals and export baselines; ordinary open never upgrades. Add import_entries with “status is applied, unchanged, conflict or invalid,” candidate IDs, conflicting values, reviewed revision, applied source and decisions; collections with “ID, parent ID, verbatim name, hierarchy path and revision” and imported identity; source_collections with “Unique source/collection pair”; source_relations with “Deduplicated related-item pairs with origin identities” and unresolved endpoint evidence. Enforce foreign keys and idempotent associations. No folder mapping or filing columns. Covers FR-024, FR-028, FR-049.
+
+## Phase 14: US3 - Bring references across and settle differences (P2)
+
+**Goal:** Import the synthetic Zotero library, inspect every outcome and explicitly accept incoming corrections.
+
+**Runnable check:** Extract T038's fixture, import it, inspect the saved batch, reconcile a selected conflict and rerun without duplicates. Bib imports exercise the same D3 rules.
+
+- [ ] T041 [US3] Implement Zotero JSON admission and canonical mapping in src/refs/adapters/zotero.py, src/refs/models.py and src/refs/data/bibliographic-coverage.json, with tests/contract/test_zotero_mapping.py. Preserve exact item JSON, native type, ordered creators and native roles, dates, tags and key precedence. Add arxiv/oclc exact-value lookup in src/refs/search.py and their assessed portable export in src/refs/bibliography.py, with regression tests: arxiv emits eprint/eprinttype and the conditional classic note; oclc is a documented omission. Preserve exact howpublished passthrough and the accepted note rule. Add D4 Extra handling with preserved-only diagnostics. Test agent/Bib/Zotero convergence, incompatible aliases and unknown mappings using tests/fixtures/zotero/. Covers FR-002, FR-018, FR-023, FR-047–049 and SC-010.
+- [ ] T042 [US3] Persist per-entry accounting for every batch format in src/refs/importing.py and wire `import --format zotero --input DIR --origin TEXT` in src/refs/cli.py. Preserve Bib invocation compatibility while adding import subcommands. Store original item, run/entry evidence, source and origin binding atomically; namespace/library_uri/item_key bindings cannot be stolen. Commit counts alongside each entry; preserve invalid/conflicting evidence, partial exit status and interruption-safe reruns. Test dry-run, partial batches and same item keys in different libraries in tests/contract/test_zotero_import.py. Covers FR-014, FR-018–024, FR-049.
+- [ ] T043 [US3] Import hierarchy and memberships, child-note context, related pairs and file locators in src/refs/importing.py and src/refs/resources.py, tested in tests/contract/test_zotero_children.py. Keep verbatim collection names/parents and legacy tags; context origin is import. Skip D2 outlines and annotations with separate preservation accounting. Resolve stored files under the original storage/<attachmentItemKey>/, linked absolute paths and base-relative paths without touching bytes; URL-only children become context, not resources. Preserve unresolved endpoints without inventing parents. Reruns duplicate no child association. Covers FR-022–023, FR-025–026, FR-028, FR-049.
+- [ ] T044 [US3] Implement shared D3 binding and gap filling in src/refs/importing.py and src/refs/sources.py with tests/contract/test_import_binding.py across Bib, Zotero and supported single-entry input routes. Exactly one existing normalized DOI/ISBN match may bind when type/edition agree; two candidates or contradictory evidence conflict. Keep the catalog key, record incoming key provenance and report every bind. Fill absent fields with imported origin, preserve deliberate clears, and report differences side by side. Title-only matches remain separate; removed records stay removed. Covers FR-003–005, FR-020–021 and SC-003.
+- [ ] T045 [US3] Implement persisted `import show BATCH [--status]` and `import reconcile BATCH --take-incoming KEY[.field]...` in src/refs/importing.py and src/refs/cli.py, tested in tests/contract/test_import_reconcile.py. Follow the selector and decision form in contracts/records.md; preview returns batch_revision and current source revisions without writes; execution requires --execute --if-batch-revision N and atomically rechecks batch and touched source revisions, preserves keys/originals and marks selected values as corrections. Leave unselected conflicts current, retain decisions and report remaining conflicts. Test ambiguous selectors, stale review, partial acceptance and repeat no-ops. Covers FR-014, FR-021, FR-024.
+- [ ] T046 [US3] Add human import inspection/reconciliation output in src/refs/render.py and tests/contract/test_import_output.py under FR-013. Show keys, candidates, side-by-side values, applied decisions and preserved-only limitations; JSON retains the envelope and per-entry details. Verify import summary precedes hints, every failure has an actionable message and every successful command prints output. Covers FR-013, FR-023–024.
+
+## Phase 15: US1 - Find sources through imported collections (P1, after US3)
+
+**Goal:** Browse the imported hierarchy and find its members without filing files.
+
+**Runnable check:** List nested and empty collections with counts, filter list/search by an imported path, combine a project filter and verify no catalog or external-file writes.
+
+- [ ] T047 [US1] Add read-only `collection list` and `--collection PATH` on list/search in src/refs/collections.py, src/refs/search.py and src/refs/cli.py. Test hierarchy, counts, verbatim Unicode paths, multiple memberships, ambiguous paths, removed-source visibility and combined filters in tests/contract/test_collections.py. Preserve existing pagination, ordering and matched-field evidence. No collection create, rename, merge, filing or moves. Covers FR-015–017, FR-028 and SC-005.
+- [ ] T048 [US1] Render collection hierarchy/counts and filtered source results in src/refs/render.py; test readable first lines and unchanged JSON structure in tests/contract/test_collection_output.py. Add runnable Zotero/collection sections to scripts/demo.sh using the synthetic extraction fixture; keep it the installed smoke test through tests/integration/test_smoke.py. Covers FR-013, FR-028 and SC-005/009.
+
+## Phase 16: US5 - Restore the expanded catalog (P2)
+
+**Runnable check:** Back up the synthetic imported catalog, restore it into a second temporary home, and compare all fourteen logical tables.
+
+- [ ] T049 [US5] Update schema-aware snapshot validation in src/refs/recovery.py and the tested procedure in docs/restore.md for migration 002. Extend tests/integration/test_restore.py to compare import decisions, original JSON, identities, collections, memberships and relations alongside existing data. Refuse unsupported schemas and damaged snapshots; include no file bytes and add no restore CLI. Covers FR-040–041 and SC-008.
+
+## Phase 17: Synthetic acceptance and proportion
+
+- [ ] T050 Run the complete extractor → importer → gate round-trip in tests/integration/test_zotero_gate.py against T038's synthetic database. Prove zero findings, unchanged rerun, all assigned keys/roles/types preserved, D3 decisions retained and attachment paths resolving; negative controls must still fail. Run locked sync, pytest, Ruff, ty, scripts/demo.sh --smoke and representative portable consumer rendering, including arxiv/oclc export and exact-value search regressions. Verify the installed wheel excludes the one-time extractor and test schema SQL. Update README.md and record results, source-line delta, four added tables, dependency count and any justified departure from the roughly 800-line estimate in specs/001-academic-catalog/reviews/slice-2-acceptance.md. No owner data is used. Covers SC-002–010.
+
+## Phase 18: US3 - Owner-authorized library cutover (P2, final task)
+
+- [ ] T051 [US3] After T050 passes, execute D3's authorized reset and real cutover, recording exact commands, resolved paths and actual results in specs/001-academic-catalog/reviews/slice-2-acceptance.md. Identify the trial catalog and its backups precisely before removing only those paths; retain configuration and all external files. Run refs init --reuse-config after that reset, archive a dated consistent Zotero data directory outside refs, extract from the owner's zotero.sqlite.bak with tools/zotero_extract/extract.py, import, and run tests/fixtures/real-trial/zotero_gate.py against the real database. Require 562 keys/items, 554 file attachments, 58 collections and 574 memberships, zero unexplained differences, whole-library portable export rendered against BBT with explained differences, and an all-unchanged rerun. Reintroduce Attention and the Pipyer paper through the walkthrough, bind DOI overlaps, explicitly re-adopt its bibliography and render it. Keep Zotero and Box read-only; do not substitute synthetic success or mark complete without the real run. Stop on unconfirmed deletion paths or gate failures. Covers FR-018, FR-020–024, FR-028, FR-049 and SC-001.
+
+## Slice 2 dependencies, coverage and scope check
+
+T038 → T039 → T040 → US3 (T041–T046) → US1 collections (T047–T048) → US5 (T049) → T050 → T051. Extraction and its oracle come first; the real import is last. T046 is the first runnable import/reconciliation milestone. Collection browsing is independently exercised after US3 supplies memberships. Restore follows schema completion. No partial milestone replaces T050 acceptance.
+
+No slice 2 tasks carry [P]: the import tasks share source, CLI and persistence boundaries. Within US3, fixture preparation for T041 and T043 can be independent once T039's format is established; implementations remain sequential. US1 and US5 also remain sequential because their checks depend on populated imported state.
+
+| Requirement | Slice 2 tasks |
+| --- | --- |
+| FR-018 | T038–T042, T051 |
+| FR-020 | T042, T044, T051 |
+| FR-021 | T044–T045, T051 |
+| FR-022 | T038, T043, T051 |
+| FR-023 | T038–T039, T041, T043, T046, T051 |
+| FR-024 | T040, T042, T045–T046, T051 |
+| FR-028 | T040, T043, T047–T048, T051 |
+| FR-049 | T038–T043, T051 |
+| FR-047–048 | T041, T050 |
+
+Fourteen new tasks, four new tables, no new runtime dependency. US3 has seven tasks including cutover; US1 has two; US5 has one; foundation and acceptance have four. No slice 3 filing, moves, reorganize or journals, and no backlog surface is scheduled. Record line-budget overruns with the incident they prevent for owner judgment.

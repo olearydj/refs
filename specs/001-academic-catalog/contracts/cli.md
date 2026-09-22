@@ -25,7 +25,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 
 | Invocation | Inputs and effect |
 | --- | --- |
-| init | Explicit creation using selected config/catalog and optional --library-root PATH; --no-library permits metadata-only use. Private permissions; no overwrite. |
+| init | --reuse-config creates a catalog at an existing configuration’s catalog path using its configured library only when no ready catalog exists; refuse a ready catalog. Without the flag, behavior is unchanged. Explicit creation using selected config/catalog and optional --library-root PATH; --no-library permits metadata-only use. Private permissions; no overwrite. |
 | paths | Resolve config/catalog/library and origins even before initialization. |
 | config show | Inspect effective values, origins and validation diagnostics; replaces config validate. |
 | schema NAME | Exactly source-create, source-patch, source-record, result; packaged, offline. |
@@ -57,7 +57,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | --- | --- |
 | import --format zotero --input DIR --origin TEXT | Apply or preview the [JSON directory](interchange.md); preserve input and persist per-entry accounting. Existing Bib invocation remains supported. |
 | import show BATCH [--status STATUS] | Show the saved run and entries, optionally filtered by applied, unchanged, conflict or invalid. |
-| import reconcile BATCH --take-incoming KEY[.field]... | Preview or apply the [explicit incoming-value decisions](records.md#identity-and-non-overwriting-import); report remaining conflicts. |
+| import reconcile BATCH --take-incoming KEY[.field]... [--execute --if-batch-revision N] | Preview or apply the [explicit incoming-value decisions](records.md#identity-and-non-overwriting-import); preview includes batch_revision and current source revisions; execution rechecks both and reports remaining conflicts. |
 | collection list | Show imported hierarchy and membership counts. |
 | list/search --collection PATH | Filter active sources by membership in the selected imported collection; retain existing project filters, sorting and pagination. |
 
