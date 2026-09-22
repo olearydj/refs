@@ -1,12 +1,10 @@
 """Plain readable views for the three retrieval commands."""
 
-import json
-
 from refs.naming import issued_year
 
 
 def authors(record: dict) -> list[str]:
-    return [name.get('literal') or ' '.join(name.get(part, '') for part in ('given', 'non-dropping-particle', 'family', 'suffix')).strip()
+    return [name.get('literal') or ' '.join(name[part].strip() for part in ('given', 'dropping-particle', 'non-dropping-particle', 'family', 'suffix') if name.get(part))
             for name in record['metadata'].get('author', [])]
 
 
@@ -16,16 +14,13 @@ def readable(command: str, data: dict) -> str:
         lines = [f"Key: {data['citation_key']}", f"Type: {metadata['type']}",
                  'Authors: ' + ('; '.join(authors(data)) or '(not supplied)'),
                  'Year: ' + issued_year(data), 'Title: ' + metadata.get('title', '(not supplied)')]
-        for field, value in metadata.items():
-            if field not in ('type', 'author', 'issued', 'title'):
-                lines.append(f'{field}: {value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)}')
-        # Retain date precision, state and all provenance in the readable view.
-        for field, value in data.items():
-            if field not in ('metadata', 'citation_key', 'resources', 'projects'):
-                lines.append(f'{field}: {value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)}')
-        if 'issued' in metadata:
-            lines.append('Issued: ' + json.dumps(metadata['issued'], ensure_ascii=False))
-        lines.append('Files: ' + (json.dumps(data.get('resources'), ensure_ascii=False) if data.get('resources') else '(none)'))
+        for field, label in [('container-title', 'Container'), ('volume', 'Volume'), ('issue', 'Issue'), ('page', 'Pages'), ('DOI', 'DOI'), ('URL', 'URL')]:
+            if field in metadata:
+                lines.append(f'{label}: {metadata[field]}')
+        resources = data.get('resources', [])
+        lines.append('Files:' if resources else 'Files: (none)')
+        for resource in resources:
+            lines.append('  ' + str(resource.get('path') or resource.get('id', '(unavailable)')))
         lines.append('Projects: ' + (', '.join(item['name'] for item in data.get('projects', [])) or '(none)'))
         return '\n'.join(lines)
     lines = []

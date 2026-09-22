@@ -41,3 +41,19 @@ def test_titles_and_filenames():
     assert naming.sort_title(record()) == 'turing trap'
     assert naming.sort_title(record() | {'overrides': {'sort_title': 'Chosen'}}) == 'chosen'
     assert naming.edition_display(2) == '2nd ed.'
+
+
+@pytest.mark.parametrize('text, language, expected, warns', [
+    ('learning from examples', None, 'Learning From Examples', False),
+    ('études françaises', None, 'études françaises', True),
+    ('études françaises', 'fr', 'études françaises', False),
+    ('learning Python', 'en', 'Learning Python', False),
+])
+def test_title_language_warning_requires_unknown_nonascii_letters(text, language, expected, warns):
+    metadata = {'title': text}
+    if language is not None:
+        metadata['language'] = language
+    normalized, warnings = naming.normalize({'metadata': metadata})
+    assert normalized['metadata']['title'] == expected
+    assert any(item['code'] == 'title_language_unknown_or_nonenglish' for item in warnings) == warns
+    assert normalized['metadata'].get('language') == language

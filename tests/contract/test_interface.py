@@ -25,7 +25,14 @@ def test_readable_output_and_json_others(initialized, tmp_path, reference_path):
         result = subprocess.run(['refs', *args], env=env, text=True, capture_output=True)
         assert result.returncode == 0, result.stderr
         assert 'smith-2024-learningPython' in result.stdout
-        assert 'Smith' in result.stdout
+        assert 'Alex Smith' in result.stdout
+        assert 'Alex  Smith' not in result.stdout
+        if args[0] == 'show':
+            for hidden in ('schema_version', 'created_at', 'updated_at', 'corrected_fields', 'key_provenance', 'originals', '{', '}'):
+                assert hidden not in result.stdout
+            assert 'Container: Journal of Synthetic Examples' in result.stdout
+            assert 'Files: (none)' in result.stdout
+            assert 'Projects: (none)' in result.stdout
         assert '2024' in result.stdout
         assert not result.stdout.startswith('{')
         assert '\x1b' not in result.stdout
