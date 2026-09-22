@@ -149,7 +149,8 @@ def test_import_entry_status_and_human_order(initialized,tmp_path):
     run=subprocess.run(['refs','import','--input',str(path)],env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(tmp_path/'cat')),stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
     assert run.returncode==4
     assert run.stdout.splitlines()[0].startswith('Imported 0, unchanged 2, conflicts 0, invalid 1')
-    assert 'Inspect reported entries' in run.stdout.splitlines()[1]
+    assert 'Inspect reported entries' in run.stdout
+    assert run.stdout.index('Imported ') < run.stdout.index('Inspect reported entries')
 
 
 

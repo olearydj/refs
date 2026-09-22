@@ -1,5 +1,7 @@
 """Plain command confirmations; structured output remains the result envelope."""
 
+import json
+
 from refs.display import readable
 
 
@@ -46,6 +48,41 @@ def warning_lines(command: str, warnings: list[dict]) -> list[str]:
         lines.append(f"Warning: {len(keys)} {noun} {description} ({', '.join(keys)})")
     return lines
 
+def import_text(command: str, data: dict) -> str:
+    if command == 'import':
+        counts = data['counts']
+        lines = [f"Imported {counts['applied']}, unchanged {counts['unchanged']}, conflicts {counts['conflict']}, invalid {counts['invalid']} from {data['input']}"]
+    else:
+        verb = 'Import' if command == 'import show' else 'Reconciled import'
+        lines = [f"{verb} {data['import_id']} (batch revision {data['batch_revision']})"]
+    for entry in data['entries']:
+        key = entry.get('citation_key') or entry.get('item_key') or '(unreadable key)'
+        binding = entry.get('binding', {})
+        if command != 'import' or entry.get('status') in ('conflict','invalid'):
+            lines.append(f"{key}: {entry.get('status','selected')}" + (f" (source revision {entry['source_revision']})" if entry.get('source_revision') else ''))
+            if entry.get('message'):
+                lines.append('  '+entry['message'])
+            candidates = entry.get('candidates',entry.get('details',{}).get('source_ids',[]))
+            if candidates:
+                lines.append('  Candidates: '+', '.join(candidates))
+            for change in binding.get('conflicts',[]) if command != 'import reconcile' else entry.get('remaining_conflicts',[]):
+                lines.append(f"  {change['path']}: current {json.dumps(change['current'],ensure_ascii=False)}; incoming {json.dumps(change['incoming'],ensure_ascii=False)}")
+        if binding.get('bound') and (binding.get('incoming_key') != binding.get('catalog_key') or binding.get('filled')):
+            lines.append(f"  Bound {key} to {binding['catalog_key']}" + ('; filled '+', '.join(binding['filled']) if binding.get('filled') else ''))
+        for decision in entry.get('decisions',[]):
+            lines.append(f"  Take incoming {decision['path']}: {json.dumps(decision['incoming'],ensure_ascii=False)}")
+        for limitation in entry.get('limitations',[]):
+            lines.append(f"  {key}: {limitation['field']}: {limitation['reason']}")
+        for warning in entry.get('warnings',[]):
+            lines.append(f"  Warning: {key}: {warning['message']}")
+    for kind, count in data.get('preservation',{}).items():
+        if count:
+            lines.append(f"Preservation: {count} {kind.replace('_',' ')} skipped as catalog content; retain the original Zotero archive")
+    if not data['entries']:
+        lines.append('(no entries)')
+    return '\n'.join(lines)
+
+
 def render_text(command: str, data: dict, warnings: list[dict]) -> str:
     key = data.get('citation_key', '')
     revision = data.get('revision', '')
@@ -67,9 +104,9 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
         'resource unlink': lambda: f"Resource {data['id']} is already unlinked" if data.get('unchanged') else f"Unlinked {data.get('resolved_path') or data.get('path') or data.get('relative')} from {key}",
         'resource check': lambda: '\n'.join(f"{item['status']}: {item.get('resolved_path') or item.get('relative') or item['id']}" for item in data['items']) or '(no resources)',
         'open': lambda: 'Choose a resource with --resource:\n' + '\n'.join(f"{item['id']}: {item.get('resolved_path') or item.get('relative')}" for item in data['choices']) if 'choices' in data else f"Opened {data['path']} for {key}",
-        'import show': lambda: f"Import {data['import_id']} ({len(data['entries'])} entries)",
-        'import reconcile': lambda: f"Reconciled import {data['import_id']} ({len(data['entries'])} selected entries)",
-        'import': lambda: f"Imported {data['counts']['applied']}, unchanged {data['counts']['unchanged']}, conflicts {data['counts']['conflict']}, invalid {data['counts']['invalid']} from {data['input']}",
+        'import show': lambda: import_text(command,data),
+        'import reconcile': lambda: import_text(command,data),
+        'import': lambda: import_text(command,data),
         'export': lambda: f"Wrote {data['output']} (0 entries)" if not data['count'] else f"Wrote {data['output']} ({data['count']} entries, {len(warnings)} warnings)",
         'show': lambda: readable(command, data),
         'search': lambda: readable(command, data),
