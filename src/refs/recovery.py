@@ -78,6 +78,7 @@ def backup(settings: Settings, output: Path, *, dry_run=False) -> dict:
         return dict(output=str(target),dry_run=True,external_contents_included=False)
     with files.file_lock(settings.catalog_path()):
         configuration=settings.config.read_bytes()
+        target.parent.mkdir(parents=True, exist_ok=True)
         staging=Path(tempfile.mkdtemp(prefix=target.name+'-',suffix='.partial',dir=target.parent))
         (staging/'config.toml').write_bytes(configuration)
         (staging/'config.toml').chmod(0o600)

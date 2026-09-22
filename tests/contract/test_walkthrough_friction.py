@@ -120,3 +120,12 @@ def test_resource_copy_collision_exits_three(human, initialized, reference_path,
     assert result['errors'][0]['code']=='destination_exists'
     from pathlib import Path
     assert Path(copied['destination']).read_bytes()==source.read_bytes()==b'synthetic original'
+
+
+def test_backup_creates_missing_parents(human, tmp_path):
+    from refs.recovery import validate_snapshot
+    target=tmp_path/'new'/'nested'/'snapshot'
+    human('backup','--output',target,'--dry-run')
+    assert not target.parent.exists()
+    assert human('backup','--output',target).splitlines()[0]==f'Wrote snapshot {target} (external file bytes excluded)'
+    assert validate_snapshot(target)['format']=='refs-backup'
