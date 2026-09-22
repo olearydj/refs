@@ -40,7 +40,7 @@ def validate_snapshot(path: Path) -> dict:
         if manifest_path.is_symlink():
             raise ValueError('Manifest cannot be a symlink')
         manifest=json.loads(manifest_path.read_text())
-        if manifest['schema_version']!=1 or manifest['external_contents_included'] is not False or set(manifest['members'])!=MEMBERS:
+        if manifest.get('format')!='refs-backup' or manifest['schema_version']!=1 or manifest['external_contents_included'] is not False or set(manifest['members'])!=MEMBERS:
             raise ValueError('Unsupported manifest or member set')
         if set(item.name for item in path.iterdir()) != MEMBERS|{'manifest.json'}:
             raise ValueError('Unexpected snapshot members')
@@ -89,7 +89,7 @@ def backup(settings: Settings, output: Path, *, dry_run=False) -> dict:
             saved.row_factory=sqlite3.Row
             inventory=resources.inventory(saved)
         (staging/'resources.jsonl').write_text(''.join(json.dumps(item,ensure_ascii=False)+'\n' for item in inventory))
-        manifest=dict(schema_version=1,configuration_path=str(settings.config),catalog_schema_version=meta['schema_version'],catalog_id=meta['catalog_id'],catalog_revision=meta['revision'],external_contents_included=False,
+        manifest=dict(format="refs-backup",schema_version=1,configuration_path=str(settings.config),catalog_schema_version=meta['schema_version'],catalog_id=meta['catalog_id'],catalog_revision=meta['revision'],external_contents_included=False,
                       members={name:dict(size=(staging/name).stat().st_size,sha256=files.hash_file(staging/name)) for name in sorted(MEMBERS)})
         (staging/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
         for member in staging.iterdir():

@@ -69,3 +69,20 @@ def test_backup_human_confirmation(initialized,tmp_path):
     result=subprocess.run(['refs','backup','--output',str(target)],env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(tmp_path/'cat')),text=True,capture_output=True)
     assert result.returncode==0,result.stderr
     assert result.stdout.splitlines()[0]==f'Wrote snapshot {target} (external file bytes excluded)'
+
+
+
+@pytest.mark.parametrize('marker', [None, 'another-format'])
+def test_snapshot_format_is_required(initialized,tmp_path,marker):
+    target=tmp_path/'snapshot'
+    recovery.backup(select(str(tmp_path/'config.toml'),str(tmp_path/'cat')),target)
+    assert recovery.validate_snapshot(target)['format']=='refs-backup'
+    path=target/'manifest.json'
+    manifest=json.loads(path.read_text())
+    if marker is None:
+        del manifest['format']
+    else:
+        manifest['format']=marker
+    path.write_text(json.dumps(manifest))
+    with pytest.raises(RefError):
+        recovery.validate_snapshot(target)
