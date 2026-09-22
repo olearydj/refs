@@ -48,20 +48,39 @@ def value_at(record: dict, path: str):
     return value
 
 
-def match(connection, source: SourceCreate, fingerprint: str) -> tuple[str | None, list[str]]:
+def isbn_plan(connection, incoming: list[SourceCreate]) -> dict:
+    from collections import Counter
+
     from refs.search import identifier
+    counts = Counter(identifier('ISBN',source.metadata.ISBN) for source in incoming if source.metadata.type=='book' and source.metadata.ISBN)
+    existing = {}
+    for row in connection.execute('SELECT id,metadata_json FROM sources'):
+        metadata = json.loads(row['metadata_json'])
+        if metadata['type']=='book' and metadata.get('ISBN'):
+            existing.setdefault(identifier('ISBN',metadata['ISBN']),[]).append(row['id'])
+    return dict(incoming=counts, existing=existing)
+
+
+def match(connection, source: SourceCreate, fingerprint: str, *, isbn_groups=None) -> tuple[str | None, list[str]]:
     ids = {row[0] for row in connection.execute('SELECT id FROM sources WHERE citation_key=?', (source.citation_key,))}
     ids.update(row[0] for row in connection.execute('SELECT source_id FROM originals WHERE sha256=? AND source_id IS NOT NULL', (fingerprint,)))
     for row in connection.execute('SELECT id,metadata_json FROM sources'):
         metadata = json.loads(row['metadata_json'])
-        for field in ('DOI','ISBN'):
-            incoming = getattr(source.metadata, field)
-            if incoming and metadata.get(field) and identifier(field,incoming) == identifier(field,metadata[field]):
-                ids.add(row['id'])
+        if source.metadata.DOI and metadata.get('DOI') and sources.doi_identity(source.metadata.DOI)==sources.doi_identity(metadata['DOI']):
+            ids.add(row['id'])
     for binding in sources.bindings(source):
         row = connection.execute('SELECT source_id FROM origin_identities WHERE namespace=? AND library_uri=? AND item_key=?', binding).fetchone()
         if row:
             ids.add(row[0])
+    if not ids and source.metadata.type=='book' and source.metadata.ISBN:
+        from refs.search import identifier
+        groups = isbn_groups if isbn_groups is not None else isbn_plan(connection,[source])
+        isbn = identifier('ISBN',source.metadata.ISBN)
+        candidates = groups['existing'].get(isbn,[])
+        if candidates:
+            if len(candidates)!=1 or groups['incoming'].get(isbn,0)!=1:
+                raise RefError('identity_conflict','ISBN group is not one-to-one; inspect the books without binding them',details={'source_ids':candidates,'isbn':isbn,'incoming_count':groups['incoming'].get(isbn,0)})
+            ids.update(candidates)
     if len(ids) > 1:
         raise RefError('identity_conflict', 'Identity signals disagree; inspect the sources', details={'source_ids': sorted(ids)})
     if not ids:
@@ -73,8 +92,8 @@ def match(connection, source: SourceCreate, fingerprint: str) -> tuple[str | Non
     return source_id, differences(source.canonical(), current)
 
 
-def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False) -> tuple[str | None, dict]:
-    source_id, paths = match(connection, source, hashlib.sha256(raw).hexdigest())
+def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False, isbn_groups=None) -> tuple[str | None, dict]:
+    source_id, paths = match(connection, source, hashlib.sha256(raw).hexdigest(),isbn_groups=isbn_groups)
     if not source_id:
         return None, {}
     from refs.search import identifier
@@ -124,7 +143,7 @@ def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False
     return source_id, dict(bound=compatible, incoming_key=source.citation_key, catalog_key=current['citation_key'], filled=fills, conflicts=conflicts)
 
 
-def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None) -> dict:
+def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None) -> dict:
     raw = block['raw']
     parsed = None
     incoming = None
@@ -143,7 +162,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         source = SourceCreate.model_validate(canonical)
         source.citation_key = key
         incoming = source.canonical()
-        source_id, binding = bind_and_fill(connection, source, raw, dry_run=dry_run)
+        source_id, binding = bind_and_fill(connection, source, raw, dry_run=dry_run,isbn_groups=isbn_groups)
         conflicts = [item['path'] for item in binding.get('conflicts', [])]
         if conflicts:
             outcome = dict(outcome='conflict', code='value_conflict', source_id=source_id, citation_key=key, conflicts=conflicts)
@@ -188,12 +207,21 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
             preserve(connection, raw, locator, fingerprint, format='bib-file', origin='import-file')
             changed(connection)
     blocks = bibtex.partition(raw)
+    incoming = []
+    for block in blocks:
+        if block['kind']=='entry':
+            try:
+                incoming.append(bibtex.parse(block['raw'])['source'])
+            except RefError:
+                pass
+    with connect(catalog) as connection:
+        isbn_groups = isbn_plan(connection,incoming)
     entries = []
     for block in blocks:
         if block['kind'] != 'entry':
             continue
         with connect(catalog, write=not dry_run) as connection:
-            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings, import_id=run_id)
+            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings, import_id=run_id,isbn_groups=isbn_groups)
             outcome = result['outcome']
             counts[outcome] += 1
             if not dry_run:
@@ -228,7 +256,7 @@ def save_entry(connection, batch: str, locator: str, result: dict) -> None:
                        (str(uuid4()), batch, locator, result['status'], json.dumps(candidates), json.dumps(result.get('conflicts', [])), source_id, revision, json.dumps(result)))
 
 
-def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, dry_run=False, settings=None, batch=None) -> dict:
+def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, dry_run=False, settings=None, batch=None, isbn_groups=None) -> dict:
     incoming, source_id = None, None
     result: dict = {}
     try:
@@ -240,7 +268,7 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
         source = SourceCreate.model_validate(incoming)
         source.citation_key = key
         incoming = source.canonical()
-        source_id, binding = bind_and_fill(connection, source, entry['raw'], dry_run=dry_run)
+        source_id, binding = bind_and_fill(connection, source, entry['raw'], dry_run=dry_run,isbn_groups=isbn_groups)
         conflicts = [item['path'] for item in binding.get('conflicts', [])]
         if source_id:
             result = dict(status='conflict' if conflicts else 'applied' if binding.get('filled') else 'unchanged', source_id=source_id, conflicts=conflicts)
@@ -274,6 +302,12 @@ def run_zotero(catalog: Path, directory: Path, *, dry_run=False, origin=None, se
     fingerprint = hashlib.sha256(b''.join(evidence + [entry['raw'] for entry in bundle['items']])).hexdigest()
     batch = str(uuid4())
     counts = dict(applied=0, unchanged=0, conflict=0, invalid=0)
+    incoming = []
+    for entry in bundle['items']:
+        if entry['data']['itemType']=='book' and isinstance(entry['data'].get('ISBN'),str):
+            incoming.append(SourceCreate.model_validate({'schema_version':'1.0','metadata':{'type':'book','title':'ISBN group candidate','ISBN':entry['data']['ISBN']}}))
+    with connect(catalog) as connection:
+        isbn_groups = isbn_plan(connection,incoming)
     if not dry_run:
         with connect(catalog, write=True) as connection:
             connection.execute('INSERT INTO imports (id,origin,file_digest,started_at) VALUES (?,?,?,?)', (batch, origin or str(directory), fingerprint, datetime.now(UTC).isoformat()))
@@ -293,7 +327,7 @@ def run_zotero(catalog: Path, directory: Path, *, dry_run=False, origin=None, se
             continue
         entry['context'] = child_context(bundle, entry['key'])
         with connect(catalog, write=not dry_run) as connection:
-            result = apply_zotero(connection, entry, manifest, fingerprint, dry_run=dry_run, settings=settings, batch=batch)
+            result = apply_zotero(connection, entry, manifest, fingerprint, dry_run=dry_run, settings=settings, batch=batch,isbn_groups=isbn_groups)
             if result.get('source_id') and result['status'] in ('applied','unchanged'):
                 result['resources'], notices = associate(connection,bundle,entry,result['source_id'],collections,settings=settings,dry_run=dry_run)
                 result.setdefault('warnings', []).extend(notices)

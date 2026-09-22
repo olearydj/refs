@@ -54,7 +54,7 @@ Record explicit sets, clearing and type supersession in the source-row corrected
 
 ## Identity and non-overwriting import
 
-**Slice 2, all import formats.** Check prior origin bindings and normalized identifiers together. A unique DOI or ISBN match binds when type and edition do not contradict; contradictory signals and removed-source matches require inspection. Keep the catalog key and record the incoming key in provenance. Report every bind. Title similarity produces a warning on a separate source, never a merge or block.
+**Slice 2, all import formats.** Check prior origin bindings and normalized identifiers together. A unique DOI match binds when type and edition do not contradict. ISBN is a fallback for books only, with exactly one incoming book and one existing book in its group; ambiguous groups do not bind. Batch ISBN candidates are the sources present before the batch, so a fresh library import keeps distinct books sharing an ISBN. Existing key and origin identities support unchanged reruns; contradictory signals and removed-source matches require inspection. Keep the catalog key and record the incoming key in provenance. Report every bind. Title similarity produces a warning on a separate source, never a merge or block.
 
 A bound entry fills absent fields with origin `import`; deliberate clears and incompatible fields stay absent. Incoming omissions propose nothing. Differing values remain in originals and appear side by side in the persisted report. Source creation, safe fills, evidence and bindings commit with the entry's accounting. Reruns do not duplicate sources, resources, notes, memberships or relations, or undo corrections.
 
