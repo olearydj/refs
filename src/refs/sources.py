@@ -11,7 +11,7 @@ from pydantic import ValidationError
 from refs import naming
 from refs.adapters.search_sqlite import refresh
 from refs.catalog import changed, connect
-from refs.models import SourceCreate, parse
+from refs.models import REGISTRY, SourceCreate, parse
 from refs.results import RefError
 
 
@@ -27,6 +27,14 @@ def record(connection, source_id: str) -> dict:
     result["originals"] = [dict(r) for r in connection.execute(
         "SELECT id, sha256, byte_length, format, origin, locator FROM originals WHERE source_id=? ORDER BY id",
         (source_id,))]
+    result['limitations'] = []
+    for original in connection.execute("SELECT definitions_json FROM originals WHERE source_id=? AND origin LIKE 'import-%'", (source_id,)):
+        for limitation in json.loads(original[0]).get('limitations', []):
+            paths = [row['canonical_path'] for row in REGISTRY['rows'] if row['input_format']=='bib' and row['source_field']==limitation['field']]
+            if paths and any(path in result['corrected_fields'] for path in paths):
+                continue
+            if limitation not in result['limitations']:
+                result['limitations'].append(limitation)
     result["resources"] = []
     result["projects"] = [dict(row) for row in connection.execute("SELECT p.id, p.name FROM projects p JOIN project_sources ps ON ps.project_id=p.id WHERE ps.source_id=? AND ps.cited=1 ORDER BY p.name", (source_id,))]
     return result

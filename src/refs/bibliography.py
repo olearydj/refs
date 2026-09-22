@@ -84,11 +84,13 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
         if kind == 'thesis':
             native = value.get('native_type', {}).get('value', '')
             degree = str(metadata.get('genre', '')).casefold().replace('.', '')
-            entry_type = 'phdthesis' if native == 'phdthesis' or degree in ('phd', 'doctoral thesis', 'dissertation') else 'mastersthesis' if native == 'mastersthesis' or degree in ('masters', "master's thesis", 'master thesis', 'msc', 'ma') else 'misc'
+            entry_type = 'phdthesis' if native == 'phdthesis' or degree in ('phd', 'phd thesis', 'doctoral thesis', 'dissertation') else 'mastersthesis' if native == 'mastersthesis' or degree in ('masters', "master's thesis", 'master thesis', 'msc', 'ma') else 'misc'
         if kind == 'chapter' and not metadata.get('title'):
             entry_type = 'inbook'
-        if entry_type == 'misc' or kind in ('article-magazine', 'article-newspaper'):
+        if entry_type == 'misc' or kind in ('article', 'article-magazine', 'article-newspaper'):
             assess('type_fallback', 'documented_fallback', f'{kind} is projected as @{entry_type}', 'metadata.type')
+        for limitation in record.get('limitations', []):
+            assess('unassessed_import', 'unknown', limitation['reason'], limitation['field'])
         fields, notes, howpublished, used = {}, [], [], {'type'}
         protection = value.get('title_protection', {})
 

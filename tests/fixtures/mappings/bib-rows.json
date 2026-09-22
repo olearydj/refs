@@ -1,0 +1,356 @@
+[
+  {
+    "field": "title",
+    "type": "article",
+    "path": "title",
+    "expected": "Distinct Title",
+    "bib": "@article{fixture,title={Distinct Title},url={https://example.org/fixture}}"
+  },
+  {
+    "field": "shorttitle",
+    "type": "article",
+    "path": "title-short",
+    "expected": "Short Title",
+    "bib": "@article{fixture,title={Fixture Title},shorttitle={Short Title}}"
+  },
+  {
+    "field": "doi",
+    "type": "article",
+    "path": "DOI",
+    "expected": "10.1000/distinct",
+    "bib": "@article{fixture,title={Fixture Title},doi={10.1000/distinct}}"
+  },
+  {
+    "field": "isbn",
+    "type": "article",
+    "path": "ISBN",
+    "expected": "978-1-23456-789-0",
+    "bib": "@article{fixture,title={Fixture Title},isbn={978-1-23456-789-0}}"
+  },
+  {
+    "field": "issn",
+    "type": "article",
+    "path": "ISSN",
+    "expected": "1234-5678",
+    "bib": "@article{fixture,title={Fixture Title},issn={1234-5678}}"
+  },
+  {
+    "field": "url",
+    "type": "article",
+    "path": "URL",
+    "expected": "https://example.org/distinct",
+    "bib": "@article{fixture,title={Fixture Title},url={https://example.org/distinct}}"
+  },
+  {
+    "field": "pmid",
+    "type": "article",
+    "path": "PMID",
+    "expected": "123456",
+    "bib": "@article{fixture,title={Fixture Title},pmid={123456}}"
+  },
+  {
+    "field": "pmcid",
+    "type": "article",
+    "path": "PMCID",
+    "expected": "PMC123456",
+    "bib": "@article{fixture,title={Fixture Title},pmcid={PMC123456}}"
+  },
+  {
+    "field": "abstract",
+    "type": "article",
+    "path": "abstract",
+    "expected": "Distinct Value",
+    "bib": "@article{fixture,title={Fixture Title},abstract={Distinct Value}}"
+  },
+  {
+    "field": "langid",
+    "type": "article",
+    "path": "language",
+    "expected": "en",
+    "bib": "@article{fixture,title={Fixture Title},langid={en}}"
+  },
+  {
+    "field": "language",
+    "type": "article",
+    "path": "language",
+    "expected": "en",
+    "bib": "@article{fixture,title={Fixture Title},language={en}}"
+  },
+  {
+    "field": "publisher",
+    "type": "book",
+    "path": "publisher",
+    "expected": "Distinct Value",
+    "bib": "@book{fixture,title={Fixture Title},publisher={Distinct Value}}"
+  },
+  {
+    "field": "address",
+    "type": "book",
+    "path": "publisher-place",
+    "expected": "Distinct Value",
+    "bib": "@book{fixture,title={Fixture Title},address={Distinct Value}}"
+  },
+  {
+    "field": "location",
+    "type": "book",
+    "path": "publisher-place",
+    "expected": "Distinct Value",
+    "bib": "@book{fixture,title={Fixture Title},location={Distinct Value}}"
+  },
+  {
+    "field": "edition",
+    "type": "book",
+    "path": "edition",
+    "expected": 2,
+    "bib": "@book{fixture,title={Fixture Title},edition={2}}"
+  },
+  {
+    "field": "volume",
+    "type": "article",
+    "path": "volume",
+    "expected": "Distinct Value",
+    "bib": "@article{fixture,title={Fixture Title},volume={Distinct Value}}"
+  },
+  {
+    "field": "pages",
+    "type": "article",
+    "path": "page",
+    "expected": "Distinct Value",
+    "bib": "@article{fixture,title={Fixture Title},pages={Distinct Value}}"
+  },
+  {
+    "field": "version",
+    "type": "misc",
+    "path": "version",
+    "expected": "Distinct Value",
+    "bib": "@misc{fixture,title={Fixture Title},version={Distinct Value}}"
+  },
+  {
+    "field": "note",
+    "type": "article",
+    "path": "note",
+    "expected": "Distinct Value",
+    "bib": "@article{fixture,title={Fixture Title},note={Distinct Value}}"
+  },
+  {
+    "field": "journal",
+    "type": "article",
+    "path": "container-title",
+    "expected": "Distinct Value",
+    "bib": "@article{fixture,title={Fixture Title},journal={Distinct Value}}"
+  },
+  {
+    "field": "journaltitle",
+    "type": "article",
+    "path": "container-title",
+    "expected": "Distinct Value",
+    "bib": "@article{fixture,title={Fixture Title},journaltitle={Distinct Value}}"
+  },
+  {
+    "field": "number",
+    "type": "article",
+    "path": "issue",
+    "expected": "Distinct Value",
+    "bib": "@article{fixture,title={Fixture Title},number={Distinct Value}}"
+  },
+  {
+    "field": "booktitle",
+    "type": "incollection",
+    "path": "container-title",
+    "expected": "Distinct Value",
+    "bib": "@incollection{fixture,title={Fixture Title},booktitle={Distinct Value}}"
+  },
+  {
+    "field": "school",
+    "type": "thesis",
+    "path": "publisher",
+    "expected": "Distinct Value",
+    "bib": "@thesis{fixture,title={Fixture Title},school={Distinct Value}}"
+  },
+  {
+    "field": "institution",
+    "type": "thesis",
+    "path": "publisher",
+    "expected": "Distinct Value",
+    "bib": "@thesis{fixture,title={Fixture Title},institution={Distinct Value}}"
+  },
+  {
+    "field": "number",
+    "type": "report",
+    "path": "number",
+    "expected": "Distinct Value",
+    "bib": "@report{fixture,title={Fixture Title},number={Distinct Value}}"
+  },
+  {
+    "field": "number",
+    "type": "book",
+    "path": "collection-number",
+    "expected": "Distinct Value",
+    "bib": "@book{fixture,title={Fixture Title},series={Series Title},number={Distinct Value}}"
+  },
+  {
+    "field": "series",
+    "type": "book",
+    "path": "collection-title",
+    "expected": "Distinct Value",
+    "bib": "@book{fixture,title={Fixture Title},series={Distinct Value}}"
+  },
+  {
+    "field": "eprint",
+    "type": "unpublished",
+    "path": "number",
+    "expected": "Distinct Value",
+    "bib": "@unpublished{fixture,title={Fixture Title},archiveprefix={arXiv},eprint={Distinct Value}}"
+  },
+  {
+    "field": "archiveprefix",
+    "type": "unpublished",
+    "path": "archive",
+    "expected": "Distinct Value",
+    "bib": "@unpublished{fixture,title={Fixture Title},archiveprefix={Distinct Value}}"
+  },
+  {
+    "field": "eprinttype",
+    "type": "unpublished",
+    "path": "archive",
+    "expected": "Distinct Value",
+    "bib": "@unpublished{fixture,title={Fixture Title},eprinttype={Distinct Value}}"
+  },
+  {
+    "field": "eventtitle",
+    "type": "inproceedings",
+    "path": "event-title",
+    "expected": "Distinct Value",
+    "bib": "@inproceedings{fixture,title={Fixture Title},eventtitle={Distinct Value}}"
+  },
+  {
+    "field": "type",
+    "type": "thesis",
+    "path": "genre",
+    "expected": "Doctoral Research",
+    "bib": "@thesis{fixture,title={Fixture Title},type={Doctoral Research}}"
+  },
+  {
+    "field": "year",
+    "type": "article",
+    "path": "issued",
+    "expected": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "bib": "@article{fixture,title={Fixture Title},year={2024}}"
+  },
+  {
+    "field": "month",
+    "type": "article",
+    "path": "issued",
+    "expected": {
+      "date-parts": [
+        [
+          2024,
+          2
+        ]
+      ]
+    },
+    "bib": "@article{fixture,title={Fixture Title},year={2024},month={feb}}"
+  },
+  {
+    "field": "date",
+    "type": "article",
+    "path": "issued",
+    "expected": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "bib": "@article{fixture,title={Fixture Title},date={2024}}"
+  },
+  {
+    "field": "urldate",
+    "type": "article",
+    "path": "accessed",
+    "expected": {
+      "date-parts": [
+        [
+          2024,
+          2,
+          3
+        ]
+      ]
+    },
+    "bib": "@article{fixture,title={Fixture Title},urldate={2024-02-03}}"
+  },
+  {
+    "field": "author",
+    "type": "article",
+    "path": "author",
+    "expected": [
+      {
+        "family": "Smith",
+        "given": "Alex"
+      }
+    ],
+    "bib": "@article{fixture,title={Fixture Title},author={Smith, Alex}}"
+  },
+  {
+    "field": "editor",
+    "type": "article",
+    "path": "editor",
+    "expected": [
+      {
+        "family": "Editor",
+        "given": "Bea"
+      }
+    ],
+    "bib": "@article{fixture,title={Fixture Title},editor={Editor, Bea}}"
+  },
+  {
+    "field": "translator",
+    "type": "article",
+    "path": "translator",
+    "expected": [
+      {
+        "family": "Translator",
+        "given": "Cam"
+      }
+    ],
+    "bib": "@article{fixture,title={Fixture Title},translator={Translator, Cam}}"
+  },
+  {
+    "field": "bookauthor",
+    "type": "inbook",
+    "path": "container-author",
+    "expected": [
+      {
+        "literal": "Research and Design"
+      }
+    ],
+    "bib": "@inbook{fixture,title={Fixture Title},bookauthor={{Research and Design}},booktitle={Container Title}}"
+  },
+  {
+    "field": "chapter",
+    "type": "inbook",
+    "path": "chapter-number",
+    "expected": "Distinct Value",
+    "bib": "@inbook{fixture,title={Fixture Title},chapter={Distinct Value}}"
+  },
+  {
+    "field": "howpublished",
+    "type": "article",
+    "path": "note",
+    "expected": "Distinct Value",
+    "bib": "@article{fixture,title={Fixture Title},howpublished={Distinct Value}}"
+  },
+  {
+    "field": "issue",
+    "type": "article",
+    "path": "issue",
+    "expected": "Distinct Value",
+    "bib": "@article{fixture,title={Fixture Title},issue={Distinct Value}}"
+  }
+]

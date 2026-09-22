@@ -325,6 +325,7 @@ class SourceRecord(SourceCreate):
     key_provenance: dict
     originals: list[OriginalReference]
     resources: list[dict]
+    limitations: list[dict] = Field(default_factory=list)
     projects: list[dict] = Field(default_factory=list)
 
 

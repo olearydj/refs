@@ -13,7 +13,7 @@ usage() {
   cat <<'HELP'
 Usage: scripts/demo.sh [--smoke] [--no-pause] [--keep]
 
-Narrated end-to-end test of refs US1 and US2 using synthetic data.
+Narrated end-to-end test of refs US1 through US3 using synthetic data.
   --smoke      Print a compact pass or fail and clean temporary data.
   --no-pause   Never wait between sections.
   --keep       Keep the temporary directory for inspection, even in smoke mode.
@@ -148,4 +148,21 @@ assert_jq 'any(.errors[0].details.entries[]; .code == "issued_date_lost_or_chang
 cmp "$DEMO_ROOT/warned.bib" "$DEMO_ROOT/before-block.bib" || fail 'blocked export changed bytes'
 pass 'blocked export preserved the existing bibliography'
 pause_demo
-printf 'PASS refs demo: %s checks (US1, US2)\n' "$CHECKS"
+section 'US3: Import and adopt an existing bibliography'
+explain 'Mixed input preserves malformed entries and reports conflicts without replacing decisions.'
+cp tests/fixtures/bibliography/mixed.bib "$DEMO_ROOT/import.bib"
+run 4 mixed-import import --format bib --input "$DEMO_ROOT/import.bib"
+assert_jq '.data.counts.applied == 2 and .data.counts.invalid == 1' "$LAST" 'mixed entries accounted for'
+run 0 edit-import update synthetic-one --if-revision 1 --set 'metadata.volume="9"'
+printf '\n@article{synthetic-one,title={A {Python} Example},author={Smith, Alex},year={2024},journal={Synthetic Studies},doi={10.1000/synthetic},volume={10}}\n' >>"$DEMO_ROOT/import.bib"
+run 4 conflicting-import import --input "$DEMO_ROOT/import.bib"
+assert_jq '.data.counts.applied == 0 and .data.counts.conflict == 1' "$LAST" 'repeat never duplicates or overwrites'
+run 0 settle update synthetic-one --if-revision 2 --set 'metadata.volume="10"'
+run 4 settled-import import --input "$DEMO_ROOT/import.bib"
+assert_jq '.data.counts.conflict == 0 and .data.counts.unchanged == 3' "$LAST" 'ordinary update settles the conflict'
+run 0 import-project project create imported
+run 0 import-cite project cite imported synthetic-one
+run 0 adopt export --project imported --output "$DEMO_ROOT/import.bib" --adopt --overwrite
+assert_jq '.data.count == 1' "$LAST" 'explicit adoption replaces exact imported bytes'
+pause_demo
+printf 'PASS refs demo: %s checks (US1, US2, US3)\n' "$CHECKS"

@@ -133,7 +133,7 @@ def parse(raw: bytes) -> dict:
         if canonical is None:
             raise ValueError('Unsupported entry type')
         metadata = {'type': canonical}
-        value: dict = {'schema_version': '1.0', 'metadata': metadata, 'provenance': [{'origin': 'import', 'access': 'unknown'}]}
+        value: dict = {'schema_version': '1.0', 'metadata': metadata, 'native_type': {'namespace':'bibtex', 'value':kind}, 'provenance': [{'origin': 'import', 'access': 'unknown'}]}
         protection = {}
         consumed = set()
         enclosing = entry.parser_metadata.get('removed_enclosing', {})
