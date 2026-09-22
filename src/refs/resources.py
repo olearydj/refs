@@ -262,3 +262,38 @@ def capture_file(settings: Settings, data: dict, path: Path, *, linked=False, ke
         if isinstance(exc,RefError) and exc.data:
             details.update(exc.data)
         raise RefError('file_action_incomplete','Metadata was saved; inspect the resource and retry resource add --copy',4,details=details,data=current | dict(outcome='needs_attention')) from exc
+
+
+def zotero_attachment(connection, settings, source_id: str, item: dict, manifest: dict, *, dry_run=False) -> dict:
+    """Resolve original Zotero locators; never use the extraction directory."""
+    data = item['data']
+    mode = data.get('linkMode')
+    expression = data.get('path', '')
+    if mode in ('imported_file', 'imported_url'):
+        base = Path(manifest['data_directory'])/'storage'/item['key']
+        suffix = Path(data.get('filename') or '')
+        if not suffix.name or suffix.is_absolute() or '..' in suffix.parts:
+            raise RefError('invalid_attachment_path', 'Inspect the stored attachment filename')
+        path = base/suffix
+    elif mode == 'linked_file':
+        if expression.startswith('attachments:'):
+            if not manifest.get('base_path'):
+                raise RefError('attachment_base_missing', 'Supply the original linked-attachment base path')
+            suffix = Path(expression.removeprefix('attachments:'))
+            if suffix.is_absolute() or '..' in suffix.parts:
+                raise RefError('invalid_attachment_path', 'Inspect the base-relative attachment path')
+            path = Path(manifest['base_path'])/suffix
+        else:
+            path = Path(expression)
+            if not path.is_absolute():
+                raise RefError('invalid_attachment_path', 'Supply an absolute or base-relative attachment path')
+    else:
+        raise RefError('unsupported_attachment', 'Inspect the attachment link mode')
+    locator = locate(settings, path=path) if settings else dict(path=str(path), root=None, relative=None)
+    identity = json.dumps(locator, sort_keys=True)
+    old = connection.execute('SELECT id FROM resources WHERE source_id=? AND locator=?', (source_id, identity)).fetchone()
+    if not dry_run and not old:
+        connection.execute('INSERT INTO resources (id,source_id,locator,path,root,relative,label,media_type) VALUES (?,?,?,?,?,?,?,?)',
+                           (str(uuid4()), source_id, identity, locator['path'], locator['root'], locator['relative'], data.get('title'), data.get('contentType')))
+        touch_source(connection, source_id)
+    return dict(**locator, status='available' if path.is_file() else 'missing', unchanged=bool(old))

@@ -169,6 +169,7 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
     try:
         parsed = zotero.parse(entry['item'], manifest)
         incoming, warnings = naming.normalize(parsed['source'].canonical(), settings.values if settings else None)
+        incoming['context'] = entry.get('context', [])
         source = SourceCreate.model_validate(incoming)
         source_id, conflicts = match(connection, source, hashlib.sha256(entry['raw']).hexdigest())
         if source_id:
@@ -210,12 +211,20 @@ def run_zotero(catalog: Path, directory: Path, *, dry_run=False, origin=None, se
                 if entry['data']['itemType'] in zotero.CHILDREN:
                     preserve(connection, entry['raw'], entry['locator'], fingerprint, format='zotero-json', origin='import-child')
             changed(connection)
+    collections = {}
+    if not dry_run:
+        with connect(catalog, write=True) as connection:
+            collections = import_collections(connection, bundle)
     entries = []
     for entry in bundle['items']:
         if entry['data']['itemType'] in zotero.CHILDREN:
             continue
+        entry['context'] = child_context(bundle, entry['key'])
         with connect(catalog, write=not dry_run) as connection:
             result = apply_zotero(connection, entry, manifest, fingerprint, dry_run=dry_run, settings=settings, batch=batch)
+            if result.get('source_id') and result['status'] in ('applied','unchanged'):
+                result['resources'], notices = associate(connection,bundle,entry,result['source_id'],collections,settings=settings,dry_run=dry_run)
+                result.setdefault('warnings', []).extend(notices)
             status = result['status']
             counts[status] += 1
             if not dry_run:
@@ -226,4 +235,78 @@ def run_zotero(catalog: Path, directory: Path, *, dry_run=False, origin=None, se
     if not dry_run:
         with connect(catalog, write=True) as connection:
             connection.execute('UPDATE imports SET finished_at=? WHERE id=?', (datetime.now(UTC).isoformat(), batch))
-    return dict(import_id=None if dry_run else batch, input=str(directory), file_digest=fingerprint, counts=counts, entries=entries, dry_run=dry_run, warnings=[], preservation=manifest.get('skipped', {}))
+            for relation in connection.execute('SELECT source_id,target_uri FROM source_relations WHERE target_id IS NULL').fetchall():
+                uri, _, key = relation['target_uri'].rpartition('/items/')
+                bound = connection.execute("SELECT source_id FROM origin_identities WHERE namespace='zotero' AND library_uri=? AND item_key=?", (uri,key)).fetchone()
+                if bound:
+                    connection.execute('UPDATE source_relations SET target_id=? WHERE source_id=? AND target_uri=?', (bound[0],relation['source_id'],relation['target_uri']))
+    preservation = dict(manifest.get('skipped', {}))
+    preservation['attachment_outlines'] = sum(bool(item['data'].get('note')) for item in bundle['items'] if item['data']['itemType']=='attachment')
+    preservation['standalone_children'] = sum(not item['data'].get('parentItem') for item in bundle['items'] if item['data']['itemType'] in zotero.CHILDREN)
+    return dict(import_id=None if dry_run else batch, input=str(directory), file_digest=fingerprint, counts=counts, entries=entries, dry_run=dry_run, warnings=[], preservation=preservation)
+
+
+def import_collections(connection, bundle: dict) -> dict:
+    uri = bundle['manifest']['library_uri']
+    pending = {entry['key']: entry['data'] for entry in bundle['collections']}
+    result = {}
+    while pending:
+        for key, data in list(pending.items()):
+            parent = data.get('parentCollection')
+            if parent and parent not in result:
+                continue
+            path = (result[parent]['path']+'/' if parent else '')+data['name']
+            previous = connection.execute('SELECT * FROM collections WHERE library_uri=? AND item_key=?', (uri,key)).fetchone()
+            identity = previous['id'] if previous else str(uuid4())
+            parent_id = result[parent]['id'] if parent else None
+            if not previous:
+                connection.execute('INSERT INTO collections (id,library_uri,item_key,parent,name,path) VALUES (?,?,?,?,?,?)', (identity,uri,key,parent_id,data['name'],path))
+            elif (previous['parent'],previous['name'],previous['path']) != (parent_id,data['name'],path):
+                connection.execute('UPDATE collections SET parent=?,name=?,path=?,revision=revision+1 WHERE id=?', (parent_id,data['name'],path,identity))
+            result[key] = dict(id=identity,path=path)
+            del pending[key]
+    return result
+
+
+def child_context(bundle: dict, parent: str) -> list[dict]:
+    import html
+    result = []
+    for entry in bundle['items']:
+        data = entry['data']
+        if data.get('parentItem') != parent:
+            continue
+        text = None
+        if data['itemType'] == 'note':
+            text = html.unescape(re.sub(r'<[^>]*>', ' ', data.get('note','')))
+            text = ' '.join(text.split())
+        elif data['itemType'] == 'attachment' and data.get('linkMode') == 'linked_url':
+            text = data.get('url')
+        if text:
+            result.append(dict(text=text, origin='import', original_ref=entry['locator']))
+    return result
+
+
+def associate(connection, bundle: dict, entry: dict, source_id: str, collections: dict, *, settings=None, dry_run=False) -> tuple[list, list]:
+    from refs.resources import zotero_attachment
+    warnings, resources = [], []
+    if not dry_run:
+        for key in entry['data'].get('collections', []):
+            connection.execute('INSERT OR IGNORE INTO source_collections VALUES (?,?)', (source_id,collections[key]['id']))
+        relations = entry['data'].get('relations', {}).get('dc:relation', [])
+        for target in [relations] if isinstance(relations,str) else relations:
+            endpoint = target.removeprefix('http://zotero.org/').removeprefix('https://zotero.org/')
+            uri, _, key = endpoint.rpartition('/items/')
+            bound = connection.execute("SELECT source_id FROM origin_identities WHERE namespace='zotero' AND library_uri=? AND item_key=?", (uri,key)).fetchone()
+            connection.execute('INSERT OR IGNORE INTO source_relations VALUES (?,?,?,?)', (source_id,endpoint,bound[0] if bound else None,bundle['manifest']['library_uri']))
+    for child in bundle['items']:
+        data = child['data']
+        if data.get('parentItem') != entry['key'] or data['itemType'] != 'attachment' or data.get('linkMode') == 'linked_url':
+            continue
+        try:
+            resource = zotero_attachment(connection,settings,source_id,child['item'],bundle['manifest'],dry_run=dry_run)
+            resources.append(resource)
+            if resource['status'] == 'missing':
+                warnings.append(dict(code='attachment_missing',message='Original attachment file is missing; restore it at the recorded path',path=child['locator'],details=resource,retryable=False))
+        except RefError as exc:
+            warnings.append(exc.issue)
+    return resources, warnings
