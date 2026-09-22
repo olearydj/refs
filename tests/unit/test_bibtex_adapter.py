@@ -73,3 +73,14 @@ def test_show_surfaces_import_limitations():
 def test_relax_in_accented_creator_is_not_a_lost_name():
     source = parse(br"@article{x,title={Study},author={Garc{\'i}a{\relax}, Alex}}")['source']
     assert source.metadata.author[0].family == 'García'
+
+
+def test_literal_year_survives_import_and_export_with_a_warning():
+    from refs import bibliography
+    parsed = parse(b'@book{artifact,title={A Study},year={/05/04 2015},author={Smith, Alex}}')
+    value = parsed['source'].canonical()
+    assert value['metadata']['issued'] == {'literal':'/05/04 2015'}
+    assert any(item['field']=='year' for item in parsed['limitations'])
+    output, warnings = bibliography.serialize([value])
+    assert b'year = {/05/04 2015}' in output
+    assert any(w['code']=='literal_issued_year' for w in warnings)

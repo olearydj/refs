@@ -232,6 +232,7 @@ def parse(raw: bytes) -> dict:
                     parts.append(MONTHS.get(month.lower()) or int(month))
             else:
                 metadata['issued'] = {'literal': year}
+                limitations.append(dict(field='year', reason='Unparseable year retained as literal date'))
         if 'date' in fields and 'date' not in unsupported:
             supplied = date(fields['date'])
             if parts:

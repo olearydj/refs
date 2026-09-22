@@ -39,7 +39,7 @@ def test_structural_conflicts_and_all_affected_entries():
     second['citation_key'] = first['citation_key'].upper()
     with pytest.raises(RefError):
         bibliography.serialize([first, second], allow_unknown=True)
-    first['metadata']['issued'] = {'literal': 'Uncertain Date'}
+    first['metadata']['issued'] = {'date-parts': [[2024]], 'circa': True}
     second['citation_key'] = 'another-key'
     second['metadata']['issued'] = {'date-parts': [[2020], [2024]]}
     with pytest.raises(RefError) as error:
