@@ -25,7 +25,8 @@ def emit(command: str, data: dict[str, Any] | None = None, *,
                   data=error.data if error else data, warnings=warnings or [], errors=[error.issue] if error else [])
     if json_output:
         print(json.dumps(result, ensure_ascii=False))
-    elif error:
-        print(f"{error.issue['code']}: {error}")
+    elif not error and command in ("show", "search", "list"):
+        from refs.display import readable
+        print(readable(command, data or {}))
     else:
-        print(json.dumps(data or {}, ensure_ascii=False, indent=2))
+        print(json.dumps(result, ensure_ascii=False, indent=2))

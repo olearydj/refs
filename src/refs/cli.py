@@ -54,11 +54,11 @@ def init(ctx: typer.Context, library_root: Annotated[str | None, typer.Option()]
 def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         input: Annotated[str, typer.Option()],
         dry_run: Annotated[bool, typer.Option()] = False):
-    if format != "refs":
-        raise RefError("unsupported_format", "This milestone accepts --format refs", 2)
+    if format not in ("refs", "csljson"):
+        raise RefError("unsupported_format", "Choose --format refs or csljson", 2)
     raw = sys.stdin.buffer.read() if input == "-" else Path(input).read_bytes()
     locator = "stdin" if input == "-" else str(absolute(input))
-    report(ctx, "add", sources.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run))
+    report(ctx, "add", sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run))
 
 
 @app.command()
@@ -150,6 +150,12 @@ def list_sources(ctx: typer.Context, project: Annotated[str | None, typer.Option
                  offset: Annotated[int, typer.Option(min=0)] = 0,
                  sort: Annotated[str, typer.Option()] = "title"):
     report(ctx, "list", search.retrieve(settings(ctx).catalog_path(), project=project, limit=limit, offset=offset, sort=sort))
+
+
+@app.command("schema")
+def inspect_schema(ctx: typer.Context, name: str):
+    from refs.models import schema
+    report(ctx, "schema", schema(name))
 
 
 def main() -> None:

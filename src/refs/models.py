@@ -293,3 +293,50 @@ class SourcePatch(StrictModel):
         if any(a != b and b.startswith(a + ".") for a in paths for b in paths):
             raise ValueError("Overlapping patch paths are ambiguous")
         return self
+
+
+class OriginalReference(StrictModel):
+    id: str
+    sha256: str
+    byte_length: int
+    format: str
+    origin: str
+    locator: str
+
+
+class SourceRecord(SourceCreate):
+    id: str
+    citation_key: Text
+    state: Literal['active', 'removed']
+    revision: int = Field(ge=1)
+    created_at: str
+    updated_at: str
+    corrected_fields: list[str]
+    key_provenance: dict
+    originals: list[OriginalReference]
+    resources: list[dict]
+    projects: list[dict] = Field(default_factory=list)
+
+
+class Issue(StrictModel):
+    code: str
+    message: str
+    path: str | None
+    details: dict
+    retryable: bool
+
+
+class Result(StrictModel):
+    schema_version: Literal['1.0']
+    command: str
+    status: Literal['ok', 'partial', 'error']
+    data: dict | None
+    warnings: list[Issue]
+    errors: list[Issue]
+
+
+def schema(name: str) -> dict:
+    models = {'source-create': SourceCreate, 'source-patch': SourcePatch, 'source-record': SourceRecord, 'result': Result}
+    if name not in models:
+        raise RefError('unknown_schema', 'Choose source-create, source-patch, source-record or result', 2)
+    return models[name].model_json_schema(by_alias=True)

@@ -28,6 +28,7 @@ def record(connection, source_id: str) -> dict:
         "SELECT id, sha256, byte_length, format, origin, locator FROM originals WHERE source_id=? ORDER BY id",
         (source_id,))]
     result["resources"] = []
+    result["projects"] = [dict(row) for row in connection.execute("SELECT p.id, p.name FROM projects p JOIN project_sources ps ON ps.project_id=p.id WHERE ps.source_id=? AND ps.cited=1 ORDER BY p.name", (source_id,))]
     return result
 
 
@@ -87,8 +88,9 @@ def candidate(connection, source: SourceCreate, fingerprint: str) -> str | None:
                    details={"source_ids": sorted(ids)})
 
 
-def add(catalog: Path, raw: bytes, locator: str, *, dry_run: bool = False) -> dict:
-    source = parse(raw)
+def add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_run: bool = False) -> dict:
+    from refs.adapters import csl
+    source = csl.parse(raw) if format == "csljson" else parse(raw)
     normalized, warnings = naming.normalize(source.canonical())
     source = SourceCreate.model_validate(normalized)
     fingerprint = hashlib.sha256(raw).hexdigest()
@@ -127,8 +129,8 @@ def add(catalog: Path, raw: bytes, locator: str, *, dry_run: bool = False) -> di
             (source_id, source.citation_key, now, now, json.dumps(metadata), json.dumps(details),
              json.dumps(key_provenance)))
         connection.execute(
-            "INSERT INTO originals (id, source_id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator) VALUES (?, ?, ?, ?, ?, 'refs', 'add', ?, ?)",
-            (str(uuid4()), source_id, raw, fingerprint, len(raw), fingerprint, locator))
+            "INSERT INTO originals (id, source_id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator) VALUES (?, ?, ?, ?, ?, ?, 'add', ?, ?)",
+            (str(uuid4()), source_id, raw, fingerprint, len(raw), format, fingerprint, locator))
         for binding in bindings(source):
             connection.execute("INSERT INTO origin_identities VALUES (?, ?, ?, ?, ?)", (*binding, source_id, fingerprint))
         refresh(connection, record(connection, source_id))
