@@ -60,7 +60,7 @@ def match(connection, source: SourceCreate, fingerprint: str) -> tuple[str | Non
     return None, []
 
 
-def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None) -> dict:
+def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None) -> dict:
     raw = block['raw']
     parsed = None
     header = re.match(rb'@\w+\s*[{(]\s*([^,]+),', raw)
@@ -106,7 +106,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
     outcome.update(start=block['start'], end=block['end'], preserved=True, editable=outcome['outcome'] in ('applied','unchanged'), searchable=outcome['outcome'] in ('applied','unchanged'), exportable='requires export assessment')
     if not dry_run:
         preserve(connection, raw, evidence_locator, file_digest, source_id=source_id if outcome['outcome'] in ('applied','unchanged') else None,
-                 origin='import-'+outcome['outcome'], definitions=dict(start=block['start'], end=block['end'], limitations=outcome.get('limitations', [])))
+                 origin='import-'+outcome['outcome'], definitions=dict(start=block['start'], end=block['end'], limitations=outcome.get('limitations', []), import_id=import_id))
     return outcome
 
 
@@ -125,7 +125,7 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
         if block['kind'] != 'entry':
             continue
         with connect(catalog, write=not dry_run) as connection:
-            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings)
+            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings, import_id=run_id)
             outcome = result['outcome']
             counts[outcome] += 1
             if not dry_run:

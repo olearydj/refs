@@ -104,9 +104,16 @@ def project_create(ctx: typer.Context, name: str,
 
 
 @project_app.command("cite")
-def project_cite(ctx: typer.Context, project: str, reference: str,
+def project_cite(ctx: typer.Context, project: str, reference: Annotated[str | None, typer.Argument()] = None,
+                 from_import: Annotated[str | None, typer.Option()] = None,
                  dry_run: Annotated[bool, typer.Option()] = False):
     catalog = settings(ctx).catalog_path()
+    if (reference is None) == (from_import is None):
+        raise RefError('invalid_arguments', 'Supply one source or --from-import ORIGIN', 2)
+    if from_import is not None:
+        report(ctx, 'project cite', projects.cite_import(catalog, project, from_import, dry_run=dry_run))
+        return
+    assert reference is not None
     data = projects.cite(catalog, project, reference, dry_run=dry_run)
     report(ctx, "project cite", data, citation_key=sources.show(catalog, data['source_id'])['citation_key'], project_name=projects.show(catalog, data['project_id'])['name'])
 

@@ -58,6 +58,36 @@ def show(catalog: Path, reference: str | None = None) -> dict:
                               removed_sources=[record for record in records if record['state'] == 'removed'])
 
 
+def cite_import(catalog: Path, project_ref: str, origin: str, *, dry_run=False) -> dict:
+    with connect(catalog, write=not dry_run) as connection:
+        project = resolve(connection, project_ref)
+        if not connection.execute('SELECT 1 FROM imports WHERE origin=?', (origin,)).fetchone():
+            raise RefError('import_origin_missing', 'Use the origin supplied to import, or its input path when no origin was supplied')
+        # Older originals predate import_id. Creation time identifies their run;
+        # a later unchanged import of the same bytes must not claim the source.
+        candidates = {}
+        for row in connection.execute("""SELECT s.id, s.citation_key, i.origin FROM sources s
+            JOIN originals o ON o.source_id=s.id AND o.origin='import-applied'
+            JOIN imports i ON i.id=json_extract(o.definitions_json,'$.import_id') OR
+              (json_extract(o.definitions_json,'$.import_id') IS NULL AND i.file_digest=o.file_digest
+               AND i.applied>0 AND s.created_at>=i.started_at AND (i.finished_at IS NULL OR s.created_at<=i.finished_at))
+            WHERE s.state='active' ORDER BY s.citation_key"""):
+            candidates.setdefault((row['id'], row['citation_key']), set()).add(row['origin'])
+        selected = []
+        for (source_id, key), origins in candidates.items():
+            if origin in origins:
+                if len(origins)>1:
+                    raise RefError('import_origin_ambiguous', f'Historical import runs overlap for {key}; cite that source individually')
+                selected.append(source_id)
+        existing = {row[0] for row in connection.execute('SELECT source_id FROM project_sources WHERE project_id=? AND cited=1', (project['id'],))}
+        new = [source_id for source_id in selected if source_id not in existing]
+        if new and not dry_run:
+            connection.executemany('INSERT INTO project_sources VALUES (?, ?, 1) ON CONFLICT(project_id,source_id) DO UPDATE SET cited=1', [(project['id'], source_id) for source_id in new])
+            connection.execute('UPDATE projects SET revision=revision+1 WHERE id=?', (project['id'],))
+            changed(connection)
+        return dict(project_id=project['id'], project_name=project['name'], origin=origin, cited=len(new), already_cited=len(selected)-len(new), dry_run=dry_run)
+
+
 def uncite(catalog: Path, project_ref: str, source_ref: str, *, dry_run: bool = False) -> dict:
     with connect(catalog, write=not dry_run) as connection:
         project = resolve(connection, project_ref)

@@ -60,7 +60,7 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
         'remove': lambda: f"Removed {key}",
         'reactivate': lambda: f"Reactivated {key}",
         'project create': lambda: f"Created project {data['name']}",
-        'project cite': lambda: f"Cited {key} in {data['project_name']}",
+        'project cite': lambda: f"Cited {data['cited']} in {data['project_name']} ({data['already_cited']} already cited)" if 'already_cited' in data else f"Cited {key} in {data['project_name']}",
         'project uncite': lambda: f"Uncited {key} from {data['project_name']}",
         'project show': lambda: project_text(data),
         'resource add': lambda: f"Copied {data['copied_from'].get('path') or data['copied_from'].get('relative')} to {data['destination']} for {key}" if 'destination' in data else f"Linked {data.get('resolved_path') or data.get('path') or data.get('relative')} to {key}",

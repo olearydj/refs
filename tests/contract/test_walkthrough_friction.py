@@ -165,3 +165,39 @@ def test_key_prefix_search_keeps_exact_matches_first(human, initialized, tmp_pat
     assert items[1]['matches'][0]['field']=='citation_key'
     assert 'matched: citation_key' in human('search','koster').splitlines()[1]
     assert initialized('search','kost er')['data']['items']==[]
+
+
+def test_cite_from_import_applied_active_only(human, initialized, tmp_path):
+    path=tmp_path/'entries.bib'
+    path.write_text('\n'.join('@book{'+key+',title={Study '+key+'},author={Smith, Alex},year={2024}}' for key in ('one','two','removed')))
+    initialized('import','--input',path,'--origin','first')
+    initialized('import','--input',path,'--origin','unchanged-only')
+    initialized('remove','removed','--if-revision',1,'--execute')
+    path.write_text('@book{one,title={Conflicting title},author={Smith, Alex},year={2024}}')
+    initialized('import','--input',path,'--origin','conflicts-only',expected=4)
+    initialized('project','create','paper')
+    for origin in ('unchanged-only','conflicts-only'):
+        assert human('project','cite','paper','--from-import',origin).strip()=='Cited 0 in paper (0 already cited)'
+    assert human('project','cite','paper','--from-import','first','--dry-run').strip()=='Preview: Cited 2 in paper (0 already cited)'
+    assert initialized('project','show','paper')['data']['sources']==[]
+    initialized('project','cite','paper','one')
+    assert human('project','cite','paper','--from-import','first').strip()=='Cited 1 in paper (1 already cited)'
+    assert human('project','cite','paper','--from-import','first').strip()=='Cited 0 in paper (2 already cited)'
+    assert [s['citation_key'] for s in initialized('project','show','paper')['data']['sources']]==['one','two']
+    initialized('project','cite','paper','one','--from-import','first',expected=2)
+    initialized('project','cite','paper','--from-import','missing',expected=3)
+
+
+def test_cite_from_legacy_import_uses_creation_time(initialized, tmp_path):
+    import sqlite3
+    path=tmp_path/'entries.bib'
+    path.write_text('@book{legacy,title={Old Import},author={Smith, Alex},year={2024}}')
+    initialized('import','--input',path,'--origin','original')
+    initialized('import','--input',path,'--origin','later')
+    # Reproduce the previous on-disk evidence shape in this synthetic catalog.
+    with sqlite3.connect(tmp_path/'cat/catalog.sqlite') as connection:
+        connection.execute('DROP TRIGGER originals_no_update')
+        connection.execute("UPDATE originals SET definitions_json=json_remove(definitions_json,'$.import_id')")
+    initialized('project','create','paper')
+    assert initialized('project','cite','paper','--from-import','later')['data']['cited']==0
+    assert initialized('project','cite','paper','--from-import','original')['data']['cited']==1
