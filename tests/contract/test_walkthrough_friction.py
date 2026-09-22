@@ -201,3 +201,25 @@ def test_cite_from_legacy_import_uses_creation_time(initialized, tmp_path):
     initialized('project','create','paper')
     assert initialized('project','cite','paper','--from-import','later')['data']['cited']==0
     assert initialized('project','cite','paper','--from-import','original')['data']['cited']==1
+
+
+def test_effective_stopwords_change_only_future_keys(human, initialized, tmp_path):
+    import json
+
+    from refs.naming import STOPWORDS
+    path=tmp_path/'record.json'
+    value={'schema_version':'1.0','metadata':{'title':'Is Science Useful','author':[{'family':'Smith','given':'Alex'}],'issued':{'date-parts':[[2024]]}}}
+    path.write_text(json.dumps(value))
+    original=initialized('add','--format','refs','--input',path)['data']
+    assert original['citation_key']=='smith-2024-isScience'
+    config=tmp_path/'config.toml'
+    words=sorted(STOPWORDS|{'is'})
+    config.write_text(config.read_text()+'\n[keys]\nstopwords = '+json.dumps(words)+'\n')
+    assert f'keys.stopwords = {words} ({config})' in human('config','show')
+    assert initialized('config','show')['data']['values']['keys.stopwords']==words
+    value['metadata']['author'][0]['family']='Jones'
+    path.write_text(json.dumps(value))
+    assert initialized('add','--format','refs','--input',path)['data']['citation_key']=='jones-2024-scienceUseful'
+    changed=initialized('update',original['id'],'--if-revision',1,'--set','metadata.publisher="Example Press"')['data']
+    assert changed['citation_key']==original['citation_key']
+    assert initialized('show',original['id'])['data']['key_provenance']==original['key_provenance']
