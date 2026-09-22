@@ -94,9 +94,13 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             entry_type = 'inbook'
         if entry_type == 'misc' or kind in ('article', 'article-magazine', 'article-newspaper'):
             assess('type_fallback', 'documented_fallback', f'{kind} is projected as @{entry_type}', 'metadata.type')
+        for notice in record.get('_projection_notices', []):
+            assess(notice['code'], 'documented_fallback', notice['message'], notice['path'])
         for limitation in record.get('limitations', []):
-            assess('unassessed_import', 'documented_fallback', limitation['reason'], limitation['field'])
-        fields, notes, howpublished, used = {}, [], [], {'type'}
+            if limitation['field'] == 'year' and metadata.get('issued', {}).get('literal'):
+                continue
+            assess('unassessed_import', 'documented_fallback', f"{limitation['field']}: {limitation['reason']}", limitation['field'])
+        fields, notes, used = {}, [], {'type'}
         protection = value.get('title_protection', {})
 
         def put(target: str, text, *, literal: bool = False) -> None:
@@ -133,7 +137,8 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                             family = name.get('given', '')
                             output_names.append('{' + tex(family) + '}')
                             continue
-                        if ' and ' in family or ',' in family:
+                        grouped_family = not name.get('dropping-particle') and not name.get('non-dropping-particle') and (len(family.split()) > 1 or family[:1].islower())
+                        if grouped_family or ' and ' in family or ',' in family:
                             family = '{' + tex(family) + '}'
                         else:
                             family = tex(family)
@@ -189,13 +194,14 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             if 'publisher' in metadata:
                 publisher = tex(str(metadata['publisher']))
                 if ' and ' in str(metadata['publisher']):
+                    assess('literal_publisher', 'documented_fallback', 'Publisher is one institution; BibLaTeX consumers will not split it on and', 'metadata.publisher')
                     publisher = '{' + publisher + '}'
                 if entry_type in ('phdthesis', 'mastersthesis'):
                     put('school', publisher, literal=True)
                 elif entry_type == 'techreport':
                     put('institution', publisher, literal=True)
                 elif entry_type == 'misc':
-                    howpublished.append(str(metadata['publisher']))
+                    notes.append(str(metadata['publisher']))
                 else:
                     put('publisher', publisher, literal=True)
             used.update(('number', 'archive', 'genre'))
@@ -207,19 +213,19 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                 if metadata.get('genre'):
                     notes.append(str(metadata['genre']))
             elif kind in ('patent', 'standard'):
-                howpublished.extend(str(metadata[field]) for field in ('genre', 'number') if metadata.get(field))
+                copy('number', 'number')
+                copy('genre', 'type')
+                notes.extend(str(metadata[field]) for field in ('genre', 'number') if metadata.get(field))
             else:
                 copy('number', 'number')
                 if entry_type in ('techreport', 'phdthesis', 'mastersthesis'):
                     copy('genre', 'type')
                 elif metadata.get('genre'):
-                    howpublished.append(str(metadata['genre']))
-            if kind in ('webpage', 'post-weblog', 'document'):
-                howpublished.insert(0, {'webpage': 'Web page', 'post-weblog': 'Blog post', 'document': 'Document'}[kind])
+                    notes.append(str(metadata['genre']))
             for field, label in [('authority', ''), ('jurisdiction', ''), ('version', 'Version')]:
                 used.add(field)
                 if metadata.get(field):
-                    howpublished.append((label + ' ' + str(metadata[field])).strip())
+                    notes.append((label + ' ' + str(metadata[field])).strip())
             for field, label in [('event-title', 'Event'), ('event-place', 'Event location'), ('section', 'Section'), ('part-title', 'Part'), ('medium', 'Medium'), ('archive-place', 'Archive location'), ('status', 'Status')]:
                 used.add(field)
                 if field in metadata:
@@ -258,10 +264,10 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                         assess('unassessed_extension', 'unknown', f'No registered projection for patent.{member}', 'extensions.patent.' + member)
                 else:
                     assess('unassessed_extension', 'unknown', f'No registered projection for {field}', 'extensions.' + field)
-            if howpublished:
-                put('howpublished', '; '.join(howpublished))
+            if record.get('_howpublished'):
+                put('howpublished', record['_howpublished'], literal=True)
             if notes:
-                put('note', '; '.join(notes))
+                put('note', title('; '.join(notes), {'protected_terms': [str(metadata['number'])] if kind in ('patent', 'standard') and metadata.get('number') else []}), literal=True)
             entry = '@' + entry_type + '{' + key + ',\n'
             for name, text in fields.items():
                 entry += f'  {name} = {text},\n' if name == 'month' else f'  {name} = {{{text}}},\n'
@@ -271,6 +277,41 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
     enforce_losses(losses, allow_unknown=allow_unknown)
     return '\n'.join(entries).encode('utf-8'), warnings
 
+
+
+def preserved_bib_fields(connection, record: dict) -> dict:
+    """Only unmodeled howpublished comes from original bytes, never modeled facts."""
+    import bibtexparser
+
+    from refs.adapters.bibtex import decode
+    values, notices = set(), []
+    for row in connection.execute("SELECT raw_bytes FROM originals WHERE source_id=? AND format='bib'", (record['id'],)):
+        library = bibtexparser.parse_string(row[0].decode('utf-8'))
+        for entry in library.entries:
+            if entry.entry_type.lower() != record.get('native_type', {}).get('value'):
+                continue
+            values.update(field.value for field in entry.fields if field.key.lower() == 'howpublished')
+            for field in entry.fields:
+                name, raw = field.key.lower(), field.value
+                if name in ('author', 'editor', 'publisher', 'institution', 'school') and re.search(r'\\relax|\\[uvH]\s*\{?\s*\\i', raw):
+                    notice = dict(code='tex_decoded', path=name, message=f'TeX relax or a dotless-i accent in {name} was decoded to Unicode; Pandoc may render the original spelling differently')
+                    if notice not in notices:
+                        notices.append(notice)
+                canonical = {'journal':'container-title', 'journaltitle':'container-title', 'booktitle':'container-title'}.get(name)
+                if canonical:
+                    try:
+                        before = decode(raw)
+                    except ValueError:
+                        continue
+                    if before != record['metadata'].get(canonical) and before.casefold() == record['metadata'].get(canonical, '').casefold():
+                        notices.append(dict(code='container_title_case', path='metadata.'+canonical, message='Container title follows the catalog Title Case convention; verify proper-name capitalization'))
+                if name == 'title':
+                    terms = record.get('title_protection', {}).get('title', {}).get('protected_terms', [])
+                    if 'R' in terms and '{R}' not in raw:
+                        notices.append(dict(code='title_protection_added', path='metadata.title', message='The programming-language name R is protected from citation-style lowercasing'))
+    if len(values) > 1:
+        raise RefError('export_blocked', 'Original howpublished values disagree; inspect the preserved entries', details={'entries':[dict(citation_key=record['citation_key'], code='work_identity_changed', message='Conflicting original howpublished values', **{'class':'blocking'})]})
+    return {'_projection_notices': list({(notice['code'], notice['path']): notice for notice in notices}.values())} | ({'_howpublished': next(iter(values))} if values else {})
 
 def target_state(connection, target: Path, project_id: str, *, overwrite: bool = False, adopt: bool = False, candidate_digest: str | None = None) -> tuple[str | None, bool, bool]:
     row = connection.execute("SELECT * FROM export_targets WHERE destination=?", (str(target),)).fetchone()
@@ -319,6 +360,8 @@ def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROF
         selected = [sources.record(connection, row[0]) for row in connection.execute(
             "SELECT s.id FROM sources s JOIN project_sources ps ON s.id=ps.source_id WHERE ps.project_id=? AND ps.cited=1 AND s.state='active' ORDER BY s.citation_key",
             (project["id"],))]
+        for record in selected:
+            record.update(preserved_bib_fields(connection, record))
         revision = connection.execute("SELECT revision FROM catalog_meta").fetchone()[0]
     data, warnings = serialize(selected, allow_unknown=allow_unknown)
     candidate_digest = files.digest(data)

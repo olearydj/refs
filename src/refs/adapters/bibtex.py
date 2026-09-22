@@ -215,7 +215,7 @@ def parse(raw: bytes) -> dict:
                 limitations.append(dict(field=field, reason=str(exc)))
         for field in set(fields) - consumed:
             limitations.append(dict(field=field, reason='Unmapped field preserved verbatim'))
-        notes = [decode(fields[field]) for field in ('howpublished', 'note') if field in fields and field not in unsupported]
+        notes = [decode(fields[field]) for field in ('note',) if field in fields and field not in unsupported]
         if notes:
             metadata['note'] = '\n'.join(notes)
         parts = None

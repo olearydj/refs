@@ -16,6 +16,10 @@ CASES = json.loads((Path(__file__).parents[1]/'fixtures/mappings/bib-rows.json')
 @pytest.mark.parametrize('case', CASES, ids=lambda case: case['type']+'-'+case['field'])
 def test_bib_refs_csl_convergence_and_clear(initialized, tmp_path, case):
     proposal = bibtex.parse(case['bib'].encode())['source'].canonical()
+    if case['field'] == 'howpublished':
+        assert 'note' not in proposal['metadata']
+        assert case['expected'] in case['bib']  # Preserved-only; actual export is tested with original bytes.
+        return
     assert proposal['metadata'][case['path']] == case['expected']
     expected = proposal['metadata']
     assert csl.parse(json.dumps(expected).encode()).canonical()['metadata'] == expected

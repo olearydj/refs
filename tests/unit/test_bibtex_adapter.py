@@ -9,7 +9,7 @@ from refs.results import RefError
     ('@techreport{x,title={Test},institution={Example School},number={R7}}', 'publisher', 'Example School'),
     ('@phdthesis{x,title={Test},school={Example School}}', 'genre', 'PhD thesis'),
     ('@inbook{x,title={Whole Book},chapter={2}}', 'container-title', 'Whole Book'),
-    ('@misc{x,title={Test},howpublished={Online},note={Details}}', 'note', 'Online\nDetails'),
+    ('@misc{x,title={Test},howpublished={Online},note={Details}}', 'note', 'Details'),
     ('@book{x,title={Test},year={2024},month=jan,date={2024-01-02}}', 'issued', {'date-parts':[[2024,1,2]]}),
     ('@book{x,title={Test},author={{Research and Design}}}', 'author', [{'literal':'Research and Design'}]),
     ('@book{x,title={Test},author={de Vries, Alex}}', 'author', [{'given':'Alex','family':'Vries','dropping-particle':'de'}]),

@@ -63,3 +63,52 @@ def test_actual_rendering(consumer, tmp_path, record_property):
         text = run([extract, 'paper.pdf', '-'], tmp_path)
     (tmp_path/'rendered.txt').write_text(text)
     expected_facts(text)
+
+
+@pytest.mark.parametrize('howpublished', ['arXiv:2407.01502', 'Python software, version 1.106', None])
+def test_misc_render_keeps_supplied_howpublished(initialized, tmp_path, howpublished):
+    from refs import bibliography, importing, projects
+    raw = '@misc{example,author={Smith, Alex},title={A Study},year={2024}'
+    if howpublished:
+        raw += ',howpublished={' + howpublished + '}'
+    raw += '}'
+    original = tmp_path/'original.bib'
+    original.write_text(raw)
+    importing.run(tmp_path/'cat', raw.encode(), str(original))
+    projects.create(tmp_path/'cat','paper','')
+    projects.cite(tmp_path/'cat','paper','example')
+    output = tmp_path/'output.bib'
+    bibliography.export(tmp_path/'cat','paper',output)
+    if howpublished:
+        assert 'howpublished = {' + howpublished + '}' in output.read_text()
+        assert 'note =' not in output.read_text()
+    else:
+        assert 'howpublished' not in output.read_text()
+    document = tmp_path/'paper.md'
+    document.write_text('---\nnocite: "@*"\n---\n')
+    renders = [run([tool('pandoc'), str(document), '--citeproc', '--bibliography', str(bib), '-t','plain'], tmp_path) for bib in (original,output)]
+    assert renders[0] == renders[1]
+
+
+@pytest.mark.parametrize('family, expected', [(r"Garc{\'i}a", False), (r"Garc{\'i}a{\relax}", True), (r"Test{\u \i}", True)])
+def test_tex_notice_only_for_observed_rendering_changes(initialized, tmp_path, family, expected):
+    from refs import bibliography, importing, projects
+    raw = ('@book{x,title={Study},year={2024},author={'+family+', Alex}}').encode()
+    importing.run(tmp_path/'cat',raw,'synthetic.bib')
+    projects.create(tmp_path/'cat','paper','')
+    projects.cite(tmp_path/'cat','paper','x')
+    report = bibliography.export(tmp_path/'cat','paper',tmp_path/'out.bib')
+    assert any(w['code']=='tex_decoded' for w in report['warnings']) == expected
+
+
+def test_added_protection_and_publisher_grouping_are_reported(initialized, tmp_path):
+    from refs import bibliography, importing, projects
+    raw = b'@book{x,title={The R Package},publisher={Research and Design Institute},year={2024},author={Smith, Alex}}'
+    importing.run(tmp_path/'cat',raw,'synthetic.bib')
+    importing.run(tmp_path/'cat',raw,'synthetic.bib')
+    projects.create(tmp_path/'cat','paper','')
+    projects.cite(tmp_path/'cat','paper','x')
+    result = bibliography.export(tmp_path/'cat','paper',tmp_path/'out.bib')
+    codes = [item['code'] for item in result['warnings']]
+    assert codes.count('title_protection_added') == 1
+    assert codes.count('literal_publisher') == 1
