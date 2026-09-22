@@ -93,7 +93,10 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
         if kind == 'chapter' and not metadata.get('title'):
             entry_type = 'inbook'
         if entry_type == 'misc' or kind in ('article', 'article-magazine', 'article-newspaper'):
-            assess('type_fallback', 'documented_fallback', f'{kind} is projected as @{entry_type}', 'metadata.type')
+            message = f'{kind} is projected as @{entry_type}'
+            if kind in ('webpage', 'post-weblog'):
+                message += '; Pandoc may change title quotation marks and emphasis for this portable type'
+            assess('type_fallback', 'documented_fallback', message, 'metadata.type')
         for notice in record.get('_projection_notices', []):
             assess(notice['code'], 'documented_fallback', notice['message'], notice['path'])
         for limitation in record.get('limitations', []):

@@ -112,3 +112,22 @@ def test_added_protection_and_publisher_grouping_are_reported(initialized, tmp_p
     codes = [item['code'] for item in result['warnings']]
     assert codes.count('title_protection_added') == 1
     assert codes.count('literal_publisher') == 1
+
+
+def test_online_documentation_reports_portable_quotation_change(initialized, tmp_path):
+    from refs import bibliography, importing, projects
+    raw = b'@online{docs,author={{Example, Inc.}},title={Service API Documentation},year={2026},url={https://example.org/docs}}'
+    original = tmp_path/'original.bib'
+    original.write_bytes(raw)
+    importing.run(tmp_path/'cat',raw,str(original))
+    projects.create(tmp_path/'cat','web','')
+    projects.cite(tmp_path/'cat','web','docs')
+    exported = tmp_path/'exported.bib'
+    report = bibliography.export(tmp_path/'cat','web',exported)
+    document = tmp_path/'paper.md'
+    document.write_text('---\nnocite: "@*"\n---\n')
+    texts = [run([tool('pandoc'),str(document),'--citeproc','--bibliography',str(path),'-t','plain'],tmp_path) for path in (original,exported)]
+    assert '“Service API Documentation.”' in texts[0]
+    assert 'Service API Documentation.' in texts[1]
+    assert any('quotation marks' in warning['message'] for warning in report['warnings'])
+    assert 'Web page' not in texts[1]
