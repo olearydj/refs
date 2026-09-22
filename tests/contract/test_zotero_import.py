@@ -79,3 +79,27 @@ def test_interrupted_run_keeps_accounting_and_reruns(initialized,zotero_fixture,
     monkeypatch.setattr(importing,'apply_zotero',apply)
     result=importing.run_zotero(tmp_path/'cat',directory)
     assert result['counts']['unchanged']==2 and result['counts']['applied']==4
+
+
+@pytest.mark.parametrize('damage',['syntax','extra_type','deleted'])
+def test_malformed_item_is_accounted_and_trash_not_resurrected(initialized,zotero_fixture,tmp_path,damage):
+    directory=tmp_path/'input'
+    extracted(zotero_fixture,directory)
+    path=directory/'items/ITEM0004.json'
+    if damage=='syntax':
+        path.write_bytes(b'{ broken JSON')
+    else:
+        value=json.loads(path.read_bytes())
+        if damage=='deleted':
+            value['data']['deleted']=1
+        else:
+            value['data']['extra']=123
+        path.write_text(json.dumps(value))
+    result=initialized('import','--format','zotero','--input',directory,expected=0 if damage=='deleted' else 4)['data']
+    assert result['counts']['applied']==5
+    assert result['counts']['invalid']==(0 if damage=='deleted' else 1)
+    if damage=='deleted':
+        assert result['preservation']['trash']==2
+    else:
+        with connect(tmp_path/'cat') as c:
+            assert c.execute("SELECT raw_bytes FROM originals WHERE locator=?",(str(path),)).fetchone()[0]==path.read_bytes()

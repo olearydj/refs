@@ -44,11 +44,19 @@ def read(directory: Path) -> dict:
         items: list[dict] = []
         for path in sorted((directory / 'items').glob('*.json')):
             raw = path.read_bytes()
-            item = json.loads(raw)
+            try:
+                item: dict = json.loads(raw)
+            except ValueError:
+                item = {'key':path.stem,'data':{'itemType':'invalid_json'}}
             key, data = item['key'], item['data']
             if not KEY.fullmatch(key) or path.stem != key or data.get('key', key) != key or not isinstance(data.get('itemType'), str):
                 raise ValueError(f'Invalid item identity: {path.name}')
             items.append(dict(key=key, data=data, item=item, raw=raw, locator=str(path)))
+        excluded = {item['key'] for item in items if item['data'].get('deleted')}
+        while children := {item['key'] for item in items if item['data'].get('parentItem') in excluded} - excluded:
+            excluded.update(children)
+        items = [item for item in items if item['key'] not in excluded]
+        manifest.setdefault('skipped', {})['trash'] = manifest.get('skipped', {}).get('trash',0)+len(excluded)
         by_key = {item['key']: item for item in items}
         for item in items:
             data = item['data']
@@ -73,11 +81,25 @@ def assign(target: dict, path: str, value) -> None:
 
 def date(value: str, parsed: str | None = None) -> dict:
     candidate = parsed or value
+    candidate = re.sub(r'[ T]\d{2}:\d{2}(?::\d{2})?(?:Z|[+-]\d{2}:?\d{2})?$', '', candidate)
+    if re.fullmatch(r'\d{4}-\d{2}-\d{2}',candidate):
+        candidate = candidate.removesuffix('-00').removesuffix('-00')
     if re.fullmatch(r'\d{4}(?:-\d{2}){0,2}', candidate):
         try:
-            return Date.model_validate({'date-parts': [[int(part) for part in candidate.split('-')]]}).model_dump(by_alias=True, exclude_none=True)
+            result = Date.model_validate({'date-parts': [[int(part) for part in candidate.split('-')]]}).model_dump(by_alias=True, exclude_none=True)
         except ValidationError:
-            pass
+            return date(value) if parsed else {'literal':value}
+        if parsed:
+            explicit = re.fullmatch(r'(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?',value)
+            years = set(re.findall(r'(?<!\d)([1-9]\d{3})(?!\d)',value))
+            parts = result['date-parts'][0]
+            if explicit and any(int(component) != part for component,part in zip(explicit.groups(),parts) if component) or len(years)==1 and int(next(iter(years))) != parts[0]:
+                raise RefError('date_conflict','Parsed date contradicts the supplied date; inspect the original item',3)
+            if explicit:
+                return date(value)
+            if len(years)>1 or re.search(r'\b(?:circa|about|before|after)\b|[?~]',value,re.I):
+                return {'literal':value}
+        return result
     return {'literal': value}
 
 
@@ -100,6 +122,8 @@ def parse(item: dict, manifest: dict) -> dict:
         if path:
             if field in ('date', 'accessDate', 'filingDate', 'priorityDate'):
                 value = date(value, item.get('meta', {}).get('parsedDate') if field == 'date' else None)
+                if 'literal' in value:
+                    limitations.append(dict(field=field,reason='Date retained literally; verify its precision'))
             elif field == 'assignee':
                 value = [{'literal': value}]
             elif field == 'url' and (urlparse(value).scheme not in ('http', 'https') or not urlparse(value).netloc):
@@ -128,10 +152,11 @@ def parse(item: dict, manifest: dict) -> dict:
         elif line.strip() and not any(entry['field'] == 'extra' for entry in limitations):
             limitations.append(dict(field='extra', reason='Preserved from import: extra'))
     key = data.get('citationKey') or extra_key or manifest.get('legacy_keys', {}).get(item['key'])
-    if key:
-        source['citation_key'] = key
     try:
-        return dict(source=SourceCreate.model_validate(source), limitations=limitations)
+        validated = SourceCreate.model_validate(source)
+        if key:
+            validated.citation_key = key
+        return dict(source=validated, limitations=limitations)
     except ValidationError as exc:
         raise RefError('invalid_zotero_item', 'Item cannot satisfy the record profile; inspect its preserved original', 2,
                        details={'issues': exc.errors(include_url=False, include_context=False, include_input=False)}) from exc

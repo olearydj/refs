@@ -159,3 +159,15 @@ def test_particle_names_export_and_render(consumer, route, particle, tmp_path, r
     line = ' '.join(text.split())
     assert re.search(r'(?:[Vv]an Lopik|Lopik, (?:Katherine|K[.]) van)', line), line
     record_property('rendered_particle_line', line)
+
+
+@pytest.mark.parametrize('consumer', ['pandoc','biber','bibtex'])
+def test_arxiv_identifier_extension_render(consumer,tmp_path,record_property):
+    record={'schema_version':'1.0','citation_key':'arxiv','metadata':{'type':'document','title':'Synthetic Preprint','author':[{'family':'Smith','given':'Alex'}],'issued':{'date-parts':[[2024]]}},'extensions':{'identifiers':{'arxiv':'2407.01502','oclc':'456'}}}
+    bib,warnings=serialize([record])
+    assert b'eprint = {2407.01502}' in bib and b'eprinttype = {arxiv}' in bib
+    assert b'oclc' not in bib
+    assert {'arxiv_fallback','oclc_omission'} <= {w['code'] for w in warnings}
+    text=render_with_consumer(consumer,bib,tmp_path,record_property)
+    assert '2407.01502' in text
+    assert 'Smith' in text and '2024' in text

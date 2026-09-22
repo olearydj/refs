@@ -28,7 +28,7 @@ uv run --locked refs --no-project-config project cite example smith-2024-learnin
 uv run --locked refs --no-project-config export --project example --output "$REFS_DEMO_HOME/references.bib"
 ```
 
-`add` accepts `refs`, `csljson` and single-entry `bib` input. `import` processes an existing bibliography without overwriting current decisions; conflicts are settled with ordinary `update`. Original input bytes remain in the catalog. Existing citation keys are preserved.
+`add` accepts `refs`, `csljson` and single-entry `bib` input. `import` processes an existing bibliography without overwriting current decisions; conflicts are settled with `update` or the reviewed `import reconcile` command. Original input bytes remain in the catalog. Existing citation keys are preserved.
 
 ## Commands
 
@@ -36,7 +36,7 @@ Global options precede the command: `--config PATH`, `--catalog PATH`, `--projec
 
 | Invocation | Purpose |
 | --- | --- |
-| `init` | Create an explicitly selected catalog; use `--library-root` or `--no-library`. |
+| `init` | Create an explicitly selected catalog; `--reuse-config` recreates a missing catalog at its configured location and refuses an existing ready catalog. |
 | `paths` | Show resolved locations and their origins, including before init. |
 | `config show` | Show effective settings, origins and validation results. |
 | `schema NAME` | Print an offline `source-create`, `source-patch`, `source-record` or `result` schema. |
@@ -45,12 +45,16 @@ Global options precede the command: `--config PATH`, `--catalog PATH`, `--projec
 | `update REF --if-revision N --set PATH=JSON` | Correct fields; alternatively use `--patch PATH`. |
 | `key set REF --key KEY --if-revision N --execute` | Explicitly change a citation key. |
 | `remove REF --if-revision N --execute` | Retain a source and its reserved key as removed. |
-| `reactivate REF --if-revision N --execute` | Reactivate that same source. |
+| `reactivate REF [--if-revision N] --execute` | Reactivate that same source. |
 | `search QUERY` | Find sources with matching-field evidence. |
-| `list` | List active sources, optionally filtered by project. |
+| `list` | List active sources; `list` and `search` accept `--project` and `--collection PATH`. |
 | `import --format bib --input PATH` | Import entries with counts and individual outcomes. |
+| `import --format zotero --input DIR --origin TEXT` | Import a published API v3 JSON directory with per-item evidence. |
+| `import show BATCH [--status STATUS]` | Inspect saved outcomes, candidates, conflicting values and decisions. |
+| `import reconcile BATCH --take-incoming KEY[.field]` | Preview incoming corrections; repeat the option for multiple selections. Execute with `--execute --if-batch-revision N` from that preview. |
+| `collection list` | Show imported hierarchy, empty collections and direct active membership counts. |
 | `resource add REF --path PATH` | Link a file; `--copy` brings it into the library. |
-| `resource unlink ID --if-revision N --execute` | Remove an association without deleting bytes. |
+| `resource unlink ID --execute` | Remove an association without deleting bytes. |
 | `resource check` | Report availability; `--verify` also checks copied-file hashes. |
 | `open REF` | Open the sole resource; choose `--resource ID` when there are several. |
 | `project create NAME` | Create a cited-source project. |
@@ -60,7 +64,7 @@ Global options precede the command: `--config PATH`, `--catalog PATH`, `--projec
 | `export --project PROJECT --output PATH` | Explicitly publish the selected bibliography. |
 | `backup --output NEW_DIRECTORY` | Save a verified catalog snapshot and resource inventory. |
 
-Rekey, remove, reactivate and unlink preview unless `--execute` is supplied. Mutations also accept `--dry-run`. Source and resource revisions reject stale changes. Exit codes are 0 for success, 2 for invalid input/configuration, 3 for conflicts, 4 for partial application, 5 for storage/integrity failure and 6 for retryable lock contention. Partial imports print their summary before the hint; JSON entries have `status` values `applied`, `unchanged`, `conflict` or `invalid`.
+Rekey, remove, reactivate and unlink preview unless `--execute` is supplied. Mutations also accept `--dry-run`. Source revisions reject stale changes; reconciliation checks its batch and source revisions. Exit codes are 0 for success, 2 for invalid input/configuration, 3 for conflicts, 4 for partial application, 5 for storage/integrity failure and 6 for retryable lock contention. Partial imports print their summary before the hint; JSON entries have `status` values `applied`, `unchanged`, `conflict` or `invalid`.
 
 ## Files and export
 
@@ -101,4 +105,12 @@ scripts/demo.sh --smoke
 
 Tests use synthetic inputs and temporary homes. Rendering checks use Pandoc, Biber and classic BibTeX with `elsarticle-num`. Dependency pins and the three-day cooldown remain in force. Unsupported Bib macros, inheritance and TeX constructs remain preserved with limitations. Copies protect against process interruption and ordinary I/O failures; they do not promise native filesystem metadata preservation or power-loss durability.
 
-The code-complete checkpoint and the owner's real-paper trial were completed on 2026-09-22 (see `specs/001-academic-catalog/reviews/slice-1-acceptance.md`). No later-slice work or real-library migration has been performed.
+The slice 1 checkpoint and real-paper trial are recorded in [slice 1 acceptance](specs/001-academic-catalog/reviews/slice-1-acceptance.md). Slice 2 adds Zotero ingest and read-only collection browsing. Its [synthetic acceptance](specs/001-academic-catalog/reviews/slice-2-acceptance.md) precedes the separate owner-assisted real cutover; that cutover has not run.
+
+## Zotero ingest
+
+[The one-time extractor](tools/zotero_extract/README.md) reads a Zotero 6 userdata-121 snapshot and produces the JSON directory; it is outside the installed package. The JSON interface also allows a future local API bridge. refs preserves item JSON, assigned keys, library/item identities, native creator roles, tags and collections. Child notes become imported context; file attachments stay linked at their original locations. Attachment outlines and annotations are accounted for separately and remain in the archived Zotero data. refs neither moves those files nor updates Zotero objects.
+
+A unique DOI or ISBN match binds compatible incoming metadata to an existing source and keeps its key. Missing fields can be filled; differing values and deliberate clears require review. `import show` presents those differences. Reconciliation previews never write. Its `batch_revision` is an opaque integer token covering the saved batch revision and the observed source revisions; pass it back unchanged for execution.
+
+Existing schema-1 catalogs require the [explicit migration](docs/restore.md#explicit-schema-upgrade). Ordinary open never upgrades them. Use explicit temporary homes for trials; the later real reset and extraction require the owner's participation.

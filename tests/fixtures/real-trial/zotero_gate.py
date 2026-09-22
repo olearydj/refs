@@ -97,6 +97,7 @@ def expected(database, base_path=None, legacy=None):
                 key=f.get("citationKey") or extra.get("citation key") or (legacy or {}).get(i),
                 native=kind,
                 names=names,
+                relations={target.removeprefix('http://zotero.org/').removeprefix('https://zotero.org/') for (target,) in c.execute("SELECT r.object FROM itemRelations r JOIN relationPredicates p USING(predicateID) WHERE r.itemID=? AND p.predicate='dc:relation'", (i,))},
                 tags={
                     r[0]
                     for r in c.execute(
@@ -122,6 +123,9 @@ def expected(database, base_path=None, legacy=None):
 def compare(catalog, database, base_path=None, legacy=None):
     uri, wanted, collections = expected(database, base_path, legacy)
     findings = []
+    with ro(database) as z:
+        structure = set(z.execute("SELECT c.key,c.collectionName,p.key FROM collections c LEFT JOIN collections p ON p.collectionID=c.parentCollectionID WHERE c.collectionID NOT IN (SELECT collectionID FROM deletedCollections)"))
+        skipped = dict(trash=z.execute('SELECT count(*) FROM deletedItems').fetchone()[0],annotations=z.execute('SELECT count(*) FROM itemAnnotations').fetchone()[0],attachment_outlines=z.execute('SELECT count(*) FROM itemNotes n JOIN itemAttachments a USING(itemID) WHERE length(n.note)>0').fetchone()[0])
     with ro(Path(catalog) / "catalog.sqlite") as c:
         bindings = {
             key: sid
@@ -139,6 +143,9 @@ def compare(catalog, database, base_path=None, legacy=None):
             if "collections" in tables
             else set()
         )
+        actual_structure = set(c.execute('SELECT v.item_key,v.name,p.item_key FROM collections v LEFT JOIN collections p ON p.id=v.parent WHERE v.library_uri=?',(uri,))) if 'collections' in tables else set()
+        if actual_structure != structure:
+            findings.append(dict(kind='collection_structure'))
         if actual_collections != collections:
             findings.append(
                 dict(
@@ -147,6 +154,8 @@ def compare(catalog, database, base_path=None, legacy=None):
                     extra=sorted(actual_collections - collections),
                 )
             )
+        if set(bindings)-set(wanted):
+            findings.append(dict(kind='unexpected_bindings',keys=sorted(set(bindings)-set(wanted))))
         for key, e in wanted.items():
             if key not in bindings:
                 findings.append(dict(kind="missing_item", key=key))
@@ -174,6 +183,13 @@ def compare(catalog, database, base_path=None, legacy=None):
                 )
             for role, names in expected_names.items():
                 check("creators_" + role, m.get(role) == names)
+            related = {row[0] for row in c.execute('SELECT target_uri FROM source_relations WHERE source_id=?',(sid,))} if 'source_relations' in tables else set()
+            check('relations',related == e['relations'])
+            for target, target_id in c.execute('SELECT target_uri,target_id FROM source_relations WHERE source_id=?',(sid,)) if 'source_relations' in tables else []:
+                target_uri, _, target_key = target.rpartition('/items/')
+                expected_id = bindings.get(target_key) if target_uri == uri else None
+                if expected_id:
+                    check('related_endpoint',target_id == expected_id)
             check("tags", set(d.get("legacy_tags", [])) == e["tags"])
             membership = (
                 {
@@ -219,6 +235,7 @@ def compare(catalog, database, base_path=None, legacy=None):
             refs_bound_to_zotero=len(bindings),
             missing_items=len(set(wanted) - bindings.keys()),
             findings=len(findings),
+            skipped=skipped,
         )
     return dict(summary=summary, findings=findings)
 

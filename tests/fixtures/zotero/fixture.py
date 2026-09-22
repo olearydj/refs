@@ -40,6 +40,7 @@ def build(folder):
             "inventor",
             "presenter",
             "programmer",
+            "seriesEditor",
         ]
         c.executemany("INSERT INTO creatorTypes VALUES (?,?)", enumerate(roles, 1))
 
@@ -59,7 +60,7 @@ def build(folder):
         for i, kind in enumerate(types[:6], 1):
             item(i, kind, f"ITEM{i:04}")
             field(i, "title", f"Synthetic {kind} Study")
-            field(i, "date", "2020-05-04")
+            field(i, "date", "2020-05-04 May 4, 2020")
             field(i, "extra", f"Citation Key: extra{i}\n")
         field(1, "citationKey", "native1")
         field(1, "DOI", "10.5555/synthetic")
@@ -76,6 +77,8 @@ def build(folder):
         for n, (item_id, role, last, first, mode) in enumerate(
             [
                 (1, "author", "van Example", "Alex", 0),
+                (1, "author", "Second", "Zoe", 0),
+                (2, "seriesEditor", "Series", "Sid", 0),
                 (1, "editor", "Editor", "Eve", 0),
                 (1, "translator", "Translator", "Tess", 0),
                 (1, "contributor", "Research and Design", "", 1),

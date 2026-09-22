@@ -22,6 +22,9 @@ def test_extraction_matches_independent_oracle(zotero_fixture, tmp_path):
     uri, expected, collections = GATE["expected"](
         zotero_fixture, zotero_fixture.parent / "base", {6: "legacy6"}
     )
+    sample = json.loads((output/'items/ITEM0001.json').read_text())
+    assert sample['data']['date'] == 'May 4, 2020'
+    assert sample['meta']['parsedDate'] == '2020-05-04'
     assert manifest["library_uri"] == uri
     assert manifest["legacy_keys"]["ITEM0006"] == "legacy6"
     assert manifest["skipped"] == {"trash": 1, "annotations": 1}

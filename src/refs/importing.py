@@ -20,6 +20,7 @@ def preserve(connection, raw: bytes, locator: str, file_digest: str, *, source_i
     fingerprint = hashlib.sha256(raw).hexdigest()
     connection.execute('INSERT OR IGNORE INTO originals (id,source_id,raw_bytes,sha256,byte_length,format,origin,file_digest,locator,definitions_json) VALUES (?,?,?,?,?,?,?,?,?,?)',
                        (str(uuid4()), source_id, raw, fingerprint, len(raw), format, origin, file_digest, locator, json.dumps(definitions or {})))
+    return connection.execute('SELECT id FROM originals WHERE sha256=? AND origin=? AND locator=?',(fingerprint,origin,locator)).fetchone()[0]
 
 
 def differences(incoming: dict, current: dict, prefix='') -> list[str]:
@@ -172,8 +173,8 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
     outcome['status'] = outcome['outcome']
     outcome.update(start=block['start'], end=block['end'], preserved=True, editable=outcome['outcome'] in ('applied','unchanged'), searchable=outcome['outcome'] in ('applied','unchanged'), exportable='requires export assessment')
     if not dry_run:
-        preserve(connection, raw, evidence_locator, file_digest, source_id=source_id if outcome['outcome'] in ('applied','unchanged') else None,
-                 origin='import-'+outcome['outcome'], definitions=dict(start=block['start'], end=block['end'], limitations=outcome.get('limitations', []), import_id=import_id))
+        outcome['original_ref'] = preserve(connection, raw, evidence_locator, file_digest, source_id=source_id if outcome['outcome'] in ('applied','unchanged') else None,
+                 origin='import-'+outcome['outcome'], definitions=dict(start=block['start'], end=block['end'], limitations=outcome.get('limitations', []), import_id=import_id, incoming_key=key))
     return outcome
 
 
@@ -232,9 +233,13 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
     result: dict = {}
     try:
         parsed = zotero.parse(entry['item'], manifest)
-        incoming, warnings = naming.normalize(parsed['source'].canonical(), settings.values if settings else None)
+        canonical = parsed['source'].canonical()
+        key = canonical.pop('citation_key', None)
+        incoming, warnings = naming.normalize(canonical, settings.values if settings else None)
         incoming['context'] = entry.get('context', [])
         source = SourceCreate.model_validate(incoming)
+        source.citation_key = key
+        incoming = source.canonical()
         source_id, binding = bind_and_fill(connection, source, entry['raw'], dry_run=dry_run)
         conflicts = [item['path'] for item in binding.get('conflicts', [])]
         if source_id:
@@ -251,12 +256,14 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
                 source_id = sources.insert_source(connection, source, entry['raw'], entry['locator'], format='zotero-json', warnings=warnings, key_provenance=provenance)['id']
             result = dict(status='applied', source_id=source_id)
         result.update(binding=binding, citation_key=source.citation_key, warnings=warnings, limitations=parsed['limitations'])
-    except RefError as exc:
+    except (RefError,ValueError,TypeError,KeyError,AttributeError) as exc:
+        if not isinstance(exc,RefError):
+            exc = RefError('invalid_zotero_item','Malformed item fields; inspect the preserved original JSON',2)
         result = dict(status='conflict' if exc.issue['code'] in ('identity_conflict', 'source_removed', 'alias_conflict') else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'])
     result.update(outcome=result['status'], incoming=incoming, item_key=entry['key'], preserved=True)
     if not dry_run:
-        preserve(connection, entry['raw'], entry['locator'], fingerprint, source_id=source_id if result['status'] in ('applied','unchanged') else None,
-                 format='zotero-json', origin='import-'+result['status'], definitions=dict(limitations=result.get('limitations', []), import_id=batch))
+        result['original_ref'] = preserve(connection, entry['raw'], entry['locator'], fingerprint, source_id=source_id if result['status'] in ('applied','unchanged') else None,
+                 format='zotero-json', origin='import-'+result['status'], definitions=dict(limitations=result.get('limitations', []), import_id=batch, incoming_key=result.get('citation_key')))
     return result
 
 
@@ -347,7 +354,7 @@ def child_context(bundle: dict, parent: str) -> list[dict]:
         elif data['itemType'] == 'attachment' and data.get('linkMode') == 'linked_url':
             text = data.get('url')
         if text:
-            result.append(dict(text=text, origin='import', original_ref=entry['locator']))
+            result.append(dict(text=text, origin='import', original_ref=bundle['manifest']['library_uri']+'/items/'+entry['key']))
     return result
 
 
@@ -454,6 +461,9 @@ def reconcile(catalog: Path, batch: str, selectors: list[str], *, execute=False,
             if execute and (decisions or entry['status']=='conflict' and not remaining):
                 if decisions:
                     sources.store_record(connection,current,canonical,list(dict.fromkeys(current['corrected_fields']+[item['path'] for item in decisions])))
+                if entry.get('original_ref'):
+                    original = connection.execute('SELECT * FROM originals WHERE id=?',(entry['original_ref'],)).fetchone()
+                    preserve(connection,original['raw_bytes'],original['locator'],original['file_digest'],source_id=current['id'],format=original['format'],origin='import-reconciled',definitions=json.loads(original['definitions_json']))
                 status = 'conflict' if remaining else 'applied'
                 saved = json.loads(connection.execute('SELECT decisions_json FROM import_entries WHERE id=?',(entry['entry_id'],)).fetchone()[0])
                 connection.execute('UPDATE import_entries SET status=?,conflicts_json=?,source_revision=?,decisions_json=? WHERE id=?',

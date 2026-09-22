@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import re
 import sqlite3
 from pathlib import Path
 
@@ -58,6 +59,10 @@ def extract(
             "SELECT d.itemID,f.fieldName,v.value FROM itemData d JOIN fields f USING(fieldID) JOIN itemDataValues v USING(valueID)"
         ):
             if i in records:
+                if name in ('date','filingDate','priorityDate') and re.match(r'^\d{4}-(?:0\d|1[0-2])-(?:[0-2]\d|3[01]) ',value) and not re.fullmatch(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}(?::\d{2})?',value):
+                    if name == 'date':
+                        records[i]['meta'] = {'parsedDate':value[:10]}
+                    value = value[11:]
                 records[i]["data"][name] = value
         for i, role, last, first, literal in c.execute(
             "SELECT ic.itemID,ct.creatorType,c.lastName,c.firstName,c.fieldMode FROM itemCreators ic JOIN creators c USING(creatorID) JOIN creatorTypes ct USING(creatorTypeID) ORDER BY ic.itemID,ic.orderIndex"

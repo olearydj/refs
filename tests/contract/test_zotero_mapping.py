@@ -123,3 +123,38 @@ def test_identifier_search_and_portable_fallback(initialized, tmp_path):
     raw["metadata"]["type"] = "article-journal"
     output, _ = bibliography.serialize([raw])
     assert b"note = {Supplied}" in output
+
+
+def test_incompatible_assigned_key_stays_preserved(initialized,zotero_fixture,tmp_path):
+    from refs import importing
+    folder=tmp_path/'input'
+    extracted(zotero_fixture,folder)
+    path=folder/'items/ITEM0002.json'
+    value=json.loads(path.read_bytes())
+    value['data']['citationKey']='legacy key'
+    path.write_text(json.dumps(value))
+    assert importing.run_zotero(tmp_path/'cat',folder)['counts']['applied']==6
+    assert sources.show(tmp_path/'cat','legacy key')['citation_key']=='legacy key'
+    with pytest.raises(RefError,match='unapplied losses'):
+        bibliography.serialize([sources.show(tmp_path/'cat','legacy key')])
+
+
+@pytest.mark.parametrize('raw,parsed,expected',[
+    ('2020','2020-00-00',{'date-parts':[[2020]]}),
+    ('2020','2020-01-01',{'date-parts':[[2020]]}),
+    ('2020-05-04','2020-00-00',{'date-parts':[[2020,5,4]]}),
+    ('2020','0000-00-00',{'date-parts':[[2020]]}),
+    ('May 2020','2020-05-00',{'date-parts':[[2020,5]]}),
+    ('undated','0000-00-00',{'literal':'undated'}),
+    ('circa 2020','2020-00-00',{'literal':'circa 2020'}),
+    ('2020–2021','2020-00-00',{'literal':'2020–2021'}),
+    ('2020-05-04 12:30:00',None,{'date-parts':[[2020,5,4]]}),
+])
+def test_partial_and_literal_dates(raw,parsed,expected):
+    assert zotero.date(raw,parsed)==expected
+
+
+def test_parsed_date_cannot_contradict_original():
+    for raw,parsed in [('Spring 2020','2021-03-00'),('2020-05','2020-06-01')]:
+        with pytest.raises(RefError,match='contradicts'):
+            zotero.date(raw,parsed)

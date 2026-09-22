@@ -37,6 +37,7 @@ def test_preview_partial_execution_and_repeat(initialized, tmp_path):
     current = sources.show(catalog, "a")
     assert current["metadata"]["title"] == "Second" and current["metadata"]["publisher"] == "Old"
     assert current["citation_key"] == "a" and "metadata.title" in current["corrected_fields"]
+    assert any(item['origin']=='import-reconciled' for item in current['originals'])
     shown = importing.show(catalog, batch)
     assert len(shown["entries"][0]["decisions"]) == 1
     importing.reconcile(catalog, batch, ["a"], execute=True, revision=shown["batch_revision"])
