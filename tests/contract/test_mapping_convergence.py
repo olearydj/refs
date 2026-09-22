@@ -77,3 +77,49 @@ def test_observed_type_families(kind):
     assert incoming['metadata']['issued'] == refs['metadata']['issued']
     if incoming['metadata']['type'] != kind:
         assert any(warning['details']['class']=='documented_fallback' for warning in warnings)
+
+
+CSL_ONLY = json.loads((Path(__file__).parents[1]/'fixtures/mappings/csl-only-rows.json').read_text())
+
+
+@pytest.mark.parametrize('case', CSL_ONLY, ids=lambda case: case['field'])
+def test_remaining_csl_rows_edit_clear_and_assessment(initialized,tmp_path,case):
+    metadata={'type':case['type'],'title':'Fixture Title',case['field']:case['expected']}
+    proposal=csl.parse(json.dumps(metadata).encode()).canonical()
+    assert parse(json.dumps(proposal).encode()).metadata.model_dump(by_alias=True,exclude_none=True) == metadata
+    source=sources.add(tmp_path/'cat',json.dumps(metadata).encode(),'csl.json',format='csljson')
+    path='metadata.'+case['field']
+    replacement={'date-parts':[[2025]]} if isinstance(case['expected'],dict) else [{'family':'Changed'}] if isinstance(case['expected'],list) else 'Changed Value'
+    changed=sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','set':{path:replacement}},source['revision'])
+    assert changed['metadata'][case['field']]==replacement
+    try:
+        output,_=bibliography.serialize([changed])
+        assert output.startswith(b'@')
+    except RefError as error:
+        assert error.issue['code']=='export_blocked'
+    cleared=sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','clear':[path]},changed['revision'])
+    assert case['field'] not in cleared['metadata']
+
+
+@pytest.mark.parametrize(('kind','extension','value','replacement'),[
+    ('patent','patent.assignees',[{'literal':'Research and Design'}],[{'literal':'Other Institution'}]),
+    ('patent','patent.application_number','APP-1','APP-2'),
+    ('patent','patent.priority_date',{'date-parts':[[2020]]},{'date-parts':[[2021]]}),
+    ('article-journal','journal_series','Series One','Series Two'),
+])
+def test_extension_edits_and_clears(initialized,tmp_path,kind,extension,value,replacement):
+    canonical={'schema_version':'1.0','metadata':{'type':kind,'title':'Fixture Title','number':'GRANT-1'} if kind=='patent' else {'type':kind,'title':'Fixture Title'},'extensions':{}}
+    node=canonical['extensions']
+    parts=extension.split('.')
+    for part in parts[:-1]:
+        node=node.setdefault(part,{})
+    node[parts[-1]]=value
+    source=sources.add(tmp_path/'cat',json.dumps(canonical).encode(),'extension.json')
+    path='extensions.'+extension
+    changed=sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','set':{path:replacement}},source['revision'])
+    with pytest.raises(RefError):
+        bibliography.serialize([changed])
+    cleared=sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','clear':[path]},changed['revision'])
+    assert path in cleared['corrected_fields']
+    if kind=='patent':
+        assert cleared['metadata']['number']=='GRANT-1'

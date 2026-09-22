@@ -315,6 +315,12 @@ class OriginalReference(StrictModel):
 
 
 class SourceRecord(SourceCreate):
+    @field_validator('citation_key')
+    @classmethod
+    def valid_key(cls, value: str | None) -> str | None:
+        # Imported legacy keys remain readable; creation and export validate them.
+        return value
+
     id: str
     citation_key: Text
     state: Literal['active', 'removed']

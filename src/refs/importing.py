@@ -133,11 +133,11 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
     return dict(import_id=None if dry_run else run_id, input=locator, file_digest=fingerprint, counts=counts, entries=entries, dry_run=dry_run, warnings=[])
 
 
-def add(catalog: Path, raw: bytes, locator: str, *, dry_run=False) -> dict:
+def add(catalog: Path, raw: bytes, locator: str, *, dry_run=False, settings=None) -> dict:
     blocks = [block for block in bibtex.partition(raw) if block['kind'] == 'entry']
     if len(blocks) != 1:
         raise RefError('invalid_bib_input', 'Use add for one entry, or import for a bibliography', 2)
-    result = run(catalog, raw, locator, dry_run=dry_run)
+    result = run(catalog, raw, locator, dry_run=dry_run, settings=settings)
     entry = result['entries'][0]
     if entry['outcome'] in ('conflict', 'invalid'):
         raise RefError(entry.get('code', 'import_conflict'), entry.get('message', 'Inspect conflicting fields and use update'), 2 if entry['outcome'] == 'invalid' else 3, details=entry,

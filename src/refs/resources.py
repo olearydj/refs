@@ -191,34 +191,17 @@ def register_copy(settings: Settings, source: dict, target: Path, digest: str, o
 
 
 def copy(settings: Settings, reference: str, path: Path, *, resource_id=None, keep_name=False, dry_run=False, label=None, media_type=None) -> dict:
-    from refs import naming
-
-    source_path = path.expanduser().absolute()
-    if source_path.is_symlink() or any(parent.is_symlink() for parent in source_path.parents) or not source_path.is_file():
-        raise RefError('unsafe_copy_source','Copy a completed regular file without symlink traversal, or link it in place')
-    library = settings.library
-    if library is None or not library.is_dir():
-        raise RefError('library_unavailable','Restore the configured library before copying; the original remains untouched')
     source = sources.show(settings.catalog_path(),reference)
-    if source['state'] != 'active':
-        raise RefError('source_removed','Reactivate the source before copying')
-    origin = locate(settings,path=source_path)
+    plan = plan_copy(settings,source,path,keep_name=keep_name)
+    source_path, target = Path(plan['path']), Path(plan['destination'])
+    origin = plan['copied_from']
     existing = next((item for item in source['resources'] if item['id']==resource_id),None) if resource_id else next((item for item in source['resources'] if all(item.get(key)==value for key,value in origin.items())),None)
     if resource_id and (existing is None or any(existing.get(key)!=value for key,value in origin.items())):
         raise RefError('resource_conflict','Select the resource that records the original copy source')
-    name = source_path.name if keep_name else naming.filename(source,source_path.name)
-    warnings = []
-    if not keep_name and (naming.issued_year(source)=='ND' or not re.search(r'[^\W_]+',naming.short_title(source))):
-        warnings.append(dict(code='filename_unavailable',message='Conventional filename unavailable; keeping the original name',path=str(source_path),details={},retryable=False))
-    folder = library/'Unfiled'
-    if folder.is_symlink() or not folder.resolve().is_relative_to(library) or folder.exists() and not folder.is_dir():
-        raise RefError('unsafe_path','Inspect the library Unfiled path before copying')
-    target = folder/name
-    if target.exists() or target.is_symlink():
-        raise RefError('destination_exists','Inspect the existing destination; copy never overwrites or adopts it',path=str(target))
-    preview = dict(dry_run=True,citation_key=source['citation_key'],path=str(source_path),destination=str(target),copied_from=origin,warnings=warnings)
     if dry_run:
-        return preview
+        return plan
+    folder = target.parent
+    warnings = plan['warnings']
     published = False
     try:
         with files.file_lock(settings.catalog_path()):
@@ -233,3 +216,51 @@ def copy(settings: Settings, reference: str, path: Path, *, resource_id=None, ke
         if isinstance(exc,RefError):
             raise
         raise RefError('copy_failed','Copy failed; inspect the original and retry after correcting the cause',5,path=str(source_path),details={'cause':str(exc)}) from exc
+
+
+def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False) -> dict:
+    from refs import naming
+
+    expanded = path.expanduser()
+    source_path = expanded.parent.resolve()/expanded.name
+    if source_path.is_symlink() or not source_path.is_file():
+        raise RefError('unsafe_copy_source','Copy a completed regular file without symlink traversal, or link it in place')
+    library = settings.library
+    if library is None or not library.is_dir():
+        raise RefError('library_unavailable','Restore the configured library before copying; the original remains untouched')
+    if source.get('state', 'active') != 'active':
+        raise RefError('source_removed','Reactivate the source before copying')
+    origin = locate(settings,path=source_path)
+    if settings.catalog_path().stat().st_dev != library.stat().st_dev:
+        raise RefError('staging_volume_mismatch','Keep catalog staging and the library on the same volume')
+    name = source_path.name if keep_name else naming.filename(source,source_path.name)
+    warnings = []
+    if not keep_name and (naming.issued_year(source)=='ND' or not re.search(r'[^\W_]+',naming.short_title(source))):
+        warnings.append(dict(code='filename_unavailable',message='Conventional filename unavailable; keeping the original name',path=str(source_path),details={},retryable=False))
+    folder = library/'Unfiled'
+    if folder.is_symlink() or not folder.resolve().is_relative_to(library) or folder.exists() and not folder.is_dir():
+        raise RefError('unsafe_path','Inspect the library Unfiled path before copying')
+    target = folder/name
+    if target.exists() or target.is_symlink():
+        raise RefError('destination_exists','Inspect the existing destination; copy never overwrites or adopts it',path=str(target))
+    preview = dict(dry_run=True,citation_key=source['citation_key'],path=str(source_path),destination=str(target),copied_from=origin,warnings=warnings)
+    return preview
+
+
+def capture_file(settings: Settings, data: dict, path: Path, *, linked=False, keep_name=False, dry_run=False) -> dict:
+    if dry_run:
+        source = data.get('record',data)
+        proposal = locate(settings,path=path) if linked else plan_copy(settings,source,path,keep_name=keep_name)
+        return data | {'resources':[proposal]}
+    try:
+        resource = link(settings,data['id'],path=path)
+        if not linked:
+            resource = copy(settings,data['id'],path,resource_id=resource['id'],keep_name=keep_name)
+        current = inspect_source(settings,data['id'])
+        return current | dict(outcome=data['outcome'],warnings=data.get('warnings',[])+resource.get('warnings',[]))
+    except (RefError,OSError) as exc:
+        current = inspect_source(settings,data['id'])
+        details = dict(cause=str(exc),original=str(path))
+        if isinstance(exc,RefError) and exc.data:
+            details.update(exc.data)
+        raise RefError('file_action_incomplete','Metadata was saved; inspect the resource and retry resource add --copy',4,details=details,data=current | dict(outcome='needs_attention')) from exc

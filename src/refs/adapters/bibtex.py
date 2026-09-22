@@ -136,7 +136,7 @@ def parse(raw: bytes) -> dict:
         value: dict = {'schema_version': '1.0', 'metadata': metadata, 'native_type': {'namespace':'bibtex', 'value':kind}, 'provenance': [{'origin': 'import', 'access': 'unknown'}]}
         protection = {}
         consumed = set()
-        enclosing = entry.parser_metadata.get('removed_enclosing', {})
+        enclosing = {key.lower(): value for key,value in entry.parser_metadata.get('removed_enclosing', {}).items()}
         unsupported = {field for field, contents in fields.items() if field not in enclosing and not contents.isdecimal() and not (field == 'month' and contents.lower() in MONTHS)}
         for field in unsupported:
             limitations.append(dict(field=field, reason='Unresolved macro or concatenation'))
@@ -186,7 +186,8 @@ def parse(raw: bytes) -> dict:
                         incoming = {'english':'en', 'american':'en-US', 'british':'en-GB', 'german':'de', 'french':'fr', 'spanish':'es'}.get(incoming.lower(), incoming)
                 assign(path, incoming)
                 if 'title' in path:
-                    terms = [decode(group) for group in re.findall(r'(?<![\\\w])\{([^{}]+)\}', contents) if not group.startswith('\\')]
+                    protection_text = re.sub(r'\\(?:[A-Za-z]+|[^A-Za-z])\s*\{[^{}]*\}', '', contents)
+                    terms = [decode(group) for group in re.findall(r'(?<![\\\w])\{([^{}]+)\}', protection_text) if not group.startswith('\\')]
                     if terms:
                         protection[path[9:]] = dict(protected_terms=terms, preserve_case=contents.startswith('{') and contents.endswith('}') and decode(contents) in terms)
             except ValueError as exc:
@@ -210,8 +211,19 @@ def parse(raw: bytes) -> dict:
                 metadata['issued'] = {'literal': year}
         if 'date' in fields and 'date' not in unsupported:
             supplied = date(fields['date'])
-            if parts and ('date-parts' not in supplied or supplied['date-parts'][0][:len(parts)] != parts):
-                raise ValueError('Date and year/month disagree')
+            if parts:
+                supplied_parts = supplied.get('date-parts', [[]])[0]
+                overlap = min(len(parts),len(supplied_parts))
+                if not supplied_parts or supplied_parts[:overlap] != parts[:overlap]:
+                    raise ValueError('Date and year/month disagree')
+                supplied = {'date-parts':[parts if len(parts)>len(supplied_parts) else supplied_parts]}
+            if 'month' in fields and 'month' not in unsupported and 'date-parts' in supplied:
+                month = MONTHS.get(fields['month'].lower()) or int(fields['month'])
+                supplied_parts = supplied['date-parts'][0]
+                if len(supplied_parts)>1 and supplied_parts[1] != month:
+                    raise ValueError('Date and month disagree')
+                if len(supplied_parts)==1:
+                    supplied_parts.append(month)
             metadata['issued'] = supplied
         elif parts:
             metadata['issued'] = {'date-parts': [parts]}

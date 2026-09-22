@@ -86,3 +86,59 @@ def test_add_defaults_and_partial_copy(initialized,tmp_path,reference_path):
     assert result['resources'][0]['root'] == 'library'
     assert result['resources'][0]['copied_from']['path'] == str(path)
     assert path.exists()
+
+
+def test_link_flag_keep_name_and_failed_add(initialized,tmp_path,reference_path):
+    path=tmp_path/'original.pdf'
+    path.write_bytes(b'synthetic')
+    linked=initialized('add','--format','refs','--input',reference_path,'--file',path,'--link')['data']
+    assert linked['resources'][0]['path'] == str(path)
+    assert not (tmp_path/'lib'/'Unfiled').exists()
+    copied=initialized('resource','add',linked['id'],'--path',path,'--copy','--keep-name')['data']
+    assert copied['relative'] == 'Unfiled/original.pdf'
+    assert len(initialized('show',linked['id'])['data']['resources']) == 1
+    other=tmp_path/'other.pdf'
+    other.write_bytes(b'other')
+    failed=initialized('add','--format','refs','--input',reference_path,'--file',other,'--keep-name')['data']
+    assert len(failed['resources']) == 2
+    assert path.exists() and other.exists()
+    result=initialized('add','--format','refs','--input',reference_path,'--file',other,'--keep-name',expected=4)
+    assert result['data']['id'] == linked['id']
+    assert result['errors'][0]['code'] == 'file_action_incomplete'
+    assert other.read_bytes() == b'other'
+
+
+def test_preview_does_not_capture_or_stage(initialized,tmp_path,reference_path):
+    path=tmp_path/'original.pdf'
+    path.write_bytes(b'synthetic')
+    data=initialized('add','--format','refs','--input',reference_path,'--file',path,'--dry-run')['data']
+    assert data['resources'][0]['destination'].endswith('/Unfiled/LearningPython-2024.pdf')
+    assert initialized('list')['data']['total'] == 0
+    assert not (tmp_path/'cat'/'staging').exists()
+    assert not (tmp_path/'lib'/'Unfiled').exists()
+
+
+def test_revision_change_after_publication_preserves_copy(initialized,tmp_path,reference_path,monkeypatch):
+    settings, source, path = prepare(initialized,tmp_path,reference_path)
+    original=resources.register_copy
+    def change(*args,**kwargs):
+        sources.update(settings.catalog_path(),source['id'],{'schema_version':'1.0','set':{'metadata.volume':'Changed'}},source['revision'])
+        return original(*args,**kwargs)
+    monkeypatch.setattr(resources,'register_copy',change)
+    with pytest.raises(RefError) as error:
+        resources.copy(settings,source['id'],path)
+    assert error.value.exit_code == 4
+    assert list((settings.library/'Unfiled').iterdir())
+    assert not sources.show(settings.catalog_path(),source['id'])['resources']
+    assert path.exists()
+
+
+def test_filename_fallback_is_explicit(initialized,tmp_path):
+    import json
+    path=tmp_path/'undated.pdf'
+    path.write_bytes(b'synthetic')
+    record=tmp_path/'undated.json'
+    record.write_text(json.dumps({'schema_version':'1.0','citation_key':'undated','metadata':{'title':'Undated Work'}}))
+    data=initialized('add','--format','refs','--input',record,'--file',path)['data']
+    assert data['resources'][0]['relative'] == 'Unfiled/undated.pdf'
+    assert any(item['code']=='filename_unavailable' for item in data['warnings'])

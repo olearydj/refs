@@ -35,3 +35,16 @@ def test_partition_and_original_protection():
     assert block['raw'] == raw[block['start']:block['end']]
     source = parse(block['raw'])['source']
     assert source.title_protection['title'].protected_terms == ['Python']
+
+
+def test_uppercase_fields_and_accents_do_not_create_protection():
+    source = parse(br'@BOOK{X,TITLE={An {NASA} Example with Caf\'{e}},AUTHOR={Smith, Alex}}')['source']
+    assert source.metadata.title == 'An NASA Example with Café'
+    assert source.title_protection['title'].protected_terms == ['NASA']
+
+
+def test_date_aliases_compare_overlapping_precision():
+    source = parse(b'@book{x,title={Test},year={2024},month=jan,date={2024}}')['source']
+    assert source.metadata.issued.date_parts == [[2024,1]]
+    with pytest.raises(RefError):
+        parse(b'@book{x,title={Test},month=feb,date={2024-01}}')

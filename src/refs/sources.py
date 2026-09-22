@@ -215,12 +215,14 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
             patch_path(canonical, path, None, clear=True)
         if patch_model.provenance:
             canonical.setdefault('provenance', []).extend(item.model_dump(exclude_none=True) for item in patch_model.provenance)
+        preserved_key = canonical.pop("citation_key")
         try:
             canonical = SourceCreate.model_validate(canonical).canonical()
             canonical, warnings = naming.normalize(canonical)
             canonical = SourceCreate.model_validate(canonical).canonical()
         except ValidationError as exc:
             raise RefError('invalid_patch', str(exc), 2) from exc
+        canonical['citation_key'] = preserved_key
         if canonical == original:
             return current | {'unchanged': True, 'warnings': warnings}
         corrections = sorted(set(current['corrected_fields']) | set(patch_model.set) | set(patch_model.clear))

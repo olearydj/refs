@@ -125,3 +125,15 @@ def test_cli_formats_and_partial_result(initialized, tmp_path):
     result = initialized('add', '--format', 'bib', '--input', path)
     assert result['data']['outcome'] == 'created'
     assert initialized('add', '--format', 'bib', '--input', path)['data']['outcome'] == 'already_present'
+
+
+def test_legacy_key_remains_editable_but_blocks_export(initialized,tmp_path):
+    from refs import bibliography
+    from refs.models import SourceRecord
+    importing.run(tmp_path/'cat',b'@book{legacy key,title={Original Title}}','legacy.bib')
+    record=sources.show(tmp_path/'cat','legacy key')
+    SourceRecord.model_validate(record)
+    edited=sources.update(tmp_path/'cat','legacy key',{'schema_version':'1.0','set':{'metadata.title':'Corrected Title'}},record['revision'])
+    assert edited['citation_key']=='legacy key'
+    with pytest.raises(RefError):
+        bibliography.serialize([edited])

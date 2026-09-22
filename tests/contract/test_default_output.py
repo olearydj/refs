@@ -67,3 +67,27 @@ def test_each_command_first_line(initialized, tmp_path, reference_path, args, fi
     result = subprocess.run(['refs', *args], env=dict(os.environ, REFS_CONFIG=str(tmp_path/'config.toml'), REFS_CATALOG=str(tmp_path/'cat')), capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
     assert result.stdout.splitlines()[0].startswith(first)
+
+
+@pytest.mark.parametrize('command', ['import','resource add','resource unlink','resource check','open'])
+def test_file_commands_first_line(initialized,tmp_path,reference_path,command):
+    source=initialized('add','--format','refs','--input',reference_path)['data']
+    paths=[tmp_path/'one.pdf',tmp_path/'two.pdf']
+    for path in paths:
+        path.write_bytes(b'synthetic')
+    first=initialized('resource','add',source['id'],'--path',paths[0])['data']
+    bib=tmp_path/'input.bib'
+    bib.write_text('@book{new,title={New Book}}')
+    cases={
+        'import':(['import','--input',str(bib)],f'Imported 1, unchanged 0, conflicts 0, invalid 0 from {bib}'),
+        'resource add':(['resource','add',source['id'],'--path',str(paths[1])],f"Linked {paths[1]} to {source['citation_key']}"),
+        'resource unlink':(['resource','unlink',first['id'],'--if-revision','1','--execute'],f"Unlinked {paths[0]} from {source['citation_key']}"),
+        'resource check':(['resource','check'],f'available: {paths[0]}'),
+        'open':(['open',source['id']],'Choose a resource with --resource:'),
+    }
+    if command=='open':
+        initialized('resource','add',source['id'],'--path',paths[1])
+    args,expected=cases[command]
+    result=subprocess.run(['refs',*args],env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(tmp_path/'cat')),capture_output=True,text=True)
+    assert result.returncode == 0,result.stderr
+    assert result.stdout.splitlines()[0]==expected

@@ -1,0 +1,116 @@
+[
+  {
+    "field": "container-title-short",
+    "type": "article-journal",
+    "expected": "Distinct Value"
+  },
+  {
+    "field": "collection-editor",
+    "type": "book",
+    "expected": [
+      {
+        "family": "Distinct",
+        "given": "Robin"
+      }
+    ]
+  },
+  {
+    "field": "contributor",
+    "type": "article",
+    "expected": [
+      {
+        "family": "Distinct",
+        "given": "Robin"
+      }
+    ]
+  },
+  {
+    "field": "submitted",
+    "type": "article",
+    "expected": {
+      "date-parts": [
+        [
+          2024,
+          2,
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "field": "original-date",
+    "type": "book",
+    "expected": {
+      "date-parts": [
+        [
+          2024,
+          2,
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "field": "event-date",
+    "type": "paper-conference",
+    "expected": {
+      "date-parts": [
+        [
+          2024,
+          2,
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "field": "number-of-pages",
+    "type": "book",
+    "expected": "Distinct Value"
+  },
+  {
+    "field": "number-of-volumes",
+    "type": "book",
+    "expected": "Distinct Value"
+  },
+  {
+    "field": "medium",
+    "type": "article",
+    "expected": "Distinct Value"
+  },
+  {
+    "field": "authority",
+    "type": "patent",
+    "expected": "Distinct Value"
+  },
+  {
+    "field": "jurisdiction",
+    "type": "patent",
+    "expected": "Distinct Value"
+  },
+  {
+    "field": "archive-place",
+    "type": "article",
+    "expected": "Distinct Value"
+  },
+  {
+    "field": "event-place",
+    "type": "paper-conference",
+    "expected": "Distinct Value"
+  },
+  {
+    "field": "section",
+    "type": "article-journal",
+    "expected": "Distinct Value"
+  },
+  {
+    "field": "part-title",
+    "type": "article-journal",
+    "expected": "Distinct Value"
+  },
+  {
+    "field": "status",
+    "type": "article",
+    "expected": "Distinct Value"
+  }
+]

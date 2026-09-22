@@ -23,7 +23,7 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
         'project cite': lambda: f"Cited {key} in {data['project_name']}",
         'project uncite': lambda: f"Uncited {key} from {data['project_name']}",
         'project show': lambda: project_text(data),
-        'resource add': lambda: f"Linked {data.get('resolved_path') or data.get('path') or data.get('relative')} to {key}",
+        'resource add': lambda: f"Copied {data['copied_from'].get('path') or data['copied_from'].get('relative')} to {data['destination']} for {key}" if 'destination' in data else f"Linked {data.get('resolved_path') or data.get('path') or data.get('relative')} to {key}",
         'resource unlink': lambda: f"Unlinked {data.get('resolved_path') or data.get('path') or data.get('relative')} from {key}",
         'resource check': lambda: '\n'.join(f"{item['status']}: {item.get('resolved_path') or item.get('relative') or item['id']}" for item in data['items']) or '(no resources)',
         'open': lambda: 'Choose a resource with --resource:\n' + '\n'.join(f"{item['id']}: {item.get('resolved_path') or item.get('relative')}" for item in data['choices']) if 'choices' in data else f"Opened {data['path']} for {key}",

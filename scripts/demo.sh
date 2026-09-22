@@ -13,7 +13,7 @@ usage() {
   cat <<'HELP'
 Usage: scripts/demo.sh [--smoke] [--no-pause] [--keep]
 
-Narrated end-to-end test of refs US1 through US3 using synthetic data.
+Narrated end-to-end test of refs US1 through US4 using synthetic data.
   --smoke      Print a compact pass or fail and clean temporary data.
   --no-pause   Never wait between sections.
   --keep       Keep the temporary directory for inspection, even in smoke mode.
@@ -165,4 +165,51 @@ run 0 import-cite project cite imported synthetic-one
 run 0 adopt export --project imported --output "$DEMO_ROOT/import.bib" --adopt --overwrite
 assert_jq '.data.count == 1' "$LAST" 'explicit adoption replaces exact imported bytes'
 pause_demo
-printf 'PASS refs demo: %s checks (US1, US2, US3)\n' "$CHECKS"
+section 'US4: Keep files without deleting originals'
+explain 'Link in place, copy verified bytes, and leave interrupted publication available for inspection.'
+printf 'Synthetic linked file\n' >"$DEMO_ROOT/linked.pdf"
+run 0 link resource add "$KEY" --path "$DEMO_ROOT/linked.pdf"
+assert_jq '.data.path != null and .data.root == null' "$LAST" 'existing source links by default'
+printf 'Synthetic download\n' >"$DEMO_ROOT/download.pdf"
+run 0 copy resource add "$KEY" --path "$DEMO_ROOT/download.pdf" --copy
+assert_jq '.data.relative == "Unfiled/LearningPython-2024.pdf" and .data.digest != null' "$LAST" 'verified conventional copy'
+cmp "$DEMO_ROOT/download.pdf" "$DEMO_ROOT/lib/Unfiled/LearningPython-2024.pdf" || fail 'copy differs'
+pass 'copy and original bytes agree'
+printf 'Synthetic keep-name file\n' >"$DEMO_ROOT/keep.pdf"
+run 0 keep resource add "$KEY" --path "$DEMO_ROOT/keep.pdf" --copy --keep-name
+assert_jq '.data.relative == "Unfiled/keep.pdf"' "$LAST" 'keep-name respected'
+run 3 collision resource add "$KEY" --path "$DEMO_ROOT/download.pdf" --copy
+assert_jq '.errors[0].code == "destination_exists"' "$LAST" 'collision refuses overwrite'
+run 0 checked resource check --source "$KEY" --verify
+assert_jq 'all(.data.items[]; .status == "available")' "$LAST" 'registered copies verify'
+cat >"$DEMO_ROOT/file-source.json" <<'JSON'
+{"schema_version":"1.0","citation_key":"file-capture","metadata":{"title":"File Capture","issued":{"date-parts":[[2024]]}}}
+JSON
+run 0 file-capture add --format refs --input "$DEMO_ROOT/file-source.json" --file "$DEMO_ROOT/download.pdf"
+assert_jq '(.data.resources | length) == 1 and .data.resources[0].copied_from.path != null and .data.resources[0].root == "library"' "$LAST" 'add copies and retargets one resource'
+[[ -f "$DEMO_ROOT/download.pdf" && -f "$DEMO_ROOT/linked.pdf" ]] || fail 'an original disappeared'
+pass 'original files retained'
+"$REPO_ROOT/.venv/bin/python" - "$DEMO_ROOT" "$KEY" >"$DEMO_ROOT/interrupted.result.json" <<'PYCODE'
+import sys
+from pathlib import Path
+from unittest.mock import patch
+from refs import resources
+from refs.config import select
+from refs.results import RefError, emit
+root = Path(sys.argv[1])
+original = root/'interrupted.pdf'
+original.write_bytes(b'Synthetic interrupted copy')
+settings = select(str(root/'config.toml'), str(root/'cat'))
+with patch.object(resources, 'register_copy', side_effect=OSError('Synthetic interruption after publication')):
+    try:
+        resources.copy(settings, sys.argv[2], original, keep_name=True)
+    except RefError as error:
+        assert error.exit_code == 4
+        emit('resource add', error=error, json_output=True)
+    else:
+        raise AssertionError('Expected interrupted registration')
+assert original.read_bytes() == (root/'lib/Unfiled/interrupted.pdf').read_bytes()
+PYCODE
+assert_jq '.errors[0].code == "copy_published_unregistered" and .status == "partial"' "$DEMO_ROOT/interrupted.result.json" 'finished interrupted copy and original retained'
+pause_demo
+printf 'PASS refs demo: %s checks (US1, US2, US3, US4)\n' "$CHECKS"

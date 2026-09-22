@@ -53,15 +53,22 @@ def init(ctx: typer.Context, library_root: Annotated[str | None, typer.Option()]
 @app.command()
 def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         input: Annotated[str, typer.Option()],
+        file: Annotated[Path | None, typer.Option()] = None,
+        link: Annotated[bool, typer.Option()] = False,
+        keep_name: Annotated[bool, typer.Option()] = False,
         dry_run: Annotated[bool, typer.Option()] = False):
+    if (link or keep_name) and file is None or link and keep_name:
+        raise RefError('invalid_invocation', 'Use --link or --keep-name with --file, never both', 2)
     if format not in ("refs", "csljson", "bib"):
         raise RefError("unsupported_format", "Choose --format refs, csljson or bib", 2)
     raw = sys.stdin.buffer.read() if input == "-" else Path(input).read_bytes()
     locator = "stdin" if input == "-" else str(absolute(input))
     if format == 'bib':
-        data = importing.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run)
+        data = importing.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run, settings=settings(ctx))
     else:
         data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run)
+    if file is not None:
+        data = resources.capture_file(settings(ctx),data,file,linked=link,keep_name=keep_name,dry_run=dry_run)
     report(ctx, 'add', data)
 
 
@@ -212,8 +219,19 @@ def resource_add(ctx: typer.Context, reference: str,
                  relative: Annotated[str | None, typer.Option()] = None,
                  label: Annotated[str | None, typer.Option()] = None,
                  media_type: Annotated[str | None, typer.Option()] = None,
+                 copy: Annotated[bool, typer.Option()] = False,
+                 keep_name: Annotated[bool, typer.Option()] = False,
                  dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, 'resource add', resources.link(settings(ctx),reference,path=path,root=root,relative=relative,label=label,media_type=media_type,dry_run=dry_run))
+    selected = settings(ctx)
+    if keep_name and not copy:
+        raise RefError('invalid_invocation','Use --keep-name only with --copy',2)
+    if copy:
+        resources.locate(selected,path=path,root=root,relative=relative)
+        original = path if path is not None else selected.roots[root]/relative
+        data = resources.copy(selected,reference,original,keep_name=keep_name,dry_run=dry_run,label=label,media_type=media_type)
+    else:
+        data = resources.link(selected,reference,path=path,root=root,relative=relative,label=label,media_type=media_type,dry_run=dry_run)
+    report(ctx, 'resource add', data)
 
 
 @resource_app.command('unlink')
