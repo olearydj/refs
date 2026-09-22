@@ -153,3 +153,15 @@ def test_shared_configuration_writer_preserves_nested_values():
     assert text.startswith('schema_version = 1\n[catalog]\npath = ')
     assert '[keys.corporate_aliases]' in text
     assert tomllib.loads(text)==values
+
+
+def test_key_prefix_search_keeps_exact_matches_first(human, initialized, tmp_path):
+    path=tmp_path/'entries.bib'
+    path.write_text('@book{koster2012,title={Alpha Work},author={Smith, Alex},year={2012}}\n@book{koster,title={Zebra Work},author={Smith, Alex},year={2024}}')
+    initialized('import','--input',path)
+    items=initialized('search','koster')['data']['items']
+    assert [item['citation_key'] for item in items]==['koster','koster2012']
+    assert [item['exact_match'] for item in items]==[True,False]
+    assert items[1]['matches'][0]['field']=='citation_key'
+    assert 'matched: citation_key' in human('search','koster').splitlines()[1]
+    assert initialized('search','kost er')['data']['items']==[]

@@ -26,6 +26,8 @@ def retrieve(catalog: Path, query: str | None = None, *, project: str | None = N
                 if query == record['citation_key']:
                     found.insert(0, dict(field='citation_key', origin='catalog', text=query))
                     exact = True
+                elif not any(char.isspace() for char in query) and record['citation_key'].startswith(query):
+                    found.insert(0, dict(field='citation_key', origin='catalog', text=record['citation_key']))
                 for field in ('DOI', 'ISBN', 'ISSN', 'PMID', 'PMCID'):
                     stored = record['metadata'].get(field)
                     if stored and identifier(field, str(stored)) == identifier(field, query):

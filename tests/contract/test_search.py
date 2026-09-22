@@ -29,7 +29,7 @@ def test_creators_diacritics_and_exact_identifiers(initialized, tmp_path):
     for query in ('Köster','koster','Bazaz','Lohtander','Alex Köster'):
         found = search.retrieve(tmp_path/'cat',query)['items']
         assert len(found) == 1 and found[0]['id'] == source['id']
-        assert found[0]['matches'][0]['field'] == 'metadata.author'
+        assert any(match['field'] == 'metadata.author' for match in found[0]['matches'])
     for query in ('koster2012','10.5555/synthetic.workflow','https://doi.org/10.5555/SYNTHETIC.WORKFLOW'):
         result = search.retrieve(tmp_path/'cat',query)['items'][0]
         assert result['id'] == source['id'] and result['exact_match']
