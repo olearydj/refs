@@ -59,3 +59,5 @@ The slice 1 manual restore procedure is:
 SQLite hot-journal recovery is distinct from restoring a snapshot. Stop other refs processes, retain all database/journal files, open the existing selected database read-write through sqlite3 so SQLite performs its own rollback recovery, and run integrity_check/foreign_key_check before normal use. Do not delete a journal manually or initialize elsewhere. If recovery fails, restore a verified snapshot into a new home and report the original failure. Implementation documentation must give the exact tested commands; no recover CLI is required.
 
 A demonstrated restore/open comparison is a slice 1 release gate. Full restore CLI, file-inclusive bundles and logical exit wait. Any later included-file backup uses independent copies or filesystem clones, never hard links to mutable source files.
+
+The snapshot manifest names the original configuration location `configuration_path`, so relative configuration paths can be interpreted during manual restore. Manifest member metadata uses `members`, with each member’s `size` and `sha256`.

@@ -63,3 +63,25 @@ def test_corruption_is_refused(initialized,tmp_path,damage):
         path.write_text(json.dumps(value))
     with pytest.raises(RefError):
         recovery.validate_snapshot(target)
+
+
+def test_documented_hot_journal_recovery(initialized,tmp_path):
+    catalog=tmp_path/'cat'
+    database=catalog/'catalog.sqlite'
+    with sqlite3.connect(database) as connection:
+        connection.execute('CREATE TABLE synthetic_padding (value BLOB)')
+        connection.executemany('INSERT INTO synthetic_padding VALUES (?)',[(b'a'*4096,)]*100)
+    crash="""import os,sqlite3,sys
+connection=sqlite3.connect(sys.argv[1])
+connection.execute('PRAGMA cache_size=1')
+connection.execute('BEGIN IMMEDIATE')
+connection.execute("UPDATE synthetic_padding SET value=zeroblob(4096)")
+os._exit(0)
+"""
+    subprocess.run(['python','-c',crash,str(database)],check=True)
+    journal=Path(str(database)+'-journal')
+    assert journal.exists() and journal.stat().st_size>0
+    result=subprocess.run(['python','-',str(catalog)],input=procedure('hot-journal'),text=True,capture_output=True)
+    assert result.returncode==0,result.stderr
+    with sqlite3.connect(database) as connection:
+        assert connection.execute('SELECT value FROM synthetic_padding LIMIT 1').fetchone()[0]==b'a'*4096

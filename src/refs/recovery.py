@@ -82,7 +82,7 @@ def backup(settings: Settings, output: Path, *, dry_run=False) -> dict:
             saved.row_factory=sqlite3.Row
             inventory=resources.inventory(saved)
         (staging/'resources.jsonl').write_text(''.join(json.dumps(item,ensure_ascii=False)+'\n' for item in inventory))
-        manifest=dict(schema_version=1,catalog_schema_version=meta['schema_version'],catalog_id=meta['catalog_id'],catalog_revision=meta['revision'],external_contents_included=False,
+        manifest=dict(schema_version=1,configuration_path=str(settings.config),catalog_schema_version=meta['schema_version'],catalog_id=meta['catalog_id'],catalog_revision=meta['revision'],external_contents_included=False,
                       members={name:dict(size=(staging/name).stat().st_size,sha256=files.hash_file(staging/name)) for name in sorted(MEMBERS)})
         (staging/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
         for member in staging.iterdir():
