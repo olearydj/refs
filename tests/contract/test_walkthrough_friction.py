@@ -107,3 +107,16 @@ def test_empty_export_warns_and_requires_overwrite(human, initialized, reference
         assert output.read_bytes()==original
     initialized('export','--project','paper','--output',output,'--overwrite')
     assert output.read_bytes()==b''
+
+
+def test_resource_copy_collision_exits_three(human, initialized, reference_path, tmp_path):
+    initialized('add','--format','refs','--input',reference_path)
+    source=tmp_path/'download.pdf'
+    source.write_bytes(b'synthetic original')
+    copied=initialized('resource','add','smith-2024-learningPython','--path',source,'--copy')['data']
+    text=human('resource','add','smith-2024-learningPython','--path',source,'--copy',expected=3)
+    assert 'existing destination' in text
+    result=initialized('resource','add','smith-2024-learningPython','--path',source,'--copy',expected=3)
+    assert result['errors'][0]['code']=='destination_exists'
+    from pathlib import Path
+    assert Path(copied['destination']).read_bytes()==source.read_bytes()==b'synthetic original'
