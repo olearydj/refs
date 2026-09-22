@@ -48,3 +48,28 @@ def test_date_aliases_compare_overlapping_precision():
     assert source.metadata.issued.date_parts == [[2024,1]]
     with pytest.raises(RefError):
         parse(b'@book{x,title={Test},month=feb,date={2024-01}}')
+
+
+@pytest.mark.parametrize('flag, particle', [('true','non-dropping-particle'), ('false','dropping-particle')])
+def test_extended_biblatex_names(flag, particle):
+    raw = ('@book{x,title={Study},author={family=Lopik, given=Katherine, prefix=van, suffix=Jr, useprefix='+flag+' and Smith, Alex}}').encode()
+    names = parse(raw)['source'].canonical()['metadata']['author']
+    assert names == [{'family':'Lopik','given':'Katherine','suffix':'Jr',particle:'van'}, {'given':'Alex','family':'Smith'}]
+
+
+@pytest.mark.parametrize('name', ['', 'family=, given=', 'family=Smith, useprefix=maybe', r'\unknown{Smith}'])
+def test_unparsed_creator_is_invalid(name):
+    with pytest.raises(RefError):
+        parse(('@book{x,title={Study},author={'+name+'}}').encode())
+
+
+def test_show_surfaces_import_limitations():
+    from refs.display import readable
+    value = parse(b'@book{x,title={Study},organization={Institute}}')
+    record = value['source'].canonical() | {'limitations':value['limitations']}
+    assert 'Limitations: organization:' in readable('show', record)
+
+
+def test_relax_in_accented_creator_is_not_a_lost_name():
+    source = parse(br"@article{x,title={Study},author={Garc{\'i}a{\relax}, Alex}}")['source']
+    assert source.metadata.author[0].family == 'García'

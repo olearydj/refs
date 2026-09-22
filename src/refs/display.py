@@ -17,6 +17,8 @@ def readable(command: str, data: dict) -> str:
         for field, label in [('container-title', 'Container'), ('volume', 'Volume'), ('issue', 'Issue'), ('page', 'Pages'), ('DOI', 'DOI'), ('URL', 'URL')]:
             if field in metadata:
                 lines.append(f'{label}: {metadata[field]}')
+        if data.get('limitations'):
+            lines.append('Limitations: ' + '; '.join(f"{item['field']}: {item['reason']}" for item in data['limitations']))
         resources = data.get('resources', [])
         lines.append('Files:' if resources else 'Files: (none)')
         for resource in resources:

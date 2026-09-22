@@ -66,7 +66,7 @@ def partition(raw: bytes) -> list[dict]:
 
 def decode(value: str) -> str:
     # Unknown macros must not disappear through the text decoder.
-    allowed = {'textit', 'textbf', 'emph', 'textrm', 'texttt', 'textnormal', 'LaTeX', 'TeX', 'ae', 'AE', 'oe', 'OE', 'aa', 'AA', 'o', 'O', 'l', 'L', 'ss', 'i', 'j', 'textbackslash', 'textasciitilde', 'textasciicircum', 'textbraceleft', 'textbraceright', 'c', 'v', 'u', 'H', 'k', 'r', 'b', 'd', 't'}
+    allowed = {'relax', 'textit', 'textbf', 'emph', 'textrm', 'texttt', 'textnormal', 'LaTeX', 'TeX', 'ae', 'AE', 'oe', 'OE', 'aa', 'AA', 'o', 'O', 'l', 'L', 'ss', 'i', 'j', 'textbackslash', 'textasciitilde', 'textasciicircum', 'textbraceleft', 'textbraceright', 'c', 'v', 'u', 'H', 'k', 'r', 'b', 'd', 't'}
     if '$' in value or any(name not in allowed for name in re.findall(r'\\([A-Za-z]+)', value)):
         raise ValueError('Unsupported TeX command or math; preserve and preprocess explicitly')
     return LatexNodes2Text().latex_to_text(value).strip()
@@ -77,11 +77,31 @@ def names(value: str) -> list[dict]:
     separated = SeparateCoAuthors()._transform_field_value(value)
     result = []
     for name in separated:
+        if re.match(r'\s*(?:family|given|prefix|suffix|useprefix)\s*=', name):
+            parts = {}
+            for component in re.split(r',\s*(?=[a-z]+\s*=)', name):
+                key, separator, contents = component.partition('=')
+                key = key.strip()
+                if not separator or key not in ('family', 'given', 'prefix', 'suffix', 'useprefix') or key in parts:
+                    raise ValueError('Invalid extended creator name')
+                parts[key] = decode(contents.strip())
+            if parts.get('useprefix', 'false').lower() not in ('true', 'false'):
+                raise ValueError('useprefix must be true or false')
+            person = {key: parts[key] for key in ('family', 'given', 'suffix') if parts.get(key)}
+            if parts.get('prefix'):
+                particle = 'non-dropping-particle' if parts.get('useprefix', 'false').lower() == 'true' else 'dropping-particle'
+                person[particle] = parts['prefix']
+            if not person.get('family') and not person.get('given'):
+                raise ValueError('Creator name needs family or given')
+            result.append(person)
+            continue
         if name.startswith('{') and name.endswith('}'):
             result.append({'literal': decode(name)})
             continue
         parts = SplitNameParts()._transform_field_value([name])[0]
         result.append({key: decode(' '.join(tokens)) for key, tokens in [('given', parts.first), ('family', parts.last), ('dropping-particle', parts.von), ('suffix', parts.jr)] if tokens})
+    if not result or any(not name for name in result):
+        raise ValueError('Creator field could not be parsed; correct the preserved entry')
     return result
 
 
@@ -139,6 +159,8 @@ def parse(raw: bytes) -> dict:
         enclosing = {key.lower(): value for key,value in entry.parser_metadata.get('removed_enclosing', {}).items()}
         unsupported = {field for field, contents in fields.items() if field not in enclosing and not contents.isdecimal() and not (field == 'month' and contents.lower() in MONTHS)}
         for field in unsupported:
+            if field in ('author', 'editor', 'translator', 'bookauthor', 'holder'):
+                raise ValueError(f'Cannot resolve creator field {field}')
             limitations.append(dict(field=field, reason='Unresolved macro or concatenation'))
         traditional = kind == 'inbook' and 'booktitle' not in fields and ('chapter' in fields or 'pages' in fields)
 
@@ -191,7 +213,7 @@ def parse(raw: bytes) -> dict:
                     if terms:
                         protection[path[9:]] = dict(protected_terms=terms, preserve_case=contents.startswith('{') and contents.endswith('}') and decode(contents) in terms)
             except ValueError as exc:
-                if str(exc).startswith('Conflicting aliases'):
+                if field in ('author', 'editor', 'translator', 'bookauthor', 'holder') or str(exc).startswith('Conflicting aliases'):
                     raise
                 limitations.append(dict(field=field, reason=str(exc)))
         for field in set(fields) - consumed:
