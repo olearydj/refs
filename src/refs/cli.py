@@ -26,8 +26,8 @@ def configure(ctx: typer.Context,
     ctx.obj = dict(config=config, catalog=catalog, json_output=json_output)
 
 
-def report(ctx: typer.Context, command: str, data: dict) -> None:
-    emit(command, data, json_output=ctx.obj["json_output"], warnings=data.get("warnings", []))
+def report(ctx: typer.Context, command: str, data: dict, **text_context) -> None:
+    emit(command, data, json_output=ctx.obj["json_output"], warnings=data.get("warnings", []), text_context=text_context)
 
 
 def settings(ctx: typer.Context):
@@ -47,7 +47,7 @@ def init(ctx: typer.Context, library_root: Annotated[str | None, typer.Option()]
     if no_library and library_root is not None:
         raise RefError("invalid_invocation", "Choose --library-root or --no-library", 2)
     library = absolute(library_root) if library_root is not None else None if no_library else selected.library
-    report(ctx, "init", storage.init(selected, library, dry_run))
+    report(ctx, "init", storage.init(selected, library, dry_run), catalog_path=str(selected.catalog_path()), library=str(library) if library else None)
 
 
 @app.command()
@@ -76,7 +76,9 @@ def project_create(ctx: typer.Context, name: str,
 @project_app.command("cite")
 def project_cite(ctx: typer.Context, project: str, reference: str,
                  dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, "project cite", projects.cite(settings(ctx).catalog_path(), project, reference, dry_run=dry_run))
+    catalog = settings(ctx).catalog_path()
+    data = projects.cite(catalog, project, reference, dry_run=dry_run)
+    report(ctx, "project cite", data, citation_key=sources.show(catalog, data['source_id'])['citation_key'], project_name=projects.show(catalog, data['project_id'])['name'])
 
 
 @app.command("export")
@@ -86,7 +88,13 @@ def export_bibliography(ctx: typer.Context, project: Annotated[str, typer.Option
                        allow_unknown_mappings: Annotated[bool, typer.Option()] = False,
                        overwrite: Annotated[bool, typer.Option()] = False,
                        dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, "export", bibliography.export(settings(ctx).catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite))
+    try:
+        data = bibliography.export(settings(ctx).catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite)
+    except RefError as exc:
+        if exc.issue['code'] == 'export_blocked' and not ctx.obj['json_output']:
+            exc.issue['path'] = str(absolute(str(output)))
+        raise
+    report(ctx, 'export', data)
 
 
 key_app = typer.Typer(no_args_is_help=True)
@@ -122,7 +130,8 @@ def set_key(ctx: typer.Context, reference: str, key: Annotated[str, typer.Option
             if_revision: Annotated[int, typer.Option(min=1)],
             execute: Annotated[bool, typer.Option()] = False,
             dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, "key set", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, new_key=key, execute=execute and not dry_run))
+    previous_key = sources.show(settings(ctx).catalog_path(), reference)["citation_key"]
+    report(ctx, "key set", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, new_key=key, execute=execute and not dry_run), previous_key=previous_key)
 
 
 @app.command()
@@ -168,7 +177,9 @@ def project_show(ctx: typer.Context, project: Annotated[str | None, typer.Argume
 @project_app.command("uncite")
 def project_uncite(ctx: typer.Context, project: str, reference: str,
                    dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, "project uncite", projects.uncite(settings(ctx).catalog_path(), project, reference, dry_run=dry_run))
+    catalog = settings(ctx).catalog_path()
+    data = projects.uncite(catalog, project, reference, dry_run=dry_run)
+    report(ctx, "project uncite", data, citation_key=sources.show(catalog, data['source_id'])['citation_key'], project_name=projects.show(catalog, data['project_id'])['name'])
 
 
 def main() -> None:

@@ -22,5 +22,5 @@ def test_error_envelope(exit_code, capsys):
 
 
 def test_human_output(capsys):
-    emit("example", {"value": "café"})
+    emit("project create", {"name": "café"})
     assert "café" in capsys.readouterr().out

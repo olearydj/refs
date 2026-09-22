@@ -1,6 +1,7 @@
 """Application-owned results, independent of the command framework."""
 
 import json
+import sys
 from typing import Any
 
 
@@ -13,20 +14,28 @@ class RefError(Exception):
             raise ValueError("Invalid application exit code")
         self.data = data
         self.exit_code = exit_code
-        self.issue = dict(code=code, message=message, path=path,
+        self.issue: dict[str, Any] = dict(code=code, message=message, path=path,
                           details=details or {}, retryable=retryable)
 
 
 def emit(command: str, data: dict[str, Any] | None = None, *,
          error: RefError | None = None, json_output: bool = False,
-         warnings: list[dict] | None = None) -> None:
+         warnings: list[dict] | None = None, text_context: dict | None = None) -> None:
     result = dict(schema_version="1.0", command=command,
                   status="partial" if error and error.exit_code == 4 else "error" if error else "ok",
                   data=error.data if error else data, warnings=warnings or [], errors=[error.issue] if error else [])
     if json_output:
         print(json.dumps(result, ensure_ascii=False))
-    elif not error and command in ("show", "search", "list"):
-        from refs.display import readable
-        print(readable(command, data or {}))
-    else:
+    elif error:
+        if error.issue['code'] == 'export_blocked':
+            print(f"Not written: {error.issue['path'] or '(destination)'}", file=sys.stderr)
+            for entry in error.issue['details'].get('entries', []):
+                print(f"{entry.get('details', {}).get('citation_key', '(source)')}: {entry['message']}", file=sys.stderr)
+        if error.data and error.data.get('outcome') == 'needs_attention':
+            print(f"Needs attention: {error.data.get('citation_key') or '(input)'}", file=sys.stderr)
+        print(' '.join(error.issue['message'].splitlines()), file=sys.stderr)
+    elif command in ('paths', 'schema'):
         print(json.dumps(result, ensure_ascii=False, indent=2))
+    else:
+        from refs.render import render_text
+        print(render_text(command, (data or {}) | (text_context or {}), warnings or []))
