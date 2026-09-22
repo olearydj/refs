@@ -36,6 +36,6 @@ All three consumers ran against `tests/fixtures/rendering/sources.json` through 
 
 The classic style is copied from the preserved audit evidence into each temporary rendering directory. No style or package is installed by the tests. An unavailable consumer produces an explicit warning and a named skipped test; none was unavailable in this run.
 
-## Remaining slice 1 acceptance
+## Acceptance status
 
-Import, file intake, backup and the demonstrated restore into a second home remain pending. The [file contract](contracts/files-and-recovery.md#snapshot-and-documented-restore) owns restore safety. The owner selects a real paper only after the remaining slice 1 work is complete. No whole-library migration or slice 2 work is authorized by this demonstration.
+All six stories are demonstrated by the script, and the owner's real-paper trial is recorded in [slice 1 acceptance](reviews/slice-1-acceptance.md). The [file contract](contracts/files-and-recovery.md#snapshot-and-documented-restore) owns restore safety. No whole-library migration or slice 2 work is authorized by this demonstration.

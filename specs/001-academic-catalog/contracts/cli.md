@@ -70,7 +70,7 @@ template = "{author}-{year}-{title}"
 without_creator = "{title}-{year}"
 missing_year = "ND"
 title_words = 2
-stopwords = ["a", "an", "the", "and", "or", "of", "to", "for", "in", "on", "with", "your"]
+stopwords = ["a", "an", "the", "and", "or", "of", "to", "for", "in", "on", "with", "your"]  # shipped default; the owner's own config adds is, are, was, be, as, at, by, from, into, not
 transliteration_policy = "creator-latin-v1"
 [keys.corporate_aliases]
 [titles]
