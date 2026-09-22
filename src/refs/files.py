@@ -83,3 +83,8 @@ def publish(temporary: Path, target: Path, expected: str | None) -> None:
             raise RefError("outside_edit", "Destination appeared before publication", path=str(target)) from None
     else:
         os.replace(temporary, target)
+
+
+def hash_file(path: Path) -> str:
+    with path.open('rb') as stream:
+        return hashlib.file_digest(stream,'sha256').hexdigest()

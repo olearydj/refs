@@ -35,7 +35,8 @@ def record(connection, source_id: str) -> dict:
                 continue
             if limitation not in result['limitations']:
                 result['limitations'].append(limitation)
-    result["resources"] = []
+    from refs.resources import inventory
+    result["resources"] = inventory(connection, source_id)
     result["projects"] = [dict(row) for row in connection.execute("SELECT p.id, p.name FROM projects p JOIN project_sources ps ON ps.project_id=p.id WHERE ps.source_id=? AND ps.cited=1 ORDER BY p.name", (source_id,))]
     return result
 

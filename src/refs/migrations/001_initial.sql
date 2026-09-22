@@ -80,3 +80,19 @@ CREATE TABLE imports (
     conflict INTEGER NOT NULL DEFAULT 0,
     invalid INTEGER NOT NULL DEFAULT 0
 );
+
+CREATE TABLE resources (
+    id TEXT PRIMARY KEY,
+    source_id TEXT NOT NULL REFERENCES sources(id),
+    revision INTEGER NOT NULL DEFAULT 1 CHECK (revision > 0),
+    locator TEXT NOT NULL,
+    path TEXT,
+    root TEXT,
+    relative TEXT,
+    label TEXT,
+    media_type TEXT,
+    digest TEXT,
+    copied_from_json TEXT,
+    CHECK ((path IS NOT NULL AND root IS NULL AND relative IS NULL) OR (path IS NULL AND root IS NOT NULL AND relative IS NOT NULL)),
+    UNIQUE (source_id, locator)
+);

@@ -62,7 +62,7 @@ def match(connection, source: SourceCreate, fingerprint: str) -> tuple[str | Non
     return None, []
 
 
-def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False) -> dict:
+def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None) -> dict:
     raw = block['raw']
     parsed = None
     outcome: dict
@@ -88,6 +88,11 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
                 source_id = created['id']
             outcome = dict(outcome='applied', source_id=source_id, citation_key=key)
         outcome.update(warnings=warnings, limitations=parsed['limitations'], resource_proposals=parsed['resource_proposals'])
+        if settings is not None and source_id and outcome['outcome'] in ('applied','unchanged'):
+            from refs.resources import import_links
+            outcome['resources'], resource_warnings = import_links(connection,settings,source_id,parsed['resource_proposals'],locator,dry_run=dry_run)
+            outcome['warnings'].extend(resource_warnings)
+            outcome['resource_proposals'] = []
     except (RefError, ValidationError) as exc:
         if isinstance(exc, ValidationError):
             exc = RefError('invalid_bib_entry', 'Entry cannot satisfy the record profile; inspect its preserved original', 2)
@@ -100,7 +105,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
     return outcome
 
 
-def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str | None = None) -> dict:
+def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str | None = None, settings=None) -> dict:
     fingerprint = hashlib.sha256(raw).hexdigest()
     run_id = str(uuid4())
     counts = dict(applied=0, unchanged=0, conflict=0, invalid=0)
@@ -115,7 +120,7 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
         if block['kind'] != 'entry':
             continue
         with connect(catalog, write=not dry_run) as connection:
-            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run)
+            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings)
             outcome = result['outcome']
             counts[outcome] += 1
             if not dry_run:

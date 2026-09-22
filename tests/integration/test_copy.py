@@ -63,11 +63,13 @@ def test_collision_keep_name_and_preview(initialized, tmp_path, reference_path):
 
 def test_unavailable_library_bundle_and_symlink(initialized,tmp_path,reference_path):
     settings, source, path = prepare(initialized,tmp_path,reference_path)
-    bundle=tmp_path/'bundle.app';bundle.mkdir()
+    bundle=tmp_path/'bundle.app'
+    bundle.mkdir()
     for candidate in [bundle]:
         with pytest.raises(RefError):
             resources.copy(settings,source['id'],candidate)
-    symlink=tmp_path/'symlink.pdf';symlink.symlink_to(path)
+    symlink=tmp_path/'symlink.pdf'
+    symlink.symlink_to(path)
     with pytest.raises(RefError):
         resources.copy(settings,source['id'],symlink)
     settings.library.rmdir()
@@ -77,7 +79,8 @@ def test_unavailable_library_bundle_and_symlink(initialized,tmp_path,reference_p
 
 
 def test_add_defaults_and_partial_copy(initialized,tmp_path,reference_path):
-    path=tmp_path/'new.pdf';path.write_bytes(b'synthetic')
+    path=tmp_path/'new.pdf'
+    path.write_bytes(b'synthetic')
     result=initialized('add','--format','refs','--input',reference_path,'--file',path)['data']
     assert len(result['resources']) == 1
     assert result['resources'][0]['root'] == 'library'

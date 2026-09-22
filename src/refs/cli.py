@@ -8,7 +8,7 @@ from typing import Annotated
 
 import typer
 
-from refs import bibliography, importing, projects, search, sources
+from refs import bibliography, importing, projects, resources, search, sources
 from refs import catalog as storage
 from refs.config import absolute, select
 from refs.results import RefError, emit
@@ -73,7 +73,7 @@ def import_bibliography(ctx: typer.Context, input: Annotated[Path, typer.Option(
     path = absolute(str(input))
     if format != 'bib':
         raise RefError('unsupported_format', 'Choose --format bib for import', 2)
-    data = importing.run(settings(ctx).catalog_path(), path.read_bytes(), str(path), dry_run=dry_run, origin=origin)
+    data = importing.run(settings(ctx).catalog_path(), path.read_bytes(), str(path), dry_run=dry_run, origin=origin, settings=settings(ctx))
     if data['counts']['conflict'] or data['counts']['invalid']:
         raise RefError('import_partial', 'Inspect reported entries and use update to settle conflicts', 4, data=data)
     report(ctx, 'import', data)
@@ -81,7 +81,7 @@ def import_bibliography(ctx: typer.Context, input: Annotated[Path, typer.Option(
 
 @app.command()
 def show(ctx: typer.Context, reference: str):
-    report(ctx, "show", sources.show(settings(ctx).catalog_path(), reference))
+    report(ctx, "show", resources.inspect_source(settings(ctx), reference))
 
 
 @project_app.command("create")
@@ -199,6 +199,41 @@ def project_uncite(ctx: typer.Context, project: str, reference: str,
     catalog = settings(ctx).catalog_path()
     data = projects.uncite(catalog, project, reference, dry_run=dry_run)
     report(ctx, "project uncite", data, citation_key=sources.show(catalog, data['source_id'])['citation_key'], project_name=projects.show(catalog, data['project_id'])['name'])
+
+
+resource_app = typer.Typer(no_args_is_help=True)
+app.add_typer(resource_app, name='resource')
+
+
+@resource_app.command('add')
+def resource_add(ctx: typer.Context, reference: str,
+                 path: Annotated[Path | None, typer.Option()] = None,
+                 root: Annotated[str | None, typer.Option()] = None,
+                 relative: Annotated[str | None, typer.Option()] = None,
+                 label: Annotated[str | None, typer.Option()] = None,
+                 media_type: Annotated[str | None, typer.Option()] = None,
+                 dry_run: Annotated[bool, typer.Option()] = False):
+    report(ctx, 'resource add', resources.link(settings(ctx),reference,path=path,root=root,relative=relative,label=label,media_type=media_type,dry_run=dry_run))
+
+
+@resource_app.command('unlink')
+def resource_unlink(ctx: typer.Context, resource: str,
+                    if_revision: Annotated[int, typer.Option(min=1)],
+                    execute: Annotated[bool, typer.Option()] = False,
+                    dry_run: Annotated[bool, typer.Option()] = False):
+    report(ctx, 'resource unlink', resources.unlink(settings(ctx),resource,if_revision,execute=execute and not dry_run))
+
+
+@resource_app.command('check')
+def resource_check(ctx: typer.Context, source: Annotated[str | None, typer.Option()] = None,
+                   verify: Annotated[bool, typer.Option()] = False):
+    report(ctx, 'resource check', resources.check(settings(ctx),source,verify=verify))
+
+
+@app.command('open')
+def open_resource(ctx: typer.Context, reference: str,
+                  resource: Annotated[str | None, typer.Option()] = None):
+    report(ctx,'open',resources.open_source(settings(ctx),reference,resource_id=resource))
 
 
 def main() -> None:

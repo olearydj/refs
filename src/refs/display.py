@@ -20,7 +20,7 @@ def readable(command: str, data: dict) -> str:
         resources = data.get('resources', [])
         lines.append('Files:' if resources else 'Files: (none)')
         for resource in resources:
-            lines.append('  ' + str(resource.get('path') or resource.get('id', '(unavailable)')))
+            lines.append('  ' + str(resource.get('resolved_path') or resource.get('path') or resource.get('relative') or resource.get('id', '(unavailable)')))
         lines.append('Projects: ' + (', '.join(item['name'] for item in data.get('projects', [])) or '(none)'))
         return '\n'.join(lines)
     lines = []
