@@ -12,6 +12,7 @@ def retrieve(catalog: Path, query: str | None = None, *, project: str | None = N
              limit: int = 50, offset: int = 0, sort: str = 'title', policy: dict | None = None) -> dict:
     if not 1 <= limit <= 1000 or offset < 0 or sort not in ('title', 'key'):
         raise RefError('invalid_query', 'Use limit 1–1000, nonnegative offset, and title or key sort', 2)
+    query = query.strip() if query else query
     with connect(catalog) as connection:
         project_id = projects.resolve(connection, project)['id'] if project else None
         lexical = matches(connection, query) if query and query.strip() else {}

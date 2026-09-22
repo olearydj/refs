@@ -1,12 +1,18 @@
 """SQLite's derived lexical projection; original bytes are never indexed."""
 
-import json
+from refs.models import Metadata
 
 
 def projection(record: dict):
     yield 'citation_key', 'catalog', record['citation_key']
     for name, value in record['metadata'].items():
-        yield 'metadata.' + name, 'metadata', value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)
+        field = next((field for key, field in Metadata.model_fields.items() if (field.alias or key) == name), None)
+        if isinstance(value, list) and field and 'Name' in str(field.annotation):
+            for person in value:
+                parts = ('given', 'dropping-particle', 'non-dropping-particle', 'family', 'suffix', 'literal')
+                yield 'metadata.' + name, 'metadata', ' '.join(person[part] for part in parts if person.get(part))
+        elif name in ('title', 'abstract'):
+            yield 'metadata.' + name, 'metadata', value
     for entry in record.get('context', []):
         yield 'context', entry['origin'], entry['text']
     for tag in record.get('legacy_tags', []):
