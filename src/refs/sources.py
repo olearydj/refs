@@ -6,6 +6,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
+from pydantic import ValidationError
+
 from refs import naming
 from refs.catalog import changed, connect
 from refs.models import SourceCreate, parse
@@ -130,3 +132,111 @@ def add(catalog: Path, raw: bytes, locator: str, *, dry_run: bool = False) -> di
             connection.execute("INSERT INTO origin_identities VALUES (?, ?, ?, ?, ?)", (*binding, source_id, fingerprint))
         changed(connection)
         return record(connection, source_id) | {"outcome": "created", "warnings": warnings}
+
+
+def checked_record(connection, reference: str, revision: int) -> dict:
+    current = record(connection, resolve(connection, reference))
+    if revision != current['revision']:
+        raise RefError('stale_revision', 'Reload the source and use its current revision',
+                       details={'expected': revision, 'actual': current['revision']})
+    return current
+
+
+def store_record(connection, current: dict, canonical: dict, corrections: list[str]) -> dict:
+    details = dict(canonical)
+    metadata = details.pop('metadata')
+    details.pop('citation_key', None)
+    connection.execute('UPDATE sources SET metadata_json=?, details_json=?, corrected_fields_json=?, updated_at=?, revision=revision+1 WHERE id=? AND revision=?',
+                       (json.dumps(metadata), json.dumps(details), json.dumps(corrections), datetime.now(UTC).isoformat(), current['id'], current['revision']))
+    changed(connection)
+    return record(connection, current['id'])
+
+
+def patch_path(value: dict, path: str, replacement, *, clear: bool) -> None:
+    from refs.models import REGISTRY
+    parts = path.split('.')
+    if parts[0] in ('context', 'provenance', 'legacy_tags') and len(parts) != 1:
+        raise RefError('invalid_patch', 'Replace arrays as a whole', 2)
+    if parts[0] == 'metadata' and (len(parts) > 2 or len(parts) == 2 and parts[1] not in REGISTRY['core_fields']):
+        raise RefError('invalid_patch', 'Unknown metadata path', 2)
+    node = value
+    for part in parts[:-1]:
+        if part not in node:
+            node[part] = {}
+        if not isinstance(node[part], dict):
+            raise RefError('invalid_patch', 'Patch path crosses a scalar or array', 2)
+        node = node[part]
+    if clear:
+        if parts[-1] not in node:
+            # Validate absent clear paths rather than accepting arbitrary names.
+            probe = json.loads(json.dumps(value))
+            patch_path(probe, path, '__validate_path__', clear=False)
+            try:
+                SourceCreate.model_validate(probe)
+            except ValidationError as exc:
+                if any(item['type'] == 'extra_forbidden' for item in exc.errors()):
+                    raise RefError('invalid_patch', 'Unknown clear path', 2) from exc
+        node.pop(parts[-1], None)
+    else:
+        node[parts[-1]] = replacement
+
+
+def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run: bool = False) -> dict:
+    from refs.models import SourcePatch
+    try:
+        patch_model = SourcePatch.model_validate(patch)
+    except ValidationError as exc:
+        raise RefError('invalid_patch', str(exc), 2) from exc
+    with connect(catalog, write=not dry_run) as connection:
+        current = checked_record(connection, reference, revision)
+        canonical = {name: current[name] for name in SourceCreate.model_fields if name in current}
+        original = json.loads(json.dumps(canonical))
+        for path, value in patch_model.set.items():
+            patch_path(canonical, path, value, clear=False)
+        for path in patch_model.clear:
+            patch_path(canonical, path, None, clear=True)
+        if patch_model.provenance:
+            canonical.setdefault('provenance', []).extend(item.model_dump(exclude_none=True) for item in patch_model.provenance)
+        try:
+            canonical = SourceCreate.model_validate(canonical).canonical()
+            canonical, warnings = naming.normalize(canonical)
+            canonical = SourceCreate.model_validate(canonical).canonical()
+        except ValidationError as exc:
+            raise RefError('invalid_patch', str(exc), 2) from exc
+        if canonical == original:
+            return current | {'unchanged': True, 'warnings': warnings}
+        corrections = sorted(set(current['corrected_fields']) | set(patch_model.set) | set(patch_model.clear))
+        if dry_run:
+            return current | canonical | dict(dry_run=True, corrected_fields=corrections, warnings=warnings)
+        return store_record(connection, current, canonical, corrections) | {'warnings': warnings}
+
+
+def change_identity(catalog: Path, reference: str, revision: int, *, new_key: str | None = None,
+                    state: str | None = None, execute: bool = False) -> dict:
+    with connect(catalog, write=execute) as connection:
+        current = checked_record(connection, reference, revision)
+        warnings = []
+        if new_key is not None:
+            try:
+                SourceCreate.valid_key(new_key)
+            except ValueError as exc:
+                raise RefError('invalid_key', str(exc), 2) from exc
+            if not new_key.strip():
+                raise RefError('invalid_key', 'Citation key cannot be blank', 2)
+            occupied = connection.execute('SELECT id FROM sources WHERE citation_key=? AND id<>?', (new_key, current['id'])).fetchone()
+            if occupied:
+                raise RefError('key_conflict', 'Citation key is already reserved')
+            field, value = 'citation_key', new_key
+            warnings = [{'code': 'external_citations_unchanged', 'message': 'External citations are not rewritten', 'path': None, 'details': {}, 'retryable': False}]
+        else:
+            field, value = 'state', state
+        if current[field] == value:
+            return current | dict(unchanged=True, warnings=warnings)
+        if not execute:
+            return current | {field: value, 'dry_run': True, 'warnings': warnings}
+        # Column names are internal constants, never user paths.
+        connection.execute(f'UPDATE sources SET {field}=?, revision=revision+1, updated_at=? WHERE id=?', (value, datetime.now(UTC).isoformat(), current['id']))
+        if new_key is not None:
+            connection.execute('UPDATE sources SET key_provenance_json=? WHERE id=?', (json.dumps({'origin': 'explicit_rekey'}), current['id']))
+        changed(connection)
+        return record(connection, current['id']) | {'warnings': warnings}

@@ -1,5 +1,6 @@
 """Typer command boundary; application services return ordinary values."""
 
+import json
 import sqlite3
 import sys
 from pathlib import Path
@@ -84,6 +85,56 @@ def export_bibliography(ctx: typer.Context, project: Annotated[str, typer.Option
                        profile: Annotated[str, typer.Option()] = bibliography.PROFILE,
                        dry_run: Annotated[bool, typer.Option()] = False):
     report(ctx, "export", bibliography.export(settings(ctx).catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run))
+
+
+key_app = typer.Typer(no_args_is_help=True)
+app.add_typer(key_app, name="key")
+
+
+@app.command("update")
+def update_source(ctx: typer.Context, reference: str,
+                  if_revision: Annotated[int, typer.Option(min=1)],
+                  patch: Annotated[str | None, typer.Option()] = None,
+                  set_values: Annotated[list[str] | None, typer.Option("--set")] = None,
+                  dry_run: Annotated[bool, typer.Option()] = False):
+    if bool(patch) == bool(set_values):
+        raise RefError("invalid_invocation", "Choose --patch or --set", 2)
+    try:
+        if patch:
+            value = json.loads(sys.stdin.read() if patch == "-" else Path(patch).read_text())
+        else:
+            values = {}
+            for item in set_values or []:
+                name, raw = item.split("=", 1)
+                if name in values:
+                    raise ValueError("Repeated patch path")
+                values[name] = json.loads(raw)
+            value = {"schema_version": "1.0", "set": values}
+    except (ValueError, UnicodeError) as exc:
+        raise RefError("invalid_patch", str(exc), 2) from exc
+    report(ctx, "update", sources.update(settings(ctx).catalog_path(), reference, value, if_revision, dry_run=dry_run))
+
+
+@key_app.command("set")
+def set_key(ctx: typer.Context, reference: str, key: Annotated[str, typer.Option()],
+            if_revision: Annotated[int, typer.Option(min=1)],
+            execute: Annotated[bool, typer.Option()] = False,
+            dry_run: Annotated[bool, typer.Option()] = False):
+    report(ctx, "key set", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, new_key=key, execute=execute and not dry_run))
+
+
+@app.command()
+def remove(ctx: typer.Context, reference: str, if_revision: Annotated[int, typer.Option(min=1)],
+           execute: Annotated[bool, typer.Option()] = False,
+           dry_run: Annotated[bool, typer.Option()] = False):
+    report(ctx, "remove", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="removed", execute=execute and not dry_run))
+
+
+@app.command()
+def reactivate(ctx: typer.Context, reference: str, if_revision: Annotated[int, typer.Option(min=1)],
+               execute: Annotated[bool, typer.Option()] = False,
+               dry_run: Annotated[bool, typer.Option()] = False):
+    report(ctx, "reactivate", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="active", execute=execute and not dry_run))
 
 
 def main() -> None:
