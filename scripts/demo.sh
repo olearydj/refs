@@ -213,6 +213,33 @@ assert original.read_bytes() == (root/'lib/Unfiled/interrupted.pdf').read_bytes(
 PYCODE
 assert_jq '.errors[0].code == "copy_published_unregistered" and .status == "partial"' "$DEMO_ROOT/interrupted.result.json" 'finished interrupted copy and original retained'
 pause_demo
+section 'US3: Bring a synthetic Zotero library across'
+explain 'Extract a disposable schema-121 fixture, preserve its children, and inspect the saved batch.'
+"$REFS_PYTHON" - "$DEMO_ROOT" <<'PYCODE'
+import pathlib, runpy, sys
+root = pathlib.Path(sys.argv[1])
+database = runpy.run_path('tests/fixtures/zotero/fixture.py')['build'](root/'zotero')
+runpy.run_path('tools/zotero_extract/extract.py')['extract'](database, root/'zotero-json', database.parent, database.parent/'base', database.parent/'better-bibtex.sqlite')
+PYCODE
+run 0 zotero-import import --format zotero --input "$DEMO_ROOT/zotero-json" --origin synthetic-zotero
+assert_jq '.data.counts.applied == 6 and .data.preservation.annotations == 1' "$LAST" 'Zotero sources applied; annotations accounted separately'
+ZOTERO_BATCH="$(jq -r '.data.import_id' "$LAST")"
+run 0 zotero-report import show "$ZOTERO_BATCH"
+assert_jq '.data.entries | length == 6' "$LAST" 'saved per-entry accounting'
+run 0 zotero-rerun import --format zotero --input "$DEMO_ROOT/zotero-json"
+assert_jq '.data.counts.unchanged == 6 and .data.counts.conflict == 0' "$LAST" 'Zotero rerun creates no duplicates'
+run 0 zotero-source show native1
+assert_jq '(.data.resources | length) == 3 and (.data.context | length) == 2' "$LAST" 'files linked in place and child context searchable'
+pause_demo
+section 'US1: Browse imported collections'
+run 0 collections collection list
+assert_jq '(.data.items | length) == 3 and any(.data.items[]; .path == "Empty" and .count == 0)' "$LAST" 'nested and empty collections preserved'
+run 0 collection-members list --collection Research/Methods --sort key
+assert_jq '.data.total == 2' "$LAST" 'direct collection membership filter'
+run 0 collection-search search Synthetic --collection Research/Methods
+assert_jq '.data.total == 2 and (.data.items[0].matches | length) > 0' "$LAST" 'collection search retains matched-field evidence'
+pause_demo
+
 section 'US5: Back up and restore into a second home'
 explain 'The snapshot contains the catalog and inventory, never attachment bytes.'
 run 0 backup backup --output "$DEMO_ROOT/snapshot"

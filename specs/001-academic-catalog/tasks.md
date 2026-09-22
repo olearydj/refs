@@ -235,7 +235,7 @@ The owner accepted the brief and D1–D4. T038–T050 use synthetic fixtures and
 **Runnable check:** List nested and empty collections with counts, filter list/search by an imported path, combine a project filter and verify no catalog or external-file writes.
 
 - [x] T047 [US1] Add read-only `collection list` and `--collection PATH` on list/search in src/refs/collections.py, src/refs/search.py and src/refs/cli.py. Test hierarchy, counts, verbatim Unicode paths, multiple memberships, ambiguous paths, removed-source visibility and combined filters in tests/contract/test_collections.py. Preserve existing pagination, ordering and matched-field evidence. No collection create, rename, merge, filing or moves. Covers FR-015–017, FR-028 and SC-005.
-- [ ] T048 [US1] Render collection hierarchy/counts and filtered source results in src/refs/render.py; test readable first lines and unchanged JSON structure in tests/contract/test_collection_output.py. Add runnable Zotero/collection sections to scripts/demo.sh using the synthetic extraction fixture; keep it the installed smoke test through tests/integration/test_smoke.py. Covers FR-013, FR-028 and SC-005/009.
+- [x] T048 [US1] Render collection hierarchy/counts and filtered source results in src/refs/render.py; test readable first lines and unchanged JSON structure in tests/contract/test_collection_output.py. Add runnable Zotero/collection sections to scripts/demo.sh using the synthetic extraction fixture; keep it the installed smoke test through tests/integration/test_smoke.py. Covers FR-013, FR-028 and SC-005/009.
 
 ## Phase 16: US5 - Restore the expanded catalog (P2)
 
