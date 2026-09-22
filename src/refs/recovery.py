@@ -4,6 +4,7 @@ import json
 import os
 import sqlite3
 import tempfile
+from importlib.resources import files as package_files
 from pathlib import Path
 
 from refs import files, resources
@@ -18,6 +19,12 @@ def validate_database(path: Path) -> dict:
     with sqlite3.connect(path.as_uri()+'?mode=ro',uri=True) as connection:
         if connection.execute('PRAGMA integrity_check').fetchall()!=[('ok',)] or connection.execute('PRAGMA foreign_key_check').fetchall():
             raise RefError('snapshot_invalid','Database integrity failed; retain the snapshot and choose another backup',5)
+        with sqlite3.connect(':memory:') as expected:
+            expected.executescript(package_files('refs').joinpath('migrations/001_initial.sql').read_text())
+            for name, in expected.execute("SELECT name FROM sqlite_master WHERE type='table'"):
+                columns=expected.execute(f'PRAGMA table_info("{name}")').fetchall()
+                if connection.execute(f'PRAGMA table_info("{name}")').fetchall()!=columns:
+                    raise RefError('unsupported_schema','Catalog tables do not match the supported schema; retain this snapshot for inspection',5)
         connection.row_factory=sqlite3.Row
         meta=connection.execute('SELECT * FROM catalog_meta WHERE singleton=1').fetchone()
         if meta is None or meta['schema_version']!=1:

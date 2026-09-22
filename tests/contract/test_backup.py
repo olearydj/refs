@@ -52,3 +52,20 @@ def test_snapshot_interruption_and_preview(initialized,tmp_path,monkeypatch):
         recovery.backup(selected,target)
     assert not target.exists()
     assert list(tmp_path.glob('*.partial'))
+
+
+def test_missing_table_is_not_a_supported_snapshot(initialized,tmp_path):
+    with sqlite3.connect(tmp_path/'cat'/'catalog.sqlite') as connection:
+        connection.execute('DROP TABLE project_sources')
+    with pytest.raises(RefError) as error:
+        recovery.backup(select(str(tmp_path/'config.toml'),str(tmp_path/'cat')),tmp_path/'snapshot')
+    assert error.value.issue['code']=='unsupported_schema'
+
+
+def test_backup_human_confirmation(initialized,tmp_path):
+    import os
+    import subprocess
+    target=tmp_path/'snapshot'
+    result=subprocess.run(['refs','backup','--output',str(target)],env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(tmp_path/'cat')),text=True,capture_output=True)
+    assert result.returncode==0,result.stderr
+    assert result.stdout.splitlines()[0]==f'Wrote snapshot {target} (external file bytes excluded)'
