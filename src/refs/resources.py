@@ -1,6 +1,8 @@
 """Resource associations and explicit local file opening."""
 
 import json
+import re
+import sqlite3
 import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
@@ -165,3 +167,69 @@ def import_links(connection, settings: Settings, source_id: str, proposals: list
             except RefError as exc:
                 warnings.append(exc.issue)
     return items,warnings
+
+
+def register_copy(settings: Settings, source: dict, target: Path, digest: str, origin: dict, existing: dict | None, *, label=None, media_type=None) -> dict:
+    locator = locate(settings,path=target)
+    encoded = json.dumps(locator,sort_keys=True)
+    with connect(settings.catalog_path(),write=True) as connection:
+        current = sources.checked_record(connection,source['id'],source['revision'])
+        if current['state'] != 'active':
+            raise RefError('source_removed','Source was removed during copying; inspect the finished copy')
+        if existing:
+            changed_rows = connection.execute('UPDATE resources SET locator=?,path=?,root=?,relative=?,digest=?,copied_from_json=?,revision=revision+1 WHERE id=? AND revision=?',
+                               (encoded,locator['path'],locator['root'],locator['relative'],digest,json.dumps(origin),existing['id'],existing['revision'])).rowcount
+            if changed_rows != 1:
+                raise RefError('stale_revision','Resource changed during copying; inspect the finished copy')
+            resource_id = existing['id']
+        else:
+            resource_id = str(uuid4())
+            connection.execute('INSERT INTO resources (id,source_id,locator,path,root,relative,label,media_type,digest,copied_from_json) VALUES (?,?,?,?,?,?,?,?,?,?)',
+                               (resource_id,source['id'],encoded,locator['path'],locator['root'],locator['relative'],label,media_type,digest,json.dumps(origin)))
+        touch_source(connection,source['id'])
+        return next(item for item in inventory(connection,source['id']) if item['id']==resource_id)
+
+
+def copy(settings: Settings, reference: str, path: Path, *, resource_id=None, keep_name=False, dry_run=False, label=None, media_type=None) -> dict:
+    from refs import naming
+
+    source_path = path.expanduser().absolute()
+    if source_path.is_symlink() or any(parent.is_symlink() for parent in source_path.parents) or not source_path.is_file():
+        raise RefError('unsafe_copy_source','Copy a completed regular file without symlink traversal, or link it in place')
+    library = settings.library
+    if library is None or not library.is_dir():
+        raise RefError('library_unavailable','Restore the configured library before copying; the original remains untouched')
+    source = sources.show(settings.catalog_path(),reference)
+    if source['state'] != 'active':
+        raise RefError('source_removed','Reactivate the source before copying')
+    origin = locate(settings,path=source_path)
+    existing = next((item for item in source['resources'] if item['id']==resource_id),None) if resource_id else next((item for item in source['resources'] if all(item.get(key)==value for key,value in origin.items())),None)
+    if resource_id and (existing is None or any(existing.get(key)!=value for key,value in origin.items())):
+        raise RefError('resource_conflict','Select the resource that records the original copy source')
+    name = source_path.name if keep_name else naming.filename(source,source_path.name)
+    warnings = []
+    if not keep_name and (naming.issued_year(source)=='ND' or not re.search(r'[^\W_]+',naming.short_title(source))):
+        warnings.append(dict(code='filename_unavailable',message='Conventional filename unavailable; keeping the original name',path=str(source_path),details={},retryable=False))
+    folder = library/'Unfiled'
+    if folder.is_symlink() or not folder.resolve().is_relative_to(library) or folder.exists() and not folder.is_dir():
+        raise RefError('unsafe_path','Inspect the library Unfiled path before copying')
+    target = folder/name
+    if target.exists() or target.is_symlink():
+        raise RefError('destination_exists','Inspect the existing destination; copy never overwrites or adopts it',path=str(target))
+    preview = dict(dry_run=True,citation_key=source['citation_key'],path=str(source_path),destination=str(target),copied_from=origin,warnings=warnings)
+    if dry_run:
+        return preview
+    published = False
+    try:
+        with files.file_lock(settings.catalog_path()):
+            folder.mkdir(exist_ok=True)
+            with files.verified_copy(settings.catalog_path(),source_path,target) as digest:
+                published = True
+                registered = register_copy(settings,source,target,digest,origin,existing,label=label,media_type=media_type)
+        return registered | dict(citation_key=source['citation_key'],resolved_path=str(target),destination=str(target),copied=True,warnings=warnings)
+    except (OSError,sqlite3.Error,RefError) as exc:
+        if published:
+            raise RefError('copy_published_unregistered','Finished copy remains unregistered; inspect it and link it explicitly',4,path=str(target),details={'cause':str(exc)},data=dict(source_id=source['id'],resource_id=existing['id'] if existing else None,original=str(source_path),destination=str(target))) from exc
+        if isinstance(exc,RefError):
+            raise
+        raise RefError('copy_failed','Copy failed; inspect the original and retry after correcting the cause',5,path=str(source_path),details={'cause':str(exc)}) from exc

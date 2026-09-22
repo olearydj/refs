@@ -88,3 +88,45 @@ def publish(temporary: Path, target: Path, expected: str | None) -> None:
 def hash_file(path: Path) -> str:
     with path.open('rb') as stream:
         return hashlib.file_digest(stream,'sha256').hexdigest()
+
+
+def file_identity(path: Path):
+    value = path.stat()
+    return value.st_dev, value.st_ino, value.st_size, value.st_mtime_ns
+
+
+@contextmanager
+def verified_copy(catalog: Path, source: Path, target: Path):
+    """Publish verified bytes and remove only this invocation's staging name."""
+    import shutil
+
+    staging = catalog/'staging'
+    if staging.is_symlink():
+        raise RefError('unsafe_path','Remove the unsafe staging symlink before copying')
+    staging.mkdir(mode=0o700,exist_ok=True)
+    if staging.stat().st_dev != target.parent.stat().st_dev:
+        raise RefError('staging_volume_mismatch','Keep catalog staging and the library on the same volume')
+    before = file_identity(source)
+    with tempfile.NamedTemporaryFile(prefix='copy-',dir=staging,delete=False) as stream:
+        temporary = Path(stream.name)
+        identity = os.fstat(stream.fileno())
+        try:
+            with source.open('rb') as incoming:
+                if (os.fstat(incoming.fileno()).st_dev,os.fstat(incoming.fileno()).st_ino) != before[:2]:
+                    raise RefError('source_changed','Source changed before reading; retry after the download completes')
+                shutil.copyfileobj(incoming,stream)
+            stream.flush()
+            source_digest = hash_file(source)
+            copy_digest = hash_file(temporary)
+            if before != file_identity(source) or source_digest != copy_digest:
+                raise RefError('source_changed','Source changed during copying; retry after the download completes')
+            publish(temporary,target,None)
+            yield copy_digest
+        finally:
+            try:
+                current = temporary.lstat()
+            except FileNotFoundError:
+                pass
+            else:
+                if (current.st_dev,current.st_ino) == (identity.st_dev,identity.st_ino):
+                    temporary.unlink()
