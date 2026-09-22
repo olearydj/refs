@@ -37,4 +37,4 @@ def test_readable_output_and_json_others(initialized, tmp_path, reference_path):
         assert not result.stdout.startswith('{')
         assert '\x1b' not in result.stdout
     result = subprocess.run(['refs', 'paths'], env=env, text=True, capture_output=True)
-    assert json.loads(result.stdout)['schema_version'] == '1.0'
+    assert result.stdout.splitlines()[0] == f"Configuration: {tmp_path/'config.toml'}"

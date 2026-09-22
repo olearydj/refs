@@ -37,7 +37,7 @@ def emit(command: str, data: dict[str, Any] | None = None, *,
         if error.data and error.data.get('outcome') == 'needs_attention':
             print(f"Needs attention: {error.data.get('citation_key') or '(input)'}", file=sys.stderr)
         print(' '.join(error.issue['message'].splitlines()), file=sys.stderr)
-    elif command in ('paths', 'schema'):
+    elif command == 'schema':
         print(json.dumps(result, ensure_ascii=False, indent=2))
     else:
         from refs.render import render_text

@@ -37,7 +37,7 @@ def test_command_confirmations(initialized, tmp_path, reference_path):
 
 @pytest.mark.parametrize(('args', 'first'), [
     (['init'], 'Initialized catalog at '),
-    (['paths'], '{'),
+    (['paths'], 'Configuration: '),
     (['schema', 'source-create'], '{'),
     (['add', '--format', 'refs'], 'Already present: '),
     (['show', 'smith-2024-learningPython'], 'Key: smith-2024-learningPython'),
@@ -91,3 +91,12 @@ def test_file_commands_first_line(initialized,tmp_path,reference_path,command):
     result=subprocess.run(['refs',*args],env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(tmp_path/'cat')),capture_output=True,text=True)
     assert result.returncode == 0,result.stderr
     assert result.stdout.splitlines()[0]==expected
+
+
+
+def test_paths_has_three_readable_lines_before_init(tmp_path):
+    env = dict(os.environ, REFS_CONFIG=str(tmp_path/'config.toml'), REFS_CATALOG=str(tmp_path/'cat'))
+    result = subprocess.run(['refs','paths'],env=env,capture_output=True,text=True)
+    assert result.returncode == 0
+    assert result.stdout.splitlines() == [f"Configuration: {tmp_path/'config.toml'}", f"Catalog: {tmp_path/'cat'}", 'Library: (not configured)']
+    assert not (tmp_path/'cat').exists()

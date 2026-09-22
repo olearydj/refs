@@ -13,6 +13,7 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
     key = data.get('citation_key', '')
     revision = data.get('revision', '')
     renderers = {
+        'paths': lambda: '\n'.join(f"{label}: {data[name]['path'] or '(not configured)'}" for name, label in [('config', 'Configuration'), ('catalog', 'Catalog'), ('library', 'Library')]),
         'config show': lambda: f"Configuration: {data['config']}" + ''.join(f"\n{name} = {value} ({data['origins'].get(name, 'default')})" for name,value in data['values'].items()),
         'backup': lambda: f"Wrote snapshot {data['output']} (external file bytes excluded)",
         'init': lambda: f"Initialized catalog at {data['catalog_path']} (library: {data.get('library') or 'none'})",
