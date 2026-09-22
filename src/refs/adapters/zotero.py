@@ -125,6 +125,10 @@ def parse(item: dict, manifest: dict) -> dict:
     for field, value in data.items():
         if not value or field in ignored:
             continue
+        preserved = REGISTRY.get('preserved_only', {}).get('zotero-json', {})
+        if field in preserved:
+            limitations.append(dict(field=field, reason=preserved[field]))
+            continue
         path = rows.get(field)
         if path:
             if field in ('date', 'issueDate', 'accessDate', 'filingDate', 'priorityDate'):

@@ -1049,7 +1049,8 @@
       "input_format": "zotero-json",
       "type_scope": [
         "book",
-        "report"
+        "report",
+        "conferencePaper"
       ],
       "source_field": "series",
       "canonical_path": "metadata.collection-title",
@@ -1967,7 +1968,9 @@
     {
       "input_format": "bib",
       "type_scope": [
-        "book"
+        "book",
+        "inproceedings",
+        "conference"
       ],
       "source_field": "series",
       "canonical_path": "metadata.collection-title",
@@ -4552,5 +4555,11 @@
     "key": "preserve explicit supplied key; require override if none",
     "reverse": "inbook title=container-title; chapter/pages retained",
     "fixture": "traditional-inbook"
+  },
+  "preserved_only": {
+    "zotero-json": {
+      "genre": "Preserved from import: genre",
+      "status": "Preserved from import: status"
+    }
   }
 }
