@@ -219,6 +219,13 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
         try:
             canonical = SourceCreate.model_validate(canonical).canonical()
             title_fields={field for field in canonical['metadata'] if 'metadata' in patch_model.set or 'metadata.'+field in patch_model.set}
+            for field in list(canonical['title_protection']):
+                supplied = any(path == 'title_protection' or path == 'title_protection.'+field or path.startswith('title_protection.'+field+'.') for path in patch_model.set)
+                if supplied:
+                    title_fields.add(field)
+                elif original['metadata'].get(field) != canonical['metadata'].get(field):
+                    protection = canonical['title_protection'][field]
+                    protection['protected_terms'] = [term for term in protection['protected_terms'] if naming.protected_spans(canonical['metadata'].get(field, ''), [term])]
             canonical, warnings = naming.normalize(canonical,policy,title_fields)
             canonical = SourceCreate.model_validate(canonical).canonical()
         except ValidationError as exc:

@@ -40,3 +40,17 @@ def test_conflict_reports_attention(initialized, tmp_path, reference_path):
     result = initialized('add', '--format', 'refs', '--input', path, expected=3)
     assert result['data']['outcome'] == 'needs_attention'
     assert original['id'] in result['errors'][0]['details']['source_ids']
+
+
+
+def test_title_edit_retires_old_protection_but_checks_supplied_terms(initialized, tmp_path):
+    import json
+
+    from refs import sources
+    raw = {'schema_version':'1.0','metadata':{'title':'An API Study'},'title_protection':{'title':{'protected_terms':['API']}}}
+    source = sources.add(tmp_path/'cat',json.dumps(raw).encode(),'synthetic')
+    changed = sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','set':{'metadata.title':'Different Study'}},1)
+    assert changed['title_protection']['title']['protected_terms'] == []
+    assert not any(w['code']=='protected_term_missing' for w in changed['warnings'])
+    supplied = sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','set':{'title_protection.title.protected_terms':['Missing']}},2)
+    assert any(w['code']=='protected_term_missing' for w in supplied['warnings'])
