@@ -58,7 +58,7 @@ LAST=""
 run() {
   local expected="$1" name="$2" status=0
   shift 2
-  LAST="$DEMO_ROOT/$name.json"
+  LAST="$DEMO_ROOT/$name.result.json"
   show_command "$@"
   "$REFS_BIN" --json "$@" >"$LAST" 2>"$DEMO_ROOT/$name.stderr" || status=$?
   if [[ "$status" != "$expected" ]]; then
@@ -128,5 +128,24 @@ run 3 outside-edit export --project demo --output "$BIB"
 assert_jq '.errors[0].code == "outside_edit"' "$LAST" 'outside edit refused'
 cmp "$BIB" "$DEMO_ROOT/edited.bib" || fail 'outside edit was overwritten'
 pass 'outside bytes preserved'
+run 0 inspect-project project show demo
+assert_jq '.data.sources | length == 1' "$LAST" 'project shows its cited sources'
+run 0 cite-book project cite demo "$BOOK_KEY"
+run 0 uncite-book project uncite demo "$BOOK_KEY"
+run 0 projects project show
+assert_jq '.data.items | length == 1' "$LAST" 'project listing'
+cat >"$DEMO_ROOT/web.json" <<'JSON'
+{"schema_version":"1.0","citation_key":"web-example","metadata":{"type":"webpage","title":"Synthetic Website","language":"en","URL":"https://example.org/demo"}}
+JSON
+run 0 web add --format refs --input "$DEMO_ROOT/web.json"
+run 0 cite-web project cite demo web-example
+run 0 warned-export export --project demo --output "$DEMO_ROOT/warned.bib"
+assert_jq 'any(.warnings[]; .details.class == "documented_fallback")' "$LAST" 'documented fallback warns'
+run 0 uncertain update web-example --if-revision 1 --set 'metadata.issued={"literal":"Uncertain Date"}'
+cp "$DEMO_ROOT/warned.bib" "$DEMO_ROOT/before-block.bib"
+run 3 blocked-export export --project demo --output "$DEMO_ROOT/warned.bib"
+assert_jq 'any(.errors[0].details.entries[]; .code == "issued_date_lost_or_changed")' "$LAST" 'meaning-changing loss blocks'
+cmp "$DEMO_ROOT/warned.bib" "$DEMO_ROOT/before-block.bib" || fail 'blocked export changed bytes'
+pass 'blocked export preserved the existing bibliography'
 pause_demo
 printf 'PASS refs demo: %s checks (US1, US2)\n' "$CHECKS"

@@ -1,70 +1,41 @@
 # Slice 1 Acceptance Walkthrough
 
-**Milestone 1 verified on 2026-09-21. The remaining slice 1 checks below are planned.** Use disposable synthetic inputs and explicit test paths; no live Zotero/catalog/PDF/manuscript changes. The [file contract](contracts/files-and-recovery.md#snapshot-and-documented-restore) owns restore safety.
+T001–T020 are implemented. The US1 and US2 demonstration uses synthetic inputs and a fresh temporary configuration, catalog and library. It does not access the owner's catalog, Zotero data, PDFs or manuscript bibliographies.
 
-## Milestone 1: One reference from capture to export
+## Run the demonstration
 
-From the repository root, run the locked environment checks:
+The walkthrough lives in [scripts/demo.sh](../../scripts/demo.sh). It is also the single installed end-to-end test, so its examples and assertions run together. From the repository root:
+
+```sh
+scripts/demo.sh
+```
+
+Use `scripts/demo.sh --help` for its execution modes. The script narrates capture, correction, retrieval, project selection and explicit bibliography export. It checks stale revisions, retained originals, removal and reactivation, repeat export, outside-edit refusal, a documented export fallback and a blocking loss. Every expected failure has an asserted exit code and JSON diagnostic.
+
+## Verification
 
 ```sh
 uv sync --locked
 uv run --locked pytest
 uv run --locked ruff check .
 uv run --locked ty check src/refs
+scripts/demo.sh --smoke
 ```
 
-The milestone run passed 31 tests, including one installed smoke test against real SQLite and bibliography bytes. Ruff and ty reported no findings. The CLI provides init, paths, add, show, project create, project cite and export. The initial migration creates seven tables. Capture currently accepts a supplied citation key and the bounded English journal-article input; unsupported fields fail explicitly. Generated keys and broader inputs arrive in later tasks.
+Focused tests cover strict records, naming, one two-process key-allocation case, transactionally updated search, correction markers, case-sensitive keys, export assessment and interrupted publication. The database has eight logical tables, including the derived search projection; SQLite's FTS shadow tables are internal. There is one initial migration, exercised only in disposable catalogs.
 
-Run the same disposable demonstration used for verification:
+## Rendering evidence, 2026-09-21
 
-```sh
-demo=$(mktemp -d)
-export REFS_CONFIG="$demo/config.toml" REFS_CATALOG="$demo/cat"
-uv run --locked refs init --library-root "$demo/lib"
-uv run --locked refs add --format refs --input tests/fixtures/reference.json
-uv run --locked refs show smith-2024-learningPython
-uv run --locked refs project create demo
-uv run --locked refs project cite demo smith-2024-learningPython
-uv run --locked refs export --project demo --output "$demo/references.bib"
-```
+All three consumers ran against `tests/fixtures/rendering/sources.json` through the actual serializer. The fixtures are a journal article, a second-edition book, a corporate-authored standard and a doctoral thesis. Assertions inspect rendered authors, issued years, journal, publisher, edition, institution, standard number and protected Python spelling. These checks establish those fixture results, not exhaustive style equivalence for every supported type and value. Unassessed mappings still block unless explicitly overridden for that invocation.
 
-Add and show return the same source ID, key and revision 1, with original-input evidence. IDs, timestamps and temporary paths vary between runs. Export reports count 1 and SHA-256 `9d8b5c99031001aec1cdf42db5973054363f30ed09466dce89b8bbb9f6cf93c4`. The actual output file is:
+| Consumer | Style | Result |
+| --- | --- | --- |
+| Pandoc 3.11 with citeproc | Preserved APA Style 7th edition CSL | Passed |
+| Biber 2.21 with LaTeX | biblatex 3.21, authoryear, dated 2025/07/10 | Passed |
+| BibTeX 0.99e, TeX Live 2026, with LaTeX | elsarticle-num 2.1, dated 2025-01-09; numeric natbib mode | Passed |
 
-```bibtex
-@article{smith-2024-learningPython,
-  author = {Smith, Alex},
-  title = {Learning {Python}},
-  journal = {Journal of Synthetic Examples},
-  year = {2024},
-  volume = {12},
-  number = {2},
-  pages = {10--20},
-  doi = {10.5555/synthetic.2024.1},
-}
-```
+The classic style is copied from the preserved audit evidence into each temporary rendering directory. No style or package is installed by the tests. An unavailable consumer produces an explicit warning and a named skipped test; none was unavailable in this run.
 
-The smoke test repeats export byte-for-byte and verifies refusal to replace an unrelated file. Focused tests cover unchanged previews, identity conflicts, failure before publication, retry after publication and outside edits. This completes T001–T010; the remaining acceptance workflow is still pending.
+## Remaining slice 1 acceptance
 
-## One installed smoke workflow
-
-1. Install the locked package in its supported Python environment. Set an explicit temporary --config and --catalog for every invocation. Initialize with a disposable library; inspect paths and config show.
-2. Inspect the four schemas. Preview/add a refs record, a CSL record and a Bib entry; include incomplete metadata and protected spelling. Show the retained values/origins/key. Update using --set and a patch under revisions; prove a stale update fails.
-3. Import a mixed .bib with one valid entry and one conflict. Save its report, inspect preserved originals, re-run without duplicate sources/resources and settle a value conflict using update. Nothing silently overwrites a correction.
-4. Search/list the records. Create a project, cite two sources, uncite one, and show the selected set. Metadata/project changes alone produce no bibliography.
-5. Use add --file to copy into Unfiled by default, and add --file --link to leave a file in place. Confirm that resource add links by default and resource add --copy brings a file into Unfiled. Check rename-by-default and --keep-name, show/check/open selection, then unlink the association without deleting bytes. A destination collision leaves both existing files unchanged.
-6. Export to a new target, repeat byte-identically, and exercise import-digest adoption of an existing file with --adopt --overwrite. Outside edits block by default. Four-class failures report all affected entries without changing target bytes; --allow-unknown-mappings does not waive known blocking losses.
-7. Remove/reactivate a source under revision guards, retaining its identity/key and external bytes. Snapshot, then perform the separate-home restore below.
-
-## Focused checks beside the smoke
-
-Keep one two-process key-allocation test. Use focused fixtures for parser defects, type-scoped aliases, names/particles/corporate “ and ”, dates, protection, keys, current-value clearing, no-overwrite imports, copied-file hashes and source changes, crash boundaries, invalid configuration and corrupt snapshots. Test portable rendering with Pandoc citeproc, Biber and classic BibTeX/elsarticle-num, asserting meaningful authors/dates/publication/edition/spelling, not just resolved keys. Record tool/style versions and limitations.
-
-No four-process matrix, 10,000-source performance gate, plugin proof, per-entry resume, stored waiver or saved export projection belongs to this slice.
-
-## Separate-home restore proof
-
-Follow the documented procedure: verify hashes/schema/integrity, restore into an empty second home with separate config, open it with list/show/project show, and compare identities, keys, original hashes, corrections, selections and resource inventory. Missing roots are reported without file changes. Try a corrupt snapshot and nonempty destination; both fail safely. Demonstrate the procedure with the installed implementation and record exact commands/results before declaring slice 1 complete.
-
-## Owner's real-paper gate
-
-After these checks, the owner chooses one real paper for capture-to-export use with its actual consumer. Obtain task-specific authorization before replacing a live bibliography or migrating files. Render with the catalog unavailable, and record what was missing or unused. No slice 2 specification work begins before this trial. Whole-library migration remains separate.
+Import, file intake, backup and the demonstrated restore into a second home remain pending. The [file contract](contracts/files-and-recovery.md#snapshot-and-documented-restore) owns restore safety. The owner selects a real paper only after the remaining slice 1 work is complete. No whole-library migration or slice 2 work is authorized by this demonstration.

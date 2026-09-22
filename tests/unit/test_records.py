@@ -10,6 +10,8 @@ def source(**metadata):
 
 @pytest.mark.parametrize('metadata', [
     {'type': 'book', 'edition': '2'},
+    {'type': 'book', 'edition': 2.0},
+    {'type': 'book', 'edition': '2.0'},
     {'type': 'patent', 'author': [{'family': 'Smith', 'given': 'Alex'}]},
     {'type': 'speech', 'author': [{'literal': 'Research and Development'}]},
     {'issued': {'date-parts': [[2024, 2, 29]]}},

@@ -101,10 +101,12 @@ class MetadataBase(StrictModel):
             if isinstance(item, float) and not math.isfinite(item):
                 raise ValueError("Numeric values must be finite")
         edition = value.get("edition")
-        if isinstance(edition, str) and edition.isdecimal():
-            value["edition"] = int(edition)
+        if isinstance(edition, str) and re.fullmatch(r"[0-9]+(?:\.0+)?", edition):
+            value["edition"] = int(edition.split(".")[0])
         if isinstance(value.get("edition"), (int, float)) and (value["edition"] <= 0 or int(value["edition"]) != value["edition"]):
             raise ValueError("Numeric edition must be a positive integer")
+        if isinstance(value.get("edition"), float):
+            value["edition"] = int(value["edition"])
         if "URL" in value:
             url = urlparse(value["URL"]) if isinstance(value["URL"], str) else None
             if url is None or url.scheme not in ("http", "https") or not url.netloc:
@@ -230,6 +232,14 @@ class SourceCreate(StrictModel):
     legacy_tags: list[Text] = Field(default_factory=list)
     key_author: Text | None = None
 
+    @field_validator("key_author")
+    @classmethod
+    def valid_key_author(cls, value: str | None) -> str | None:
+        if value is not None:
+            from refs.naming import creator_token
+            creator_token(value)
+        return value
+
     @field_validator("citation_key")
     @classmethod
     def valid_key(cls, value: str | None) -> str | None:
@@ -270,7 +280,7 @@ def parse(raw: bytes) -> SourceCreate:
     try:
         return SourceCreate.model_validate_json(raw)
     except ValidationError as exc:
-        raise RefError("invalid_record", "Input is outside the supported milestone record profile", 2,
+        raise RefError("invalid_record", "Input does not match the supported record profile", 2,
                        details={"issues": exc.errors(include_url=False, include_context=False, include_input=False)}) from exc
 
 

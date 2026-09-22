@@ -5,6 +5,7 @@ import sqlite3
 import unicodedata
 from contextlib import nullcontext
 from pathlib import Path
+from uuid import uuid4
 
 from pydantic import ValidationError
 
@@ -179,14 +180,17 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                 put('pages', re.sub(r'(?<=\d)[-–](?=\d)', '--', str(metadata['page'])))
             used.add('publisher')
             if 'publisher' in metadata:
+                publisher = tex(str(metadata['publisher']))
+                if ' and ' in str(metadata['publisher']):
+                    publisher = '{' + publisher + '}'
                 if entry_type in ('phdthesis', 'mastersthesis'):
-                    put('school', metadata['publisher'])
+                    put('school', publisher, literal=True)
                 elif entry_type == 'techreport':
-                    put('institution', metadata['publisher'])
+                    put('institution', publisher, literal=True)
                 elif entry_type == 'misc':
                     howpublished.append(str(metadata['publisher']))
                 else:
-                    put('publisher', metadata['publisher'])
+                    put('publisher', publisher, literal=True)
             used.update(('number', 'archive', 'genre'))
             if kind in ('article', 'manuscript'):
                 copy('archive', 'archiveprefix')
@@ -263,7 +267,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
     return '\n'.join(entries).encode('utf-8'), warnings
 
 
-def target_state(connection, target: Path, project_id: str) -> tuple[str | None, bool, bool]:
+def target_state(connection, target: Path, project_id: str, *, overwrite: bool = False) -> tuple[str | None, bool, bool]:
     row = connection.execute("SELECT * FROM export_targets WHERE destination=?", (str(target),)).fetchone()
     current = files.current_digest(target)
     if row is None:
@@ -278,6 +282,8 @@ def target_state(connection, target: Path, project_id: str) -> tuple[str | None,
         return current, True, True
     if current is None and row["baseline_digest"] is None:
         return None, False, True
+    if overwrite and current is not None:
+        return current, False, True
     raise RefError("outside_edit", "Destination differs from recorded export bytes", path=str(target))
 
 
@@ -291,7 +297,7 @@ def finish_export(catalog: Path, target: Path, digest: str) -> None:
         changed(connection)
 
 
-def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROFILE, dry_run: bool = False, allow_unknown: bool = False) -> dict:
+def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROFILE, dry_run: bool = False, allow_unknown: bool = False, overwrite: bool = False) -> dict:
     if profile != PROFILE:
         raise RefError("unsupported_profile", "This milestone supports portable-bibtex-v1", 2)
     target = files.destination(output)
@@ -309,7 +315,7 @@ def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROF
     # Preview never acquires the file lock, stages bytes or reconciles intent.
     with nullcontext() if dry_run else files.file_lock(catalog):
         with connect(catalog) as connection:
-            current, recoverable, known = target_state(connection, target, project["id"])
+            current, recoverable, known = target_state(connection, target, project["id"], overwrite=overwrite)
         if dry_run:
             return result | dict(dry_run=True, recoverable=recoverable)
         if recoverable:
@@ -319,9 +325,17 @@ def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROF
             return result | dict(unchanged=True, recovered=recoverable)
         with files.staged(target, data) as temporary:
             with connect(catalog, write=True) as connection:
-                checked, _, _ = target_state(connection, target, project["id"])
+                checked, _, _ = target_state(connection, target, project["id"], overwrite=overwrite)
                 if checked != current:
                     raise RefError("outside_edit", "Destination changed while preparing export")
+                if known and overwrite:
+                    previous = connection.execute("SELECT baseline_digest, pending_digest FROM export_targets WHERE destination=?", (str(target),)).fetchone()
+                    if current not in (previous['baseline_digest'], previous['pending_digest']):
+                        outside = target.read_bytes()
+                        if files.digest(outside) != current:
+                            raise RefError('outside_edit', 'Outside bytes changed during preservation')
+                        connection.execute("INSERT OR IGNORE INTO originals (id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator) VALUES (?, ?, ?, ?, 'bib', 'export-overwrite', ?, ?)",
+                                           (str(uuid4()), outside, current, len(outside), current, str(target)))
                 if not known:
                     connection.execute("INSERT INTO export_targets VALUES (?, ?, ?, NULL, ?)", (str(target), project["id"], PROFILE_FINGERPRINT, candidate_digest))
                 else:

@@ -101,3 +101,12 @@ def test_nonenglish_language_and_unassessed_language():
     assert b'langid = {french}' in data
     with pytest.raises(RefError):
         bibliography.serialize([record(language='zz')], allow_unknown=True)
+
+
+@pytest.mark.parametrize('kind, field', [('book', 'publisher'), ('report', 'institution'), ('thesis', 'school')])
+def test_literal_institutions_containing_and(kind, field):
+    metadata = {'publisher': 'Research and Development'}
+    if kind == 'thesis':
+        metadata['genre'] = 'PhD'
+    data, _ = bibliography.serialize([record(kind, **metadata)])
+    assert (field + ' = {{Research and Development}}').encode() in data

@@ -84,8 +84,9 @@ def export_bibliography(ctx: typer.Context, project: Annotated[str, typer.Option
                        output: Annotated[Path, typer.Option()],
                        profile: Annotated[str, typer.Option()] = bibliography.PROFILE,
                        allow_unknown_mappings: Annotated[bool, typer.Option()] = False,
+                       overwrite: Annotated[bool, typer.Option()] = False,
                        dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, "export", bibliography.export(settings(ctx).catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run, allow_unknown=allow_unknown_mappings))
+    report(ctx, "export", bibliography.export(settings(ctx).catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite))
 
 
 key_app = typer.Typer(no_args_is_help=True)
@@ -157,6 +158,17 @@ def list_sources(ctx: typer.Context, project: Annotated[str | None, typer.Option
 def inspect_schema(ctx: typer.Context, name: str):
     from refs.models import schema
     report(ctx, "schema", schema(name))
+
+
+@project_app.command("show")
+def project_show(ctx: typer.Context, project: Annotated[str | None, typer.Argument()] = None):
+    report(ctx, "project show", projects.show(settings(ctx).catalog_path(), project))
+
+
+@project_app.command("uncite")
+def project_uncite(ctx: typer.Context, project: str, reference: str,
+                   dry_run: Annotated[bool, typer.Option()] = False):
+    report(ctx, "project uncite", projects.uncite(settings(ctx).catalog_path(), project, reference, dry_run=dry_run))
 
 
 def main() -> None:

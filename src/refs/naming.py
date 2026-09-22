@@ -79,9 +79,9 @@ def normalize(record: dict) -> tuple[dict, list[dict]]:
         if not protection.get('preserve_case') and any(any(char.isupper() for char in match.group()[1:]) and not any(a <= match.start() and match.end() <= b for a, b in spans) for match in re.finditer(r'\w+', text)):
             warnings.append({'code': 'unprotected_capital', 'message': 'Review unprotected internal capitals', 'path': f'metadata.{field}', 'details': {}, 'retryable': False})
         main = record.get('title_parts', {}).get('main_title') if field == 'title' else None
-        metadata[field] = title_case(text, protection, len(main) if main else None)
+        metadata[field] = title_case(text, protection, len(unicodedata.normalize('NFC', main)) if main else None)
         if main:
-            record['title_parts']['main_title'] = metadata[field][:len(main)]
+            record['title_parts']['main_title'] = metadata[field][:len(unicodedata.normalize('NFC', main))]
     return record, warnings
 
 

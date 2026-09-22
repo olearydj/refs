@@ -120,3 +120,18 @@ def test_protection_and_tex_are_not_executable(cited):
     assert "{Python} \\& Pythonic" in text
     assert r"\textbackslash{}input\{unsafe\}" in text
     assert "author = {{Research and Development}}" in text
+
+
+def test_explicit_overwrite_preserves_outside_bytes_and_cannot_adopt(initialized, cited):
+    catalog, output = cited
+    bibliography.export(catalog, 'demo', output)
+    outside = b'% Synthetic outside edit\n'
+    output.write_bytes(outside)
+    initialized('export', '--project', 'demo', '--output', output, '--overwrite')
+    assert output.read_bytes() != outside
+    with sqlite3.connect(catalog/'catalog.sqlite') as connection:
+        assert connection.execute("SELECT raw_bytes FROM originals WHERE origin='export-overwrite'").fetchone()[0] == outside
+    unrelated = output.parent/'unowned.bib'
+    unrelated.write_bytes(outside)
+    initialized('export', '--project', 'demo', '--output', unrelated, '--overwrite', expected=3)
+    assert unrelated.read_bytes() == outside
