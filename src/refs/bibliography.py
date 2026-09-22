@@ -269,7 +269,17 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                 if metadata[field]:
                     assess('unassessed_mapping', 'unknown', f'No assessed portable projection for {field}', 'metadata.' + field)
             for field, extension in value.get('extensions', {}).items():
-                if field == 'patent':
+                if field == 'identifiers':
+                    if extension.get('arxiv'):
+                        arxiv = extension['arxiv']
+                        put('eprint', arxiv)
+                        put('eprinttype', 'arxiv')
+                        if entry_type in ('misc', 'unpublished') and arxiv not in record.get('_howpublished', ''):
+                            notes.append('arXiv:' + arxiv)
+                        assess('arxiv_fallback', 'documented_fallback', 'arXiv identifier retained in eprint fields and a classic-consumer note where needed', 'extensions.identifiers.arxiv')
+                    if extension.get('oclc'):
+                        assess('oclc_omission', 'documented_fallback', 'OCLC identifier retained in catalog', 'extensions.identifiers.oclc')
+                elif field == 'patent':
                     for member in extension:
                         assess('unassessed_extension', 'unknown', f'No registered projection for patent.{member}', 'extensions.patent.' + member)
                 else:

@@ -225,7 +225,13 @@ class Patent(StrictModel):
     priority_date: Date | None = None
 
 
+class Identifiers(StrictModel):
+    arxiv: Text | None = None
+    oclc: Text | None = None
+
+
 class Extensions(StrictModel):
+    identifiers: Identifiers | None = None
     patent: Patent | None = None
     journal_series: Text | None = None
 

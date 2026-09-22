@@ -480,6 +480,11 @@
       "path": "extensions.journal_series",
       "rationale": "Text distinct from collection-title",
       "fixture": "journal-series"
+    },
+    {
+      "path": "extensions.identifiers",
+      "rationale": "arxiv and oclc identifiers from Extra",
+      "fixture": "zotero-extra"
     }
   ],
   "rows": [
@@ -4511,6 +4516,18 @@
     "extensions.journal_series": {
       "type": "string",
       "minLength": 1
+    },
+    "identifiers": {
+      "type": "object",
+      "properties": {
+        "arxiv": {
+          "type": "string"
+        },
+        "oclc": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "traditional_inbook_branch": {

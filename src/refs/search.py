@@ -33,6 +33,10 @@ def retrieve(catalog: Path, query: str | None = None, *, project: str | None = N
                     if stored and identifier(field, str(stored)) == identifier(field, query):
                         found.insert(0, dict(field='metadata.' + field, origin='metadata', text=stored))
                         exact = True
+                for scheme, stored in record.get('extensions', {}).get('identifiers', {}).items():
+                    if query == stored:
+                        found.insert(0, dict(field='extensions.identifiers.' + scheme, origin='metadata', text=stored))
+                        exact = True
                 if not found:
                     continue
             items.append(record | {'matches': found, 'exact_match': exact})
