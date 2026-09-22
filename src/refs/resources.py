@@ -115,13 +115,11 @@ def check(settings: Settings, reference=None, *, verify=False) -> dict:
     return {'items':[check_item(settings,item,verify) for item in items]}
 
 
-def unlink(settings: Settings, resource_id: str, revision: int, *, execute=False) -> dict:
+def unlink(settings: Settings, resource_id: str, *, execute=False) -> dict:
     with connect(settings.catalog_path(),write=execute) as connection:
         item = next((item for item in inventory(connection) if item['id']==resource_id),None)
         if item is None:
-            raise RefError('resource_missing','Inspect the source and use an existing resource ID')
-        if item['revision'] != revision:
-            raise RefError('stale_revision','Reload the resource and use its current revision')
+            return dict(id=resource_id, unchanged=True, dry_run=not execute)
         key = connection.execute('SELECT citation_key FROM sources WHERE id=?',(item['source_id'],)).fetchone()[0]
         if execute:
             connection.execute('DELETE FROM resources WHERE id=?',(resource_id,))

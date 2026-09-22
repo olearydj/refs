@@ -16,7 +16,8 @@ def warning_lines(command: str, warnings: list[dict]) -> list[str]:
     groups = {}
     for warning in warnings:
         if warning['code'] == 'empty_selection':
-            warning = warning | {'message': 'No cited active sources were selected'}
+            warning = dict(warning)
+            warning['message'] = 'No cited active sources were selected'
         if warning.get('details', {}).get('class') == 'info':
             continue
         group = warning['code'] if warning.get('details', {}).get('class') == 'documented_fallback' else str(len(groups))
@@ -63,7 +64,7 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
         'project uncite': lambda: f"Uncited {key} from {data['project_name']}",
         'project show': lambda: project_text(data),
         'resource add': lambda: f"Copied {data['copied_from'].get('path') or data['copied_from'].get('relative')} to {data['destination']} for {key}" if 'destination' in data else f"Linked {data.get('resolved_path') or data.get('path') or data.get('relative')} to {key}",
-        'resource unlink': lambda: f"Unlinked {data.get('resolved_path') or data.get('path') or data.get('relative')} from {key}",
+        'resource unlink': lambda: f"Resource {data['id']} is already unlinked" if data.get('unchanged') else f"Unlinked {data.get('resolved_path') or data.get('path') or data.get('relative')} from {key}",
         'resource check': lambda: '\n'.join(f"{item['status']}: {item.get('resolved_path') or item.get('relative') or item['id']}" for item in data['items']) or '(no resources)',
         'open': lambda: 'Choose a resource with --resource:\n' + '\n'.join(f"{item['id']}: {item.get('resolved_path') or item.get('relative')}" for item in data['choices']) if 'choices' in data else f"Opened {data['path']} for {key}",
         'import': lambda: f"Imported {data['counts']['applied']}, unchanged {data['counts']['unchanged']}, conflicts {data['counts']['conflict']}, invalid {data['counts']['invalid']} from {data['input']}",

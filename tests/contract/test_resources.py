@@ -16,7 +16,7 @@ def test_link_repeat_inventory_unlink(initialized, tmp_path, reference_path):
     assert first['id'] == again['id'] and again['unchanged']
     shown = initialized('show',source['id'])['data']
     assert len(shown['resources']) == 1
-    initialized('resource','unlink',first['id'],'--if-revision',1,'--execute')
+    initialized('resource','unlink',first['id'],'--execute')
     assert path.read_bytes() == b'synthetic PDF bytes'
     assert not initialized('show',source['id'])['data']['resources']
 

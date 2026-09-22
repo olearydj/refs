@@ -81,7 +81,7 @@ def test_file_commands_first_line(initialized,tmp_path,reference_path,command):
     cases={
         'import':(['import','--input',str(bib)],f'Imported 1, unchanged 0, conflicts 0, invalid 0 from {bib}'),
         'resource add':(['resource','add',source['id'],'--path',str(paths[1])],f"Linked {paths[1]} to {source['citation_key']}"),
-        'resource unlink':(['resource','unlink',first['id'],'--if-revision','1','--execute'],f"Unlinked {paths[0]} from {source['citation_key']}"),
+        'resource unlink':(['resource','unlink',first['id'],'--execute'],f"Unlinked {paths[0]} from {source['citation_key']}"),
         'resource check':(['resource','check'],f'available: {paths[0]}'),
         'open':(['open',source['id']],'Choose a resource with --resource:'),
     }

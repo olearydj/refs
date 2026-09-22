@@ -248,10 +248,9 @@ def resource_add(ctx: typer.Context, reference: str,
 
 @resource_app.command('unlink')
 def resource_unlink(ctx: typer.Context, resource: str,
-                    if_revision: Annotated[int, typer.Option(min=1)],
                     execute: Annotated[bool, typer.Option()] = False,
                     dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, 'resource unlink', resources.unlink(settings(ctx),resource,if_revision,execute=execute and not dry_run))
+    report(ctx, 'resource unlink', resources.unlink(settings(ctx),resource,execute=execute and not dry_run))
 
 
 @resource_app.command('check')

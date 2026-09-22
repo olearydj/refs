@@ -129,3 +129,16 @@ def test_backup_creates_missing_parents(human, tmp_path):
     assert not target.parent.exists()
     assert human('backup','--output',target).splitlines()[0]==f'Wrote snapshot {target} (external file bytes excluded)'
     assert validate_snapshot(target)['format']=='refs-backup'
+
+
+def test_unlink_previews_without_revision_and_is_idempotent(human, initialized, reference_path, tmp_path):
+    source=initialized('add','--format','refs','--input',reference_path)['data']
+    path=tmp_path/'linked.pdf'
+    path.write_bytes(b'untouched original')
+    resource=initialized('resource','add',source['id'],'--path',path)['data']
+    assert human('resource','unlink',resource['id']).startswith(f'Preview: Unlinked {path}')
+    assert len(initialized('show',source['id'])['data']['resources'])==1
+    assert human('resource','unlink',resource['id'],'--execute').startswith(f'Unlinked {path}')
+    assert initialized('show',source['id'])['data']['resources']==[]
+    assert 'already unlinked' in human('resource','unlink',resource['id'],'--execute')
+    assert path.read_bytes()==b'untouched original'
