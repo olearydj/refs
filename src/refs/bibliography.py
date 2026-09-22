@@ -340,6 +340,8 @@ def target_state(connection, target: Path, project_id: str, *, overwrite: bool =
         return None, False, False
     if row["project_id"] != project_id or row["profile_fingerprint"] != PROFILE_FINGERPRINT:
         raise RefError("target_binding_conflict", "Destination belongs to another project or profile", path=str(target))
+    if candidate_digest == files.digest(b'') and current not in (None, candidate_digest) and not overwrite:
+        raise RefError('outside_edit', 'Selection is empty; pass --overwrite to replace the non-empty bibliography', path=str(target))
     if current is not None and current == row["baseline_digest"]:
         return current, False, True
     if current is not None and current == row["pending_digest"]:
@@ -376,6 +378,8 @@ def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROF
     data, warnings = serialize(selected, allow_unknown=allow_unknown)
     info = [notice for notice in warnings if notice['details'].get('class') == 'info']
     warnings = [notice for notice in warnings if notice['details'].get('class') != 'info']
+    if not selected:
+        warnings.append(warning('(selection)', 'empty_selection', f'Wrote {target} (0 entries)'))
     candidate_digest = files.digest(data)
     result = dict(output=str(target), profile=profile, count=len(selected),
                   keys=[record["citation_key"] for record in selected], sha256=candidate_digest,

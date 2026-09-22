@@ -87,3 +87,23 @@ def test_paths_and_config_keep_their_distinct_formats(human, tmp_path):
     assert text.startswith(f'Configuration: {tmp_path/"config.toml"}\n')
     assert f'catalog.path = {tmp_path/"cat"} (REFS_CATALOG)' in text
     assert f'resources.library_root = {tmp_path/"lib"} ({tmp_path/"config.toml"})' in text
+
+
+def test_empty_export_warns_and_requires_overwrite(human, initialized, reference_path, tmp_path):
+    initialized('project','create','paper')
+    output=tmp_path/'empty.bib'
+    result=initialized('export','--project','paper','--output',output)
+    assert result['warnings'][0]['code']=='empty_selection'
+    assert output.read_bytes()==b''
+    assert f'Wrote {output} (0 entries)' in human('export','--project','paper','--output',output)
+    initialized('add','--format','refs','--input',reference_path)
+    initialized('project','cite','paper','smith-2024-learningPython')
+    initialized('export','--project','paper','--output',output)
+    original=output.read_bytes()
+    initialized('project','uncite','paper','smith-2024-learningPython')
+    for options in ([], ['--dry-run']):
+        refused=initialized('export','--project','paper','--output',output,*options,expected=3)
+        assert refused['errors'][0]['code']=='outside_edit'
+        assert output.read_bytes()==original
+    initialized('export','--project','paper','--output',output,'--overwrite')
+    assert output.read_bytes()==b''

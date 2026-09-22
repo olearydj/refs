@@ -15,6 +15,8 @@ def warning_lines(command: str, warnings: list[dict]) -> list[str]:
         return ['Warning: ' + warning['message'] for warning in warnings]
     groups = {}
     for warning in warnings:
+        if warning['code'] == 'empty_selection':
+            warning = warning | {'message': 'No cited active sources were selected'}
         if warning.get('details', {}).get('class') == 'info':
             continue
         group = warning['code'] if warning.get('details', {}).get('class') == 'documented_fallback' else str(len(groups))
@@ -65,7 +67,7 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
         'resource check': lambda: '\n'.join(f"{item['status']}: {item.get('resolved_path') or item.get('relative') or item['id']}" for item in data['items']) or '(no resources)',
         'open': lambda: 'Choose a resource with --resource:\n' + '\n'.join(f"{item['id']}: {item.get('resolved_path') or item.get('relative')}" for item in data['choices']) if 'choices' in data else f"Opened {data['path']} for {key}",
         'import': lambda: f"Imported {data['counts']['applied']}, unchanged {data['counts']['unchanged']}, conflicts {data['counts']['conflict']}, invalid {data['counts']['invalid']} from {data['input']}",
-        'export': lambda: f"Wrote {data['output']} ({data['count']} entries, {len(warnings)} warnings)",
+        'export': lambda: f"Wrote {data['output']} (0 entries)" if not data['count'] else f"Wrote {data['output']} ({data['count']} entries, {len(warnings)} warnings)",
         'show': lambda: readable(command, data),
         'search': lambda: readable(command, data),
         'list': lambda: readable(command, data),
