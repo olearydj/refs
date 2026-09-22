@@ -119,24 +119,28 @@ def add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_ru
         if dry_run:
             return dict(dry_run=True, outcome="created", id=None, citation_key=source.citation_key,
                         record=source.canonical(), key_provenance=key_provenance, warnings=warnings)
-        source_id = str(uuid4())
-        now = datetime.now(UTC).isoformat()
-        details = source.canonical()
-        metadata = details.pop("metadata")
-        details.pop("citation_key")
-        connection.execute(
-            "INSERT INTO sources (id, citation_key, created_at, updated_at, metadata_json, details_json, key_provenance_json) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (source_id, source.citation_key, now, now, json.dumps(metadata), json.dumps(details),
-             json.dumps(key_provenance)))
-        connection.execute(
-            "INSERT INTO originals (id, source_id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator) VALUES (?, ?, ?, ?, ?, ?, 'add', ?, ?)",
-            (str(uuid4()), source_id, raw, fingerprint, len(raw), format, fingerprint, locator))
-        for binding in bindings(source):
-            connection.execute("INSERT INTO origin_identities VALUES (?, ?, ?, ?, ?)", (*binding, source_id, fingerprint))
-        refresh(connection, record(connection, source_id))
-        changed(connection)
-        return record(connection, source_id) | {"outcome": "created", "warnings": warnings}
+        return insert_source(connection, source, raw, locator, format=format, warnings=warnings, key_provenance=key_provenance)
 
+
+def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *, format: str, warnings: list, key_provenance: dict) -> dict:
+    fingerprint = hashlib.sha256(raw).hexdigest()
+    source_id = str(uuid4())
+    now = datetime.now(UTC).isoformat()
+    details = source.canonical()
+    metadata = details.pop("metadata")
+    details.pop("citation_key")
+    connection.execute(
+        "INSERT INTO sources (id, citation_key, created_at, updated_at, metadata_json, details_json, key_provenance_json) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (source_id, source.citation_key, now, now, json.dumps(metadata), json.dumps(details),
+         json.dumps(key_provenance)))
+    connection.execute(
+        "INSERT INTO originals (id, source_id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator) VALUES (?, ?, ?, ?, ?, ?, 'add', ?, ?)",
+        (str(uuid4()), source_id, raw, fingerprint, len(raw), format, fingerprint, locator))
+    for binding in bindings(source):
+        connection.execute("INSERT INTO origin_identities VALUES (?, ?, ?, ?, ?)", (*binding, source_id, fingerprint))
+    refresh(connection, record(connection, source_id))
+    changed(connection)
+    return record(connection, source_id) | {"outcome": "created", "warnings": warnings}
 
 def checked_record(connection, reference: str, revision: int) -> dict:
     current = record(connection, resolve(connection, reference))

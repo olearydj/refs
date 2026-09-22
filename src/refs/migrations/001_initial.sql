@@ -68,3 +68,15 @@ CREATE TABLE export_targets (
 );
 
 CREATE VIRTUAL TABLE search_projection USING fts5(source_id UNINDEXED, field UNINDEXED, origin UNINDEXED, text, tokenize='unicode61');
+
+CREATE TABLE imports (
+    id TEXT PRIMARY KEY,
+    origin TEXT NOT NULL,
+    file_digest TEXT NOT NULL,
+    started_at TEXT NOT NULL,
+    finished_at TEXT,
+    applied INTEGER NOT NULL DEFAULT 0,
+    unchanged INTEGER NOT NULL DEFAULT 0,
+    conflict INTEGER NOT NULL DEFAULT 0,
+    invalid INTEGER NOT NULL DEFAULT 0
+);
