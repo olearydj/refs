@@ -66,3 +66,5 @@ CREATE TABLE export_targets (
     baseline_digest TEXT,
     pending_digest TEXT
 );
+
+CREATE VIRTUAL TABLE search_projection USING fts5(source_id UNINDEXED, field UNINDEXED, origin UNINDEXED, text, tokenize='unicode61');

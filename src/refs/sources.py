@@ -9,6 +9,7 @@ from uuid import uuid4
 from pydantic import ValidationError
 
 from refs import naming
+from refs.adapters.search_sqlite import refresh
 from refs.catalog import changed, connect
 from refs.models import SourceCreate, parse
 from refs.results import RefError
@@ -130,6 +131,7 @@ def add(catalog: Path, raw: bytes, locator: str, *, dry_run: bool = False) -> di
             (str(uuid4()), source_id, raw, fingerprint, len(raw), fingerprint, locator))
         for binding in bindings(source):
             connection.execute("INSERT INTO origin_identities VALUES (?, ?, ?, ?, ?)", (*binding, source_id, fingerprint))
+        refresh(connection, record(connection, source_id))
         changed(connection)
         return record(connection, source_id) | {"outcome": "created", "warnings": warnings}
 
@@ -148,6 +150,7 @@ def store_record(connection, current: dict, canonical: dict, corrections: list[s
     details.pop('citation_key', None)
     connection.execute('UPDATE sources SET metadata_json=?, details_json=?, corrected_fields_json=?, updated_at=?, revision=revision+1 WHERE id=? AND revision=?',
                        (json.dumps(metadata), json.dumps(details), json.dumps(corrections), datetime.now(UTC).isoformat(), current['id'], current['revision']))
+    refresh(connection, record(connection, current['id']))
     changed(connection)
     return record(connection, current['id'])
 
@@ -238,5 +241,6 @@ def change_identity(catalog: Path, reference: str, revision: int, *, new_key: st
         connection.execute(f'UPDATE sources SET {field}=?, revision=revision+1, updated_at=? WHERE id=?', (value, datetime.now(UTC).isoformat(), current['id']))
         if new_key is not None:
             connection.execute('UPDATE sources SET key_provenance_json=? WHERE id=?', (json.dumps({'origin': 'explicit_rekey'}), current['id']))
+        refresh(connection, record(connection, current['id']))
         changed(connection)
         return record(connection, current['id']) | {'warnings': warnings}

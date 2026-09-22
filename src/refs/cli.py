@@ -8,7 +8,7 @@ from typing import Annotated
 
 import typer
 
-from refs import bibliography, projects, sources
+from refs import bibliography, projects, search, sources
 from refs import catalog as storage
 from refs.config import absolute, select
 from refs.results import RefError, emit
@@ -135,6 +135,21 @@ def reactivate(ctx: typer.Context, reference: str, if_revision: Annotated[int, t
                execute: Annotated[bool, typer.Option()] = False,
                dry_run: Annotated[bool, typer.Option()] = False):
     report(ctx, "reactivate", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="active", execute=execute and not dry_run))
+
+
+@app.command("search")
+def search_sources(ctx: typer.Context, query: str, project: Annotated[str | None, typer.Option()] = None,
+                   limit: Annotated[int, typer.Option(min=1, max=1000)] = 50,
+                   offset: Annotated[int, typer.Option(min=0)] = 0):
+    report(ctx, "search", search.retrieve(settings(ctx).catalog_path(), query, project=project, limit=limit, offset=offset))
+
+
+@app.command("list")
+def list_sources(ctx: typer.Context, project: Annotated[str | None, typer.Option()] = None,
+                 limit: Annotated[int, typer.Option(min=1, max=1000)] = 50,
+                 offset: Annotated[int, typer.Option(min=0)] = 0,
+                 sort: Annotated[str, typer.Option()] = "title"):
+    report(ctx, "list", search.retrieve(settings(ctx).catalog_path(), project=project, limit=limit, offset=offset, sort=sort))
 
 
 def main() -> None:
