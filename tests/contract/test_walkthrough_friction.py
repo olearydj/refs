@@ -47,3 +47,16 @@ def test_show_reports_preserved_howpublished(human, initialized, tmp_path):
     report=initialized('export','--project','paper','--output',tmp_path/'out.bib')
     assert 'howpublished = {arXiv:2407.01502}' in (tmp_path/'out.bib').read_text()
     assert not any(w['code']=='unassessed_import' for w in report['warnings'])
+
+
+
+def test_project_show_uses_key_sorted_list_rows(human, initialized, tmp_path, reference_path):
+    initialized('add','--format','refs','--input',reference_path)
+    path=tmp_path/'other.bib'
+    path.write_text('@book{alpha,title={Zebra Study},author={Jones, Alex},year={2025}}')
+    initialized('import','--input',path)
+    initialized('project','create','paper')
+    for key in ('smith-2024-learningPython','alpha'):
+        initialized('project','cite','paper',key)
+    assert human('project','show','paper').splitlines()[1:] == human('list','--sort','key').splitlines()
+    assert human('project','show','paper').splitlines()[1].startswith('alpha | Alex Jones | 2025 | Zebra Study')

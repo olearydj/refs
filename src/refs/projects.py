@@ -53,6 +53,7 @@ def show(catalog: Path, reference: str | None = None) -> dict:
             return dict(items=[dict(row) for row in connection.execute('SELECT * FROM projects ORDER BY name')])
         project = resolve(connection, reference)
         records = [sources.record(connection, row[0]) for row in connection.execute('SELECT source_id FROM project_sources WHERE project_id=? AND cited=1 ORDER BY source_id', (project['id'],))]
+        records.sort(key=lambda record: record['citation_key'])
         return project | dict(sources=[record for record in records if record['state'] == 'active'],
                               removed_sources=[record for record in records if record['state'] == 'removed'])
 

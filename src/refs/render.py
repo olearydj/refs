@@ -6,7 +6,7 @@ from refs.display import readable
 def project_text(data: dict) -> str:
     if 'items' in data:
         return '\n'.join(item['name'] for item in data['items']) or '(no projects)'
-    return '\n'.join([f"Project: {data['name']}", *[source['citation_key'] for source in data['sources']]])
+    return f"Project: {data['name']}\n" + readable('list', {'items': data['sources']})
 
 
 def render_text(command: str, data: dict, warnings: list[dict]) -> str:
