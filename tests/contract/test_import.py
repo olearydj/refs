@@ -137,3 +137,16 @@ def test_legacy_key_remains_editable_but_blocks_export(initialized,tmp_path):
     assert edited['citation_key']=='legacy key'
     with pytest.raises(RefError):
         bibliography.serialize([edited])
+
+
+def test_import_entry_status_and_human_order(initialized,tmp_path):
+    import os
+    import subprocess
+    path=tmp_path/'mixed.bib'
+    path.write_bytes((FIXTURES/'mixed.bib').read_bytes())
+    result=initialized('import','--input',path,expected=4)
+    assert [entry['status'] for entry in result['data']['entries']]==['applied','applied','invalid']
+    run=subprocess.run(['refs','import','--input',str(path)],env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(tmp_path/'cat')),stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+    assert run.returncode==4
+    assert run.stdout.splitlines()[0].startswith('Imported 0, unchanged 2, conflicts 0, invalid 1')
+    assert 'Inspect reported entries' in run.stdout.splitlines()[1]
