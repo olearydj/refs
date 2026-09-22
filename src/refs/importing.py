@@ -10,7 +10,7 @@ from uuid import uuid4
 from pydantic import ValidationError
 
 from refs import naming, sources
-from refs.adapters import bibtex
+from refs.adapters import bibtex, zotero
 from refs.catalog import changed, connect
 from refs.models import SourceCreate
 from refs.results import RefError
@@ -63,6 +63,7 @@ def match(connection, source: SourceCreate, fingerprint: str) -> tuple[str | Non
 def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None) -> dict:
     raw = block['raw']
     parsed = None
+    incoming = None
     header = re.match(rb'@\w+\s*[{(]\s*([^,]+),', raw)
     key = header[1].decode('utf-8', errors='replace').strip() if header else '(unreadable key)'
     outcome: dict
@@ -77,6 +78,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         canonical['provenance'][0]['source_identity'] = dict(namespace='bibtex', library_uri=locator, item_key=key)
         source = SourceCreate.model_validate(canonical)
         source.citation_key = key
+        incoming = source.canonical()
         source_id, conflicts = match(connection, source, hashlib.sha256(raw).hexdigest())
         if conflicts:
             outcome = dict(outcome='conflict', code='value_conflict', source_id=source_id, citation_key=key, conflicts=conflicts)
@@ -101,6 +103,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
             exc = RefError('invalid_bib_entry', 'Entry cannot satisfy the record profile; inspect its preserved original', 2)
         conflict = exc.issue['code'] in ('identity_conflict', 'source_removed', 'likely_match')
         outcome = dict(outcome='conflict' if conflict else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'], limitations=exc.issue['details'].get('limitations', []))
+    outcome['incoming'] = incoming
     outcome['citation_key'] = key
     outcome['status'] = outcome['outcome']
     outcome.update(start=block['start'], end=block['end'], preserved=True, editable=outcome['outcome'] in ('applied','unchanged'), searchable=outcome['outcome'] in ('applied','unchanged'), exportable='requires export assessment')
@@ -129,7 +132,8 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
             outcome = result['outcome']
             counts[outcome] += 1
             if not dry_run:
-                connection.execute(f'UPDATE imports SET {outcome}={outcome}+1 WHERE id=?', (run_id,))
+                save_entry(connection, run_id, f"{locator}#bytes={block['start']}:{block['end']}", result)
+                connection.execute(f'UPDATE imports SET {outcome}={outcome}+1, revision=revision+1 WHERE id=?', (run_id,))
                 changed(connection)
             entries.append(result)
     if not dry_run:
@@ -149,3 +153,77 @@ def add(catalog: Path, raw: bytes, locator: str, *, dry_run=False, settings=None
                        data={'outcome':'needs_attention', 'citation_key':entry.get('citation_key')})
     record = sources.show(catalog, entry['source_id']) if entry['source_id'] else bibtex.parse(blocks[0]['raw'])['source'].canonical()
     return record | dict(outcome='created' if entry['outcome'] == 'applied' else 'already_present', warnings=entry.get('warnings', []), dry_run=dry_run, limitations=entry['limitations'])
+
+
+def save_entry(connection, batch: str, locator: str, result: dict) -> None:
+    source_id = result.get('source_id')
+    revision = sources.record(connection, source_id)['revision'] if source_id else None
+    candidates = result.get('details', {}).get('source_ids', [source_id] if source_id else [])
+    connection.execute('INSERT INTO import_entries (id,import_id,locator,status,candidates_json,conflicts_json,source_id,source_revision,payload_json) VALUES (?,?,?,?,?,?,?,?,?)',
+                       (str(uuid4()), batch, locator, result['status'], json.dumps(candidates), json.dumps(result.get('conflicts', [])), source_id, revision, json.dumps(result)))
+
+
+def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, dry_run=False, settings=None, batch=None) -> dict:
+    incoming, source_id = None, None
+    result: dict = {}
+    try:
+        parsed = zotero.parse(entry['item'], manifest)
+        incoming, warnings = naming.normalize(parsed['source'].canonical(), settings.values if settings else None)
+        source = SourceCreate.model_validate(incoming)
+        source_id, conflicts = match(connection, source, hashlib.sha256(entry['raw']).hexdigest())
+        if source_id:
+            result = dict(status='conflict' if conflicts else 'unchanged', source_id=source_id, conflicts=conflicts)
+        else:
+            provenance = dict(origin='supplied', policy=None, table_version=None, unicode_version=None)
+            if source.citation_key is None:
+                base, index = naming.key(incoming, settings.values if settings else None), 0
+                while connection.execute('SELECT 1 FROM sources WHERE citation_key=?', (base+naming.suffix(index),)).fetchone():
+                    index += 1
+                source.citation_key = base+naming.suffix(index)
+                provenance = naming.provenance(settings.values if settings else None)
+            if not dry_run:
+                source_id = sources.insert_source(connection, source, entry['raw'], entry['locator'], format='zotero-json', warnings=warnings, key_provenance=provenance)['id']
+            result = dict(status='applied', source_id=source_id)
+        result.update(citation_key=source.citation_key, warnings=warnings, limitations=parsed['limitations'])
+    except RefError as exc:
+        result = dict(status='conflict' if exc.issue['code'] in ('identity_conflict', 'source_removed', 'alias_conflict') else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'])
+    result.update(outcome=result['status'], incoming=incoming, item_key=entry['key'], preserved=True)
+    if not dry_run:
+        preserve(connection, entry['raw'], entry['locator'], fingerprint, source_id=source_id if result['status'] in ('applied','unchanged') else None,
+                 format='zotero-json', origin='import-'+result['status'], definitions=dict(limitations=result.get('limitations', []), import_id=batch))
+    return result
+
+
+def run_zotero(catalog: Path, directory: Path, *, dry_run=False, origin=None, settings=None) -> dict:
+    bundle = zotero.read(directory)
+    manifest = bundle['manifest']
+    evidence = [(directory/name).read_bytes() for name in ('manifest.json','collections.json')]
+    fingerprint = hashlib.sha256(b''.join(evidence + [entry['raw'] for entry in bundle['items']])).hexdigest()
+    batch = str(uuid4())
+    counts = dict(applied=0, unchanged=0, conflict=0, invalid=0)
+    if not dry_run:
+        with connect(catalog, write=True) as connection:
+            connection.execute('INSERT INTO imports (id,origin,file_digest,started_at) VALUES (?,?,?,?)', (batch, origin or str(directory), fingerprint, datetime.now(UTC).isoformat()))
+            for name, raw in zip(('manifest.json','collections.json'), evidence, strict=True):
+                preserve(connection, raw, str(directory/name), fingerprint, format='zotero-evidence', origin='import-file')
+            for entry in bundle['items']:
+                if entry['data']['itemType'] in zotero.CHILDREN:
+                    preserve(connection, entry['raw'], entry['locator'], fingerprint, format='zotero-json', origin='import-child')
+            changed(connection)
+    entries = []
+    for entry in bundle['items']:
+        if entry['data']['itemType'] in zotero.CHILDREN:
+            continue
+        with connect(catalog, write=not dry_run) as connection:
+            result = apply_zotero(connection, entry, manifest, fingerprint, dry_run=dry_run, settings=settings, batch=batch)
+            status = result['status']
+            counts[status] += 1
+            if not dry_run:
+                save_entry(connection, batch, entry['locator'], result)
+                connection.execute(f'UPDATE imports SET {status}={status}+1, revision=revision+1 WHERE id=?', (batch,))
+                changed(connection)
+            entries.append(result)
+    if not dry_run:
+        with connect(catalog, write=True) as connection:
+            connection.execute('UPDATE imports SET finished_at=? WHERE id=?', (datetime.now(UTC).isoformat(), batch))
+    return dict(import_id=None if dry_run else batch, input=str(directory), file_digest=fingerprint, counts=counts, entries=entries, dry_run=dry_run, warnings=[], preservation=manifest.get('skipped', {}))

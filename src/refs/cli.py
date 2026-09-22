@@ -77,15 +77,24 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
     report(ctx, 'add', data, file_action=file_action)
 
 
-@app.command('import')
-def import_bibliography(ctx: typer.Context, input: Annotated[Path, typer.Option()],
+import_app = typer.Typer(invoke_without_command=True)
+app.add_typer(import_app, name='import')
+
+
+@import_app.callback()
+def import_bibliography(ctx: typer.Context, input: Annotated[Path | None, typer.Option()] = None,
                         format: Annotated[str, typer.Option()] = "bib",
                         origin: Annotated[str | None, typer.Option()] = None,
                         dry_run: Annotated[bool, typer.Option()] = False):
+    if ctx.invoked_subcommand is not None:
+        return
+    if input is None:
+        raise RefError('invalid_invocation', 'Supply --input PATH or an import subcommand', 2)
     path = absolute(str(input))
-    if format != 'bib':
-        raise RefError('unsupported_format', 'Choose --format bib for import', 2)
-    data = importing.run(settings(ctx).catalog_path(), path.read_bytes(), str(path), dry_run=dry_run, origin=origin, settings=settings(ctx))
+    if format not in ('bib', 'zotero'):
+        raise RefError('unsupported_format', 'Choose --format bib or zotero for import', 2)
+    selected = settings(ctx)
+    data = importing.run_zotero(selected.catalog_path(), path, dry_run=dry_run, origin=origin, settings=selected) if format == 'zotero' else importing.run(selected.catalog_path(), path.read_bytes(), str(path), dry_run=dry_run, origin=origin, settings=selected)
     if data['counts']['conflict'] or data['counts']['invalid']:
         raise RefError('import_partial', 'Inspect reported entries and use update to settle conflicts', 4, data=data)
     report(ctx, 'import', data)
