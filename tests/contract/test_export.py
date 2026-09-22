@@ -110,3 +110,26 @@ def test_literal_institutions_containing_and(kind, field):
         metadata['genre'] = 'PhD'
     data, _ = bibliography.serialize([record(kind, **metadata)])
     assert (field + ' = {{Research and Development}}').encode() in data
+
+
+def test_adoption_requires_exact_completed_import(initialized, tmp_path):
+    from refs import bibliography, importing, projects
+    from refs.results import RefError
+    catalog = tmp_path/'cat'
+    path = tmp_path/'adopt.bib'
+    raw = b'@book{x,title={Synthetic Book},author={Smith, Alex},year={2024}}'
+    path.write_bytes(raw)
+    projects.create(catalog, 'adoption', '')
+    with pytest.raises(RefError):
+        bibliography.export(catalog, 'adoption', path, adopt=True, overwrite=True)
+    importing.run(catalog, raw, str(path))
+    projects.cite(catalog, 'adoption', 'x')
+    with pytest.raises(RefError):
+        bibliography.export(catalog, 'adoption', path, adopt=True)
+    path.write_bytes(raw+b'\n% outside change')
+    with pytest.raises(RefError):
+        bibliography.export(catalog, 'adoption', path, adopt=True, overwrite=True)
+    path.write_bytes(raw)
+    result = bibliography.export(catalog, 'adoption', path, adopt=True, overwrite=True)
+    assert result['count'] == 1
+    assert path.read_bytes() != raw
