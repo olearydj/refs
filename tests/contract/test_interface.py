@@ -30,7 +30,7 @@ def test_readable_output_and_json_others(initialized, tmp_path, reference_path):
         if args[0] == 'show':
             for hidden in ('schema_version', 'created_at', 'updated_at', 'corrected_fields', 'key_provenance', 'originals', '{', '}'):
                 assert hidden not in result.stdout
-            assert 'Container: Journal of Synthetic Examples' in result.stdout
+            assert 'container-title: Journal of Synthetic Examples' in result.stdout
             assert 'Files: (none)' in result.stdout
             assert 'Projects: (none)' in result.stdout
         assert '2024' in result.stdout

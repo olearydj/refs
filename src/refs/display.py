@@ -8,15 +8,29 @@ def authors(record: dict) -> list[str]:
             for name in record['metadata'].get('author', [])]
 
 
+
+def metadata_text(value) -> str:
+    if isinstance(value, list):
+        return '; '.join(metadata_text(item) for item in value)
+    if isinstance(value, dict):
+        if any(key in value for key in ('family', 'given', 'literal')):
+            return authors({'metadata': {'author': [value]}})[0]
+        if 'date-parts' in value:
+            dates = ' – '.join('-'.join(str(number).zfill(4 if index == 0 else 2) for index,number in enumerate(parts)) for parts in value['date-parts'])
+            extras = {key:item for key,item in value.items() if key != 'date-parts'}
+            return dates + ('; ' + metadata_text(extras) if extras else '')
+        return '; '.join(f'{key}: {metadata_text(item)}' for key,item in sorted(value.items()))
+    return str(value)
+
 def readable(command: str, data: dict) -> str:
     if command == 'show':
         metadata = data['metadata']
         lines = [f"Key: {data['citation_key']}", f"Type: {metadata['type']}",
                  'Authors: ' + ('; '.join(authors(data)) or '(not supplied)'),
                  'Year: ' + issued_year(data), 'Title: ' + metadata.get('title', '(not supplied)')]
-        for field, label in [('container-title', 'Container'), ('volume', 'Volume'), ('issue', 'Issue'), ('page', 'Pages'), ('DOI', 'DOI'), ('URL', 'URL')]:
-            if field in metadata:
-                lines.append(f'{label}: {metadata[field]}')
+        for field in sorted(set(metadata) - {'type', 'author', 'title'}):
+            if metadata[field] not in (None, '', [], {}):
+                lines.append(f'{field}: {metadata_text(metadata[field])}')
         if data.get('limitations'):
             lines.append('Limitations: ' + '; '.join(f"{item['field']}: {item['reason']}" for item in data['limitations']))
         resources = data.get('resources', [])
