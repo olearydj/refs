@@ -55,5 +55,6 @@ This is a boundary ledger, not a later-slice specification.
 | Backlog | export_projections, export_waivers/export waive, field_provenance table, normalize, index rebuild, background project membership, primary-resource administration, 10,000-source gate and four-process matrix. |
 | When a second implementation is evaluated | Search entry point, selectable providers and replacement proof (including the QMD investigation). |
 | Existing product backlog | Public CSL/Zotero JSON output, richer declared-consumer profiles, RIS, built-in lookup, PDF/semantic search and enrichment. |
+| Slice 2 conveniences from first use (2026-09-22) | Key preview candidates: `add --dry-run` shows the chosen title fragment plus the next two candidate word pairs so an explicit `--key` can be picked in one step. Owner's use-list continues to accumulate here. |
 
 No deferred command needs a placeholder CLI or empty table. Current originals, optional native type, identities and correction markers retain the information required for later decisions. Without saved projection history, slice 1 reports lossy re-import differences without overwriting richer values; without stored waivers, known blocking losses remain blocked.
