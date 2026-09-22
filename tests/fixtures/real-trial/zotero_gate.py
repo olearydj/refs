@@ -34,6 +34,55 @@ def normalized_identifier(scheme, value):
     return value
 
 
+def expected_issued(stored):
+    """Independent SQL-date oracle; no refs adapters or models are imported."""
+    if not stored:
+        return None
+    native = re.fullmatch(r'(\d{4}-\d{2}-\d{2}) (.+)', stored)
+    raw, parsed = (native[2],native[1]) if native and not re.fullmatch(r'\d{2}:\d{2}(?::\d{2})?',native[2]) else (stored,None)
+    interval = None
+    if match := re.fullmatch(r'(\d{4})\s*[-–—/]\s*(\d{4})',raw):
+        interval = [[int(year)] for year in match.groups()]
+    elif match := re.fullmatch(r'(\d{1,2})[-–—](\d{1,2})\s+([A-Za-z]+)\.?\s+(\d{4})',raw):
+        from datetime import datetime
+        try:
+            interval = []
+            for day in match.groups()[:2]:
+                format = '%d %b %Y' if len(match[3])==3 else '%d %B %Y'
+                endpoint=datetime.strptime(f'{day} {match[3]} {match[4]}',format)
+                interval.append([endpoint.year,endpoint.month,endpoint.day])
+        except ValueError:
+            return {'literal':raw}
+    elif match := re.fullmatch(r'(\d{4}(?:-\d{1,2}){0,2})\s*(?:/|–|—| to | - )\s*(\d{4}(?:-\d{1,2}){0,2})',raw):
+        interval = [[int(n) for n in endpoint.split('-')] for endpoint in match.groups()]
+    if interval:
+        if interval[0]>interval[1] or any(not valid_parts(part) for part in interval):
+            return {'literal':raw}
+        return {'date-parts':interval}
+    simple = re.fullmatch(r'\d{4}(?:-\d{1,2}){0,2}(?:[ T]\d{2}:\d{2}.*)?|\d{4}/\d{1,2}(?:/\d{1,2})?|\d{1,2}/\d{4}|\d{1,2}/\d{1,2}/\d{2,4}',raw)
+    if (not simple and re.search(r'[-–—/]|\b(?:to|through|until)\b',raw,re.I)) or re.search(r'\b(?:circa|about|before|after)\b|[?~]',raw,re.I):
+        return {'literal':raw}
+    explicit = re.fullmatch(r'\d{4}(?:-\d{2}){0,2}',raw)
+    candidate = raw if explicit else parsed or raw
+    candidate = re.sub(r'[ T]\d{2}:\d{2}(?::\d{2})?(?:Z|[+-]\d{2}:?\d{2})?$','',candidate)
+    if re.fullmatch(r'\d{4}(?:-\d{2}){0,2}',candidate):
+        parts = [int(n) for n in candidate.split('-')]
+        while len(parts)>1 and parts[-1]==0:
+            parts.pop()
+        if valid_parts(parts):
+            return {'date-parts':[parts]}
+    return {'literal':raw}
+
+
+def valid_parts(parts):
+    from datetime import date
+    try:
+        date(*(parts+[1]*(3-len(parts))))
+        return True
+    except ValueError:
+        return False
+
+
 def expected(database, base_path=None, legacy=None):
     with ro(database) as c:
         settings = {
@@ -107,6 +156,7 @@ def expected(database, base_path=None, legacy=None):
             result[key] = dict(
                 key=f.get("citationKey") or extra.get("citation key") or (legacy or {}).get(i),
                 native=kind,
+                issued=expected_issued(f.get('issueDate') if kind=='patent' and f.get('issueDate') else f.get('date')),
                 names=names,
                 relations={target.removeprefix('http://zotero.org/').removeprefix('https://zotero.org/') for (target,) in c.execute("SELECT r.object FROM itemRelations r JOIN relationPredicates p USING(predicateID) WHERE r.itemID=? AND p.predicate='dc:relation'", (i,))},
                 tags={
@@ -185,6 +235,7 @@ def compare(catalog, database, base_path=None, legacy=None):
             check("citation_key", not e["key"] or ckey == e["key"])
             check("native_type", d.get("native_type", {}).get("value") == e["native"])
             check("active", state == "active")
+            check("issued", m.get("issued") == e["issued"])
             expected_names = {}
             for role, last, first, literal in e["names"]:
                 expected_names.setdefault(ROLES.get(role, role), []).append(

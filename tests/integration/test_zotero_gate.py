@@ -68,6 +68,7 @@ def populated(initialized, tmp_path, zotero_fixture):
             )
         metadata = (
             record["metadata"]
+            | ({"issued": e["issued"]} if e["issued"] else {})
             | names
             | {k.upper(): v for k, v in e["ids"] if k not in ("arxiv", "oclc")}
         )
@@ -114,6 +115,7 @@ def test_gate_negative_controls(initialized, tmp_path, zotero_fixture):
 
     assert check()["summary"]["findings"] == 0
     cases = [
+        ("UPDATE sources SET metadata_json=json_remove(metadata_json,'$.issued') WHERE citation_key='native1'", "issued"),
         (
             "UPDATE origin_identities SET library_uri='users/999' WHERE item_key='ITEM0001'",
             "missing_item",
@@ -184,3 +186,16 @@ def test_gate_normalization_preserves_version_and_identity(initialized,tmp_path,
     with sqlite3.connect(catalog/'catalog.sqlite') as c:
         c.execute("UPDATE sources SET metadata_json=json_set(metadata_json,'$.DOI','10.1234/different') WHERE citation_key='native1'")
     assert 'identifier_doi' in {item['kind'] for item in check()['findings']}
+
+
+def test_gate_range_oracle_and_start_only_negative_control(initialized,tmp_path,zotero_fixture):
+    for raw,expected in [('2011-03-19 19-23 March 2011',[[2011,3,19],[2011,3,23]]),('2022-09-08 08–13 Sep 2022',[[2022,9,8],[2022,9,13]]),('2019-00-00 2019/2020',[[2019],[2020]])]:
+        assert GATE['expected_issued'](raw)=={'date-parts':expected}
+    with sqlite3.connect(zotero_fixture) as c:
+        c.execute("INSERT INTO itemDataValues (value) VALUES ('2011-03-19 19-23 March 2011')")
+        c.execute("UPDATE itemData SET valueID=(SELECT valueID FROM itemDataValues WHERE value='2011-03-19 19-23 March 2011') WHERE itemID=1 AND fieldID=(SELECT fieldID FROM fields WHERE fieldName='date')")
+    catalog=populated(initialized,tmp_path,zotero_fixture)
+    assert GATE['compare'](catalog,zotero_fixture,zotero_fixture.parent/'base')['summary']['findings']==0
+    with sqlite3.connect(catalog/'catalog.sqlite') as c:
+        c.execute("UPDATE sources SET metadata_json=json_remove(metadata_json,'$.issued.date-parts[1]') WHERE citation_key='native1'")
+    assert 'issued' in {item['kind'] for item in GATE['compare'](catalog,zotero_fixture,zotero_fixture.parent/'base')['findings']}

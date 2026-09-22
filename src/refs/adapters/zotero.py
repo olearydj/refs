@@ -83,10 +83,36 @@ def assign(target: dict, path: str, value) -> None:
     target[parts[-1]] = value
 
 
+def date_range(value: str) -> dict | None:
+    """Read explicit endpoints before considering Zotero's parsed start date."""
+    parts = None
+    if match := re.fullmatch(r'(\d{4})\s*[-–—/]\s*(\d{4})', value):
+        parts = [[int(match[1])], [int(match[2])]]
+    elif match := re.fullmatch(r'(\d{4}(?:-\d{1,2}){0,2})\s*(?:/|–|—| to | - )\s*(\d{4}(?:-\d{1,2}){0,2})', value):
+        parts = [[int(n) for n in endpoint.split('-')] for endpoint in match.groups()]
+    elif match := re.fullmatch(r'(\d{1,2})\s*[-–—]\s*(\d{1,2})\s+([A-Za-z]+)\.?\s+(\d{4})', value):
+        names = 'january february march april may june july august september october november december'.split()
+        months = {alias:number for number,name in enumerate(names,1) for alias in (name,name[:3])}
+        month = months.get(match[3].lower())
+        if month:
+            parts = [[int(match[4]), month, int(match[index])] for index in (1,2)]
+    if parts:
+        try:
+            return Date.model_validate({'date-parts': parts}).model_dump(by_alias=True, exclude_none=True)
+        except ValidationError:
+            return {'literal':value}
+    single = re.fullmatch(r'\d{4}(?:-\d{1,2}){0,2}(?:[ T]\d{2}:\d{2}.*)?|\d{4}/\d{1,2}(?:/\d{1,2})?|\d{1,2}/\d{4}|\d{1,2}/\d{1,2}/\d{2,4}', value)
+    if not single and re.search(r'[-–—/]|\b(?:to|through|until)\b', value, re.I):
+        return {'literal':value}
+    return None
+
+
 def date(value: str, parsed: str | None = None) -> dict:
     multipart = re.fullmatch(r'(\d{4}-\d{2}-\d{2}) (.+)', value)
     if multipart and not re.fullmatch(r'\d{2}:\d{2}(?::\d{2})?', multipart[2]):
         value, parsed = multipart[2], parsed or multipart[1]
+    if interval := date_range(value):
+        return interval
     candidate = parsed or value
     candidate = re.sub(r'[ T]\d{2}:\d{2}(?::\d{2})?(?:Z|[+-]\d{2}:?\d{2})?$', '', candidate)
     if re.fullmatch(r'\d{4}-\d{2}-\d{2}',candidate):

@@ -756,7 +756,7 @@
       "portable_projection": "year and month",
       "export_class": "value-dependent",
       "fixture": "dates",
-      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful year/month mapping. Full day: preserve supplementary date as well as year/month and validate declared consumers. Unrepresentable supplied precision/range/uncertainty: issued_date_lost_or_changed block; unassessed syntax: unknown."
+      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful. Full day: supplementary date and note. Ranges: documented date_range_projected fallback to start year and shared month, no range note; full endpoints remain in the catalog. Other lost supplied precision or uncertainty: issued_date_lost_or_changed block. Unassessed syntax: unknown."
     },
     {
       "input_format": "zotero-json",
@@ -2087,7 +2087,7 @@
       "portable_projection": "year and month",
       "export_class": "value-dependent",
       "fixture": "dates",
-      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful year/month mapping. Full day: preserve supplementary date as well as year/month and validate declared consumers. Unrepresentable supplied precision/range/uncertainty: issued_date_lost_or_changed block; unassessed syntax: unknown."
+      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful. Full day: supplementary date and note. Ranges: documented date_range_projected fallback to start year and shared month, no range note; full endpoints remain in the catalog. Other lost supplied precision or uncertainty: issued_date_lost_or_changed block. Unassessed syntax: unknown."
     },
     {
       "input_format": "bib",
@@ -2120,7 +2120,7 @@
       "portable_projection": "year and month",
       "export_class": "value-dependent",
       "fixture": "dates",
-      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful year/month mapping. Full day: preserve supplementary date as well as year/month and validate declared consumers. Unrepresentable supplied precision/range/uncertainty: issued_date_lost_or_changed block; unassessed syntax: unknown."
+      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful. Full day: supplementary date and note. Ranges: documented date_range_projected fallback to start year and shared month, no range note; full endpoints remain in the catalog. Other lost supplied precision or uncertainty: issued_date_lost_or_changed block. Unassessed syntax: unknown."
     },
     {
       "input_format": "bib",
@@ -2153,7 +2153,7 @@
       "portable_projection": "year and month",
       "export_class": "value-dependent",
       "fixture": "dates",
-      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful year/month mapping. Full day: preserve supplementary date as well as year/month and validate declared consumers. Unrepresentable supplied precision/range/uncertainty: issued_date_lost_or_changed block; unassessed syntax: unknown."
+      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful. Full day: supplementary date and note. Ranges: documented date_range_projected fallback to start year and shared month, no range note; full endpoints remain in the catalog. Other lost supplied precision or uncertainty: issued_date_lost_or_changed block. Unassessed syntax: unknown."
     },
     {
       "input_format": "bib",
@@ -2951,7 +2951,7 @@
       "portable_projection": "By canonical field/type rows and bibliography contract",
       "export_class": "value-dependent",
       "fixture": "agent",
-      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful year/month mapping. Full day: preserve supplementary date as well as year/month and validate declared consumers. Unrepresentable supplied precision/range/uncertainty: issued_date_lost_or_changed block; unassessed syntax: unknown."
+      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful. Full day: supplementary date and note. Ranges: documented date_range_projected fallback to start year and shared month, no range note; full endpoints remain in the catalog. Other lost supplied precision or uncertainty: issued_date_lost_or_changed block. Unassessed syntax: unknown."
     },
     {
       "input_format": "csljson",
@@ -3955,7 +3955,7 @@
       "portable_projection": "year and month",
       "export_class": "value-dependent",
       "fixture": "patent-issued",
-      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful year/month mapping. Full day: preserve supplementary date as well as year/month and validate declared consumers. Unrepresentable supplied precision/range/uncertainty: issued_date_lost_or_changed block; unassessed syntax: unknown."
+      "assessment_rule": "Absent: faithful-incomplete warning. Calendar year/month: faithful. Full day: supplementary date and note. Ranges: documented date_range_projected fallback to start year and shared month, no range note; full endpoints remain in the catalog. Other lost supplied precision or uncertainty: issued_date_lost_or_changed block. Unassessed syntax: unknown."
     }
   ],
   "unmapped_policy": "Preserve per-entry original and report unassessed. Do not create native editable paths. Output uses four-class policy, never unknown-as-safe.",

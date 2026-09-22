@@ -142,7 +142,7 @@ run 0 web add --format refs --input "$DEMO_ROOT/web.json"
 run 0 cite-web project cite demo web-example
 run 0 warned-export export --project demo --output "$DEMO_ROOT/warned.bib"
 assert_jq 'any(.warnings[]; .details.class == "documented_fallback")' "$LAST" 'documented fallback warns'
-run 0 uncertain update web-example --if-revision 1 --set 'metadata.issued={"date-parts":[[2020],[2024]]}'
+run 0 uncertain update web-example --if-revision 1 --set 'metadata.issued={"date-parts":[[2020]],"circa":true}'
 cp "$DEMO_ROOT/warned.bib" "$DEMO_ROOT/before-block.bib"
 run 3 blocked-export export --project demo --output "$DEMO_ROOT/warned.bib"
 assert_jq 'any(.errors[0].details.entries[]; .code == "issued_date_lost_or_changed")' "$LAST" 'meaning-changing loss blocks'

@@ -21,7 +21,7 @@ def test_four_classes_and_unknown_override():
     data, warnings = bibliography.serialize([value], allow_unknown=True)
     assert any(item['details'].get('override') for item in warnings)
     assert b'Synthetic Work' in data
-    value['metadata']['issued'] = {'date-parts': [[2020], [2024]]}
+    value['metadata']['issued'] = {'date-parts': [[2020], [2024]], 'circa': True}
     with pytest.raises(RefError) as error:
         bibliography.serialize([value], allow_unknown=True)
     assert any(item['code'] == 'issued_date_lost_or_changed' for item in error.value.issue['details']['entries'])
@@ -41,7 +41,7 @@ def test_structural_conflicts_and_all_affected_entries():
         bibliography.serialize([first, second], allow_unknown=True)
     first['metadata']['issued'] = {'date-parts': [[2024]], 'circa': True}
     second['citation_key'] = 'another-key'
-    second['metadata']['issued'] = {'date-parts': [[2020], [2024]]}
+    second['metadata']['issued'] = {'date-parts': [[2020], [2024]], 'circa': True}
     with pytest.raises(RefError) as error:
         bibliography.serialize([first, second])
     assert {row['citation_key'] for row in error.value.issue['details']['entries']} == {'example-2024-work', 'another-key'}

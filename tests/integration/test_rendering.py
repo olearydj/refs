@@ -186,3 +186,24 @@ def test_language_aliases_and_valid_mislabel_render(consumer,tmp_path,record_pro
     for year in range(2020,2026):
         assert str(year) in text
     assert 'Smith' in text
+
+
+@pytest.mark.parametrize('consumer',['pandoc','biber','bibtex'])
+@pytest.mark.parametrize(('raw','iso','parts'),[
+    ('19-23 March 2011','2011-03-19/2011-03-23',[[2011,3,19],[2011,3,23]]),
+    ('08–13 Sep 2022','2022-09-08/2022-09-13',[[2022,9,8],[2022,9,13]]),
+])
+def test_range_year_matches_bbt_render(consumer,raw,iso,parts,tmp_path,record_property):
+    from refs.adapters import zotero
+    original=f'@inproceedings{{range,title={{Synthetic Range Study}},author={{Smith, Alex}},booktitle={{Synthetic Proceedings}},date={{{iso}}}}}'
+    (tmp_path/'bbt.bib').write_text(original)
+    (tmp_path/'compare.md').write_text('---\nnocite: "@*"\n---\n')
+    baseline=run([tool('pandoc'),'compare.md','--citeproc','--bibliography','bbt.bib','-t','plain'],tmp_path)
+    value=zotero.parse({'key':'RANGE001','meta':{'parsedDate':iso.split('/')[0]},'data':{'itemType':'conferencePaper','citationKey':'range','title':'Synthetic Range Study','proceedingsTitle':'Synthetic Proceedings','date':raw,'creators':[{'creatorType':'author','lastName':'Smith','firstName':'Alex'}]}},{'library_uri':'users/123'})['source'].canonical()
+    assert value['metadata']['issued']['date-parts']==parts
+    output,warnings=serialize([value])
+    assert b'note =' not in output
+    rendered=render_with_consumer(consumer,output,tmp_path,record_property)
+    year=str(parts[0][0])
+    assert year in baseline and year in rendered
+    assert any(w['code']=='date_range_projected' for w in warnings)

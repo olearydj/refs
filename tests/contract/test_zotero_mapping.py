@@ -147,7 +147,7 @@ def test_incompatible_assigned_key_stays_preserved(initialized,zotero_fixture,tm
     ('May 2020','2020-05-00',{'date-parts':[[2020,5]]}),
     ('undated','0000-00-00',{'literal':'undated'}),
     ('circa 2020','2020-00-00',{'literal':'circa 2020'}),
-    ('2020–2021','2020-00-00',{'literal':'2020–2021'}),
+    ('2020–2021','2020-00-00',{'date-parts':[[2020],[2021]]}),
     ('2020-05-04 12:30:00',None,{'date-parts':[[2020,5,4]]}),
 ])
 def test_partial_and_literal_dates(raw,parsed,expected):

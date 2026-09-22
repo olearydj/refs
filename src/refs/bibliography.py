@@ -193,6 +193,13 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             elif issued.get('literal') and not issued.get('date-parts') and not any(issued.get(name) for name in ('circa', 'season')):
                 put('year', issued['literal'])
                 assess('literal_issued_year', 'documented_fallback', 'Literal issued date written unchanged in year; verify the rendered date', 'metadata.issued')
+            elif len(issued.get('date-parts', [])) == 2 and not any(issued.get(name) for name in ('literal', 'circa', 'season')):
+                start, end = issued['date-parts']
+                put('year', start[0])
+                if len(start)>1 and len(end)>1 and start[1]==end[1]:
+                    put('month', MONTHS[start[1]-1], literal=True)
+                interval = '/'.join('-'.join([str(part[0]), *[f'{n:02d}' for n in part[1:]]]) for part in (start,end))
+                assess('date_range_projected', 'documented_fallback', f'Issued range {interval} projects to its start year and shared month; full precision remains in the catalog', 'metadata.issued')
             elif not issued.get('date-parts') or len(issued['date-parts']) != 1 or any(issued.get(name) for name in ('literal', 'circa', 'season')):
                 assess('issued_date_lost_or_changed', 'blocking', 'Portable year/month cannot preserve this issued precision', 'metadata.issued')
             else:
