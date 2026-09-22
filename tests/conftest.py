@@ -35,3 +35,10 @@ def initialized(cli, tmp_path):
 @pytest.fixture
 def reference_path():
     return Path(__file__).parent / "fixtures" / "reference.json"
+
+
+@pytest.fixture
+def zotero_fixture(tmp_path):
+    import runpy
+    build = runpy.run_path(str(Path(__file__).parent/'fixtures/zotero/fixture.py'))['build']
+    return build(tmp_path/'zotero')
