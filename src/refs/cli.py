@@ -8,7 +8,16 @@ from typing import Annotated
 
 import typer
 
-from refs import bibliography, importing, projects, recovery, resources, search, sources
+from refs import (
+    bibliography,
+    collections,
+    importing,
+    projects,
+    recovery,
+    resources,
+    search,
+    sources,
+)
 from refs import catalog as storage
 from refs.config import absolute, select
 from refs.results import RefError, emit
@@ -203,18 +212,18 @@ def reactivate(ctx: typer.Context, reference: str, if_revision: Annotated[int | 
 
 
 @app.command("search")
-def search_sources(ctx: typer.Context, query: str, project: Annotated[str | None, typer.Option()] = None,
+def search_sources(ctx: typer.Context, query: str, collection: Annotated[str | None, typer.Option()] = None, project: Annotated[str | None, typer.Option()] = None,
                    limit: Annotated[int, typer.Option(min=1, max=1000)] = 50,
                    offset: Annotated[int, typer.Option(min=0)] = 0):
-    report(ctx, "search", search.retrieve(settings(ctx).catalog_path(), query, project=project or settings(ctx).values.get('project'), limit=limit, offset=offset,policy=settings(ctx).values))
+    report(ctx, "search", search.retrieve(settings(ctx).catalog_path(), query, collection=collection, project=project or settings(ctx).values.get('project'), limit=limit, offset=offset,policy=settings(ctx).values))
 
 
 @app.command("list")
-def list_sources(ctx: typer.Context, project: Annotated[str | None, typer.Option()] = None,
+def list_sources(ctx: typer.Context, collection: Annotated[str | None, typer.Option()] = None, project: Annotated[str | None, typer.Option()] = None,
                  limit: Annotated[int, typer.Option(min=1, max=1000)] = 50,
                  offset: Annotated[int, typer.Option(min=0)] = 0,
                  sort: Annotated[str, typer.Option()] = "title"):
-    report(ctx, "list", search.retrieve(settings(ctx).catalog_path(), project=project or settings(ctx).values.get('project'), limit=limit, offset=offset, sort=sort,policy=settings(ctx).values))
+    report(ctx, "list", search.retrieve(settings(ctx).catalog_path(), collection=collection, project=project or settings(ctx).values.get('project'), limit=limit, offset=offset, sort=sort,policy=settings(ctx).values))
 
 
 @app.command("schema")
@@ -330,3 +339,12 @@ def import_reconcile(ctx: typer.Context, batch: str,
                      execute: Annotated[bool, typer.Option()] = False,
                      if_batch_revision: Annotated[int | None, typer.Option()] = None):
     report(ctx,'import reconcile',importing.reconcile(settings(ctx).catalog_path(),batch,take_incoming or [],execute=execute,revision=if_batch_revision))
+
+
+collection_app = typer.Typer(no_args_is_help=True)
+app.add_typer(collection_app,name='collection')
+
+
+@collection_app.command('list')
+def collection_list(ctx: typer.Context):
+    report(ctx,'collection list',collections.list_collections(settings(ctx).catalog_path()))
