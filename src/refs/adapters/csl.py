@@ -29,5 +29,7 @@ def parse(raw: bytes) -> SourceCreate:
         if external_id is not None:
             provenance['source_identity'] = {'namespace': 'csljson', 'item_key': str(external_id)}
         return SourceCreate.model_validate({'schema_version': '1.0', 'metadata': metadata, 'provenance': [provenance]})
-    except (ValueError, ValidationError) as exc:
+    except ValidationError as exc:
+        raise RefError('invalid_record', 'Input does not match the supported record profile', 2, details={'issues':exc.errors(include_url=False,include_context=False,include_input=False)}) from exc
+    except ValueError as exc:
         raise RefError('invalid_record', str(exc), 2) from exc

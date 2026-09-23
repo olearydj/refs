@@ -1,7 +1,7 @@
 import pytest
 
-from refs.sources import patch_path
 from refs.results import RefError
+from refs.sources import patch_path
 
 
 def test_date_member_replaces_whole_array():

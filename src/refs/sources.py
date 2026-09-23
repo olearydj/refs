@@ -199,7 +199,7 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
     try:
         patch_model = SourcePatch.model_validate(patch)
     except ValidationError as exc:
-        raise RefError('invalid_patch', str(exc), 2) from exc
+        raise RefError('invalid_patch', 'Patch does not match the supported record profile', 2, details={'issues':exc.errors(include_url=False,include_context=False,include_input=False)}) from exc
     with connect(catalog, write=not dry_run) as connection:
         current = checked_record(connection, reference, revision)
         canonical = json.loads(json.dumps({name: current[name] for name in SourceCreate.model_fields if name in current}))
@@ -224,7 +224,7 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
             canonical, warnings = naming.normalize(canonical,policy,title_fields)
             canonical = SourceCreate.model_validate(canonical).canonical()
         except ValidationError as exc:
-            raise RefError('invalid_patch', str(exc), 2) from exc
+            raise RefError('invalid_patch', 'Patch does not match the supported record profile', 2, details={'issues':exc.errors(include_url=False,include_context=False,include_input=False)}) from exc
         canonical['citation_key'] = preserved_key
         if canonical == original:
             return current | {'unchanged': True, 'warnings': warnings}
