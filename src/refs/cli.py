@@ -69,10 +69,12 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         loc: Annotated[str | None, typer.Option()] = None,
         file: Annotated[Path | None, typer.Option()] = None,
         link: Annotated[bool, typer.Option()] = False,
+        copy: Annotated[bool, typer.Option()] = False,
+        move: Annotated[bool, typer.Option()] = False,
         keep_name: Annotated[bool, typer.Option()] = False,
         dry_run: Annotated[bool, typer.Option()] = False):
-    if (link or keep_name) and file is None or link and keep_name:
-        raise RefError('invalid_invocation', 'Use --link or --keep-name with --file, never both', 2)
+    if sum((link,copy,move))>1 or (link or copy or move or keep_name) and file is None or link and keep_name:
+        raise RefError('invalid_invocation', 'Choose one of --link, --copy or --move with --file; --keep-name requires copy or move', 2)
     if format not in ("refs", "csljson", "bib"):
         raise RefError("unsupported_format", "Choose --format refs, csljson or bib", 2)
     from refs.models import normalize_loc
@@ -93,7 +95,7 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
             data = data | sources.update(settings(ctx).catalog_path(), data["id"], {"schema_version":"1.0", "set":{"loc":loc}}, data["revision"], policy=settings(ctx).values)
     file_action = None
     if file is not None:
-        data, file_action = resources.capture_file(settings(ctx),data,file,linked=link,keep_name=keep_name,dry_run=dry_run)
+        data, file_action = resources.capture_file(settings(ctx),data,file,linked=link,moving=not link and not copy,keep_name=keep_name,dry_run=dry_run)
     report(ctx, 'add', data, file_action=file_action)
 
 
@@ -268,15 +270,19 @@ def resource_add(ctx: typer.Context, reference: str,
                  label: Annotated[str | None, typer.Option()] = None,
                  media_type: Annotated[str | None, typer.Option()] = None,
                  copy: Annotated[bool, typer.Option()] = False,
+                 move: Annotated[bool, typer.Option()] = False,
+                 link: Annotated[bool, typer.Option()] = False,
                  keep_name: Annotated[bool, typer.Option()] = False,
                  dry_run: Annotated[bool, typer.Option()] = False):
     selected = settings(ctx)
-    if keep_name and not copy:
-        raise RefError('invalid_invocation','Use --keep-name only with --copy',2)
-    if copy:
+    if sum((link,copy,move))>1 or keep_name and not (copy or move):
+        raise RefError('invalid_invocation','Choose one intake mode; use --keep-name only with --copy or --move',2)
+    if copy or move:
         resources.locate(selected,path=path,root=root,relative=relative)
         original = path if path is not None else selected.roots[root]/relative
-        data = resources.copy(selected,reference,original,keep_name=keep_name,dry_run=dry_run,label=label,media_type=media_type)
+        from refs.moves import intake
+        action = intake if move else resources.copy
+        data = action(selected,reference,original,keep_name=keep_name,dry_run=dry_run,label=label,media_type=media_type)
     else:
         data = resources.link(selected,reference,path=path,root=root,relative=relative,label=label,media_type=media_type,dry_run=dry_run)
     report(ctx, 'resource add', data)

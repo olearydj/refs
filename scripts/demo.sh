@@ -189,7 +189,7 @@ assert_jq 'all(.data.items[]; .status == "available")' "$LAST" 'registered copie
 cat >"$DEMO_ROOT/file-source.json" <<'JSON'
 {"schema_version":"1.0","citation_key":"file-capture","metadata":{"title":"File Capture","issued":{"date-parts":[[2024]]}}}
 JSON
-run 0 file-capture add --format refs --input "$DEMO_ROOT/file-source.json" --file "$DEMO_ROOT/download.pdf"
+run 0 file-capture add --format refs --input "$DEMO_ROOT/file-source.json" --file "$DEMO_ROOT/download.pdf" --copy
 assert_jq '(.data.resources | length) == 1 and .data.resources[0].copied_from.path != null and .data.resources[0].root == "library"' "$LAST" 'add copies and retargets one resource'
 [[ -f "$DEMO_ROOT/download.pdf" && -f "$DEMO_ROOT/linked.pdf" ]] || fail 'an original disappeared'
 pass 'original files retained'

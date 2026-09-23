@@ -200,12 +200,14 @@ def copy(settings: Settings, reference: str, path: Path, *, resource_id=None, ke
         raise RefError('resource_conflict','Select the resource that records the original copy source')
     if dry_run:
         return plan
+    if not source.get('loc'):
+        source = sources.update(settings.catalog_path(),source['id'],{'schema_version':'1.0','set':{'loc':'Unfiled'}},source['revision'])
     folder = target.parent
     warnings = plan['warnings']
     published = False
     try:
         with files.file_lock(settings.catalog_path()):
-            folder.mkdir(exist_ok=True)
+            folder.mkdir(parents=True,exist_ok=True)
             with files.verified_copy(settings.catalog_path(),source_path,target) as digest:
                 published = True
                 registered = register_copy(settings,source,target,digest,origin,existing,label=label,media_type=media_type)
@@ -237,8 +239,8 @@ def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, 
     warnings = []
     if not keep_name and (naming.issued_year(source)=='ND' or not re.search(r'[^\W_]+',naming.short_title(source))):
         warnings.append(dict(code='filename_unavailable',message='Conventional filename unavailable; keeping the original name',path=str(source_path),details={},retryable=False))
-    folder = library/'Unfiled'
-    if folder.is_symlink() or not folder.resolve().is_relative_to(library) or folder.exists() and not folder.is_dir():
+    folder = library/(source.get('loc') or 'Unfiled')
+    if any(parent.is_symlink() for parent in [folder,*folder.parents]) or not folder.resolve().is_relative_to(library) or folder.exists() and not folder.is_dir():
         raise RefError('unsafe_path','Inspect the library Unfiled path before copying')
     target = folder/name
     if label and (target.exists() or target.is_symlink()):
@@ -260,14 +262,22 @@ def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, 
     return preview
 
 
-def capture_file(settings: Settings, data: dict, path: Path, *, linked=False, keep_name=False, dry_run=False) -> tuple[dict, dict]:
+def capture_file(settings: Settings, data: dict, path: Path, *, linked=False, moving=False, keep_name=False, dry_run=False) -> tuple[dict, dict]:
     if dry_run:
-        source = data.get('record',data)
+        source = data.get('record',data) | ({'loc':data['loc']} if data.get('loc') else {})
+        if moving:
+            from refs.moves import admit
+            admit(settings,path)
         proposal = locate(settings,path=path) if linked else plan_copy(settings,source,path,keep_name=keep_name)
+        proposal['moved'] = moving
         return data | {'resources':[proposal]}, proposal
     try:
-        resource = link(settings,data['id'],path=path)
-        if not linked:
+        if moving:
+            from refs.moves import intake
+            resource = intake(settings,data['id'],path,keep_name=keep_name)
+        else:
+            resource = link(settings,data['id'],path=path)
+        if not linked and not moving:
             resource = copy(settings,data['id'],path,resource_id=resource['id'],keep_name=keep_name)
         current = inspect_source(settings,data['id'])
         return current | dict(outcome=data['outcome'],warnings=data.get('warnings',[])+resource.get('warnings',[])), resource
@@ -276,7 +286,7 @@ def capture_file(settings: Settings, data: dict, path: Path, *, linked=False, ke
         details = dict(cause=str(exc),original=str(path))
         if isinstance(exc,RefError) and exc.data:
             details.update(exc.data)
-        raise RefError('file_action_incomplete','Metadata was saved; inspect the resource and retry resource add --copy',4,details=details,data=current | dict(outcome='needs_attention')) from exc
+        raise RefError('file_action_incomplete','Metadata was saved; inspect the resource and retry resource add with the same intake option',4,details=details,data=current | dict(outcome='needs_attention')) from exc
 
 
 def zotero_attachment(connection, settings, source_id: str, item: dict, manifest: dict, *, dry_run=False) -> dict:

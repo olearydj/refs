@@ -82,7 +82,7 @@ def test_unavailable_library_bundle_and_symlink(initialized,tmp_path,reference_p
 def test_add_defaults_and_partial_copy(initialized,tmp_path,reference_path):
     path=tmp_path/'new.pdf'
     path.write_bytes(b'synthetic')
-    result=initialized('add','--format','refs','--input',reference_path,'--file',path)['data']
+    result=initialized('add','--format','refs','--input',reference_path,'--file',path,'--copy')['data']
     assert len(result['resources']) == 1
     assert result['resources'][0]['root'] == 'library'
     assert result['resources'][0]['copied_from']['path'] == str(path)
@@ -101,10 +101,10 @@ def test_link_flag_keep_name_and_failed_add(initialized,tmp_path,reference_path)
     assert len(initialized('show',linked['id'])['data']['resources']) == 1
     other=tmp_path/'other.pdf'
     other.write_bytes(b'other')
-    failed=initialized('add','--format','refs','--input',reference_path,'--file',other,'--keep-name')['data']
+    failed=initialized('add','--format','refs','--input',reference_path,'--file',other,'--copy','--keep-name')['data']
     assert len(failed['resources']) == 2
     assert path.exists() and other.exists()
-    result=initialized('add','--format','refs','--input',reference_path,'--file',other,'--keep-name',expected=4)
+    result=initialized('add','--format','refs','--input',reference_path,'--file',other,'--copy','--keep-name',expected=4)
     assert result['data']['id'] == linked['id']
     assert result['errors'][0]['code'] == 'file_action_incomplete'
     assert other.read_bytes() == b'other'
@@ -113,7 +113,7 @@ def test_link_flag_keep_name_and_failed_add(initialized,tmp_path,reference_path)
 def test_preview_does_not_capture_or_stage(initialized,tmp_path,reference_path):
     path=tmp_path/'original.pdf'
     path.write_bytes(b'synthetic')
-    data=initialized('add','--format','refs','--input',reference_path,'--file',path,'--dry-run')['data']
+    data=initialized('add','--format','refs','--input',reference_path,'--file',path,'--copy','--dry-run')['data']
     assert data['resources'][0]['destination'].endswith('/Unfiled/LearningPython-2024.pdf')
     assert initialized('list')['data']['total'] == 0
     assert not (tmp_path/'cat'/'staging').exists()
@@ -141,6 +141,6 @@ def test_filename_fallback_is_explicit(initialized,tmp_path):
     path.write_bytes(b'synthetic')
     record=tmp_path/'undated.json'
     record.write_text(json.dumps({'schema_version':'1.0','citation_key':'undated','metadata':{'title':'Undated Work'}}))
-    data=initialized('add','--format','refs','--input',record,'--file',path)['data']
+    data=initialized('add','--format','refs','--input',record,'--file',path,'--copy')['data']
     assert data['resources'][0]['relative'] == 'Unfiled/undated.pdf'
     assert any(item['code']=='filename_unavailable' for item in data['warnings'])

@@ -201,3 +201,28 @@ def admit(settings, path: Path):
             existing=resources.resolve_path(settings,item)
             if existing==path.resolve() or existing.exists() and path.exists() and existing.samefile(path):
                 raise RefError('resource_already_recorded',f"File is already resource {item['id']}; use reorg",details={'resource_id':item['id']})
+
+
+def intake(settings, reference, path: Path, *, keep_name=False, dry_run=False, label=None, media_type=None):
+    source=sources.show(settings.catalog_path(),reference)
+    path=path.expanduser().absolute()
+    with connect(settings.catalog_path()) as c:
+        old=c.execute('SELECT o.* FROM file_operations o JOIN resources r ON r.id=o.resource_id WHERE r.source_id=? AND o.old_path=? ORDER BY o.created_at DESC LIMIT 1',(source['id'],str(path))).fetchone()
+    if old and (old['state']!='removed' or not path.exists()):
+        resource_id,target=old['resource_id'],Path(old['new_path'])
+        plan=dict(path=str(path),destination=str(target),copied_from={'path':str(path)},warnings=[])
+    else:
+        admit(settings,path)
+        plan=resources.plan_copy(settings,source,path,keep_name=keep_name,label=label)
+        target=Path(plan['destination'])
+        resource_id=None
+    if dry_run:
+        return plan | dict(dry_run=True,moved=True,citation_key=source['citation_key'])
+    if resource_id is None:
+        if not source.get('loc'):
+            sources.update(settings.catalog_path(),source['id'],{'schema_version':'1.0','set':{'loc':'Unfiled'}},source['revision'])
+        resource_id=resources.link(settings,source['id'],path=path,label=label,media_type=media_type)['id']
+    result=move(settings,resource_id,target)
+    current=sources.show(settings.catalog_path(),source['id'])
+    item=next(item for item in current['resources'] if item['id']==resource_id)
+    return item | dict(citation_key=source['citation_key'],moved=True,destination=result['new_path'],moves=[result],unlinked_paths=[],warnings=plan['warnings'])
