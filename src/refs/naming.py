@@ -70,8 +70,11 @@ def normalize(record: dict, policy: dict | None = None, fields: set[str] | None 
     for field, text in metadata.items():
         if 'title' not in field or not isinstance(text, str) or fields is not None and field not in fields:
             continue
+        letter_words = re.findall(r'[^\W\d_]+',text)
+        shouted = bool(letter_words) and all(word.isupper() for word in letter_words)
+        acronyms = [word for word in letter_words if len(word)>=2 and word.isupper()] if not shouted else []
         protection = protections.setdefault(field, {'protected_terms': [], 'preserve_case': False})
-        protection['protected_terms'] = list(dict.fromkeys(protection.get('protected_terms', []) + [term for term in policy.get('titles',{}).get('protected_terms',GLOBAL_TERMS) if protected_spans(text, [term])]))
+        protection['protected_terms'] = list(dict.fromkeys(protection.get('protected_terms', []) + acronyms + [term for term in policy.get('titles',{}).get('protected_terms',GLOBAL_TERMS) if protected_spans(text, [term])]))
         for term in protection['protected_terms']:
             if not protected_spans(text, [term]):
                 warnings.append({'code': 'protected_term_missing', 'message': f'Protected term is absent: {term}', 'path': f'metadata.{field}', 'details': {}, 'retryable': False})
@@ -82,7 +85,7 @@ def normalize(record: dict, policy: dict | None = None, fields: set[str] | None 
         if language and not language.startswith('en'):
             continue
         spans = protected_spans(text, protection['protected_terms'])
-        if not protection.get('preserve_case') and any(any(char.isupper() for char in match.group()[1:]) and not any(a <= match.start() and match.end() <= b for a, b in spans) for match in re.finditer(r'\w+', text)):
+        if not protection.get('preserve_case') and (shouted or any(any(char.isupper() for char in match.group()[1:]) and not any(a <= match.start() and match.end() <= b for a, b in spans) for match in re.finditer(r'\w+', text))):
             warnings.append({'code': 'unprotected_capital', 'message': 'Review unprotected internal capitals', 'path': f'metadata.{field}', 'details': {}, 'retryable': False})
         main = record.get('title_parts', {}).get('main_title') if field == 'title' else None
         metadata[field] = title_case(text, protection, len(unicodedata.normalize('NFC', main)) if main else None,policy.get('titles',{}).get('minor_words'))
