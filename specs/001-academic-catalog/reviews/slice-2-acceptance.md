@@ -507,9 +507,16 @@ The real cutover is complete: 562 Zotero sources imported with zero conflicts or
 
 Remaining data review is not concealed as completed reconciliation:
 
-- Attention retains its existing fuller issued date, abstract and HTTP URL; the three incoming differences remain unresolved. Its publisher and version gap fills were saved. No decision to overwrite the differing values was made.
-- farrell2020stati retains the valid but misapplied `bn` language tag. The expected correction is `metadata.language="en"`, using the source's current revision; it has not been applied during this cutover.
+- Attention: closed 2026-09-22 after review. The catalog kept the better values in all three differences (full date `2017-12-05` over `2017`, the abstract, the resolving URL); `publisher` and `version` were filled. The differences were reported only in the `add` result envelope because `add` persists no batch; that gap is the next fix batch's item (a) in the plan's deferred ledger. A redundant copy of the PDF made during post-cutover review was unlinked and deleted by the owner; the record's attachment is the Box-linked file.
+- farrell2020stati retains the valid but misapplied `bn` language tag (a translator mislabel on an English paper). Correction: `refs update farrell2020stati --set 'metadata.language="en"' --if-revision 2`, handed to the owner 2026-09-22.
 - The previously identified patent assignee value warrants owner inspection and was preserved unchanged.
-- The earlier annotation check found one malformed embedded annotation object; the owner should inspect that PDF in a viewer before retiring Zotero. The full archive preserves the original evidence.
+- The earlier annotation check found one malformed embedded annotation object, in `janssens2021data` (Janssens 2021, *Data Science at the Command Line*, two highlights in Zotero). The owner opens it once with `refs open janssens2021data` to confirm both highlights render. The full archive preserves the original evidence.
+
+Facts established during post-cutover review, 2026-09-22:
+
+- 40 of the 551 file links resolve into `~/Zotero/storage/` (Zotero-stored snapshots and downloads), not `~/Box Sync/zotero` (511). The Zotero data directory therefore remains a live file store until slice 3 relocates those files; the archive copy at `/Volumes/Casa/archive/refs/zotero-2026-09-22/zotero-archive` duplicates them.
+- The 128 "missing links" in the render comparison are Google Books URLs that Better BibTeX synthesizes at export from the `google-books-id` Extra line. Under D4 refs does not model that line, so no stored URL was lost; the render difference is the decision working as chosen.
+- Citation keys are deliberately mixed: the 562 imported records keep their Better BibTeX keys (`vaswani2017atten`), and only refs-generated keys use the accepted hyphenated form. A record captured before the reset under a new-style key (`vaswani-2017-attentionIs`) no longer exists; the post-reset re-add bound by DOI to the Zotero record, whose key survives. `key set` changes a key deliberately and reserves the old one.
+- The live Zotero database had a leftover `zotero.sqlite-journal` after the cutover, indicating an unclean last exit; the owner removed it. The archive holds a consistent `.bak`; nothing opens the live database again.
 
 The catalog backup excludes attachment bytes. Box-linked PDFs remain at their original paths and outside both the catalog snapshot and the copied Zotero data directory. Rendering acceptance is based on the explained rehearsal differences, byte identity of bibliography inputs, successful actual renders and the supplied reference-list screenshot; it does not claim identical rendering for every portable projection.

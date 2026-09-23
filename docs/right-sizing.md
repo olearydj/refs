@@ -56,6 +56,10 @@ Each is about ten minutes of measuring by an agent and one judgment by the owner
 | Slice 1 code-complete | Source lines, commands, classes, doc words per source line, beside git-muster and canvas-ledger | Whether it feels like a 5 in use |
 | After one real paper | What was reached for and missing; what was never touched | What enters slice 2; what leaves the backlog for good |
 
+### Slice 2 code-complete, 2026-09-22
+
+Measured after the owner-executed Zotero cutover: about 4,130 application lines, roughly 1,000 over slice 1 against an estimate of 800; 14 tables (four added, approved); 4 runtime dependencies, unchanged; 500 tests; 23 classes, unchanged; 6 new invocations. The overrun is six rule-level fixes from rehearsing the real import against a copy of the owner's library (ISBN binding guards, identifier and language normalization, five portable projections, date ranges, the extractor's version row), each carrying a regression test from the real shape that motivated it. Score holds at 6. The rehearsal harness earned its place: the synthetic fixture passed while hiding a defect the first real run exposed in the first second.
+
 ## Design lens
 
 Once there is code, apply a restrained ArjanCodes-style review, calibrated in [the project's own review](arjancodes-review.md): abstractions emerge from actual variation; interfaces are shaped by the consumer; application-owned types and errors at the boundary; plain functions for transformations and classes for state, lifecycle or invariants; replaceability proven by two real implementations. Speak up at a new abstraction, interface, hierarchy, dependency or layer, in that review's format: principle, the concrete change, the simpler alternative, evidence the boundary helps, any deliberate departure. It is a lens, not a doctrine.
