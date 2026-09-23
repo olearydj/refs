@@ -2,6 +2,8 @@
 
 Date: 2026-09-22 (local). T038 through T051 are complete. The initial T038–T050 evidence below used synthetic fixtures at explicit temporary paths. The later T051 transcript records the owner-executed real cutover. Intermediate statements of outstanding work describe that point in the transcript; the completion section at the end gives current status.
 
+**Archive location, 2026-09-22:** the cutover working directory referred to below as `~/refs-cutover-20260922` (the copied Zotero data directory, the `.bak` database, the extracted JSON, the whole-library export and its renders, 442 MB) was moved by the owner after the cutover to `/Volumes/Casa/archive/refs/zotero-2026-09-22`. Nothing in the catalog references it by path.
+
 ## Implementation commits
 
 The five analysis decisions and appended tasks were committed as `a783263`. The owner's intervening bridge clarification, `bc05c65`, was retained.
