@@ -100,7 +100,7 @@ D1 Layout. A: keep the collection tree as it stands, moved intact so `lib/disser
 
 D2 Names. A: the move preserves names, as A2 already says for reorganize; renaming stays a separate later pass under the same protocol, if use shows the names hurt (Recommended: one destructive change at a time, and the current names already carry author, year and title). B: rename by the accepted convention during the move, so the one big move is also the one big rename.
 
-D3 Unlinked files. The six Box PDFs and three storage PDFs that no source links. A: leave them where they are and list them in the move report; you add the ones you want with `add --file` before or after (Recommended). B: move them into `lib/Unfiled` as orphans for later capture.
+D3 Unlinked files. The six Box PDFs and three storage PDFs that no source links. A: leave them where they are and list them in the move report; you add the ones you want with `add --file` before or after (Recommended). B: move them into `lib/Unfiled` as orphans for later capture. Owner, 2026-09-23, on the copied originals left in the Box tree: "I don't mind the extras in the Box folder. it is essentially an archive / backup of zotero db for now." Taken as A: the tree is an archive, unlinked files stay and are listed.
 
 D4 Intake default. A: `add --file` and `resource add` move from Downloads by default, with `--copy` to keep the original (Recommended: the ledger item "move default", and Downloads cruft is the incident). B: keep copy as the default and add `--move`.
 
