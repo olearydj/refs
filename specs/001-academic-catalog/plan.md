@@ -115,7 +115,7 @@ Budget: about three invocations, one table, no new dependency, roughly 600 sourc
 
 ### What must never break
 
-No delete before a verified copy: the destination digest is checked before the original goes, and the owner makes a plain copy of the Box tree and the storage folder under `/Volumes/Casa/archive/refs/` before the bulk move, because no other copy of the PDFs exists. No overwrite in lib. Existing names unless D2 chooses otherwise. Citation keys and every catalog row other than the resource locator. The Zotero database and the vault, read-only throughout. The never-cut list in `AGENTS.md`.
+No delete before a verified copy: the destination digest is checked before the original goes, and the owner runs a Carbon Copy Cloner backup covering the Box tree and the Zotero storage folder before the bulk move (owner, 2026-09-23: "I'll just run a CCC backup before we actually run slice 3"), because no other copy of the PDFs exists; the cutover archive holds the database and Zotero storage, not the Box tree. No overwrite in lib. Existing names unless D2 chooses otherwise. Citation keys and every catalog row other than the resource locator. The Zotero database and the vault, read-only throughout. The never-cut list in `AGENTS.md`.
 
 ### Acceptance gate
 
