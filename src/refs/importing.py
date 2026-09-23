@@ -525,11 +525,7 @@ def reconcile(catalog: Path, batch: str, selectors: list[str], *, keep_current=N
                 if incoming != previous:
                     action = selected[entry['entry_id']][path]
                     if action == 'take_incoming':
-                        target = canonical
-                        parts = path.split('.')
-                        for part in parts[:-1]:
-                            target = target.setdefault(part,{})
-                        target[parts[-1]] = incoming
+                        sources.patch_path(canonical,path,incoming,clear=False)
                     decisions.append(dict(path=path,current=previous,incoming=incoming,action=action))
             key = canonical.pop('citation_key')
             try:
