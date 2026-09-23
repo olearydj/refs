@@ -1,6 +1,6 @@
 # refs Design Packet
 
-**Current stage, 2026-09-22:** Slices 1 and 2 are delivered. The owner's Zotero library (562 sources, 58 collections, 551 file links) was imported on 2026-09-22 with zero conflicts and a zero-finding fidelity gate against the live database; Zotero is now an archive, copied alongside the catalog snapshots. All 51 [tasks](../specs/001-academic-catalog/tasks.md) are complete; [slice 2 acceptance](../specs/001-academic-catalog/reviews/slice-2-acceptance.md) holds the cutover transcript and three open data-review items for the owner. Files remain linked in place under the old Zotero tree; slice 3 (organize files) has no brief yet and waits on the owner's use-list.
+**Current stage, 2026-09-22:** Slices 1 and 2 are delivered. The owner's Zotero library (562 sources, 58 collections, 551 file links) was imported on 2026-09-22 with zero conflicts and a zero-finding fidelity gate against the live database; Zotero is now an archive, copied alongside the catalog snapshots. All 51 [tasks](../specs/001-academic-catalog/tasks.md) are complete; [slice 2 acceptance](../specs/001-academic-catalog/reviews/slice-2-acceptance.md) holds the cutover transcript and three open data-review items for the owner. Files remain linked in place under the old Zotero tree; the [slice 3 brief](../specs/001-academic-catalog/plan.md#slice-3-brief-organize-files) (organize files, 2026-09-23) awaits the owner's four decisions.
 
 ## Authority and read order
 
