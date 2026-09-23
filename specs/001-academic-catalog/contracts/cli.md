@@ -56,6 +56,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | Invocation | Inputs and effect |
 | --- | --- |
 | import --format zotero --input DIR --origin TEXT | Apply or preview the [JSON directory](interchange.md); preserve input and persist per-entry accounting. Existing Bib invocation remains supported. |
+| import list | Saved runs newest first: batch ID, origin, date, counts by status, batch revision. |
 | import show BATCH [--status STATUS] | Show the saved run and entries, optionally filtered by applied, unchanged, conflict or invalid. |
 | import reconcile BATCH (--take-incoming or --keep-current) KEY[.field]... [--execute --if-batch-revision N] | Preview or apply the [explicit incoming-value decisions](records.md#identity-and-non-overwriting-import); preview includes batch_revision and current source revisions; execution rechecks both and reports remaining conflicts. |
 | collection list | Show imported hierarchy and membership counts. |
@@ -71,7 +72,7 @@ Both routes pass through the same validator, identity rule, binding, originals t
 | --- | --- | --- |
 | Input | One record (refs JSON, CSL-JSON, one BibTeX entry), optionally with `--file` | A whole file or Zotero JSON directory, with `--origin` |
 | Result | One outcome: created, already present, needs attention; key returned | A batch: per-entry applied, unchanged, conflict, invalid; every entry accounted for |
-| Persisted run | None, except a bound `add` with differing values (next fix batch) | An `imports` row keyed by file digest and one `import_entries` row per entry |
+| Persisted run | None, unless the bound source has differing values: then one `imports` row with origin `add` and one entry, so `import show` and `import reconcile` apply | An `imports` row keyed by file digest and one `import_entries` row per entry |
 | Re-run | Same record reports already present | Same file reports every entry unchanged |
 | Conflicts | In the result envelope | Persisted; `import show` and `import reconcile` |
 | Files | `--file` copies into the library or links | Records links found in the input; never copies |
