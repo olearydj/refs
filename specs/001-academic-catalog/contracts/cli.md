@@ -63,6 +63,22 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 
 BATCH is the saved import ID. Collection paths identify the imported hierarchy; ambiguous paths fail visibly. No collection editing, filing or movement is included.
 
+## `add` and `import` are one engine with two contracts
+
+Both routes pass through the same validator, identity rule, binding, originals table and format adapters; a source created either way is indistinguishable afterwards. They stay separate commands because they answer different callers, and the difference is the unit of work, not scale (owner discussion, 2026-09-22).
+
+| | `add` | `import` |
+| --- | --- | --- |
+| Input | One record (refs JSON, CSL-JSON, one BibTeX entry), optionally with `--file` | A whole file or Zotero JSON directory, with `--origin` |
+| Result | One outcome: created, already present, needs attention; key returned | A batch: per-entry applied, unchanged, conflict, invalid; every entry accounted for |
+| Persisted run | None, except a bound `add` with differing values (next fix batch) | An `imports` row keyed by file digest and one `import_entries` row per entry |
+| Re-run | Same record reports already present | Same file reports every entry unchanged |
+| Conflicts | In the result envelope | Persisted; `import show` and `import reconcile` |
+| Files | `--file` copies into the library or links | Records links found in the input; never copies |
+| Malformed input | The record is refused, exit 2 | The entry becomes `invalid`; the rest apply, exit 4 |
+
+Merging them would make one command carry two behaviours behind a flag; the shared interior is already one thing.
+
 ## Configuration and paths
 
 Select config by --config, then REFS_CONFIG, then ~/.config/refs/config.toml; select catalog by --catalog, then REFS_CATALOG, then config catalog.path. Explicit empty/invalid choices fail. No --home/REFS_HOME fallback. Canonical chosen data paths are /Volumes/Casa/refs/cat and /Volumes/Casa/refs/lib (owner's /casa aliases). Ordinary commands never create a missing catalog or substitute a location when Casa is unmounted.
