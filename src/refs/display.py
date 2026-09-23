@@ -31,6 +31,8 @@ def readable(command: str, data: dict) -> str:
         for field in sorted(set(metadata) - {'type', 'author', 'title'}):
             if metadata[field] not in (None, '', [], {}):
                 lines.append(f'{field}: {metadata_text(metadata[field])}')
+        if data.get("loc"):
+            lines.append(f"loc: {data['loc']}")
         if data.get('limitations'):
             lines.append('Limitations:')
             lines.extend('  ' + (item['reason'] if item['reason'].startswith('Preserved from import:') else f"{item['field']}: {item['reason']}") for item in data['limitations'])

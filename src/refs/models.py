@@ -295,9 +295,21 @@ class Provenance(StrictModel):
     source_identity: SourceIdentity | None = None
 
 
+def normalize_loc(value: str | None) -> str | None:
+    from unicodedata import normalize
+    if value is None or value == '':
+        return None
+    if value.startswith('/') or any(part in ('', '.', '..') for part in value.split('/')) or '\x00' in value:
+        raise ValueError('loc must be a relative folder path without empty or parent segments')
+    return normalize('NFC', value)
+
+
 class SourceCreate(StrictModel):
     schema_version: Literal["1.0"]
     citation_key: Text | None = None
+    loc: str | None = None
+
+    _loc = field_validator("loc")(normalize_loc)
     metadata: Metadata
     context: list[Context] = Field(default_factory=list)
     provenance: list[Provenance] = Field(default_factory=list)
@@ -402,7 +414,7 @@ class SourcePatch(StrictModel):
             raise ValueError("Use clear instead of null")
         if set(self.set) & set(self.clear):
             raise ValueError("A path cannot be set and cleared together")
-        allowed = {"metadata", "native_type", "extensions", "title_protection", "title_parts", "overrides", "legacy_tags", "context", "provenance", "key_author"}
+        allowed = {"metadata", "native_type", "extensions", "title_protection", "title_parts", "overrides", "legacy_tags", "context", "provenance", "key_author", "loc"}
         paths = list(self.set) + self.clear
         if any(path.split(".")[0] not in allowed for path in paths):
             raise ValueError("Identity, files and internal state cannot be patched")

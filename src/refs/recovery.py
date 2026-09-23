@@ -22,18 +22,20 @@ def validate_database(path: Path) -> dict:
         with sqlite3.connect(':memory:') as expected:
             expected.executescript(package_files('refs').joinpath('migrations/001_initial.sql').read_text())
             version_row=connection.execute('SELECT schema_version FROM catalog_meta WHERE singleton=1').fetchone()
-            if version_row is None or version_row[0] not in (1,2):
+            if version_row is None or version_row[0] not in (1,2,3):
                 raise RefError('unsupported_schema','Use a supported catalog schema',5)
             version=version_row[0]
-            if version==2:
+            if version>=2:
                 expected.executescript(package_files('refs').joinpath('migrations/002_zotero_ingest.sql').read_text())
+            if version>=3:
+                expected.executescript(package_files('refs').joinpath('migrations/003_source_loc.sql').read_text())
             for name, in expected.execute("SELECT name FROM sqlite_master WHERE type='table'"):
                 columns=expected.execute(f'PRAGMA table_info("{name}")').fetchall()
                 if connection.execute(f'PRAGMA table_info("{name}")').fetchall()!=columns:
                     raise RefError('unsupported_schema','Catalog tables do not match the supported schema; retain this snapshot for inspection',5)
         connection.row_factory=sqlite3.Row
         meta=connection.execute('SELECT * FROM catalog_meta WHERE singleton=1').fetchone()
-        if meta is None or meta['schema_version'] not in (1,2):
+        if meta is None or meta['schema_version'] not in (1,2,3):
             raise RefError('unsupported_schema','Use a supported catalog schema',5)
         return dict(meta)
 

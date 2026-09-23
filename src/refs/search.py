@@ -5,14 +5,18 @@ from pathlib import Path
 from refs import collections, naming, projects, sources
 from refs.adapters.search_sqlite import matches
 from refs.catalog import connect
-from refs.models import normalize_arxiv
+from refs.models import normalize_arxiv, normalize_loc
 from refs.results import RefError
 
 
-def retrieve(catalog: Path, query: str | None = None, *, project: str | None = None, collection: str | None = None,
+def retrieve(catalog: Path, query: str | None = None, *, loc: str | None = None, project: str | None = None, collection: str | None = None,
              limit: int = 50, offset: int = 0, sort: str = 'title', policy: dict | None = None) -> dict:
     if not 1 <= limit <= 1000 or offset < 0 or sort not in ('title', 'key'):
         raise RefError('invalid_query', 'Use limit 1–1000, nonnegative offset, and title or key sort', 2)
+    try:
+        loc = normalize_loc(loc)
+    except ValueError as exc:
+        raise RefError("invalid_loc", str(exc), 2) from exc
     query = query.strip() if query else query
     with connect(catalog) as connection:
         project_id = projects.resolve(connection, project)['id'] if project else None
@@ -21,6 +25,8 @@ def retrieve(catalog: Path, query: str | None = None, *, project: str | None = N
         records = [sources.record(connection, row[0]) for row in connection.execute("SELECT id FROM sources WHERE state='active'")]
         items = []
         for record in records:
+            if loc is not None and (record.get("loc") or "").casefold() != loc.casefold():
+                continue
             if collection_id and not connection.execute('SELECT 1 FROM source_collections WHERE collection_id=? AND source_id=?', (collection_id,record['id'])).fetchone():
                 continue
             if project_id and not connection.execute('SELECT 1 FROM project_sources WHERE project_id=? AND source_id=? AND cited=1', (project_id, record['id'])).fetchone():

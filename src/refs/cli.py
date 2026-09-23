@@ -66,6 +66,7 @@ def init(ctx: typer.Context, reuse_config: Annotated[bool, typer.Option()] = Fal
 @app.command()
 def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         input: Annotated[str, typer.Option()],
+        loc: Annotated[str | None, typer.Option()] = None,
         file: Annotated[Path | None, typer.Option()] = None,
         link: Annotated[bool, typer.Option()] = False,
         keep_name: Annotated[bool, typer.Option()] = False,
@@ -74,12 +75,22 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         raise RefError('invalid_invocation', 'Use --link or --keep-name with --file, never both', 2)
     if format not in ("refs", "csljson", "bib"):
         raise RefError("unsupported_format", "Choose --format refs, csljson or bib", 2)
+    from refs.models import normalize_loc
+    try:
+        loc = normalize_loc(loc)
+    except ValueError as exc:
+        raise RefError("invalid_loc", str(exc), 2) from exc
     raw = sys.stdin.buffer.read() if input == "-" else Path(input).read_bytes()
     locator = "stdin" if input == "-" else str(absolute(input))
     if format == 'bib':
         data = importing.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run, settings=settings(ctx))
     else:
         data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run,policy=settings(ctx).values)
+    if loc is not None and not data.get("loc"):
+        if dry_run:
+            data["loc"] = loc
+        else:
+            data = data | sources.update(settings(ctx).catalog_path(), data["id"], {"schema_version":"1.0", "set":{"loc":loc}}, data["revision"], policy=settings(ctx).values)
     file_action = None
     if file is not None:
         data, file_action = resources.capture_file(settings(ctx),data,file,linked=link,keep_name=keep_name,dry_run=dry_run)
@@ -212,18 +223,18 @@ def reactivate(ctx: typer.Context, reference: str, if_revision: Annotated[int | 
 
 
 @app.command("search")
-def search_sources(ctx: typer.Context, query: str, collection: Annotated[str | None, typer.Option()] = None, project: Annotated[str | None, typer.Option()] = None,
+def search_sources(ctx: typer.Context, query: str, loc: Annotated[str | None, typer.Option()] = None, collection: Annotated[str | None, typer.Option()] = None, project: Annotated[str | None, typer.Option()] = None,
                    limit: Annotated[int, typer.Option(min=1, max=1000)] = 50,
                    offset: Annotated[int, typer.Option(min=0)] = 0):
-    report(ctx, "search", search.retrieve(settings(ctx).catalog_path(), query, collection=collection, project=project or settings(ctx).values.get('project'), limit=limit, offset=offset,policy=settings(ctx).values))
+    report(ctx, "search", search.retrieve(settings(ctx).catalog_path(), query, loc=loc, collection=collection, project=project or settings(ctx).values.get('project'), limit=limit, offset=offset,policy=settings(ctx).values))
 
 
 @app.command("list")
-def list_sources(ctx: typer.Context, collection: Annotated[str | None, typer.Option()] = None, project: Annotated[str | None, typer.Option()] = None,
+def list_sources(ctx: typer.Context, loc: Annotated[str | None, typer.Option()] = None, collection: Annotated[str | None, typer.Option()] = None, project: Annotated[str | None, typer.Option()] = None,
                  limit: Annotated[int, typer.Option(min=1, max=1000)] = 50,
                  offset: Annotated[int, typer.Option(min=0)] = 0,
                  sort: Annotated[str, typer.Option()] = "title"):
-    report(ctx, "list", search.retrieve(settings(ctx).catalog_path(), collection=collection, project=project or settings(ctx).values.get('project'), limit=limit, offset=offset, sort=sort,policy=settings(ctx).values))
+    report(ctx, "list", search.retrieve(settings(ctx).catalog_path(), loc=loc, collection=collection, project=project or settings(ctx).values.get('project'), limit=limit, offset=offset, sort=sort,policy=settings(ctx).values))
 
 
 @app.command("schema")

@@ -21,6 +21,8 @@ def record(connection, source_id: str) -> dict:
         raise RefError("source_missing", "Source was not found")
     value = dict(row)
     result = json.loads(value.pop("details_json")) | value
+    if result.get("loc") is None:
+        result.pop("loc", None)
     result["metadata"] = json.loads(result.pop("metadata_json"))
     result["corrected_fields"] = json.loads(result.pop("corrected_fields_json"))
     result["key_provenance"] = json.loads(result.pop("key_provenance_json"))
@@ -128,10 +130,11 @@ def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *,
     details = source.canonical()
     metadata = details.pop("metadata")
     details.pop("citation_key")
+    loc = details.pop("loc", None)
     connection.execute(
-        "INSERT INTO sources (id, citation_key, created_at, updated_at, metadata_json, details_json, key_provenance_json) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO sources (id, citation_key, created_at, updated_at, metadata_json, details_json, key_provenance_json, loc) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         (source_id, source.citation_key, now, now, json.dumps(metadata), json.dumps(details),
-         json.dumps(key_provenance)))
+         json.dumps(key_provenance), loc))
     connection.execute(
         "INSERT INTO originals (id, source_id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator) VALUES (?, ?, ?, ?, ?, ?, 'add', ?, ?)",
         (str(uuid4()), source_id, raw, fingerprint, len(raw), format, fingerprint, locator))
@@ -153,8 +156,9 @@ def store_record(connection, current: dict, canonical: dict, corrections: list[s
     details = dict(canonical)
     metadata = details.pop('metadata')
     details.pop('citation_key', None)
-    connection.execute('UPDATE sources SET metadata_json=?, details_json=?, corrected_fields_json=?, updated_at=?, revision=revision+1 WHERE id=? AND revision=?',
-                       (json.dumps(metadata), json.dumps(details), json.dumps(corrections), datetime.now(UTC).isoformat(), current['id'], current['revision']))
+    loc = details.pop('loc', None)
+    connection.execute('UPDATE sources SET metadata_json=?, details_json=?, loc=?, corrected_fields_json=?, updated_at=?, revision=revision+1 WHERE id=? AND revision=?',
+                       (json.dumps(metadata), json.dumps(details), loc, json.dumps(corrections), datetime.now(UTC).isoformat(), current['id'], current['revision']))
     refresh(connection, record(connection, current['id']))
     changed(connection)
     return record(connection, current['id'])
@@ -203,6 +207,8 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
     with connect(catalog, write=not dry_run) as connection:
         current = checked_record(connection, reference, revision)
         canonical = json.loads(json.dumps({name: current[name] for name in SourceCreate.model_fields if name in current}))
+        if canonical.get("loc") is None:
+            canonical.pop("loc", None)
         original = json.loads(json.dumps(canonical))
         for path, value in patch_model.set.items():
             patch_path(canonical, path, value, clear=False)
@@ -228,7 +234,7 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
         canonical['citation_key'] = preserved_key
         if canonical == original:
             return current | {'unchanged': True, 'warnings': warnings}
-        corrections = sorted(set(current['corrected_fields']) | set(patch_model.set) | set(patch_model.clear))
+        corrections = sorted(set(current['corrected_fields']) | (set(patch_model.set) | set(patch_model.clear)) - {'loc'})
         if dry_run:
             return current | canonical | dict(dry_run=True, corrected_fields=corrections, warnings=warnings)
         return store_record(connection, current, canonical, corrections) | {'warnings': warnings}

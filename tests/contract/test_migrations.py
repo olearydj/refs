@@ -25,7 +25,7 @@ def test_explicit_migration_preserves_identity(tmp_path):
     migrate(path)
     migrate(path)
     with connect(path) as c:
-        assert tuple(c.execute("SELECT * FROM catalog_meta").fetchone()) == (1, "stable", 2, 7)
+        assert tuple(c.execute("SELECT * FROM catalog_meta").fetchone()) == (1, "stable", 3, 7)
         assert c.execute("PRAGMA foreign_key_check").fetchall() == []
         assert (
             c.execute(
@@ -60,5 +60,5 @@ def test_reuse_config(cli, tmp_path):
     assert config.read_bytes() == before
     assert (tmp_path / "lib").is_dir()
     with connect(tmp_path / "cat") as c:
-        assert c.execute("SELECT schema_version FROM catalog_meta").fetchone()[0] == 2
+        assert c.execute("SELECT schema_version FROM catalog_meta").fetchone()[0] == 3
     cli("--catalog", tmp_path / "other", "init", "--reuse-config", expected=3)
