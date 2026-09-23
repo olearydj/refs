@@ -179,6 +179,9 @@ pass 'copy and original bytes agree'
 printf 'Synthetic keep-name file\n' >"$DEMO_ROOT/keep.pdf"
 run 0 keep resource add "$KEY" --path "$DEMO_ROOT/keep.pdf" --copy --keep-name
 assert_jq '.data.relative == "Unfiled/keep.pdf"' "$LAST" 'keep-name respected'
+run 0 duplicate resource add "$KEY" --path "$DEMO_ROOT/download.pdf" --copy
+assert_jq '.data.copied == false and .warnings[0].code == "duplicate_attachment"' "$LAST" 'duplicate attachment is not copied'
+printf 'Different content for collision test\n' >"$DEMO_ROOT/download.pdf"
 run 3 collision resource add "$KEY" --path "$DEMO_ROOT/download.pdf" --copy
 assert_jq '.errors[0].code == "destination_exists"' "$LAST" 'collision refuses overwrite'
 run 0 checked resource check --source "$KEY" --verify

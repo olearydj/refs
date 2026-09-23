@@ -56,3 +56,23 @@ def test_unbound_and_identical_add_do_not_create_batches(initialized,tmp_path,fo
             sources.add(tmp_path/'cat',raw,'input.json')
     with connect(tmp_path/'cat') as connection:
         assert connection.execute('SELECT count(*) FROM imports').fetchone()[0]==0
+
+
+def test_attention_preprint_three_differences_and_two_gap_fills(initialized,tmp_path):
+    catalog=tmp_path/'cat'
+    item={'key':'ATTN0001','data':{'itemType':'preprint','title':'Attention Is All You Need','citationKey':'vaswani2017atten','DOI':'10.5555/attention','date':'2017-12-05','abstractNote':'Synthetic original abstract','url':'http://example.org/attention','creators':[{'creatorType':'author','firstName':'Alex','lastName':'Researcher'}]}}
+    with connect(catalog,write=True) as connection:
+        importing.apply_zotero(connection,{'key':'ATTN0001','item':item,'raw':json.dumps(item).encode(),'locator':'fixture.json'},{'library_uri':'users/123'},'fixture')
+    incoming={'type':'article','title':'Attention Is All You Need','DOI':'10.5555/attention','issued':{'date-parts':[[2017]]},'abstract':'Synthetic revised abstract','URL':'https://example.org/attention','publisher':'arXiv','version':'7'}
+    with pytest.raises(RefError) as error:
+        sources.add(catalog,json.dumps(incoming).encode(),'attention.json',format='csljson')
+    assert error.value.data['citation_key']=='vaswani2017atten'
+    batch=importing.list_batches(catalog)['items'][0]
+    entry=importing.show(catalog,batch['import_id'])['entries'][0]
+    assert set(entry['binding']['filled'])=={'metadata.publisher','metadata.version'}
+    assert set(entry['conflicts'])=={'metadata.abstract','metadata.URL','metadata.issued.date-parts'}
+    importing.reconcile(catalog,batch['import_id'],['vaswani2017atten.metadata.abstract','vaswani2017atten.metadata.URL'],keep_current=['vaswani2017atten.metadata.issued.date-parts'],execute=True,revision=batch['batch_revision'])
+    current=sources.show(catalog,'vaswani2017atten')
+    assert current['metadata']['issued']['date-parts']==[[2017,12,5]]
+    assert current['metadata']['abstract']=='Synthetic revised abstract'
+    assert importing.show(catalog,batch['import_id'])['counts']['conflict']==0

@@ -114,12 +114,14 @@ def test_resource_copy_collision_exits_three(human, initialized, reference_path,
     source=tmp_path/'download.pdf'
     source.write_bytes(b'synthetic original')
     copied=initialized('resource','add','smith-2024-learningPython','--path',source,'--copy')['data']
+    source.write_bytes(b'different file, same destination')
     text=human('resource','add','smith-2024-learningPython','--path',source,'--copy',expected=3)
     assert 'existing destination' in text
     result=initialized('resource','add','smith-2024-learningPython','--path',source,'--copy',expected=3)
     assert result['errors'][0]['code']=='destination_exists'
     from pathlib import Path
-    assert Path(copied['destination']).read_bytes()==source.read_bytes()==b'synthetic original'
+    assert Path(copied['destination']).read_bytes()==b'synthetic original'
+    assert source.read_bytes()==b'different file, same destination'
 
 
 def test_backup_creates_missing_parents(human, tmp_path):

@@ -56,6 +56,7 @@ def test_collision_keep_name_and_preview(initialized, tmp_path, reference_path):
     assert preview['dry_run'] and not (settings.library/'Unfiled').exists()
     copied = resources.copy(settings,source['id'],path,keep_name=True)
     assert copied['relative'] == 'Unfiled/download.pdf'
+    path.write_bytes(b'different content, same destination')
     with pytest.raises(RefError):
         resources.copy(settings,source['id'],path,keep_name=True)
     assert path.exists()
@@ -95,7 +96,8 @@ def test_link_flag_keep_name_and_failed_add(initialized,tmp_path,reference_path)
     assert linked['resources'][0]['path'] == str(path)
     assert not (tmp_path/'lib'/'Unfiled').exists()
     copied=initialized('resource','add',linked['id'],'--path',path,'--copy','--keep-name')['data']
-    assert copied['relative'] == 'Unfiled/original.pdf'
+    assert copied['copied'] is False
+    assert copied['duplicate_resource_id'] == linked['resources'][0]['id']
     assert len(initialized('show',linked['id'])['data']['resources']) == 1
     other=tmp_path/'other.pdf'
     other.write_bytes(b'other')

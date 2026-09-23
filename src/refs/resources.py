@@ -190,7 +190,9 @@ def register_copy(settings: Settings, source: dict, target: Path, digest: str, o
 
 def copy(settings: Settings, reference: str, path: Path, *, resource_id=None, keep_name=False, dry_run=False, label=None, media_type=None) -> dict:
     source = sources.show(settings.catalog_path(),reference)
-    plan = plan_copy(settings,source,path,keep_name=keep_name)
+    plan = plan_copy(settings,source,path,keep_name=keep_name,check_duplicates=resource_id is None)
+    if plan.get('duplicate_resource_id'):
+        return plan | dict(dry_run=dry_run,copied=False)
     source_path, target = Path(plan['path']), Path(plan['destination'])
     origin = plan['copied_from']
     existing = next((item for item in source['resources'] if item['id']==resource_id),None) if resource_id else next((item for item in source['resources'] if all(item.get(key)==value for key,value in origin.items())),None)
@@ -216,13 +218,24 @@ def copy(settings: Settings, reference: str, path: Path, *, resource_id=None, ke
         raise RefError('copy_failed','Copy failed; inspect the original and retry after correcting the cause',5,path=str(source_path),details={'cause':str(exc)}) from exc
 
 
-def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False) -> dict:
+def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, check_duplicates=False) -> dict:
     from refs import naming
 
     expanded = path.expanduser()
     source_path = expanded.parent.resolve()/expanded.name
     if source_path.is_symlink() or not source_path.is_file():
         raise RefError('unsafe_copy_source','Copy a completed regular file without symlink traversal, or link it in place')
+    if check_duplicates:
+        digest = files.hash_file(source_path)
+        for item in source.get('resources',[]):
+            try:
+                existing_path = resolve_path(settings,item)
+                same = existing_path.is_file() and files.hash_file(existing_path)==digest
+            except (OSError,RefError):
+                continue
+            if same:
+                notice = dict(code='duplicate_attachment',message=f"Same file content already attached as resource {item['id']} ({existing_path}); no copy made",path=str(source_path),details={'resource_id':item['id'],'path':str(existing_path)},retryable=False)
+                return dict(citation_key=source['citation_key'],path=str(source_path),duplicate_resource_id=item['id'],warnings=[notice])
     library = settings.library
     if library is None or not library.is_dir():
         raise RefError('library_unavailable','Restore the configured library before copying; the original remains untouched')
