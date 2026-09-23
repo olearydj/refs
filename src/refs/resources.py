@@ -4,6 +4,7 @@ import json
 import re
 import sqlite3
 import subprocess
+import unicodedata
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -108,11 +109,50 @@ def inspect_source(settings: Settings, reference: str) -> dict:
     return result
 
 
-def check(settings: Settings, reference=None, *, verify=False) -> dict:
+PLACEMENT_KINDS = {
+    'linked_unplaced': 'linked with no loc (untouched)',
+    'linked_pending': 'linked with a loc (pending reorg)',
+    'managed_mismatch': 'managed in the wrong folder',
+    'unfinished': 'unfinished move',
+    'unrecorded': 'in the library, not recorded',
+}
+
+
+def check(settings: Settings, reference=None, *, verify=False, kind=None) -> dict:
+    if kind is not None and kind not in PLACEMENT_KINDS:
+        raise RefError('invalid_kind','Choose '+', '.join(PLACEMENT_KINDS),2)
     with connect(settings.catalog_path()) as connection:
         source_id = sources.resolve(connection,reference) if reference else None
-        items = inventory(connection,source_id)
-    return {'items':[check_item(settings,item,verify) for item in items]}
+        all_items = inventory(connection)
+        locs = {row['id']:row['loc'] for row in connection.execute('SELECT id,loc FROM sources')}
+        operations = [dict(row) for row in connection.execute("SELECT * FROM file_operations WHERE state!='removed' ORDER BY created_at,id")]
+    busy = {row['resource_id'] for row in operations}
+    result, known = [], set()
+    for item in all_items:
+        checked = check_item(settings,item,verify)
+        if checked.get('resolved_path'):
+            known.add(unicodedata.normalize('NFC',checked['resolved_path']).casefold())
+        if source_id and item['source_id']!=source_id or item['id'] in busy:
+            continue
+        loc = locs[item['source_id']]
+        placement = None
+        if item['root']!='library':
+            placement = 'linked_pending' if loc else 'linked_unplaced'
+        elif loc and unicodedata.normalize('NFC',str(Path(item['relative']).parent)).casefold()!=loc.casefold():
+            placement = 'managed_mismatch'
+        result.append(checked | dict(kind=placement))
+    for row in operations:
+        item = next((item for item in all_items if item['id']==row['resource_id']),None)
+        known.add(unicodedata.normalize('NFC',row['new_path']).casefold())
+        if source_id and (item is None or item['source_id']!=source_id):
+            continue
+        result.append(dict(kind='unfinished',id=row['resource_id'],operation_id=row['id'],resolved_path=row['old_path'],old_path=row['old_path'],new_path=row['new_path'],state=row['state'],error=row['error'],status='unfinished'))
+    if source_id is None and settings.library and settings.library.is_dir():
+        for path in sorted(settings.library.rglob('*')):
+            if not path.is_symlink() and path.is_file() and unicodedata.normalize('NFC',str(path)).casefold() not in known:
+                result.append(dict(kind='unrecorded',resolved_path=str(path),status='available',hint='Use resource add SOURCE --path on this file to record it'))
+    return {'items':[item for item in result if kind is None or item['kind']==kind]}
+
 
 
 def unlink(settings: Settings, resource_id: str, *, execute=False) -> dict:

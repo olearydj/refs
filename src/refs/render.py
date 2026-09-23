@@ -117,7 +117,7 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
         'project show': lambda: project_text(data),
         'resource add': lambda: f"Not copied: {data['path']} is already attached to {key}" if data.get('duplicate_resource_id') else f"{'Moved' if data.get('moved') else 'Copied'} {data['copied_from'].get('path') or data['copied_from'].get('relative')} to {data['destination']} for {key}" if 'destination' in data else f"Linked {data.get('resolved_path') or data.get('path') or data.get('relative')} to {key}",
         'resource unlink': lambda: f"Resource {data['id']} is already unlinked" if data.get('unchanged') else f"Unlinked {data.get('resolved_path') or data.get('path') or data.get('relative')} from {key}",
-        'resource check': lambda: '\n'.join(f"{item['status']}: {item.get('resolved_path') or item.get('relative') or item['id']}" for item in data['items']) or '(no resources)',
+        'resource check': lambda: placement_text(data),
         'open': lambda: 'Choose a resource with --resource:\n' + '\n'.join(f"{item['id']}: {item.get('resolved_path') or item.get('relative')}" for item in data['choices']) if 'choices' in data else f"Opened {data['path']} for {key}",
         'import list': lambda: '\n'.join(f"{item['import_id']} {item['origin']} {datetime.fromisoformat(item['created']).isoformat(timespec='seconds')} " + ', '.join(f'{name} {count}' for name,count in item['counts'].items()) for item in data['items']) or '(no imports)',
         'import show': lambda: import_text(command,data),
@@ -140,3 +140,15 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
     for entry in data.get('import_conflicts', []):
         text += '\nConflict: ' + str(entry.get('citation_key') or entry.get('message') or entry.get('code'))
     return '\n'.join([text, *warning_lines(command, warnings)])
+
+
+def placement_text(data):
+    from refs.resources import PLACEMENT_KINDS
+    lines=[]
+    for item in data['items']:
+        label=PLACEMENT_KINDS.get(item.get('kind'),item['status'])
+        if item.get('kind') and item['status'] not in ('available','unfinished'):
+            label += f" ({item['status']})"
+        path=item.get('resolved_path') or item.get('relative') or item.get('id')
+        lines.append(f"{label}: {path}"+(f" -> {item['new_path']} ({item['state']})" if item.get('kind')=='unfinished' else '')+(f"; {item['hint']}" if item.get('hint') else ''))
+    return '\n'.join(lines) or '(no resources)'

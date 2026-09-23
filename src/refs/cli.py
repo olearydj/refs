@@ -306,8 +306,9 @@ def reorg(ctx: typer.Context,
 
 @resource_app.command('check')
 def resource_check(ctx: typer.Context, source: Annotated[str | None, typer.Option()] = None,
-                   verify: Annotated[bool, typer.Option()] = False):
-    report(ctx, 'resource check', resources.check(settings(ctx),source,verify=verify))
+                   verify: Annotated[bool, typer.Option()] = False,
+                   kind: Annotated[str | None, typer.Option()] = None):
+    report(ctx, 'resource check', resources.check(settings(ctx),source,verify=verify,kind=kind))
 
 
 @app.command('open')
