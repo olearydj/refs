@@ -165,7 +165,7 @@ def policies(user: dict, config: Path, explicit: str | None, disabled: bool) -> 
                             raise ValueError(f'{key} must be a list of nonblank strings')
                         seen=set()
                         deduplicated=[]
-                        for item in value:
+                        for item in (defaults[section][key] if key!='consumers' else []) + value:
                             if item.casefold() not in seen:
                                 deduplicated.append(item)
                                 seen.add(item.casefold())
@@ -190,7 +190,7 @@ def policies(user: dict, config: Path, explicit: str | None, disabled: bool) -> 
                         assert isinstance(value,str)
                         value=str(absolute(value,path.parent))
                     effective.setdefault(section,{})[key]=value
-                    origins[section+'.'+key]=str(path)
+                    origins[section+'.'+key]=('default+config: ' if key in ('stopwords','minor_words','protected_terms','ignore_leading_articles') else '')+str(path)
             if 'project' in values:
                 if not isinstance(values['project'],str) or not values['project'].strip():
                     raise ValueError('project must be a nonblank name or ID')

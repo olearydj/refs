@@ -96,7 +96,8 @@ def test_inspection_and_policy_overrides(initialized,tmp_path):
     result=initialized('add','--format','refs','--input',record)['data']
     assert result['citation_key']=='2024_rnd_work'
     inspected=initialized('config','show')['data']
-    assert inspected['values']['titles.minor_words']==['With']
+    from refs.naming import MINOR
+    assert inspected['values']['titles.minor_words']==sorted(MINOR)+['With']
     assert inspected['origins']['keys.template']==str(config)
     run=subprocess.run(['refs','config','show'],env=dict(os.environ,REFS_CONFIG=str(config),REFS_CATALOG=str(tmp_path/'cat')),text=True,capture_output=True)
     assert run.returncode==0 and run.stdout.startswith('Configuration:')
