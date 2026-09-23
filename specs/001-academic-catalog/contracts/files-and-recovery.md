@@ -82,6 +82,8 @@ Matching bytes alone do not authorize adoption. Recovery requires matching bytes
 
 ## Snapshot and documented restore
 
+Catalog upgrades are automatic, including on read-only commands and dry runs. Before applying pending migrations under the existing file lock, refs saves a consistent copy beside the database as `before-schema-<N>-<YYYY-MM-DD>.sqlite`, where N is the target schema. It refuses with unsupported_schema and the reason if that safety copy cannot be written; an existing dated copy is never overwritten. On success, text output includes one upgrade line naming the copy; JSON includes a schema_upgraded warning. Newer unsupported catalogs still refuse, and initialization remains explicit. At cutover the owner first renames the library's Unfiled folder to unfiled with mv; the next refs command upgrades the catalog and its safety-copy path goes in the acceptance record.
+
 Backup uses SQLite's backup API, never a copy of only the live main database. Under the coordination lock capture configuration, create a new private .partial directory, snapshot SQLite, recheck config and derive resource inventory from the saved database. The directory contains catalog.sqlite, config.toml, resources.jsonl and manifest.json with schema/catalog identity, hashes/sizes and external_contents_included=false. Validate integrity/foreign keys and publish to a new unused directory. Incomplete imports are valid saved state, not a reason to refuse backup. No resource bytes, managed or linked, are included.
 
 The slice 1 manual restore procedure is:

@@ -4,7 +4,7 @@ SQLite is the sole authority. Slice 1 has ten logical tables. Slice 2 adds four:
 
 | Table | Stored values and invariants |
 | --- | --- |
-| catalog_meta | One stable catalog UUID, schema version and monotonically increasing catalog revision. No implicit init or upgrade. |
+| catalog_meta | One stable catalog UUID, schema version and monotonically increasing catalog revision. No implicit init; automatic upgrade after a safety copy. |
 | sources | Stable UUID, binary-unique citation key, active/removed state, revision, UTC timestamps; validated metadata/context/native type/extensions/title protection and overrides. Slice 3 adds nullable loc: an NFC relative path compared case-insensitively, without leading slash or parent segments; absence means not placed; reorg ignores its files. Key-generation provenance holds policy/table/Unicode versions. A compact corrected_fields JSON marker identifies explicit sets, clears and type-superseded paths; origins/access claims remain distinguishable on the row. |
 | originals | Immutable exact entry bytes, SHA-256, length, format, origin, file digest/locator and needed comments/definitions; nullable source association for unresolved input. Deduplicate by digest plus origin/locator association so repeated import does not duplicate evidence. Retain exact .bib file bytes once for adoption inspection as well as addressable entries; no whole Zotero databases. |
 | origin_identities | Unique namespace/library identity/item key binding to source ID, plus input fingerprint. Bindings cannot be stolen. Source-system identity is provenance, not write authority over another system. |
@@ -26,7 +26,7 @@ Bibliographic facts live once in sources.metadata_json under the bounded CSL-sha
 
 Enable foreign keys on each connection. Mutations validate then use BEGIN IMMEDIATE with five-second busy timeout; conditional updates affect exactly one expected revision. Changed source aggregates increment once; no-ops do not. Allocate keys in that transaction. Do not hold write transactions during file copy/hash. Resource registration rechecks source activity/revision after publication and fails safely if stale.
 
-Read-only commands do not create/migrate or perform writable hot-journal recovery. On recovery_required, the documented procedure opens only the selected existing database for SQLite recovery and integrity checks; there is no recover command. Mutating commands may let SQLite perform its normal rollback recovery before validation. A corrupt or unsupported database is not silently replaced.
+Read-only commands do not initialize catalogs or perform writable hot-journal recovery; they do upgrade supported older schemas after a safety copy. On recovery_required, the documented procedure opens only the selected existing database for SQLite recovery and integrity checks; there is no recover command. Mutating commands may let SQLite perform its normal rollback recovery before validation. A corrupt or unsupported database is not silently replaced.
 
 ## Import identity and re-runs
 

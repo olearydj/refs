@@ -7,6 +7,7 @@ import stat
 import tempfile
 import time
 from contextlib import contextmanager
+from contextvars import ContextVar
 from pathlib import Path
 
 from refs.results import RefError
@@ -32,8 +33,15 @@ def current_digest(path: Path) -> str | None:
     return digest(path.read_bytes())
 
 
+_held_locks: ContextVar[frozenset] = ContextVar("held_file_locks", default=frozenset())
+
+
 @contextmanager
 def file_lock(catalog: Path):
+    key = catalog.resolve()
+    if key in _held_locks.get():
+        yield
+        return
     # Init creates this file. Never replace its inode or create it during preview.
     with (catalog / "files.lock").open("r+b") as stream:
         deadline = time.monotonic() + 5
@@ -45,9 +53,11 @@ def file_lock(catalog: Path):
                 if time.monotonic() >= deadline:
                     raise RefError("lock_timeout", "Catalog file effects are busy; retry", 6, retryable=True) from None
                 time.sleep(0.05)
+        token = _held_locks.set(_held_locks.get() | {key})
         try:
             yield
         finally:
+            _held_locks.reset(token)
             fcntl.flock(stream, fcntl.LOCK_UN)
 
 

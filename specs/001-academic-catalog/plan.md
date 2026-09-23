@@ -18,7 +18,7 @@ SQLite rollback journal, foreign keys, synchronous FULL and short BEGIN IMMEDIAT
 
 ## Structure and capability boundary
 
-Keep ordinary modules for CLI, validated records, catalog/configuration, naming, bibliography, files and snapshot recovery, with Bib/CSL adapters. Domain functions use refs-owned values/errors, independent of Typer and SQLite row types. File adapters own only the platform primitives needed for verified copy and publication. A plain migration runner owns schema changes; ordinary open never upgrades implicitly.
+Keep ordinary modules for CLI, validated records, catalog/configuration, naming, bibliography, files and snapshot recovery, with Bib/CSL adapters. Domain functions use refs-owned values/errors, independent of Typer and SQLite row types. File adapters own only the platform primitives needed for verified copy and publication. A plain migration runner owns schema changes; catalog open upgrades supported older schemas automatically after a dated safety copy (owner decision, 2026-09-23: "normally it is handled automagically"; "agree with A").
 
 The internal read-only search boundary takes literal query/filter/limit/offset and returns source IDs, revisions, matching fields and ranked snippets/availability. The application resolves authoritative records and enforces catalog policy. SQLite FTS5 is its only implementation. Rebuild the derived projection from authoritative values as needed internally; there is no index rebuild command. No entry-point selector, provider schema or proof package ships. Constitution IV/V require selection and replacement proof when a second implementation is evaluated, not now.
 

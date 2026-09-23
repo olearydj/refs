@@ -56,7 +56,7 @@ with (home / "config.toml").open("x") as output:
 print("Restored catalog at", catalog)
 ```
 
-Schema-4 and schema-5 snapshots also preserve loc and the file_operations rows, including unfinished moves. They contain no staged or attachment bytes. Schema-2 snapshots restore all fourteen logical tables, including saved import entries and decisions, collection hierarchy and memberships, and related-source pairs. Older snapshots are validated and restored unchanged; apply the explicit schema upgrade below to catalogs below schema 5 before opening them with this version of refs. Migration 005 only updates catalog paths and loc; the owner separately renames the library intake folder to lowercase unfiled once.
+Schema-4 and schema-5 snapshots also preserve loc and the file_operations rows, including unfinished moves. They contain no staged or attachment bytes. Schema-2 snapshots restore all fourteen logical tables, including saved import entries and decisions, collection hierarchy and memberships, and related-source pairs. Older snapshots are validated and restored unchanged; the first command opening a catalog below schema 5 upgrades it after saving a dated safety copy. Migration 005 only updates catalog paths and loc; the owner separately renames the library intake folder to lowercase unfiled once.
 
 Open the restored catalog without launching any resource viewer:
 
@@ -96,12 +96,8 @@ print("SQLite recovery and integrity checks passed")
 
 SQLite performs rollback recovery when the database is opened and read. If recovery fails, preserve the failed database and journal, then restore a verified snapshot into a second home. This is distinct from snapshot restoration and does not authorize changes to external files.
 
-## Explicit schema upgrade
+## Automatic schema upgrade
 
-Stop writers and retain a verified snapshot before upgrading a catalog from schema 1, 2, 3 or 4. Ordinary commands never migrate it. Use the installed project environment and an explicit path:
+The first refs command that opens an older supported catalog saves `cat/before-schema-<N>-<YYYY-MM-DD>.sqlite` and applies pending migrations under the file lock. This also happens for read commands and dry runs. The notice names the safety copy; JSON carries it as a warning. If the copy cannot be written, refs refuses before migrating. An existing dated copy is never overwritten; inspect and retain it elsewhere before retrying. Newer unsupported schemas still refuse. There is no manual migration step.
 
-```sh
-uv run --locked python -c 'from pathlib import Path; import sys; from refs.catalog import migrate; migrate(Path(sys.argv[1]))' "$CATALOG"
-```
-
-Migration 002 applies atomically and leaves 001 unchanged. A failed transaction rolls back; inspect the reported failure before retrying. New catalogs start at schema 2. The slice 2 cutover instead resets the trial catalog as authorized and uses `refs init --reuse-config` to preserve its configuration and library settings.
+Before the real slice 3 cutover, the owner renames the library's Unfiled folder to unfiled once with mv. Migration 005 updates the catalog paths, not disk names. Record the first command's upgrade notice and safety-copy path in the acceptance record.

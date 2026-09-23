@@ -9,4 +9,6 @@ uv run --locked python tools/assign_initial_loc.py --config "$CONFIG" --catalog 
 uv run --locked python tools/assign_initial_loc.py --config "$CONFIG" --catalog "$CATALOG" --box-root "$BOX_COPY" --execute > assignments-applied.json
 ```
 
+Opening an older catalog upgrades it after a dated safety copy, including during preview. The report includes a warnings list naming that copy. At real cutover, the owner renames the intake folder to lowercase before this first open and records the safety-copy path.
+
 Both reports include source ID, citation key, revision, old loc, proposed loc, reason and state. The second invocation recomputes the proposals, then applies each through the revision-checked update path. It does not mark loc as a corrected field. A stale revision refuses that update. Where no assignment is proposed, an existing loc is retained. Review the applied report before previewing reorg.

@@ -4,12 +4,13 @@ import os
 import sqlite3
 import tomllib
 from contextlib import contextmanager
+from datetime import date
 from importlib.resources import files
 from pathlib import Path
 from uuid import uuid4
 
 from refs.config import Settings, absolute, toml_text
-from refs.results import RefError
+from refs.results import RefError, upgrade_notices
 
 
 @contextmanager
@@ -19,6 +20,7 @@ def connect(catalog: Path, *, write: bool = False):
         raise RefError("catalog_missing", "Selected catalog is missing", path=str(catalog))
     if not (catalog / "ready").is_file():
         raise RefError("recovery_required", "Catalog initialization is incomplete", 5, path=str(catalog))
+    ensure_schema(catalog)
     if write and (not os.access(catalog,os.W_OK) or not os.access(db,os.W_OK)):
         raise RefError('home_not_writable','Allow write access to the selected catalog and its staging directory, then retry',5,path=str(catalog))
     connection = sqlite3.connect(db.as_uri() + ("?mode=rw" if write else "?mode=ro"), uri=True, timeout=5)
@@ -135,3 +137,40 @@ def migrate(catalog: Path) -> None:
     with sqlite3.connect((catalog/'catalog.sqlite').resolve().as_uri()+'?mode=rw', uri=True) as connection:
         connection.execute('PRAGMA foreign_keys=ON')
         upgrade_connection(connection)
+
+
+def ensure_schema(catalog: Path) -> None:
+    """Upgrade an existing catalog only after saving a consistent safety copy."""
+    from refs.files import file_lock
+    db = catalog / 'catalog.sqlite'
+    def version():
+        with sqlite3.connect(db.as_uri()+'?mode=ro', uri=True) as c:
+            return c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0]
+    current = version()
+    if current == 5:
+        return
+    if current not in (1, 2, 3, 4):
+        raise RefError('unsupported_schema', 'Catalog schema is newer or unsupported; use a compatible refs version', 5)
+    with file_lock(catalog):
+        current = version()
+        if current == 5:
+            return
+        if current not in (1, 2, 3, 4):
+            raise RefError('unsupported_schema', 'Catalog schema is newer or unsupported; use a compatible refs version', 5)
+        safety = catalog / f'before-schema-5-{date.today().isoformat()}.sqlite'
+        with sqlite3.connect(db.as_uri()+'?mode=rw', uri=True) as c:
+            c.execute('BEGIN IMMEDIATE')
+            try:
+                with safety.open('xb'):
+                    safety.chmod(0o600)
+                with sqlite3.connect(db.as_uri()+'?mode=ro', uri=True) as source, sqlite3.connect(safety) as target:
+                    source.backup(target)
+                with safety.open('rb') as stream:
+                    os.fsync(stream.fileno())
+            except (OSError, sqlite3.Error) as exc:
+                raise RefError('unsupported_schema', f'Cannot write schema safety copy {safety}: {exc}; resolve this before retrying', 5) from exc
+            finally:
+                c.rollback()
+            c.execute('PRAGMA foreign_keys=ON')
+            upgrade_connection(c)
+        upgrade_notices.set([*upgrade_notices.get(), dict(code='schema_upgraded', message=f'Upgraded catalog schema {current} to 5; safety copy: {safety}', path=str(safety), details={}, retryable=False)])

@@ -20,7 +20,7 @@ from refs import (
 )
 from refs import catalog as storage
 from refs.config import absolute, select
-from refs.results import RefError, emit
+from refs.results import RefError, emit, upgrade_notices
 
 app = typer.Typer(no_args_is_help=True, pretty_exceptions_enable=False)
 project_app = typer.Typer(no_args_is_help=True)
@@ -34,6 +34,7 @@ def configure(ctx: typer.Context,
               project_file: Annotated[str | None, typer.Option()] = None,
               no_project_config: Annotated[bool, typer.Option()] = False,
               json_output: Annotated[bool, typer.Option("--json")] = False):
+    upgrade_notices.set([])
     ctx.obj = dict(config=config, catalog=catalog, json_output=json_output, project_file=project_file, no_project_config=no_project_config)
 
 

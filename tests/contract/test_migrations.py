@@ -11,17 +11,18 @@ from refs.results import RefError
 def old_catalog(path):
     path.mkdir()
     (path / "ready").touch()
+    (path / "files.lock").touch()
     with sqlite3.connect(path / "catalog.sqlite") as c:
         c.executescript(files("refs").joinpath("migrations/001_initial.sql").read_text())
         c.execute("INSERT INTO catalog_meta VALUES (1,'stable',1,7)")
 
 
-def test_explicit_migration_preserves_identity(tmp_path):
+def test_automatic_migration_preserves_identity(tmp_path):
     path = tmp_path / "old"
     old_catalog(path)
-    with pytest.raises(RefError):
-        with connect(path):
-            pass
+    with connect(path):
+        pass
+    assert len(list(path.glob("before-schema-5-*.sqlite"))) == 1
     migrate(path)
     migrate(path)
     with connect(path) as c:
@@ -110,3 +111,76 @@ def test_lowercase_migration_preserves_locator_identity_and_disk(tmp_path):
         assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0]==5
     assert [p.name for p in (tmp_path/'lib').iterdir()]==['Unfiled']
     assert (old_folder/'Café.pdf').read_bytes()==b'untouched'
+
+
+@pytest.mark.parametrize('json_output', [False, True])
+def test_read_upgrades_with_notice_and_copy(tmp_path, json_output):
+    import json
+    import subprocess
+    path = tmp_path/'cat'
+    old_catalog(path)
+    original = (path/'catalog.sqlite').read_bytes()
+    command = ['refs', '--no-project-config', '--config', str(tmp_path/'config.toml'), '--catalog', str(path)]
+    result = subprocess.run(command + (['--json'] if json_output else []) + ['list'], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    safety, = path.glob('before-schema-5-*.sqlite')
+    with sqlite3.connect(safety) as c:
+        assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == 1
+    assert safety.stat().st_size == len(original)
+    if json_output:
+        assert json.loads(result.stdout)['warnings'][0]['code'] == 'schema_upgraded'
+    else:
+        assert result.stdout.count('Upgraded catalog schema 1 to 5; safety copy:') == 1
+    again = subprocess.run(command + ['list'], capture_output=True, text=True)
+    assert again.returncode == 0 and 'Upgraded' not in again.stdout
+
+
+def test_safety_copy_failure_refuses_before_migration(tmp_path, monkeypatch):
+    from pathlib import Path
+    path = tmp_path/'cat'
+    old_catalog(path)
+    original = (path/'catalog.sqlite').read_bytes()
+    real_open = Path.open
+    def denied(self, *args, **kwargs):
+        if self.name.startswith('before-schema-'):
+            raise PermissionError('synthetic permission denial')
+        return real_open(self, *args, **kwargs)
+    monkeypatch.setattr(Path, 'open', denied)
+    with pytest.raises(RefError, match='Cannot write schema safety copy') as error:
+        with connect(path):
+            pass
+    assert error.value.issue['code'] == 'unsupported_schema'
+    assert (path/'catalog.sqlite').read_bytes() == original
+
+
+def test_newer_schema_still_refuses(tmp_path):
+    path = tmp_path/'cat'
+    old_catalog(path)
+    with sqlite3.connect(path/'catalog.sqlite') as c:
+        c.execute('PRAGMA ignore_check_constraints=ON')
+        c.execute('UPDATE catalog_meta SET schema_version=99')
+    with pytest.raises(RefError) as error:
+        with connect(path):
+            pass
+    assert error.value.issue['code'] == 'unsupported_schema'
+    assert not list(path.glob('before-schema-*'))
+
+
+
+def test_upgrade_inside_existing_file_lock(tmp_path):
+    from refs.files import file_lock
+    path = tmp_path/'cat'
+    old_catalog(path)
+    with file_lock(path), connect(path) as c:
+        assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == 5
+
+
+def test_dry_run_upgrades(cli, tmp_path):
+    from refs.config import toml_text
+    path = tmp_path/'cat'
+    old_catalog(path)
+    (tmp_path/'config.toml').write_text(toml_text(dict(schema_version=1,catalog=dict(path=str(path)))))
+    value = cli('project', 'create', 'preview', '--dry-run')
+    assert value['warnings'][0]['code'] == 'schema_upgraded'
+    with connect(path) as c:
+        assert c.execute('SELECT count(*) FROM projects').fetchone()[0] == 0

@@ -125,4 +125,4 @@ The slice 1 checkpoint and real-paper trial are recorded in [slice 1 acceptance]
 
 A unique DOI or ISBN match binds compatible incoming metadata to an existing source and keeps its key. Missing fields can be filled; differing values and deliberate clears require review. `import show` presents those differences. Reconciliation previews never write. Its `batch_revision` is an opaque integer token covering the saved batch revision and the observed source revisions; pass it back unchanged for execution.
 
-Existing catalogs at schema 1 through 4 require the [explicit migration](docs/restore.md#explicit-schema-upgrade). Ordinary open never upgrades them. Use explicit temporary homes for trials; the real file cutover requires the owner's participation.
+Existing catalogs upgrade automatically after a [dated safety copy](docs/restore.md#automatic-schema-upgrade), including on read commands and dry runs. Use explicit temporary homes for trials; the real file cutover requires the owner's participation.

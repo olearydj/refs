@@ -66,7 +66,8 @@ def main():
     entries=preview(settings,args.box_root)
     if args.execute:
         entries=apply(settings,entries)
-    print(json.dumps(dict(dry_run=not args.execute,entries=entries),ensure_ascii=False,indent=2))
+    from refs.results import upgrade_notices
+    print(json.dumps(dict(dry_run=not args.execute,entries=entries,warnings=upgrade_notices.get()),ensure_ascii=False,indent=2))
 
 
 if __name__=='__main__':

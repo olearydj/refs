@@ -92,7 +92,7 @@ Earlier build verification found that the old bibliography harness could follow 
 
 ## Owner-executed cutover
 
-T062–T067 have not run. Retain the required CCC backup and use the documented explicit schema upgrade on the selected catalog before real assignment or reorg. Ordinary commands never upgrade an existing catalog. The owner then performs assignment preview/apply, reorg preview/execute, resource check, vault repair and final acceptance. No commands against the live catalog, attachment trees or vault were executed for this rehearsal.
+T062–T067 have not run. Retain the required CCC backup and rename the intake folder as T062a directs before real assignment or reorg. The next catalog open upgrades automatically after a safety copy; record its path here from the owner's output. The owner then performs assignment preview/apply, reorg preview/execute, resource check, vault repair and final acceptance. No commands against the live catalog, attachment trees or vault were executed for this rehearsal.
 
 
 ## T061a: revised placement and lowercase folder
@@ -147,3 +147,12 @@ Every scenario assigned 510 of 510 sources with files; all 65 file-less sources 
 The actual move count is 554, plus two resources already correctly placed after the simulated folder rename. All 556 resources were verified under the library with matching digests and distinct paths. Moving those two again would contradict reorg's mismatch-only selection. All 40 storage attachments moved. The eight snapshots retained exactly the three original and five suffixed names listed above in every scenario. Both kill-and-resume scenarios completed without missing or duplicated files. No operations failed; the same 50 unrecorded files and the library's pre-existing .DS_Store remained untouched. The supplied sample's hashes were unchanged, and it was not deleted.
 
 Verification: `uv sync --locked` passed; `uv run --locked pytest -q` reported 584 passed in 126.41 seconds; Ruff and ty both reported all checks passed. Demo output was `PASS refs demo: 121 checks (US1, US2, US3, US4, US5, US6)`. The real-input harness reported `Trial failures: 0`; its log is `/private/tmp/refs-trial-4n9xoyhf/run.log`. The new migration regression verifies that the filesystem retains its old directory name until the owner renames it. No live catalog or attachment tree was changed. T062–T067 remain unchecked.
+
+
+## T061b: automatic catalog upgrades
+
+Owner decision, 2026-09-23: "normally it is handled automagically"; "agree with A". Opening a supported older catalog now saves a consistent SQLite safety copy under the existing file lock, then applies pending migrations. Read commands and dry runs follow the same path. Human output prints one line naming the upgrade and copy; the JSON envelope includes a schema_upgraded warning. The assignment tool also retains the notice in its JSON report. A denied safety copy leaves the old database unchanged and returns unsupported_schema. A newer schema still refuses. Existing dated copies are not overwritten, and initialization remains explicit.
+
+Regression checks cover text and JSON read-command upgrades, no repeated notice on a second open, safety-copy refusal, newer-schema refusal, dry-run upgrade without creating the proposed project, and upgrade while the file lock is already held. All fixtures use temporary paths. Final verification: uv sync --locked passed; pytest reported 590 passed in 127.36 seconds; Ruff and ty reported all checks passed. Demo: PASS refs demo: 121 checks (US1, US2, US3, US4, US5, US6). Real-trial harness: Trial failures: 0, with log at /private/tmp/refs-trial-1x3626m0/run.log.
+
+Application Python is 4,716 lines, up 60 in T061b and 510 from the slice baseline of 4,206, within the roughly 700-line estimate. No table, dependency, migration file or installed command was added in T061b. The owner-only T062a now follows the CCC backup and precedes assignment: rename the physical Unfiled folder to unfiled with mv, then let the first catalog open upgrade automatically. The actual live safety-copy path remains pending owner output; no live catalog was opened and no owner step was run. T062, T062a and T063–T067 remain unchecked.
