@@ -18,7 +18,7 @@ SQLite is the sole authority. Slice 1 has ten logical tables. Slice 2 adds four:
 | collections — slice 2 | ID, parent ID, verbatim name, hierarchy path and revision. Preserve the imported library/item identity. Imported history, independent of loc; no collection-editing surface. |
 | source_collections — slice 2 | Unique source/collection pair, preserving every imported membership independently of projects and file placement. |
 | source_relations — slice 2 | Deduplicated related-item pairs with origin identities; retain unresolved endpoints as evidence rather than inventing sources. No relationship editor. |
-| file_operations (slice 3) | One row per file transfer: ID, resource ID, old/new paths and names, original/destination/staging identities, size, mtime, digest, expected source/resource revisions and loc, state, last completed state, error and timestamps. States and transaction boundaries follow [the move protocol](contracts/files-and-recovery.md#move-protocol-and-journal). recorded means pending original removal; removed is final. |
+| file_operations (slice 3) | One row per file transfer: ID, resource ID, old/new paths and names, original/destination/staging identities, size, mtime, digest, expected source/resource revisions and loc, state, last completed state, error and timestamps. States and transaction boundaries follow [the move protocol](contracts/files-and-recovery.md#move-protocol-and-journal). recorded means pending original removal; removed is final. The resource ID is historical, kept without a foreign key so completed move history survives unlink; operation creation checks the resource exists. |
 
 ## Authority and mutations
 

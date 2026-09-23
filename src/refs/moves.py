@@ -294,6 +294,7 @@ def unlinked_paths(settings, planned):
     with connect(settings.catalog_path()) as c:
         known={str(resources.resolve_path(settings,item)) for item in resources.inventory(c)}
         known.update(row[0] for row in c.execute("SELECT old_path FROM file_operations WHERE state!='removed'"))
+    known={unicodedata.normalize('NFC',path) for path in known}
     parents={Path(item['old_path']).parent for item in planned}
     parents={path for path in parents if not any(other!=path and path.is_relative_to(other) for other in parents)}
     found=set()
@@ -303,7 +304,7 @@ def unlinked_paths(settings, planned):
             dirs[:]=[name for name in dirs if not (base/name).is_symlink() and base/name not in (settings.library,settings.catalog_path())]
             for name in names:
                 path=base/name
-                if not path.is_symlink() and path.is_file() and path!=settings.config and str(path) not in known:
+                if not path.is_symlink() and path.is_file() and path!=settings.config and unicodedata.normalize('NFC',str(path)) not in known:
                     found.add(str(path))
     return sorted(found)
 

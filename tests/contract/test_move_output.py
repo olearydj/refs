@@ -86,3 +86,18 @@ def test_staging_cleanup_failure_does_not_follow_original_deletion(initialized,t
     assert caught.value.data['moves'][0]['state']=='failed' and path.exists()
     monkeypatch.setattr(Path,'unlink',unlink)
     assert moves.reorg(settings,execute=True)['moves'][0]['state']=='removed'
+
+
+def test_untouched_scan_matches_nfd_disk_to_nfc_catalog(initialized,tmp_path,reference_path):
+    import unicodedata
+
+    from refs.catalog import connect
+    settings,path,extra=prepare(initialized,tmp_path,reference_path)
+    nfd=path.parent/unicodedata.normalize('NFD','Büttner - Training.pdf')
+    nfd.write_bytes(b'synthetic real-shaped filename')
+    source=initialized('show','smith-2024-learningPython')['data']
+    resource=resources.link(settings,source['id'],path=nfd)
+    nfc=unicodedata.normalize('NFC',str(nfd))
+    with connect(settings.catalog_path(),write=True) as c:
+        c.execute('UPDATE resources SET path=? WHERE id=?',(nfc,resource['id']))
+    assert moves.unlinked_paths(settings,[dict(old_path=str(path))])==[str(extra)]

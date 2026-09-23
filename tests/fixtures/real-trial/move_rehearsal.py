@@ -56,7 +56,8 @@ def prepare(sample, work):
             c.execute('UPDATE resources SET path=?,root=?,relative=?,locator=? WHERE id=?',(locator['path'],locator['root'],locator['relative'],json.dumps(locator,sort_keys=True),resource_id))
     settings=select(str(config),str(work/'cat'),no_project_config=True)
     assignment=runpy.run_path(str(REPO/'tools/assign_initial_loc.py'))
-    assignment['apply'](settings,assignment['preview'](settings,contained(work,manifest['box_root'])))
+    assignments=assignment['apply'](settings,assignment['preview'](settings,contained(work,manifest['box_root'])))
+    (work/'assignments.json').write_text(json.dumps(assignments,ensure_ascii=False,indent=2))
     return settings
 
 
@@ -89,6 +90,7 @@ moves.reorg(select(sys.argv[1],sys.argv[2],no_project_config=True),execute=True)
     if completed.returncode:
         raise AssertionError(completed.stdout+completed.stderr)
     report=json.loads(completed.stdout)['data']
+    (work/'move-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
     with catalog.connect(settings.catalog_path()) as c:
         after=resources.inventory(c)
         operations=[dict(row) for row in c.execute('SELECT * FROM file_operations')]
@@ -107,7 +109,7 @@ moves.reorg(select(sys.argv[1],sys.argv[2],no_project_config=True),execute=True)
 
 def run(sample):
     sample=Path(sample).expanduser().resolve()
-    allowed=[Path(tempfile.gettempdir()).resolve(),Path('/private/tmp'),REPO/'tests/fixtures/real-trial']
+    allowed=[Path(tempfile.gettempdir()).resolve(),Path('/private/tmp'),Path('/Volumes/Casa/tmp'),REPO/'tests/fixtures/real-trial']
     if not any(sample.is_relative_to(root) for root in allowed):
         raise ValueError('Put the disposable sample under the trial fixtures or a temporary directory')
     baseline={str(path.relative_to(sample)):files.hash_file(path) for path in sample.rglob('*') if not path.is_symlink() and path.is_file()}
