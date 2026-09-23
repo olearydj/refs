@@ -19,6 +19,7 @@ def test_assignment_rules_preview_and_apply(initialized,tmp_path):
         'both':['Box/Papers/Café/book.pdf','storage/KEY/snapshot.html'],
         'single':['storage/OTHER/file.pdf'],
         'none':['elsewhere/file.pdf'],
+        'managed':['lib/unfiled/copy.pdf'],
         'fileless':[],
         'ambiguous':['Box/A/one.pdf','Box/B/two.pdf'],
     }.items():
@@ -39,11 +40,13 @@ def test_assignment_rules_preview_and_apply(initialized,tmp_path):
     preview=tool['preview'](settings,box)
     by_key={entry['citation_key']:entry for entry in preview}
     assert by_key['both']['loc']=='Papers/Café'
-    assert by_key['single']['loc']=='History/Collection'
-    assert all(by_key[key]['loc'] is None for key in ['none','fileless','ambiguous'])
+    assert by_key['single']['loc']=='unfiled'
+    assert by_key['none']['loc']=='unfiled'
+    assert by_key['managed']['loc']=='unfiled'
+    assert all(by_key[key]['loc'] is None for key in ['fileless','ambiguous'])
     assert (tmp_path/'cat/catalog.sqlite').read_bytes()==before
     applied=tool['apply'](settings,preview)
-    assert sum(entry['state']=='applied' for entry in applied)==2
+    assert sum(entry['state']=='applied' for entry in applied)==4
     for key in ['both','single']:
         shown=sources.show(settings.catalog_path(),ids[key])
         assert shown['loc']==by_key[key]['loc'] and 'loc' not in shown['corrected_fields']

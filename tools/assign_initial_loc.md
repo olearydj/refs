@@ -1,6 +1,6 @@
 # Initial loc assignment
 
-This one-time cutover tool reads recorded paths and collection memberships. It opens no attachments and moves no files. For a source with files it proposes the folder relative to the supplied Box root, otherwise its single collection, otherwise no assignment. A storage attachment follows the Box folder when the source has both. File-less sources receive no assignment. Unexpected multiple Box folders are reported for an explicit owner choice.
+This one-time cutover tool reads recorded file paths. It opens no attachments and moves no files. For a source with files it proposes the folder relative to the supplied Box root, otherwise the folder of its managed file relative to the library root, otherwise unfiled for non-topic storage. Collections never determine loc. A storage attachment follows the Box folder when the source has both. File-less sources receive no assignment. Unexpected multiple Box or managed folders are reported for an explicit owner choice.
 
 Run against a disposable rehearsal catalog first. Only the owner executes the real cutover after the CCC backup.
 

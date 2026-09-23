@@ -17,6 +17,7 @@ def preview(settings, box_root):
             item=dict(row)
             files=resources.inventory(c,item['id'])
             folders={}
+            managed={}
             for resource in files:
                 path=resources.resolve_path(settings,resource)
                 if path.is_relative_to(box_root):
@@ -24,16 +25,23 @@ def preview(settings, box_root):
                     if relative!='.':
                         folder=normalize_loc(relative)
                         folders[folder.casefold()]=folder
-            memberships=[row[0] for row in c.execute('SELECT c.path FROM collections c JOIN source_collections sc ON sc.collection_id=c.id WHERE sc.source_id=? ORDER BY c.path',(item['id'],))]
-            loc,reason=None,'no folder or single collection'
+                elif resource['root']=='library':
+                    relative=str(Path(resource['relative']).parent)
+                    folder=normalize_loc(relative) if relative!='.' else resources.UNFILED
+                    managed[folder.casefold()]=folder
+            loc,reason=None,'no files'
             if not files:
                 reason='no files'
             elif len(folders)>1:
                 reason='multiple Box folders; choose loc explicitly'
             elif folders:
                 loc,reason=next(iter(folders.values())),'Box folder'
-            elif len(memberships)==1:
-                loc,reason=normalize_loc(memberships[0]),'single collection'
+            elif len(managed)>1:
+                reason='multiple managed folders; choose loc explicitly'
+            elif managed:
+                loc,reason=next(iter(managed.values())),'managed folder'
+            else:
+                loc,reason=resources.UNFILED,'non-topic storage'
             result.append(dict(source_id=item['id'],citation_key=item['citation_key'],revision=item['revision'],old_loc=item['loc'],loc=loc,reason=reason,state='unchanged' if loc is None or loc==item['loc'] else 'planned'))
     return result
 

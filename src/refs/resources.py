@@ -14,6 +14,7 @@ from refs.catalog import changed, connect
 from refs.config import Settings
 from refs.results import RefError
 
+UNFILED = "unfiled"
 
 def inventory(connection, source_id=None) -> list[dict]:
     rows = connection.execute('SELECT * FROM resources'+(' WHERE source_id=?' if source_id else '')+' ORDER BY id', (source_id,) if source_id else ())
@@ -241,7 +242,7 @@ def copy(settings: Settings, reference: str, path: Path, *, resource_id=None, ke
     if dry_run:
         return plan
     if not source.get('loc'):
-        source = sources.update(settings.catalog_path(),source['id'],{'schema_version':'1.0','set':{'loc':'Unfiled'}},source['revision'])
+        source = sources.update(settings.catalog_path(),source['id'],{'schema_version':'1.0','set':{'loc':UNFILED}},source['revision'])
     folder = target.parent
     warnings = plan['warnings']
     published = False
@@ -279,9 +280,9 @@ def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, 
     warnings = []
     if not keep_name and (naming.issued_year(source)=='ND' or not re.search(r'[^\W_]+',naming.short_title(source))):
         warnings.append(dict(code='filename_unavailable',message='Conventional filename unavailable; keeping the original name',path=str(source_path),details={},retryable=False))
-    folder = library/(source.get('loc') or 'Unfiled')
+    folder = library/(source.get('loc') or UNFILED)
     if any(parent.is_symlink() for parent in [folder,*folder.parents]) or not folder.resolve().is_relative_to(library) or folder.exists() and not folder.is_dir():
-        raise RefError('unsafe_path','Inspect the library Unfiled path before copying')
+        raise RefError('unsafe_path','Inspect the library unfiled path before copying')
     target = folder/name
     if label and (target.exists() or target.is_symlink()):
         raise RefError('destination_exists','Inspect the existing destination; copy never overwrites or adopts it',path=str(target))

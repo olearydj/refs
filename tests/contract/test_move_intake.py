@@ -7,14 +7,14 @@ def test_add_moves_and_resource_add_links(initialized,tmp_path,reference_path):
     original=tmp_path/'download.pdf'
     original.write_bytes(b'synthetic')
     source=initialized('add','--format','refs','--input',reference_path,'--file',original)['data']
-    assert source['loc']=='Unfiled' and not original.exists()
+    assert source['loc']=='unfiled' and not original.exists()
     assert len(source['resources'])==1
     assert (tmp_path/'lib'/source['resources'][0]['relative']).read_bytes()==b'synthetic'
     other=tmp_path/'other.pdf'
     other.write_bytes(b'linked')
     linked=initialized('resource','add',source['id'],'--path',other)['data']
     assert linked['path']==str(other) and other.exists()
-    assert initialized('show',source['id'])['data']['loc']=='Unfiled'
+    assert initialized('show',source['id'])['data']['loc']=='unfiled'
 
 
 @pytest.mark.parametrize('flag',['--copy','--move'])
@@ -38,7 +38,7 @@ def test_copy_sets_loc_and_link_leaves_it_empty(initialized,tmp_path,reference_p
     other=tmp_path/'second.pdf'
     other.write_bytes(b'second')
     initialized('resource','add',source['id'],'--path',other,'--copy')
-    assert initialized('show',source['id'])['data']['loc']=='Unfiled'
+    assert initialized('show',source['id'])['data']['loc']=='unfiled'
     assert path.exists() and other.exists()
 
 
@@ -76,7 +76,7 @@ def test_add_move_preview_loc_and_text(initialized, tmp_path, reference_path):
     result = subprocess.run(['refs','--no-project-config','--config',str(tmp_path/'config.toml'),'--catalog',str(tmp_path/'cat'),'add','--format','refs','--input',str(reference_path),'--file',str(path)],capture_output=True,text=True)
     assert result.returncode == 0, result.stderr
     text = result.stdout
-    assert text.splitlines()[1] == f"Moved {path} to {tmp_path/'lib/Unfiled/LearningPython-2024.pdf'} for smith-2024-learningPython"
+    assert text.splitlines()[1] == f"Moved {path} to {tmp_path/'lib/unfiled/LearningPython-2024.pdf'} for smith-2024-learningPython"
 
 
 def test_intake_resumes_with_one_resource(initialized, tmp_path, reference_path, monkeypatch):

@@ -4,7 +4,7 @@
 
 T052–T060 are implemented and the supplied disposable sample passed all three move-integrity scenarios. T061 verification is complete; the build is stopped for owner review. T062–T067 remain owner-executed and have not run. This record does not authorize the real cutover.
 
-One placement decision remains open: the current assignment rule leaves thomas-2025-aiValue and zhang-2023-exploringMIT without loc. Their files were already managed under Unfiled in the sample. The tool follows the contract's Box-folder, single-collection, otherwise-no-assignment rule. The owner has been asked whether to add an existing-managed-folder fallback or set these locs explicitly.
+The placement decision is resolved by the owner's pre-cutover rules below. T061a is complete. The earlier rehearsal is retained here as historical evidence; its collection fallback and two unassigned managed sources are superseded.
 
 ## Real sample and results
 
@@ -92,4 +92,58 @@ Earlier build verification found that the old bibliography harness could follow 
 
 ## Owner-executed cutover
 
-T062–T067 have not run. Resolve the two locs above, retain the required CCC backup and use the documented explicit schema upgrade on the selected catalog before real assignment or reorg. Ordinary commands never upgrade an existing catalog. The owner then performs assignment preview/apply, reorg preview/execute, resource check, vault repair and final acceptance. No commands against the live catalog, attachment trees or vault were executed for this rehearsal.
+T062–T067 have not run. Retain the required CCC backup and use the documented explicit schema upgrade on the selected catalog before real assignment or reorg. Ordinary commands never upgrade an existing catalog. The owner then performs assignment preview/apply, reorg preview/execute, resource check, vault repair and final acceptance. No commands against the live catalog, attachment trees or vault were executed for this rehearsal.
+
+
+## T061a: revised placement and lowercase folder
+
+Initial assignment now uses the Box-tree folder, otherwise the managed-file folder relative to the library, otherwise `unfiled` for non-topic storage. Collections do not determine placement. Migration 005 upgrades the catalog to schema 5, rewriting the old capitalized source loc and leading managed relative-path segment while preserving IDs and locator formatting. It never renames a directory. The owner performs the real folder rename once with `mv`; only fresh temporary rehearsal copies were renamed here.
+
+The same rehearsal command above was rerun. Each home retains `assignment-preview.json`, `assignments.json` and `move-report.json`. Actual output:
+
+```json
+[
+  {
+    "scenario": "clean",
+    "resources": 556,
+    "sources_with_files": 510,
+    "sources_assigned": 510,
+    "fileless_sources": 65,
+    "moves": 554,
+    "already_placed": 2,
+    "unlinked_files": 50,
+    "findings": 0,
+    "home": "/private/var/folders/d3/2qdml55n4vd1lcrt4q_5dl3w0000gn/T/refs-move-rehearsal-ia1qmb2d/home"
+  },
+  {
+    "scenario": "published_uncommitted",
+    "resources": 556,
+    "sources_with_files": 510,
+    "sources_assigned": 510,
+    "fileless_sources": 65,
+    "moves": 554,
+    "already_placed": 2,
+    "unlinked_files": 50,
+    "findings": 0,
+    "home": "/private/var/folders/d3/2qdml55n4vd1lcrt4q_5dl3w0000gn/T/refs-move-rehearsal-jjnbsl3k/home"
+  },
+  {
+    "scenario": "recorded",
+    "resources": 556,
+    "sources_with_files": 510,
+    "sources_assigned": 510,
+    "fileless_sources": 65,
+    "moves": 554,
+    "already_placed": 2,
+    "unlinked_files": 50,
+    "findings": 0,
+    "home": "/private/var/folders/d3/2qdml55n4vd1lcrt4q_5dl3w0000gn/T/refs-move-rehearsal-wefu4c7a/home"
+  }
+]
+```
+
+Every scenario assigned 510 of 510 sources with files; all 65 file-less sources remained unplaced. The five storage-only sources bailenson2018exper, creswell2019educa, likert1932techn, roscoe1971incre and shabanov2024effor received `unfiled`. The two managed sources thomas-2025-aiValue and zhang-2023-exploringMIT received their managed folder, now `unfiled`.
+
+The actual move count is 554, plus two resources already correctly placed after the simulated folder rename. All 556 resources were verified under the library with matching digests and distinct paths. Moving those two again would contradict reorg's mismatch-only selection. All 40 storage attachments moved. The eight snapshots retained exactly the three original and five suffixed names listed above in every scenario. Both kill-and-resume scenarios completed without missing or duplicated files. No operations failed; the same 50 unrecorded files and the library's pre-existing .DS_Store remained untouched. The supplied sample's hashes were unchanged, and it was not deleted.
+
+Verification: `uv sync --locked` passed; `uv run --locked pytest -q` reported 584 passed in 126.41 seconds; Ruff and ty both reported all checks passed. Demo output was `PASS refs demo: 121 checks (US1, US2, US3, US4, US5, US6)`. The real-input harness reported `Trial failures: 0`; its log is `/private/tmp/refs-trial-4n9xoyhf/run.log`. The new migration regression verifies that the filesystem retains its old directory name until the owner renames it. No live catalog or attachment tree was changed. T062–T067 remain unchecked.

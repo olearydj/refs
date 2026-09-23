@@ -21,7 +21,7 @@ def test_copy_retargets_one_resource(initialized, tmp_path, reference_path):
     assert copied['id'] == linked['id']
     assert copied['copied_from']['path'] == str(path)
     assert copied['root'] == 'library'
-    assert copied['relative'].startswith('Unfiled/')
+    assert copied['relative'].startswith('unfiled/')
     assert path.read_bytes() == (settings.library/copied['relative']).read_bytes()
     assert len(sources.show(settings.catalog_path(),source['id'])['resources']) == 1
 
@@ -45,7 +45,7 @@ def test_copy_failure_retains_original_and_published_copy(initialized, tmp_path,
     with pytest.raises(RefError):
         resources.copy(settings, source['id'], path, resource_id=linked['id'])
     assert path.exists()
-    copies = list((settings.library/'Unfiled').glob('*')) if (settings.library/'Unfiled').exists() else []
+    copies = list((settings.library/'unfiled').glob('*')) if (settings.library/'unfiled').exists() else []
     assert len(copies) == (1 if failure == 'after' else 0)
     assert sources.show(settings.catalog_path(),source['id'])['resources'][0]['path'] == str(path)
 
@@ -53,9 +53,9 @@ def test_copy_failure_retains_original_and_published_copy(initialized, tmp_path,
 def test_collision_keep_name_and_preview(initialized, tmp_path, reference_path):
     settings, source, path = prepare(initialized,tmp_path,reference_path)
     preview = resources.copy(settings, source['id'],path,keep_name=True,dry_run=True)
-    assert preview['dry_run'] and not (settings.library/'Unfiled').exists()
+    assert preview['dry_run'] and not (settings.library/'unfiled').exists()
     copied = resources.copy(settings,source['id'],path,keep_name=True)
-    assert copied['relative'] == 'Unfiled/download.pdf'
+    assert copied['relative'] == 'unfiled/download.pdf'
     path.write_bytes(b'different content, same destination')
     with pytest.raises(RefError):
         resources.copy(settings,source['id'],path,keep_name=True)
@@ -94,7 +94,7 @@ def test_link_flag_keep_name_and_failed_add(initialized,tmp_path,reference_path)
     path.write_bytes(b'synthetic')
     linked=initialized('add','--format','refs','--input',reference_path,'--file',path,'--link')['data']
     assert linked['resources'][0]['path'] == str(path)
-    assert not (tmp_path/'lib'/'Unfiled').exists()
+    assert not (tmp_path/'lib'/'unfiled').exists()
     copied=initialized('resource','add',linked['id'],'--path',path,'--copy','--keep-name')['data']
     assert copied['copied'] is False
     assert copied['duplicate_resource_id'] == linked['resources'][0]['id']
@@ -114,10 +114,10 @@ def test_preview_does_not_capture_or_stage(initialized,tmp_path,reference_path):
     path=tmp_path/'original.pdf'
     path.write_bytes(b'synthetic')
     data=initialized('add','--format','refs','--input',reference_path,'--file',path,'--copy','--dry-run')['data']
-    assert data['resources'][0]['destination'].endswith('/Unfiled/LearningPython-2024.pdf')
+    assert data['resources'][0]['destination'].endswith('/unfiled/LearningPython-2024.pdf')
     assert initialized('list')['data']['total'] == 0
     assert not (tmp_path/'cat'/'staging').exists()
-    assert not (tmp_path/'lib'/'Unfiled').exists()
+    assert not (tmp_path/'lib'/'unfiled').exists()
 
 
 def test_revision_change_after_publication_preserves_copy(initialized,tmp_path,reference_path,monkeypatch):
@@ -130,7 +130,7 @@ def test_revision_change_after_publication_preserves_copy(initialized,tmp_path,r
     with pytest.raises(RefError) as error:
         resources.copy(settings,source['id'],path)
     assert error.value.exit_code == 4
-    assert list((settings.library/'Unfiled').iterdir())
+    assert list((settings.library/'unfiled').iterdir())
     assert not sources.show(settings.catalog_path(),source['id'])['resources']
     assert path.exists()
 
@@ -142,5 +142,5 @@ def test_filename_fallback_is_explicit(initialized,tmp_path):
     record=tmp_path/'undated.json'
     record.write_text(json.dumps({'schema_version':'1.0','citation_key':'undated','metadata':{'title':'Undated Work'}}))
     data=initialized('add','--format','refs','--input',record,'--file',path,'--copy')['data']
-    assert data['resources'][0]['relative'] == 'Unfiled/undated.pdf'
+    assert data['resources'][0]['relative'] == 'unfiled/undated.pdf'
     assert any(item['code']=='filename_unavailable' for item in data['warnings'])

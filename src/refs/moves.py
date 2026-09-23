@@ -220,7 +220,7 @@ def intake(settings, reference, path: Path, *, keep_name=False, dry_run=False, l
         return plan | dict(dry_run=True,moved=True,citation_key=source['citation_key'],moves=[report(dict(old)) if old and resource_id else preview_move(resource_id,path,target)],unlinked_paths=[])
     if resource_id is None:
         if not source.get('loc'):
-            sources.update(settings.catalog_path(),source['id'],{'schema_version':'1.0','set':{'loc':'Unfiled'}},source['revision'])
+            sources.update(settings.catalog_path(),source['id'],{'schema_version':'1.0','set':{'loc':resources.UNFILED}},source['revision'])
         resource_id=resources.link(settings,source['id'],path=path,label=label,media_type=media_type)['id']
     result=move(settings,resource_id,target)
     current=sources.show(settings.catalog_path(),source['id'])

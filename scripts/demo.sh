@@ -173,12 +173,12 @@ run 0 link resource add "$KEY" --path "$DEMO_ROOT/linked.pdf"
 assert_jq '.data.path != null and .data.root == null' "$LAST" 'existing source links by default'
 printf 'Synthetic download\n' >"$DEMO_ROOT/download.pdf"
 run 0 copy resource add "$KEY" --path "$DEMO_ROOT/download.pdf" --copy
-assert_jq '.data.relative == "Unfiled/LearningPython-2024.pdf" and .data.digest != null' "$LAST" 'verified conventional copy'
-cmp "$DEMO_ROOT/download.pdf" "$DEMO_ROOT/lib/Unfiled/LearningPython-2024.pdf" || fail 'copy differs'
+assert_jq '.data.relative == "unfiled/LearningPython-2024.pdf" and .data.digest != null' "$LAST" 'verified conventional copy'
+cmp "$DEMO_ROOT/download.pdf" "$DEMO_ROOT/lib/unfiled/LearningPython-2024.pdf" || fail 'copy differs'
 pass 'copy and original bytes agree'
 printf 'Synthetic keep-name file\n' >"$DEMO_ROOT/keep.pdf"
 run 0 keep resource add "$KEY" --path "$DEMO_ROOT/keep.pdf" --copy --keep-name
-assert_jq '.data.relative == "Unfiled/keep.pdf"' "$LAST" 'keep-name respected'
+assert_jq '.data.relative == "unfiled/keep.pdf"' "$LAST" 'keep-name respected'
 run 0 duplicate resource add "$KEY" --path "$DEMO_ROOT/download.pdf" --copy
 assert_jq '.data.copied == false and .warnings[0].code == "duplicate_attachment"' "$LAST" 'duplicate attachment is not copied'
 printf 'Different content for collision test\n' >"$DEMO_ROOT/download.pdf"
@@ -212,7 +212,7 @@ with patch.object(resources, 'register_copy', side_effect=OSError('Synthetic int
         emit('resource add', error=error, json_output=True)
     else:
         raise AssertionError('Expected interrupted registration')
-assert original.read_bytes() == (root/'lib/Unfiled/interrupted.pdf').read_bytes()
+assert original.read_bytes() == (root/'lib/unfiled/interrupted.pdf').read_bytes()
 PYCODE
 assert_jq '.errors[0].code == "copy_published_unregistered" and .status == "partial"' "$DEMO_ROOT/interrupted.result.json" 'finished interrupted copy and original retained'
 pause_demo

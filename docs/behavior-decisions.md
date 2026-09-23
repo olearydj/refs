@@ -28,7 +28,7 @@ Short-title overrides persist; absent one, use an explicitly known main title or
 
 **Literal reply:** “B: Derive mode from location (Recommended)”, audit §11. **Interpretation:** A file recorded by named root within library_root is managed; other files stay linked. There is no mode flag, managed-but-elsewhere state or resource adopt command. Outside linked files cannot be moved/renamed/deleted except through explicitly invoked intake, as constitution 2.0.0 states. Assigning filing collections to files already under the root never moves them. Selected reorganize remains explicit/previewed and preserves names; membership edits never move files.
 
-Each managed file has one effective filing collection. Slice 1 uses Unfiled as the intake folder/default without collection tables. Collections, projects and tags remain distinct; collection implementation and move default wait until after real-paper use. The constitution amendment is applied, authorized by the owner's “proceed with 1-3”; it is not pending.
+Each managed file has one effective filing collection. Slice 1 uses unfiled as the intake folder/default without collection tables. Collections, projects and tags remain distinct; collection implementation and move default wait until after real-paper use. The constitution amendment is applied, authorized by the owner's “proceed with 1-3”; it is not pending.
 
 ## C1 — Capture, and projects
 

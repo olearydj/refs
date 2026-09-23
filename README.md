@@ -68,7 +68,7 @@ Rekey, remove, reactivate and unlink preview unless `--execute` is supplied. Mut
 
 ## Files and export
 
-`add --file PATH` moves a new file into the library by default: it copies and verifies the bytes, records the managed path, then deletes the original. Use `--copy` to retain the original or `--link` to leave it in place. `resource add` still links by default and offers the same three flags. Copy and move use the source's loc, assigning `Unfiled` only when it has none. Intake uses the filename convention unless `--keep-name`; reorg preserves names, adding collision suffixes when necessary.
+`add --file PATH` moves a new file into the library by default: it copies and verifies the bytes, records the managed path, then deletes the original. Use `--copy` to retain the original or `--link` to leave it in place. `resource add` still links by default and offers the same three flags. Copy and move use the source's loc, assigning `unfiled` only when it has none. Intake uses the filename convention unless `--keep-name`; reorg preserves names, adding collision suffixes when necessary.
 
 Loc is optional. Set it with `add --loc PATH` or revision-checked `update REF --set 'loc="Papers/Topic"'`; changing or clearing it never moves files. `show` displays loc, and `list --loc` and `search --loc` filter it. Reorg previews by default:
 
@@ -125,4 +125,4 @@ The slice 1 checkpoint and real-paper trial are recorded in [slice 1 acceptance]
 
 A unique DOI or ISBN match binds compatible incoming metadata to an existing source and keeps its key. Missing fields can be filled; differing values and deliberate clears require review. `import show` presents those differences. Reconciliation previews never write. Its `batch_revision` is an opaque integer token covering the saved batch revision and the observed source revisions; pass it back unchanged for execution.
 
-Existing catalogs at schema 1 through 3 require the [explicit migration](docs/restore.md#explicit-schema-upgrade). Ordinary open never upgrades them. Use explicit temporary homes for trials; the real file cutover requires the owner's participation.
+Existing catalogs at schema 1 through 4 require the [explicit migration](docs/restore.md#explicit-schema-upgrade). Ordinary open never upgrades them. Use explicit temporary homes for trials; the real file cutover requires the owner's participation.

@@ -30,6 +30,12 @@ def prepare(sample, work):
     shutil.copytree(sample,work)
     library=work/'lib'
     library.mkdir(exist_ok=True)
+    # Simulate the owner's one-time rename only inside this fresh disposable home.
+    old_folder,new_folder=library/'Unfiled',library/'unfiled'
+    if old_folder.exists():
+        if new_folder.exists() and not old_folder.samefile(new_folder):
+            raise ValueError('Both intake folders exist; inspect the disposable sample')
+        old_folder.rename(new_folder)
     config=work/'config.toml'
     config.write_text(toml_text(dict(schema_version=1,catalog=dict(path=str(work/'cat')),resources=dict(library_root=str(library),roots=dict(library=str(library))))))
     catalog.migrate(work/'cat')
@@ -56,7 +62,9 @@ def prepare(sample, work):
             c.execute('UPDATE resources SET path=?,root=?,relative=?,locator=? WHERE id=?',(locator['path'],locator['root'],locator['relative'],json.dumps(locator,sort_keys=True),resource_id))
     settings=select(str(config),str(work/'cat'),no_project_config=True)
     assignment=runpy.run_path(str(REPO/'tools/assign_initial_loc.py'))
-    assignments=assignment['apply'](settings,assignment['preview'](settings,contained(work,manifest['box_root'])))
+    proposals=assignment['preview'](settings,contained(work,manifest['box_root']))
+    (work/'assignment-preview.json').write_text(json.dumps(proposals,ensure_ascii=False,indent=2))
+    assignments=assignment['apply'](settings,proposals)
     (work/'assignments.json').write_text(json.dumps(assignments,ensure_ascii=False,indent=2))
     return settings
 
@@ -70,6 +78,11 @@ def run_scenario(sample, scenario):
     settings=prepare(sample,work)
     with catalog.connect(settings.catalog_path()) as c:
         before=resources.inventory(c)
+        with_files=len({item['source_id'] for item in before})
+        assigned=c.execute('SELECT count(*) FROM sources WHERE loc IS NOT NULL AND id IN (SELECT source_id FROM resources)').fetchone()[0]
+        fileless=c.execute('SELECT count(*) FROM sources WHERE id NOT IN (SELECT source_id FROM resources)').fetchone()[0]
+        assert assigned==with_files, 'A source with files lacks loc'
+        assert c.execute('SELECT count(*) FROM sources WHERE loc IS NOT NULL AND id NOT IN (SELECT source_id FROM resources)').fetchone()[0]==0, 'A file-less source received loc'
     expected={item['id']:files.hash_file(resources.resolve_path(settings,item)) for item in before}
     planned=moves.reorg(settings)
     extras={path:files.hash_file(Path(path)) for path in planned['unlinked_paths']}
@@ -104,7 +117,7 @@ moves.reorg(select(sys.argv[1],sys.argv[2],no_project_config=True),execute=True)
     assert all(not Path(row['old_path']).exists() for row in operations)
     assert all(files.hash_file(Path(path))==digest for path,digest in extras.items()), 'An unlinked extra changed'
     assert moves.reorg(settings,execute=True)['moves']==[], 'Completed rerun was not a no-op'
-    return dict(scenario=scenario,resources=len(after),moves=len(report['moves']),unlinked_files=len(extras),findings=0,home=str(work))
+    return dict(scenario=scenario,resources=len(after),sources_with_files=with_files,sources_assigned=assigned,fileless_sources=fileless,moves=len(report['moves']),already_placed=len(after)-len(report['moves']),unlinked_files=len(extras),findings=0,home=str(work))
 
 
 def run(sample):

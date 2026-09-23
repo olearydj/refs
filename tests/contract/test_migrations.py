@@ -25,7 +25,7 @@ def test_explicit_migration_preserves_identity(tmp_path):
     migrate(path)
     migrate(path)
     with connect(path) as c:
-        assert tuple(c.execute("SELECT * FROM catalog_meta").fetchone()) == (1, "stable", 4, 7)
+        assert tuple(c.execute("SELECT * FROM catalog_meta").fetchone()) == (1, "stable", 5, 7)
         assert c.execute("PRAGMA foreign_key_check").fetchall() == []
         assert (
             c.execute(
@@ -60,14 +60,14 @@ def test_reuse_config(cli, tmp_path):
     assert config.read_bytes() == before
     assert (tmp_path / "lib").is_dir()
     with connect(tmp_path / "cat") as c:
-        assert c.execute("SELECT schema_version FROM catalog_meta").fetchone()[0] == 4
+        assert c.execute("SELECT schema_version FROM catalog_meta").fetchone()[0] == 5
     cli("--catalog", tmp_path / "other", "init", "--reuse-config", expected=3)
 
 
 def test_move_operations_schema_and_constraints(cli, tmp_path):
     cli('init', '--library-root', tmp_path/'lib')
     with connect(tmp_path/'cat', write=True) as c:
-        assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == 4
+        assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == 5
         assert c.execute("SELECT name FROM sqlite_master WHERE name='file_operations'").fetchone()
         with pytest.raises(sqlite3.IntegrityError):
             c.execute("INSERT INTO file_operations (id,resource_id,old_path,new_path,old_name,new_name,staging_path,state,created_at,updated_at) VALUES ('op','missing','old','new','old','new','stage','other','now','now')")
@@ -84,3 +84,29 @@ def test_failed_move_migration_rolls_back(tmp_path):
         migrate(path)
     with sqlite3.connect(path/'catalog.sqlite') as c:
         assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == 3
+
+
+def test_lowercase_migration_preserves_locator_identity_and_disk(tmp_path):
+    import json
+    path=tmp_path/'old'
+    old_catalog(path)
+    old_folder=tmp_path/'lib/Unfiled'
+    old_folder.mkdir(parents=True)
+    (old_folder/'Café.pdf').write_bytes(b'untouched')
+    relative='Unfiled/Café/Unfiled/file.pdf'
+    locator=dict(path=None,root='library',relative=relative)
+    with sqlite3.connect(path/'catalog.sqlite') as c:
+        for name in ['002_zotero_ingest.sql','003_source_loc.sql','004_file_operations.sql']:
+            c.executescript(files('refs').joinpath('migrations/'+name).read_text())
+        c.execute("INSERT INTO sources (id,citation_key,created_at,updated_at,metadata_json,details_json,key_provenance_json,loc) VALUES ('s','key','now','now','{}','{}','{}','Unfiled')")
+        c.execute("INSERT INTO resources (id,source_id,locator,root,relative) VALUES ('r','s',?,'library',?)",(json.dumps(locator,sort_keys=True),relative))
+    migrate(path)
+    migrate(path)
+    with connect(path) as c:
+        row=c.execute('SELECT id,relative,locator FROM resources').fetchone()
+        assert row['id']=='r' and row['relative']=='unfiled/Café/Unfiled/file.pdf'
+        assert row['locator']==json.dumps(locator | {'relative':row['relative']},sort_keys=True)
+        assert c.execute('SELECT loc FROM sources').fetchone()[0]=='unfiled'
+        assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0]==5
+    assert [p.name for p in (tmp_path/'lib').iterdir()]==['Unfiled']
+    assert (old_folder/'Café.pdf').read_bytes()==b'untouched'

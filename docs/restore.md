@@ -56,7 +56,7 @@ with (home / "config.toml").open("x") as output:
 print("Restored catalog at", catalog)
 ```
 
-Schema-4 snapshots also preserve loc and the file_operations rows, including unfinished moves. They contain no staged or attachment bytes. Schema-2 snapshots restore all fourteen logical tables, including saved import entries and decisions, collection hierarchy and memberships, and related-source pairs. Schema-1 snapshots are also validated and restored unchanged; apply the explicit schema upgrade below to that restored home before opening it with this version of refs.
+Schema-4 and schema-5 snapshots also preserve loc and the file_operations rows, including unfinished moves. They contain no staged or attachment bytes. Schema-2 snapshots restore all fourteen logical tables, including saved import entries and decisions, collection hierarchy and memberships, and related-source pairs. Older snapshots are validated and restored unchanged; apply the explicit schema upgrade below to catalogs below schema 5 before opening them with this version of refs. Migration 005 only updates catalog paths and loc; the owner separately renames the library intake folder to lowercase unfiled once.
 
 Open the restored catalog without launching any resource viewer:
 
@@ -98,7 +98,7 @@ SQLite performs rollback recovery when the database is opened and read. If recov
 
 ## Explicit schema upgrade
 
-Stop writers and retain a verified snapshot before upgrading a catalog from schema 1, 2 or 3. Ordinary commands never migrate it. Use the installed project environment and an explicit path:
+Stop writers and retain a verified snapshot before upgrading a catalog from schema 1, 2, 3 or 4. Ordinary commands never migrate it. Use the installed project environment and an explicit path:
 
 ```sh
 uv run --locked python -c 'from pathlib import Path; import sys; from refs.catalog import migrate; migrate(Path(sys.argv[1]))' "$CATALOG"
