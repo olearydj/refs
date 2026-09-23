@@ -89,7 +89,7 @@ os._exit(0)
         assert connection.execute('SELECT value FROM synthetic_padding LIMIT 1').fetchone()[0]==b'a'*4096
 
 
-def test_zotero_decisions_and_fourteen_tables_restore(initialized,zotero_fixture,tmp_path):
+def test_zotero_decisions_and_all_tables_restore(initialized,zotero_fixture,tmp_path):
     import json
     import runpy
 
@@ -114,7 +114,7 @@ def test_zotero_decisions_and_fourteen_tables_restore(initialized,zotero_fixture
     assert result.returncode==0,result.stderr
     with connect(tmp_path/'cat') as original, connect(tmp_path/'restored/cat') as restored:
         tables=[row[0] for row in original.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'search_projection_%'")]
-        assert len(tables)==14
+        assert len(tables)==15
         for name in tables:
             assert [tuple(r) for r in original.execute(f'SELECT * FROM "{name}"')]==[tuple(r) for r in restored.execute(f'SELECT * FROM "{name}"')],name
         for name in ('import_entries','collections','source_collections','source_relations','origin_identities','originals'):

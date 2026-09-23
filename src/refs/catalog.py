@@ -32,7 +32,7 @@ def connect(catalog: Path, *, write: bool = False):
             if not write and "readonly" in str(exc):
                 raise RefError("recovery_required", "SQLite needs writable rollback recovery", 5) from exc
             raise
-        if not meta or meta["schema_version"] != 3:
+        if not meta or meta["schema_version"] != 4:
             raise RefError("unsupported_schema", "Catalog schema is not supported", 5)
         if write:
             connection.execute("PRAGMA synchronous=FULL")
@@ -116,9 +116,9 @@ def init(settings: Settings, library: Path | None, dry_run: bool = False, *, reu
 
 def upgrade_connection(connection: sqlite3.Connection) -> None:
     version = connection.execute('SELECT schema_version FROM catalog_meta').fetchone()
-    if version is None or version[0] not in (1, 2, 3):
-        raise RefError('unsupported_schema', 'Expected catalog schema 1 through 3', 5)
-    migrations = {2: '002_zotero_ingest.sql', 3: '003_source_loc.sql'}
+    if version is None or version[0] not in (1, 2, 3, 4):
+        raise RefError('unsupported_schema', 'Expected catalog schema 1 through 4', 5)
+    migrations = {2: '002_zotero_ingest.sql', 3: '003_source_loc.sql', 4: '004_file_operations.sql'}
     for target, filename in migrations.items():
         if version[0] < target:
             try:
