@@ -328,6 +328,11 @@ def main() -> None:
         raise SystemExit(130) from None
 
 
+@import_app.command('list')
+def import_list(ctx: typer.Context):
+    report(ctx,'import list',importing.list_batches(settings(ctx).catalog_path()))
+
+
 @import_app.command('show')
 def import_show(ctx: typer.Context, batch: str, status: Annotated[str | None, typer.Option()] = None):
     report(ctx,'import show',importing.show(settings(ctx).catalog_path(),batch,status))

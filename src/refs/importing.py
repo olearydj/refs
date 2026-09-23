@@ -467,6 +467,15 @@ def inspect_batch(connection, batch: str, status=None) -> dict:
                 counts={name:run[name] for name in ('applied','unchanged','conflict','invalid')})
 
 
+def list_batches(catalog: Path) -> dict:
+    with connect(catalog) as connection:
+        items = []
+        for row in connection.execute('SELECT id,started_at FROM imports ORDER BY started_at DESC,rowid DESC'):
+            review = inspect_batch(connection,row['id'])
+            items.append({name:review[name] for name in ('import_id','origin','counts','batch_revision')} | {'created':row['started_at']})
+        return dict(items=items)
+
+
 def show(catalog: Path, batch: str, status=None) -> dict:
     with connect(catalog) as connection:
         return inspect_batch(connection,batch,status)
@@ -516,7 +525,11 @@ def reconcile(catalog: Path, batch: str, selectors: list[str], *, keep_current=N
                 if incoming != previous:
                     action = selected[entry['entry_id']][path]
                     if action == 'take_incoming':
-                        sources.patch_path(canonical,path,incoming,clear=False)
+                        target = canonical
+                        parts = path.split('.')
+                        for part in parts[:-1]:
+                            target = target.setdefault(part,{})
+                        target[parts[-1]] = incoming
                     decisions.append(dict(path=path,current=previous,incoming=incoming,action=action))
             key = canonical.pop('citation_key')
             try:

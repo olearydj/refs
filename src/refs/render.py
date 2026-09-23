@@ -117,6 +117,7 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
         'resource unlink': lambda: f"Resource {data['id']} is already unlinked" if data.get('unchanged') else f"Unlinked {data.get('resolved_path') or data.get('path') or data.get('relative')} from {key}",
         'resource check': lambda: '\n'.join(f"{item['status']}: {item.get('resolved_path') or item.get('relative') or item['id']}" for item in data['items']) or '(no resources)',
         'open': lambda: 'Choose a resource with --resource:\n' + '\n'.join(f"{item['id']}: {item.get('resolved_path') or item.get('relative')}" for item in data['choices']) if 'choices' in data else f"Opened {data['path']} for {key}",
+        'import list': lambda: '\n'.join(f"{item['import_id']} {item['origin']} {item['created']} " + ', '.join(f'{name} {count}' for name,count in item['counts'].items()) + f" (batch revision {item['batch_revision']})" for item in data['items']) or '(no imports)',
         'import show': lambda: import_text(command,data),
         'import reconcile': lambda: import_text(command,data),
         'import': lambda: import_text(command,data),
