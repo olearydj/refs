@@ -1,5 +1,13 @@
 <!--
 Sync Impact Report
+Version change: 2.0.0 → 3.0.0 (MAJOR: the filing obligation in Principle II is redefined from a per-file filing collection to an optional per-source loc).
+Authority: explicit owner authorization on 2026-09-23. The owner was shown the two sentence replacements below and replied: "if you feel that is an accurate description of the loc / reorg / link plan we agreed on earlier - approved". The plan referred to is slice 3 decisions D1, D5 and D6 in plan.md.
+Modified principles:
+- II: "Each managed attachment MUST have one filing collection ..." becomes the per-source loc sentence; "Assigning filing collections to files already in the library MUST NOT move them" becomes the loc-never-moves sentence. Transfer, preservation and linked-file rules are unchanged.
+Added or removed sections: none. Ratification date retained.
+Dependent artifacts: spec.md FR-050 to FR-054, contracts/files-and-recovery.md "Ownership and naming" and "Move protocol and journal", contracts/cli.md "Slice 3 commands", data-model.md sources and file_operations rows, tasks.md T052 to T067; all already written to the loc model on 2026-09-23. docs/behavior-decisions.md A2 still says "filing collection" and is read as loc.
+
+Previous amendment, retained for history:
 Version change: 1.0.0 → 2.0.0 (MAJOR: an ownership obligation in Principle II is redefined; delivery timing in Principles IV and V is changed).
 Authority: explicit owner authorization on 2026-09-21. The owner was shown three numbered items (1: Git baseline; 2: this Principle II wording; 3: keep the internal search boundary in slice 1 and move the entry point and proof package to "when a second implementation is evaluated", folded into the same 2.0.0 amendment) and replied "proceed with 1-3". Principle II follows the owner's A2 decision "B: Derive mode from location (Recommended)" recorded in audit section 11.
 Modified principles:
@@ -23,9 +31,9 @@ Source information, normalized metadata, personal contributions, and generated e
 
 ### II. Make Ownership and Effects Explicit
 
-Linked-in-place files and authored notes MUST remain under their owners' control. Removing a catalog entry or relationship MUST NOT delete external files; metadata updates MUST NOT overwrite authored prose or rename attachments. Collection membership, project association, citation selection, and physical placement MUST remain distinct. Each managed attachment MUST have one filing collection, even when its source has several collection memberships.
+Linked-in-place files and authored notes MUST remain under their owners' control. Removing a catalog entry or relationship MUST NOT delete external files; metadata updates MUST NOT overwrite authored prose or rename attachments. Collection membership, project association, citation selection, and physical placement MUST remain distinct. Placement is a property of the source: an optional loc naming one folder under the library. Every file of a source is placed under that loc, so a source's files are never split across folders, whatever collections or projects the source belongs to.
 
-Managed intake MUST follow an explicit, inspectable intake policy. Managed reorganization MUST be previewed and explicitly invoked; membership edits MUST NOT move files automatically. Transfers MUST preserve filenames unless renaming is separately requested, prevent destructive collisions, verify the destination before removing an original, and support recovery from interruption. Catalog links MUST be updated and external-link impacts reported. Files recorded under the configured library root MUST be treated as managed. Files elsewhere MUST remain linked; refs MUST NOT move, rename, or delete them except through an explicitly invoked intake. Assigning filing collections to files already in the library MUST NOT move them.
+Managed intake MUST follow an explicit, inspectable intake policy. Managed reorganization MUST be previewed and explicitly invoked; membership edits MUST NOT move files automatically. Transfers MUST preserve filenames unless renaming is separately requested, prevent destructive collisions, verify the destination before removing an original, and support recovery from interruption. Catalog links MUST be updated and external-link impacts reported. Files recorded under the configured library root MUST be treated as managed. Files elsewhere MUST remain linked; refs MUST NOT move, rename, or delete them except through an explicitly invoked intake. Setting or changing a source's loc MUST NOT move its files; only an explicitly invoked reorg does.
 
 Bibliographies MUST be written only on explicit export invocation, including deliberate calls by external automation. Catalog changes MUST NOT trigger regeneration. Unchanged selected catalog data and export configuration MUST produce reproducible output usable by the manuscript without access to the catalog. These boundaries preserve control over files and published work.
 
@@ -65,4 +73,4 @@ This constitution governs enduring development commitments. Explicit user decisi
 
 Amendments MUST state the change, rationale, affected principles, and any migration or documentation consequences, and MUST have explicit user authorization. Update the version and amendment date and review dependent feature artifacts for conflicts. Use MAJOR for incompatible principle removals or redefinitions, MINOR for added principles or materially expanded guidance, and PATCH for clarifications without changed obligations. Preserve the original ratification date. Review every feature plan and implementation change for compliance; exceptions require a recorded user decision and an amendment when they alter an enduring commitment.
 
-**Version**: 2.0.0 | **Ratified**: 2026-09-20 | **Last Amended**: 2026-09-21
+**Version**: 3.0.0 | **Ratified**: 2026-09-20 | **Last Amended**: 2026-09-23
