@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 # Exercise refs against copies of real bibliographies in throwaway homes. Read-only on the copies' sources.
 set -uo pipefail
-T="$(cd "$(dirname "$0")" && pwd)"; REPO=/Volumes/Casa/dev/refs; OUT="$T/out"; rm -rf "$OUT"; mkdir -p "$OUT"
+T="$(cd "$(dirname "$0")" && pwd)"
+REPO="${REFS_TRIAL_REPO:-$(cd "$T/../../.." && pwd)}"
+if [[ "${REFS_TRIAL_ISOLATED:-}" != 1 ]]; then
+  exec "$REPO/.venv/bin/python" "$T/isolated_trial.py"
+fi
+case "$T" in /private/tmp/refs-trial-*/trial) ;; *) echo "Refusing a trial outside its temporary copy" >&2; exit 2 ;; esac
+OUT="$T/out"; rm -rf "$OUT"; mkdir -p "$OUT"
 R() { uv run --project "$REPO" --locked refs "$@"; }
 log() { printf '%s\n' "$*" | tee -a "$OUT/findings.txt"; }
 home() { local n=$1; export REFS_CONFIG="$OUT/$n/config.toml" REFS_CATALOG="$OUT/$n/cat"; mkdir -p "$OUT/$n"; R init --library-root "$OUT/$n/lib" >/dev/null 2>&1 || log "[$n] init failed"; }
