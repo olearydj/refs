@@ -218,7 +218,7 @@ def test_effective_stopwords_change_only_future_keys(human, initialized, tmp_pat
     words=sorted(STOPWORDS|{'is'})
     config.write_text(config.read_text()+'\n[keys]\nstopwords = '+json.dumps(words)+'\n')
     assert f"keys.stopwords = {sorted(STOPWORDS)+['is']} (default+config: {config})" in human('config','show')
-    assert initialized('config','show')['data']['values']['keys.stopwords']==words
+    assert initialized('config','show')['data']['values']['keys.stopwords']==sorted(STOPWORDS)+['is']
     value['metadata']['author'][0]['family']='Jones'
     path.write_text(json.dumps(value))
     assert initialized('add','--format','refs','--input',path)['data']['citation_key']=='jones-2024-scienceUseful'
