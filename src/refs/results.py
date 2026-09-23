@@ -27,6 +27,9 @@ def emit(command: str, data: dict[str, Any] | None = None, *,
     if json_output:
         print(json.dumps(result, ensure_ascii=False))
     elif error:
+        if error.data and error.data.get('moves'):
+            from refs.render import move_text
+            print(move_text(error.data), file=sys.stderr)
         if error.issue['code'] == 'import_partial' and error.data:
             from refs.render import render_text
             print(render_text('import', error.data, warnings or []), flush=True)

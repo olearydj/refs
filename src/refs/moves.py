@@ -155,6 +155,8 @@ def resume(settings,row):
                 raise RefError('destination_changed','Published file changed; original retained')
             record_destination(settings,row)
             checkpoint('recorded',row)
+        if stage.exists() and not stage.is_symlink() and identity(stage)[:2]==json.loads(row['staging_identity'])[:2]:
+            stage.unlink()
         if row['state']=='recorded':
             if not verified(target,row['destination_identity'],row['digest']) or not pointer_matches(settings,row):
                 raise RefError('move_conflict','Destination or resource pointer changed; original retained')
@@ -167,12 +169,10 @@ def resume(settings,row):
                 checkpoint('unlinked',row)
             save(settings,row,state='removed',error=None)
             checkpoint('removed',row)
-        if stage.exists() and not stage.is_symlink() and identity(stage)[:2]==json.loads(row['staging_identity'])[:2]:
-            stage.unlink()
         return row
     except (OSError,RefError) as exc:
         save(settings,row,last_state=row['state'],state='failed',error=str(exc))
-        raise RefError('move_incomplete','Move incomplete; inspect the report and rerun the command',4,data=report(row),details={'cause':str(exc)}) from exc
+        raise RefError('move_incomplete','Move incomplete; inspect the report and rerun the command',4,data=dict(moves=[report(row)],unlinked_paths=[]),details={'cause':str(exc)}) from exc
 
 
 def report(row):
@@ -217,7 +217,7 @@ def intake(settings, reference, path: Path, *, keep_name=False, dry_run=False, l
         target=Path(plan['destination'])
         resource_id=None
     if dry_run:
-        return plan | dict(dry_run=True,moved=True,citation_key=source['citation_key'])
+        return plan | dict(dry_run=True,moved=True,citation_key=source['citation_key'],moves=[report(dict(old)) if old and resource_id else preview_move(resource_id,path,target)],unlinked_paths=[])
     if resource_id is None:
         if not source.get('loc'):
             sources.update(settings.catalog_path(),source['id'],{'schema_version':'1.0','set':{'loc':'Unfiled'}},source['revision'])
@@ -260,21 +260,53 @@ def selection(settings, reference=None, loc=None):
         if settings.library is None or not settings.library.is_dir():
             raise RefError('library_unavailable','Restore the library before reorganizing')
         target=preserved_target(settings.library/source['loc'],path.name,reserved)
-        planned.append(dict(operation_id=None,resource_id=item['id'],old_path=str(path),new_path=str(target),old_name=path.name,new_name=target.name,state='planned',error=None))
+        planned.append(preview_move(item['id'],path,target))
     return pending,planned
 
 
 def reorg(settings, *, reference=None, loc=None, execute=False):
     pending,planned=selection(settings,reference,loc)
-    result=dict(dry_run=not execute,moves=[report(row) for row in pending]+planned,unlinked_paths=[])
+    proposed=[report(row) for row in pending]+planned
+    result=dict(dry_run=not execute,moves=proposed,unlinked_paths=unlinked_paths(settings,proposed))
     if not execute:
         return result
     result['moves']=[]
-    for row in pending:
-        with files.file_lock(settings.catalog_path()):
-            result['moves'].append(report(resume(settings,row)))
-    # Finishing a recorded move can expose a later loc edit as a new mismatch.
-    _,planned=selection(settings,reference,loc)
-    for item in planned:
-        result['moves'].append(move(settings,item['resource_id'],Path(item['new_path'])))
+    current=None
+    try:
+        for row in pending:
+            current=report(row)
+            with files.file_lock(settings.catalog_path()):
+                result['moves'].append(report(resume(settings,row)))
+        # Finishing a recorded move can expose a later loc edit as a new mismatch.
+        _,planned=selection(settings,reference,loc)
+        for item in planned:
+            current=item
+            result['moves'].append(move(settings,item['resource_id'],Path(item['new_path'])))
+    except RefError as exc:
+        result['moves'].extend((exc.data or {}).get('moves',[]) or ([current | dict(state='failed',error=str(exc))] if current else []))
+        raise RefError(exc.issue['code'],str(exc),exc.exit_code,data=result,details=exc.issue['details']) from exc
     return result
+
+
+def unlinked_paths(settings, planned):
+    if not planned:
+        return []
+    with connect(settings.catalog_path()) as c:
+        known={str(resources.resolve_path(settings,item)) for item in resources.inventory(c)}
+        known.update(row[0] for row in c.execute("SELECT old_path FROM file_operations WHERE state!='removed'"))
+    parents={Path(item['old_path']).parent for item in planned}
+    parents={path for path in parents if not any(other!=path and path.is_relative_to(other) for other in parents)}
+    found=set()
+    for parent in parents:
+        for folder, dirs, names in os.walk(parent,followlinks=False):
+            base=Path(folder)
+            dirs[:]=[name for name in dirs if not (base/name).is_symlink() and base/name not in (settings.library,settings.catalog_path())]
+            for name in names:
+                path=base/name
+                if not path.is_symlink() and path.is_file() and path!=settings.config and str(path) not in known:
+                    found.add(str(path))
+    return sorted(found)
+
+
+def preview_move(resource_id, original, target):
+    return dict(operation_id=None,resource_id=resource_id,old_path=str(original),new_path=str(target),old_name=original.name,new_name=target.name,state='planned',error=None)

@@ -310,7 +310,10 @@ def capture_file(settings: Settings, data: dict, path: Path, *, linked=False, mo
             admit(settings,path)
         proposal = locate(settings,path=path) if linked else plan_copy(settings,source,path,keep_name=keep_name)
         proposal['moved'] = moving
-        return data | {'resources':[proposal]}, proposal
+        if moving:
+            from refs.moves import preview_move
+            proposal.update(moves=[preview_move(None,Path(proposal['path']),Path(proposal['destination']))],unlinked_paths=[])
+        return data | {'resources':[proposal]} | {key:proposal[key] for key in ('moves','unlinked_paths') if key in proposal}, proposal
     try:
         if moving:
             from refs.moves import intake
@@ -320,13 +323,13 @@ def capture_file(settings: Settings, data: dict, path: Path, *, linked=False, mo
         if not linked and not moving:
             resource = copy(settings,data['id'],path,resource_id=resource['id'],keep_name=keep_name)
         current = inspect_source(settings,data['id'])
-        return current | dict(outcome=data['outcome'],warnings=data.get('warnings',[])+resource.get('warnings',[])), resource
+        return current | dict(outcome=data['outcome'],warnings=data.get('warnings',[])+resource.get('warnings',[])) | {key:resource[key] for key in ('moves','unlinked_paths') if key in resource}, resource
     except (RefError,OSError) as exc:
         current = inspect_source(settings,data['id'])
         details = dict(cause=str(exc),original=str(path))
         if isinstance(exc,RefError) and exc.data:
             details.update(exc.data)
-        raise RefError('file_action_incomplete','Metadata was saved; inspect the resource and retry resource add with the same intake option',4,details=details,data=current | dict(outcome='needs_attention')) from exc
+        raise RefError('file_action_incomplete','Metadata was saved; inspect the resource and retry resource add with the same intake option',4,details=details,data=current | dict(outcome='needs_attention') | ({key:exc.data[key] for key in ('moves','unlinked_paths') if key in exc.data} if isinstance(exc,RefError) and exc.data else {})) from exc
 
 
 def zotero_attachment(connection, settings, source_id: str, item: dict, manifest: dict, *, dry_run=False) -> dict:

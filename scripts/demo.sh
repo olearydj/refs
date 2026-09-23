@@ -243,6 +243,20 @@ run 0 collection-search search Synthetic --collection Research/Methods
 assert_jq '.data.total == 2 and (.data.items[0].matches | length) > 0' "$LAST" 'collection search retains matched-field evidence'
 pause_demo
 
+section 'US4: Explicit organization'
+run 0 organization-current show file-capture
+REVISION="$(jq -r '.data.revision' "$LAST")"
+run 0 place update file-capture --if-revision "$REVISION" --set 'loc="Papers/Demo"'
+run 0 reorganize-preview reorg --source file-capture
+assert_jq '.data.dry_run and .data.moves[0].operation_id == null' "$LAST" 'organization preview writes nothing'
+run 0 reorganize reorg --source file-capture --execute
+assert_jq '.data.moves[0].state == "removed" and (.data.moves[0].new_path | endswith("/Papers/Demo/FileCapture-2024.pdf"))' "$LAST" 'organization moves and records the file'
+run 0 reorganize-again reorg --source file-capture --execute
+assert_jq '.data.moves == []' "$LAST" 'completed reorg is a no-op'
+run 0 placement-check resource check --kind managed_mismatch
+assert_jq '.data.items == []' "$LAST" 'managed files agree with loc'
+pause_demo
+
 section 'US5: Back up and restore into a second home'
 explain 'The snapshot contains the catalog and inventory, never attachment bytes.'
 run 0 backup backup --output "$DEMO_ROOT/snapshot"

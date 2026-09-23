@@ -101,7 +101,7 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
     revision = data.get('revision', '')
     renderers = {
         'collection list': lambda: '\n'.join(f"{item['path']} ({item['count']} active sources) [{item['library_uri']}]" for item in data['items']) or '(no collections)',
-        'reorg': lambda: '\n'.join(f"{item['old_path']} -> {item['new_path']} ({item['state']})" for item in data['moves']) or '(no moves)',
+        'reorg': lambda: move_text(data),
         'paths': lambda: '\n'.join(f"{label}: {data[name]['path'] or '(not configured)'}" for name, label in [('config', 'Configuration'), ('catalog', 'Catalog'), ('library', 'Library')]),
         'config show': lambda: f"Configuration: {data['config']}" + ''.join(f"\n{name} = {value} ({data['origins'].get(name, 'default')})" for name,value in data['values'].items()),
         'backup': lambda: f"Wrote snapshot {data['output']} (external file bytes excluded)",
@@ -152,3 +152,9 @@ def placement_text(data):
         path=item.get('resolved_path') or item.get('relative') or item.get('id')
         lines.append(f"{label}: {path}"+(f" -> {item['new_path']} ({item['state']})" if item.get('kind')=='unfinished' else '')+(f"; {item['hint']}" if item.get('hint') else ''))
     return '\n'.join(lines) or '(no resources)'
+
+
+def move_text(data):
+    lines=[f"{item['old_path']} -> {item['new_path']} ({item['state']})"+(f": {item['error']}" if item.get('error') else '') for item in data['moves']]
+    lines.extend(f"Left untouched (not linked): {path}" for path in data.get('unlinked_paths',[]))
+    return '\n'.join(lines) or '(no moves)'
