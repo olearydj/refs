@@ -1,6 +1,6 @@
 # CLI and Configuration Contract v1
 
-**Scope:** Delivered slice 1 commands and the slice 2 additions below. Later file-organization commands remain deferred.
+**Scope:** Slices 1 and 2 are delivered. Slice 3 adds loc, explicit reorg and the move protocol below; implementation awaits independent review.
 
 ## Invocation and results
 
@@ -8,7 +8,7 @@
 
 Mutations support --dry-run: validate and report intended effects without rows, locks, staging or key reservations. Actual execution rechecks revisions/collisions; previewed generated keys are not reserved. Removal, reactivation, unlink and rekey require --execute after their default preview. Add/copy/export are explicit actions and require no extra confirmation. There is no --request-id or stored replay contract.
 
-All results contain schema_version="1.0", command, status, data, warnings and errors. status is ok, partial or error; data is object or null. Warnings/errors contain code, message, nullable path, details and retryable. Return source/resource/import IDs where applicable; there is no operation ID. Never claim complete success after partial application. JSON exceptions are handled by refs' wrapper, not delegated to Typer help formatting.
+All results contain schema_version="1.0", command, status, data, warnings and errors. status is ok, partial or error; data is object or null. Warnings/errors contain code, message, nullable path, details and retryable. Return source/resource/import IDs where applicable; move results also identify file_operations rows. Never claim complete success after partial application. JSON exceptions are handled by refs' wrapper, not delegated to Typer help formatting.
 
 | Exit | Meaning |
 | --- | --- |
@@ -29,14 +29,14 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | paths | Resolve config/catalog/library and origins even before initialization. |
 | config show | Inspect effective values, origins and validation diagnostics; replaces config validate. |
 | schema NAME | Exactly source-create, source-patch, source-record, result; packaged, offline. |
-| add | --format refs\|csljson\|bib --input PATH accepts one reference. With --file PATH, the file is copied into Unfiled by default; --link keeps it in place. --keep-name preserves the copied file's name. --dry-run shows normalization, key components and the destination. |
+| add | --format refs\|csljson\|bib --input PATH accepts one reference. With --file PATH, slice 3 uses the intake flags below. --keep-name preserves the basename. --dry-run shows normalization, key components and the destination. |
 | show REF | Canonical record, revision, origins/corrections, context, limitations and resource list/availability. |
 | update REF | --patch PATH or repeated --set PATH=JSON; --if-revision N required. |
 | search QUERY | Exact key/normalized identifier match first, then literal lexical query; --project PROJECT, --limit N, --offset N; matched fields and source identities. |
 | list | Same filters/pagination; --sort title\|key. |
 | key set REF | --key TEXT --if-revision N --execute; preview otherwise, warn external citations remain unchanged. |
 | import | --format bib --input PATH --origin TEXT; preview or apply .bib with per-entry report and aggregate run counts. |
-| resource add REF | --path PATH or --root NAME --relative PATH; optional --copy, --keep-name, label/media type. Default links in place; --copy uses Unfiled and appends a slugged --label to the convention filename. --keep-name retains the original basename. |
+| resource add REF | --path PATH or --root NAME --relative PATH; --link (default), --copy or --move; optional --keep-name, --label and media type. Copy/move intake uses lib/<loc> and the labelled filename convention. |
 | resource unlink RESOURCE | --if-revision N --execute; association only, never file deletion. |
 | resource check | Optional --source REF, --verify; availability/digest/root diagnostics, no repair/write. |
 | open REF | Optional --resource RESOURCE; use sole resource or return choices; external opener, no content editing. |
@@ -49,7 +49,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | reactivate REF | --if-revision N --execute; restore same identity/key, report retained associations. |
 | backup | --output NEW_DIRECTORY; consistent catalog/config snapshot and external-file inventory. |
 
---keep-name is valid with add --file unless --link is supplied. For resource add, it requires --copy. It is invalid without a file. Repeated resource linking of the same source/locator is a no-op. Add with a duplicate candidate reports the identity rather than silently creating another or merging differences. Search/list default limit=50, offset=0; limit 1–1000, nonnegative offset. Report total/catalog revision; separate pages need not share a snapshot. All project associations are cited, so no --cited flag is needed.
+--keep-name is valid with add --file unless --link is supplied. For resource add, it requires --copy or --move. It is invalid without a file. Repeated resource linking of the same source/locator is a no-op. Add with a duplicate candidate reports the identity rather than silently creating another or merging differences. Search/list default limit=50, offset=0; limit 1–1000, nonnegative offset. Report total/catalog revision; separate pages need not share a snapshot. All project associations are cited, so no --cited flag is needed.
 
 ## Slice 2 commands
 
@@ -62,7 +62,21 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | collection list | Show imported hierarchy and membership counts. |
 | list/search --collection PATH | Filter active sources by membership in the selected imported collection; retain existing project filters, sorting and pagination. |
 
-BATCH is the saved import ID. Collection paths identify the imported hierarchy; ambiguous paths fail visibly. No collection editing, filing or movement is included.
+BATCH is the saved import ID. Collection paths identify the imported hierarchy; ambiguous paths fail visibly. Collections remain imported history; loc controls filing.
+
+## Slice 3 commands
+
+| Invocation | Inputs and effect |
+| --- | --- |
+| add --loc PATH | Set source loc; show includes it. |
+| add --file PATH | --move by default; --copy retains the original; --link leaves it in place. |
+| resource add REF | --link by default; --copy and --move bring files into lib/<loc>. |
+| update REF --set loc=JSON | Change loc through the existing revision-checked update; no file moves. Clear restores Unfiled. |
+| list/search --loc PATH | Exact case-insensitive loc filter, combined with existing filters. |
+| reorg [--source REF \| --loc PREFIX] [--execute] | Preview by default. Select folder/loc mismatches, including linked files entering lib, and unfinished moves. Prefix matches complete path segments. Execute the [move protocol](files-and-recovery.md#move-protocol-and-journal), preserving names. |
+| resource check | Also report incomplete operations and folder/loc mismatches. |
+
+The three intake flags are mutually exclusive. Only --move refuses files already recorded as resources of any source. Reorg is explicit intake for selected outside files under Principle II. Its completed report has `data.moves`, each with `operation_id`, `resource_id`, `old_path`, `new_path`, `state` and `error`; `data.unlinked_paths` lists untouched extras. Preview uses the same paths with null operation_id for new work, without creating operations. Human output lists every old/new pair. The initial loc assignment is the contract's one-time tool, not another command.
 
 ## `add` and `import` are one engine with two contracts
 
@@ -112,7 +126,7 @@ ignore_leading_articles = ["a", "an", "the"]
 profile = "portable-bibtex-v1"
 ```
 
-Each resource root has a name and an absolute local path. The library_root setting and roots.library must agree. Relative paths in configuration are resolved against the configuration file; command-line paths are resolved against the current directory. Expand a leading ~, but never evaluate shell expressions. When the library is disabled, metadata capture, linking and export remain available. Both add --file without --link and resource add --copy fail if the library is unavailable. Neither command silently changes the requested action. Slice 1 retains the original file after every copy; the accepted move default arrives later.
+Each resource root has a name and an absolute local path. The library_root setting and roots.library must agree. Relative paths in configuration are resolved against the configuration file; command-line paths are resolved against the current directory. Expand a leading ~, but never evaluate shell expressions. When the library is disabled, metadata capture, linking and export remain available. Copy and move intake fail if the library is unavailable; neither silently becomes a link.
 
 Catalog/staging require agent write access to /Volumes/Casa/refs/cat, and intake also to lib. home_not_writable names the resolved failing path and required access. catalog_missing, unsupported_schema and recovery_required are distinct failures. Never sync the live database or staging; library sync, if later configured by the owner, is not backup.
 

@@ -102,7 +102,7 @@ D2 Names. Decision A: the move preserves names. Owner: "I agree with A"; on bulk
 
 D3 Unlinked files. Owner, on the copied originals left in the Box tree: "I don't mind the extras in the Box folder. it is essentially an archive / backup of zotero db for now." Unlinked files stay where they are and the move report lists them.
 
-D4 Intake default. Decision A: `add --file` moves the file by default, copying into `lib/<loc>` of the source, verifying, then deleting the original; `--copy` keeps the original; `--link` links in place. `resource add` keeps linking in place as its default, because attaching a file that already sits where it belongs is its ordinary use, and gains `--move` beside the existing `--copy` (clarified 2026-09-23 on the authoring session's question). Owner: "I think move should be the default". No exception for a file already inside lib: "you can't reorg something before it is added, so add moves it to the source loc. you can reorg it later if wanted". A file already recorded as a resource of any source is refused, naming that resource: "I would probably block this. it seems unlikely that it would be intentional. if so we can fix it later."
+D4 Intake default. Decision A: `add --file` moves the file by default, copying into `lib/<loc>` of the source, verifying, then deleting the original; `--copy` keeps the original; `--link` links in place. `resource add` keeps linking in place as its default, because attaching a file that already sits where it belongs is its ordinary use, and gains `--move` beside the existing `--copy` (clarified 2026-09-23 on the authoring session's question). Owner: "I think move should be the default". No exception for a file already inside lib: "you can't reorg something before it is added, so add moves it to the source loc. you can reorg it later if wanted". For move intake, a file already recorded as a resource of any source is refused, naming that resource: "I would probably block this. it seems unlikely that it would be intentional. if so we can fix it later."
 
 ### What is built, proposal
 
@@ -116,58 +116,15 @@ Budget: about three invocations plus the `--loc` options, one column and one tab
 
 ### What must never break
 
-Existing citation keys, byte for byte. The Zotero database, the Box tree and every manuscript bibliography, which are read-only throughout. (The trial catalog from slice 1 is deleted and re-initialized before the library import, per D3; the Pipyer paper is re-imported afterwards and its adoption re-established by the walkthrough.) No file moves, renames or deletions. The never-cut list in `AGENTS.md`.
+No delete before a verified copy; no overwrite in lib. The owner runs a CCC backup covering Box and Zotero storage before the bulk move: "I'll just run a CCC backup before we actually run slice 3". Existing filenames, citation keys, the Zotero database and the vault remain unchanged. The owner repairs vault references from the report. The never-cut list in `AGENTS.md` applies.
 
 ### Acceptance gate
 
-Run against the owner's real library only after the harness passes on synthetic fixtures and the owner authorizes the extraction. Gate: all 562 items imported with per-entry accounting and zero unexplained differences from the harness; all 562 keys preserved; all 554 file-backed attachments resolving; 58 collections and 574 memberships matching; a whole-library portable export rendering through Pandoc identically to the BBT export except for reported, explained differences; a re-run of the import reporting all items unchanged; then the Pipyer paper re-imported and re-adopted by the slice 1 walkthrough with every overlap bound by DOI per D3. Then the owner migrates remaining papers one at a time by the slice 1 walkthrough and keeps the use-list that decides slice 3's content beyond the file work already promised.
+Rehearse in a temporary home on copied catalog and files: a clean run, interruption between publish and re-record, and interruption between re-record and delete. Re-runs complete with matching digests, no missing files and no duplicate resources. The owner-authorized cutover then moves the 551 resources, followed by resource check, sample opens and manual vault repairs.
 
 ### Process
 
-Follow the [light loop](../../docs/right-sizing.md): specify, append slice 2 tasks, analyze, build, then perform the real import under owner authorization. The extractor and synthetic gate come first; the real import is the last task. Budget: about six new invocations, four tables (import_entries, collections, source_collections, source_relations), no new runtime dependency and roughly 800 source lines. These are tests of proportion, not caps that distort the schema. Governing text stays net-flat or smaller.
-
-## Slice 3 brief: organize files
-
-Owner direction, 2026-09-22: after the ingest, "clean it up / reorg the refs folder, and migrate other adhoc papers / bib consumers to the new method." Earlier (2026-09-21) the PDFs were to move to a visible folder on Casa, renamed and cleaned up, and synced to other devices with Syncthing. This is the destructive slice: the move-with-delete protocol gets full specification, an experiment on a copy of the real tree, and an independent review before it touches the library. Everything else in the slice is decided by use.
-
-### Outcome
-
-Every file the catalog knows sits under `/Volumes/Casa/refs/lib`, recorded by root and relative path, in a folder tree that is its filing. The old Box tree and the Zotero storage folder hold nothing refs owns. New intake from Downloads moves the file rather than copying it. A file can be refiled by an explicit, previewed move. An interrupted move can be re-run to completion with nothing lost and nothing duplicated. Syncthing shares lib with the owner's other devices; that is a Syncthing setting made after the move, not a refs feature.
-
-### Observed inputs, read-only, 2026-09-23
-
-551 catalog resources, all absolute links, none under a named root: 511 under `~/Box Sync/zotero` (4.2 GB, all PDF) and 40 under `~/Zotero/storage` (37 HTML snapshots, 2 JPG, 1 PDF). Every linked path resolves. The Box tree has 517 real files: the 511 plus six PDFs no source links (two copies of Boost Your Git DX, ZeroToSoldMobile, Thomas 2025, ExploringMITCurricwithLLM, Bailenson). Zotero storage has three more unlinked PDFs. The Box tree is already a collection layout: 497 of 511 files sit in a folder whose relative path is one of their source's collection paths, and the other 14 sit in that collection's parent folder (`papers`, `web`). Names are Zotero's "Author - Year - Title" form with spaces and truncation; on disk they are NFD Unicode, in the catalog NFC, and macOS resolves both. lib holds nothing today. The cutover archive holds the database and JSON, not the PDFs, and no Time Machine backup exists. One vault note references the Box tree by path, seven times. Syncthing runs under launchd and already shares the vault with two devices.
-
-### Decisions needed from the owner
-
-D1 Layout. A: keep the collection tree as it stands, moved intact so `lib/dissertation/mixed-reality/...` stays what it is, and a folder path under lib is the file's filing collection with no separate filing table (Recommended: it is the layout you built and 497 of 511 files already agree with it; derive-from-location is the accepted A2 rule). B: flat, one folder per citation key initial or per year. C: something else you describe.
-
-D2 Names. A: the move preserves names, as A2 already says for reorganize; renaming stays a separate later pass under the same protocol, if use shows the names hurt (Recommended: one destructive change at a time, and the current names already carry author, year and title). B: rename by the accepted convention during the move, so the one big move is also the one big rename.
-
-D3 Unlinked files. The six Box PDFs and three storage PDFs that no source links. A: leave them where they are and list them in the move report; you add the ones you want with `add --file` before or after (Recommended). B: move them into `lib/Unfiled` as orphans for later capture. Owner, 2026-09-23, on the copied originals left in the Box tree: "I don't mind the extras in the Box folder. it is essentially an archive / backup of zotero db for now." Taken as A: the tree is an archive, unlinked files stay and are listed.
-
-D4 Intake default. A: `add --file` and `resource add` move from Downloads by default, with `--copy` to keep the original (Recommended: the ledger item "move default", and Downloads cruft is the incident). B: keep copy as the default and add `--move`.
-
-### What is built, proposal
-
-1. One move protocol, used by every route: copy to `cat/staging` with an exclusive name, fsync, atomic publish into lib without overwrite, verify the destination digest against the source digest, then in one transaction re-record the resource as root plus relative path and mark the original as pending removal, then delete the original and mark the operation complete. Filenames are written NFC. A `file_operations` table (one row per file: resource, source path, destination, digest, state, timestamps) is the journal; re-running the same command resumes from the recorded state. No request-ID replay, no operations list/show, no native metadata adapter; `resource check` reports incomplete operations and the report of a completed move lists every old path beside its new one, which is what the vault link fix needs.
-2. `reorganize`: previewed bulk move of linked files under a path prefix into lib, preserving relative paths (D1) and names (D2), or of one resource to a named collection folder. This is the 551-file cutover and the future refile in one command.
-3. Intake by move per D4, through the same protocol.
-4. The sync setup is a Syncthing folder added by the owner after the move; refs records nothing about it. `resource check` already recognizes sync-conflict filenames.
-
-Budget: about three invocations, one table, no new dependency, roughly 600 source lines. Score should hold at 6. Journals, recover commands, request-ID replay, forced directory syncing beyond the fsyncs above, and the native metadata adapter stay deferred until an interruption in real use shows what re-running does not cover.
-
-### What must never break
-
-No delete before a verified copy: the destination digest is checked before the original goes, and the owner runs a Carbon Copy Cloner backup covering the Box tree and the Zotero storage folder before the bulk move (owner, 2026-09-23: "I'll just run a CCC backup before we actually run slice 3"), because no other copy of the PDFs exists; the cutover archive holds the database and Zotero storage, not the Box tree. No overwrite in lib. Existing names unless D2 chooses otherwise. Citation keys and every catalog row other than the resource locator. The Zotero database and the vault, read-only throughout. The never-cut list in `AGENTS.md`.
-
-### Acceptance gate
-
-Rehearse in a temporary home on a copy of the catalog and a sample of the real tree: a clean run, a run killed between publish and delete, a run killed between re-record and delete, each re-run to completion with 551 resources recorded under lib, every digest matching, no file present twice and no file missing. Then the real move under owner authorization, followed by `resource check` clean, `open` on a sample, and the vault paths updated from the report.
-
-### Process
-
-Full specification for the protocol and the journal (a short section in [files-and-recovery](contracts/files-and-recovery.md) and the data model), an independent review of that section only, tasks, build against synthetic fixtures, the rehearsal above, then the real move. Governing text stays net-flat or smaller.
+Independently review the [move protocol](contracts/files-and-recovery.md#move-protocol-and-journal) before tasks. Then build against synthetic fixtures, rehearse on copies and obtain owner authorization for the real move.
 
 ## Deferred work
 
@@ -175,7 +132,6 @@ This is a boundary ledger, not a later-slice specification.
 
 | Destination | Deferred surface |
 | --- | --- |
-| Slice 3: organize files | Relocating the library tree; filing from folders without movement; move default and explicit reorganize; operations/file-operations journals, operations list/show, recover, request-ID replay; native metadata adapter, attribute verification, forced flushes and directory syncing; renaming by convention; sync setup. |
 | Later recovery/exit | Full restore command, file-inclusive backup/bundle validation and logical library export. |
 | Backlog | export_projections, export_waivers/export waive, field_provenance table, normalize, index rebuild, background project membership, primary-resource administration, 10,000-source gate and four-process matrix. |
 | When a second implementation is evaluated | Search entry point, selectable providers and replacement proof (including the QMD investigation). |

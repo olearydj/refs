@@ -1,8 +1,6 @@
-# Feature Specification: Academic Catalog, Slices 1 and 2
+# Feature Specification: Academic Catalog, Slices 1–3
 
-Slice 1 was accepted on 2026-09-22 after the Pipyer trial. Slice 2 brings the Zotero library across under the [plan's brief](plan.md#slice-2-brief-bring-the-library-across). Clauses marked **slice 2** are the new work; existing requirements continue to apply.
-
-refs is a personal, offline reference catalog for the owner and coding agents. Slice 1 delivers capture, correction, search, cited-only projects, portable bibliography export, Bib import, linked or copied files, and snapshot restoration. Slice 2 adds Zotero ingest, imported collections, and persisted import decisions. File organization belongs to slice 3.
+Slices 1 and 2 are delivered. Slice 3 specifies file organization under the [final D1–D4 decisions](plan.md#slice-3-brief-organize-files). Its move protocol awaits independent review before tasks or implementation. refs remains a personal offline catalog with explicit bibliography export.
 
 ## Authority
 
@@ -14,8 +12,8 @@ The [constitution, version 2.0.0](../../.specify/memory/constitution.md), the [a
 - Citation key: the short name used to cite a source in a manuscript, for example `smith-2024-turingTrap`.
 - Original entry: the exact text or JSON that a source was imported or submitted from, kept unchanged as evidence.
 - Revision: a counter on each source that goes up with every change. An edit must say which revision it was based on, so two agents cannot silently overwrite each other.
-- Library: the folder `/Volumes/Casa/refs/lib`, where refs keeps copies of files it has been asked to take in. `Unfiled` is the folder inside it where new copies go in this slice.
-- Managed and linked: a file stored inside the library is managed by refs. A file anywhere else is linked: refs records where it is and never moves, renames, or deletes it.
+- Library: the folder `/Volumes/Casa/refs/lib`, where refs keeps copies of files it has been asked to take in. `Unfiled` is the destination when a source has no loc.
+- Managed and linked: a file stored inside the library is managed by refs. A file anywhere else is linked: refs leaves it untouched except through explicit intake.
 - Catalog: the SQLite database in `/Volumes/Casa/refs/cat`. Configuration lives separately in `~/.config/refs/config.toml`.
 - Project: a paper or other piece of writing. In this slice a project is simply the set of sources cited in it.
 - Portable bibliography: a `.bib` file written in the traditional BibTeX dialect, which Pandoc, Biber, and classic BibTeX can all read.
@@ -39,12 +37,21 @@ The slice 2 replies below were recorded on 2026-09-22. Earlier [audit sections 1
 | Background project membership | “No, cited only for now (Recommended)” | A project's sources are its citations; keep a cited column as a future seam. |
 | Rename on intake | “Rename by default” | New copy intake renames by convention unless --keep-name; linked files and later reorganize keep names. |
 | Trim | “I'm satisfied with changes based on my answers” | The keep/fold/defer list in audit §14 supersedes earlier delivery commitments. |
-| D1: Imported collections | “A: Verbatim (Recommended)” | Slice 2 preserves names, parents and memberships. Editing waits for slice 3. |
+| D1: Imported collections | “A: Verbatim (Recommended)” | Slice 2 preserves names, parents and memberships. Collections remain import history. |
 | D2: Attachment notes | “A, but check more closely to confirm not infer” | Verified PDF outlines are skipped; FR-023 records the evidence. |
 | D3: Reset and binding | “the current refs catalog is just from testing and will duplicate things. I recommend resetting it before proceeding with post slice 2 work.”; “I agree that doi / isbn can and should serve as a unique identifier, but will note that the quality of citation information varies wildly ... sometimes a new citation will be better than the existing one.”; “Yes, reset before the library import” | Reset the trial catalog and backups before library import. Reintroduce Pipyer and Attention afterwards; bind overlaps, fill gaps and explicitly reconcile differences under FR-020/021. |
 | D4: Extra | “it seems like only the identifiers. arxiv, doi, pmid, pmcid, oclc, issn are potentially / debatable useful. I would scrub the rest.” | Model the six identifier schemes; preserve other Extra lines only in originals, not context. |
 
-In the first clarification session the owner answered five multiple-choice questions with the letters `b`, `a`, `a`, `b`, and the sentence `a - use a library / package if something small and proven exists and is beneficial. seems like this could be more problematic than it seems on face`. Those letters chose: move a newly downloaded file into the library by default; put it in `Unfiled` when no collection is chosen; import the entries that have no conflicts and report the rest; let an explicit export replace a bibliography that refs wrote earlier and that nobody has edited since; and handle accented names with care. Moving files arrives in slice 3; until then the closest safe equivalent, copying, is used. The later no-dependency decision settled name handling. Keeping existing citation keys unchanged comes from constitution principle I, not from a quoted owner statement.
+Slice 3 replies (2026-09-23), distinct from the slice 2 D1–D4 above:
+
+| Question/topic | Literal owner reply | Interpretation applied here |
+| --- | --- | --- |
+| D1: Filing | “a source (bib entry) can refer to several files, but will have only one loc, and all files will go there” | One source loc determines every attachment's folder. |
+| D2: Names | “I agree with A”; “not no, deferred”; “as an optional part of the reorg process” | Preserve names during reorg; bulk rename is a later reorg option. |
+| D3: Unlinked files | “I don't mind the extras in the Box folder. it is essentially an archive / backup of zotero db for now.” | Leave unlinked files and list them. |
+| D4: Intake | “I think move should be the default”; “I would probably block this. it seems unlikely that it would be intentional. if so we can fix it later.” | `add --file` moves by default. `resource add` keeps linking by default because attaching an existing file in place is its ordinary use. Both offer --link, --copy and --move; only move refuses an already recorded file. |
+
+In the first clarification session the owner answered five multiple-choice questions with the letters `b`, `a`, `a`, `b`, and the sentence `a - use a library / package if something small and proven exists and is beneficial. seems like this could be more problematic than it seems on face`. Those letters chose: move a newly downloaded file into the library by default; put it in `Unfiled` when no collection is chosen; import the entries that have no conflicts and report the rest; let an explicit export replace a bibliography that refs wrote earlier and that nobody has edited since; and handle accented names with care. Slice 1 delivered copying; slice 3 adds the accepted move default. The later no-dependency decision settled name handling. Keeping existing citation keys unchanged comes from constitution principle I, not from a quoted owner statement.
 
 ## User stories and acceptance
 
@@ -53,7 +60,7 @@ In the first clarification session the owner answered five multiple-choice quest
 | US1 Keep and find references | P1 | Starting with an empty catalog, add one complete and one incomplete reference, correct a field, search for both, and read back their keys, with no project and no network service. A correction based on an out-of-date revision is refused. |
 | US2 Use a bibliography in one paper | P1 | Create a project, cite and uncite sources, export, and render the paper while the catalog is unavailable. Editing the catalog afterwards leaves the exported file untouched until the next export. |
 | US3 Import references | P2 | Import a prepared `.bib` file that contains clean entries, a conflict, and a malformed entry. Every original is kept, the conflict and the malformed entry are reported, importing again creates no duplicates, and an ordinary update settles the conflict. The input file is never changed. **Slice 2:** the Zotero gate checks the imported library, a repeat creates no duplicates, and persisted conflicts can be inspected and reconciled. |
-| US4 Keep research files | P2 | Link one file without touching it. Copy another into `Unfiled` and see it renamed by the convention. Try the keep-name option, a name collision, a source file that changes during the copy, and an interrupted copy. The original file survives every case. |
+| US4 Keep research files | P2 | Link one file without touching it. Use --copy for another into `Unfiled` and see it renamed by the convention. Try the keep-name option, a name collision, a source file that changes during the copy, and an interrupted copy. The original file survives every case. |
 | US5 Recover the catalog | P2 | Take a snapshot, restore it into a second, empty location, open it, and compare IDs, keys, corrections, projects, and the list of files. The snapshot says plainly that the PDFs themselves are not inside it. |
 | US6 See the settings in force | P2 | Show the configuration, catalog, and library locations and every effective setting, even before the catalog exists. An invalid project setting is rejected. If the Casa volume is not mounted, refs reports that and does not create a catalog somewhere else. |
 
@@ -72,7 +79,7 @@ In the first clarification session the owner answered five multiple-choice quest
 - FR-009: A short title that was supplied is kept. Otherwise refs uses the main title when the split between title and subtitle was given explicitly, and the full title when it was not. It never splits at a colon on its own and never invents an abbreviation.
 - FR-010: An ordinary numbered edition is stored as a number and shown as `2nd ed.`, or `2E` in a filename. Version labels such as `v1.2.4` and unclear shorthand such as `P1E` are kept exactly as written and are never reinterpreted.
 - FR-011: Lists sorted by title ignore a leading `A`, `An`, or `The`. The title as shown and cited is unchanged. A sort title set by hand stays until it is cleared.
-- FR-012: When refs copies a file into the library it names the copy from the short title, the edition or version if any, and the year, with no spaces: `PracticalVim-2E-2015.pdf`. The `--keep-name` option keeps the original name. If the source has no short title or no year, the original name is kept and refs says so. Linked files are never renamed.
+- FR-012: When refs takes a new file into the library it names it from the short title, the edition or version if any, and the year, with no spaces: `PracticalVim-2E-2015.pdf`. The `--keep-name` option keeps the original name. If the source has no short title or no year, the original name is kept and refs says so. Linked files are never renamed.
 
 ### Working with agents
 
@@ -97,12 +104,12 @@ In the first clarification session the owner answered five multiple-choice quest
 - FR-025: A source can have several files of any type, each with a label. A file's location is recorded either as a full path or as a named folder plus a relative path, so that a whole folder can be relocated later by changing one setting.
 - FR-026: refs shows where each file is and whether it can currently be found. Removing a file's link removes only the catalog record. A missing file or folder is reported and nothing is moved or deleted in response.
 - FR-027: `refs open` opens a source's only file, or a file chosen explicitly. When there are several and none was chosen, it lists them instead of guessing. Files are opened in their usual application and never modified.
-- FR-028: **Slice 2:** Import collection hierarchy and source memberships. `collection list` shows the hierarchy with counts; `list` and `search` accept `--collection PATH`. Collection creation, renaming, filing and file moves wait for slice 3.
-- FR-030: In this slice every copy goes into the library's `Unfiled` folder, with no filing decision required.
-- FR-031: A file is either linked where it is or copied into the library. A file supplied together with a new reference is copied into the library by default, which is the slice 1 form of the owner's choice to bring new downloads into the library; an option links it in place instead. Adding a file to an existing source links it by default, and an option copies it in. Before a copy, refs shows the destination and the new name. If the library is not set up or cannot be reached, the command fails and the original file is untouched.
-- FR-032: A file inside the library is managed. A file anywhere else is linked, and refs never moves, renames, or deletes it. Changing where a named folder points never moves a file.
-- FR-033: A copy is checked against the original before it counts. refs never overwrites an existing file, and if the original changes while it is being copied the copy is abandoned. The original is kept in every case. If refs is interrupted after a copy is complete and before the catalog records it, the finished copy stays in place; refs reports it and never deletes it, and the owner can link it to the source.
-- FR-034: Something made of several files, such as a saved web page with its folder of images, is linked where it is and not copied in this slice.
+- FR-028: **Slice 2:** Import collection hierarchy and source memberships. `collection list` shows the hierarchy with counts; `list` and `search` accept `--collection PATH`. Collections remain imported history; loc governs slice 3 filing.
+- FR-030: Unfiled is the destination when no loc is assigned.
+- FR-031: Before transfer, refs shows the destination and name. Intake requires a reachable library; otherwise it fails without touching the original. Slice 3 intake follows FR-052.
+- FR-032: Library files are managed; others remain linked except through explicit intake. Changing a named root never moves files.
+- FR-033: Copies retain their originals and follow the [copy protocol](contracts/files-and-recovery.md#copy-protocol-and-interruption). Slice 3 moves follow FR-052.
+- FR-034: Unsupported multi-file bundles remain linked; do not silently move only part of a bundle.
 - FR-035: Removing a source first shows what is attached to it and requires explicit confirmation on the command line. Removal never deletes a file and never changes an exported bibliography. The removed source's key stays reserved. `refs reactivate` brings a removed source back with the same ID and key. An import never brings a removed source back on its own.
 
 ### Projects, export, and recovery
@@ -122,9 +129,17 @@ In the first clarification session the owner answered five multiple-choice quest
 
 - FR-049: **Slice 2:** Import child notes as searchable context with origin `import` and keep related-item pairs in `source_relations`. Zotero item key and library URI are provenance only, never authority to write to Zotero.
 
+### Organizing files
+
+- FR-050: **Slice 3, D1:** “will have only one loc, and all files will go there.” Store one validated source loc. Add and update can set it; show, list and search expose it. Changing loc never moves files.
+- FR-051: **Slice 3, D2:** “I agree with A.” Reorg previews selected folder/loc mismatches and moves them only with execute, preserving names apart from NFC normalization.
+- FR-052: **Slice 3, D4:** “I think move should be the default.” `add --file` defaults to move; `resource add` defaults to link. Moves use the [move protocol](contracts/files-and-recovery.md#move-protocol-and-journal), with verified publication before deletion and resumable interruption. An explicit copy retains the original; linking remains available.
+- FR-053: **Slice 3, D4:** “I would probably block this.” Refuse move intake of a file already recorded for any source, naming its resource. This admission rule does not prevent resuming an existing move.
+- FR-054: **Slice 3, D3:** “I don't mind the extras in the Box folder.” Leave unlinked files untouched and report them alongside every completed old/new path pair. Resource check reports incomplete moves and folder/loc disagreements.
+
 ## Deferred identifiers
 
-FR-029 and the filing, move and reorganize portions of FR-030–034 belong to slice 3. FR-042 (logical library export), file-inclusive backup in FR-040 and a restore command in FR-041 remain deferred. See the [ledger](plan.md#deferred-work).
+FR-029’s collection-editing proposal is superseded by source loc. Bulk rename remains deferred as a future reorg option under D2. FR-042 (logical library export), file-inclusive backup in FR-040 and a restore command in FR-041 remain deferred. See the [ledger](plan.md#deferred-work).
 
 ## Success criteria
 
@@ -144,4 +159,4 @@ FR-029 and the filing, move and reorganize portions of FR-030–034 belong to sl
 - A-04: How the configuration file, the catalog location, and a project's `.refs.toml` take precedence over one another is defined in the [CLI and configuration contract](contracts/cli.md).
 - A-12: Agents may submit CSL-JSON now. Writing CSL-JSON, and writing Zotero's JSON format, are on the backlog.
 
-The real slice 2 import is a later, owner-authorized execution step. This document does not execute D3’s reset or authorize file movement. refs is designed to survive being interrupted or killed at any moment on a local disk; protection against sudden power loss is best effort and its limits are stated in the [files and recovery contract](contracts/files-and-recovery.md).
+Specification does not authorize executing the real slice 3 move; independent review, rehearsal and owner authorization precede it. refs is designed to survive being interrupted or killed at any moment on a local disk; protection against sudden power loss is best effort and its limits are stated in the [files and recovery contract](contracts/files-and-recovery.md).
