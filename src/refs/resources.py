@@ -190,7 +190,7 @@ def register_copy(settings: Settings, source: dict, target: Path, digest: str, o
 
 def copy(settings: Settings, reference: str, path: Path, *, resource_id=None, keep_name=False, dry_run=False, label=None, media_type=None) -> dict:
     source = sources.show(settings.catalog_path(),reference)
-    plan = plan_copy(settings,source,path,keep_name=keep_name,check_duplicates=resource_id is None)
+    plan = plan_copy(settings,source,path,keep_name=keep_name,check_duplicates=resource_id is None,label=label)
     if plan.get('duplicate_resource_id'):
         return plan | dict(dry_run=dry_run,copied=False)
     source_path, target = Path(plan['path']), Path(plan['destination'])
@@ -218,13 +218,31 @@ def copy(settings: Settings, reference: str, path: Path, *, resource_id=None, ke
         raise RefError('copy_failed','Copy failed; inspect the original and retry after correcting the cause',5,path=str(source_path),details={'cause':str(exc)}) from exc
 
 
-def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, check_duplicates=False) -> dict:
+def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, check_duplicates=False, label=None) -> dict:
     from refs import naming
 
     expanded = path.expanduser()
     source_path = expanded.parent.resolve()/expanded.name
     if source_path.is_symlink() or not source_path.is_file():
         raise RefError('unsafe_copy_source','Copy a completed regular file without symlink traversal, or link it in place')
+    library = settings.library
+    if library is None or not library.is_dir():
+        raise RefError('library_unavailable','Restore the configured library before copying; the original remains untouched')
+    if source.get('state', 'active') != 'active':
+        raise RefError('source_removed','Reactivate the source before copying')
+    origin = locate(settings,path=source_path)
+    if settings.catalog_path().stat().st_dev != library.stat().st_dev:
+        raise RefError('staging_volume_mismatch','Keep catalog staging and the library on the same volume')
+    name = source_path.name if keep_name else naming.filename(source,source_path.name,label)
+    warnings = []
+    if not keep_name and (naming.issued_year(source)=='ND' or not re.search(r'[^\W_]+',naming.short_title(source))):
+        warnings.append(dict(code='filename_unavailable',message='Conventional filename unavailable; keeping the original name',path=str(source_path),details={},retryable=False))
+    folder = library/'Unfiled'
+    if folder.is_symlink() or not folder.resolve().is_relative_to(library) or folder.exists() and not folder.is_dir():
+        raise RefError('unsafe_path','Inspect the library Unfiled path before copying')
+    target = folder/name
+    if label and (target.exists() or target.is_symlink()):
+        raise RefError('destination_exists','Inspect the existing destination; copy never overwrites or adopts it',path=str(target))
     if check_duplicates:
         digest = files.hash_file(source_path)
         for item in source.get('resources',[]):
@@ -236,22 +254,6 @@ def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, 
             if same:
                 notice = dict(code='duplicate_attachment',message=f"Same file content already attached as resource {item['id']} ({existing_path}); no copy made",path=str(source_path),details={'resource_id':item['id'],'path':str(existing_path)},retryable=False)
                 return dict(citation_key=source['citation_key'],path=str(source_path),duplicate_resource_id=item['id'],warnings=[notice])
-    library = settings.library
-    if library is None or not library.is_dir():
-        raise RefError('library_unavailable','Restore the configured library before copying; the original remains untouched')
-    if source.get('state', 'active') != 'active':
-        raise RefError('source_removed','Reactivate the source before copying')
-    origin = locate(settings,path=source_path)
-    if settings.catalog_path().stat().st_dev != library.stat().st_dev:
-        raise RefError('staging_volume_mismatch','Keep catalog staging and the library on the same volume')
-    name = source_path.name if keep_name else naming.filename(source,source_path.name)
-    warnings = []
-    if not keep_name and (naming.issued_year(source)=='ND' or not re.search(r'[^\W_]+',naming.short_title(source))):
-        warnings.append(dict(code='filename_unavailable',message='Conventional filename unavailable; keeping the original name',path=str(source_path),details={},retryable=False))
-    folder = library/'Unfiled'
-    if folder.is_symlink() or not folder.resolve().is_relative_to(library) or folder.exists() and not folder.is_dir():
-        raise RefError('unsafe_path','Inspect the library Unfiled path before copying')
-    target = folder/name
     if target.exists() or target.is_symlink():
         raise RefError('destination_exists','Inspect the existing destination; copy never overwrites or adopts it',path=str(target))
     preview = dict(dry_run=True,citation_key=source['citation_key'],path=str(source_path),destination=str(target),copied_from=origin,warnings=warnings)

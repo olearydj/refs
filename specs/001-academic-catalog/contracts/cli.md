@@ -36,7 +36,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | list | Same filters/pagination; --sort title\|key. |
 | key set REF | --key TEXT --if-revision N --execute; preview otherwise, warn external citations remain unchanged. |
 | import | --format bib --input PATH --origin TEXT; preview or apply .bib with per-entry report and aggregate run counts. |
-| resource add REF | --path PATH or --root NAME --relative PATH; optional --copy, --keep-name, label/media type. Default links in place; --copy uses Unfiled. |
+| resource add REF | --path PATH or --root NAME --relative PATH; optional --copy, --keep-name, label/media type. Default links in place; --copy uses Unfiled and appends a slugged --label to the convention filename. --keep-name retains the original basename. |
 | resource unlink RESOURCE | --if-revision N --execute; association only, never file deletion. |
 | resource check | Optional --source REF, --verify; availability/digest/root diagnostics, no repair/write. |
 | open REF | Optional --resource RESOURCE; use sole resource or return choices; external opener, no content editing. |

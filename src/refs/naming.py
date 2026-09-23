@@ -148,7 +148,7 @@ def edition_display(value: int | str) -> str:
     return value
 
 
-def filename(record: dict, original: str) -> str:
+def filename(record: dict, original: str, label: str | None = None) -> str:
     year = issued_year(record)
     words = re.findall(r'[^\W_]+', short_title(record))
     if year == 'ND' or not words:
@@ -160,4 +160,5 @@ def filename(record: dict, original: str) -> str:
         name += f'-{edition}E'
     elif version:
         name += '-v' + re.sub(r'[^\w.-]', '', version.removeprefix('v'))
-    return f'{name}-{year}{Path(original).suffix}'
+    slug = ''.join(char for char in label or '' if char.isalpha() or char.isdigit() or char in '.-')
+    return f'{name}-{year}' + (f'-{slug}' if slug else '') + Path(original).suffix
