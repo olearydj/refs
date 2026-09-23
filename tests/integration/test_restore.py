@@ -129,3 +129,39 @@ def test_schema_two_table_damage_is_refused(initialized,tmp_path):
         c.execute('ALTER TABLE import_entries RENAME COLUMN decisions_json TO wrong')
     with pytest.raises(RefError,match='schema'):
         recovery.validate_database(database)
+
+
+@pytest.mark.parametrize('point',['published_uncommitted','recorded'])
+def test_loc_and_unfinished_move_survive_documented_restore(initialized,tmp_path,reference_path,monkeypatch,point):
+    from refs import moves, resources, sources
+    from refs.catalog import connect
+
+    source=initialized('add','--format','refs','--input',reference_path,'--loc','Papers/Topic')['data']
+    settings=select(str(tmp_path/'config.toml'),str(tmp_path/'cat'),no_project_config=True)
+    original=tmp_path/'download.pdf'
+    original.write_bytes(b'synthetic restore evidence')
+    resource=resources.link(settings,source['id'],path=original)
+    def interrupt(at,row):
+        if at==point:
+            raise KeyboardInterrupt
+    monkeypatch.setattr(moves,'checkpoint',interrupt)
+    with pytest.raises(KeyboardInterrupt):
+        moves.reorg(settings,execute=True)
+    snapshot=tmp_path/'snapshot'
+    recovery.backup(settings,snapshot)
+    assert recovery.validate_snapshot(snapshot)['external_contents_included'] is False
+    home=tmp_path/'restored'
+    restored=run_restore(snapshot,home)
+    assert restored.returncode==0,restored.stderr
+    with connect(settings.catalog_path()) as before,connect(home/'cat') as after:
+        original_rows=[dict(row) for row in before.execute('SELECT * FROM file_operations')]
+        assert [dict(row) for row in after.execute('SELECT * FROM file_operations')]==original_rows
+        assert after.execute('SELECT loc FROM sources WHERE id=?',(source['id'],)).fetchone()[0]=='Papers/Topic'
+    selected=select(str(home/'config.toml'),str(home/'cat'),no_project_config=True)
+    shown=sources.show(selected.catalog_path(),source['id'])
+    assert shown['loc']=='Papers/Topic' and shown['resources'][0]['id']==resource['id']
+    unfinished=resources.check(selected,kind='unfinished')['items']
+    assert len(unfinished)==1 and unfinished[0]['old_path']==str(original)
+    assert unfinished[0]['state']==('staged' if point=='published_uncommitted' else 'recorded')
+    assert original.read_bytes()==b'synthetic restore evidence'
+    assert not (home/'cat/staging').exists()  # Backup excludes file bytes.

@@ -12,7 +12,7 @@ uv run --locked refs --help
 uv build --wheel
 ```
 
-A built wheel can be installed into a Python 3.14 environment with `uv pip install --python /path/to/environment/bin/python dist/refs-0.1.0-py3-none-any.whl`. It includes the mapping registry, naming data, migration and code that supplies all four offline schemas. There is no runtime network lookup.
+A built wheel can be installed into a Python 3.14 environment with `uv pip install --python /path/to/environment/bin/python dist/refs-0.1.0-py3-none-any.whl`. It includes the mapping registry, naming data, migrations and code that supplies all four offline schemas. There is no runtime network lookup.
 
 Use explicit disposable locations to try the tool:
 
@@ -68,7 +68,19 @@ Rekey, remove, reactivate and unlink preview unless `--execute` is supplied. Mut
 
 ## Files and export
 
-`add --file PATH` copies into `Unfiled` and uses the conventional filename. Use `--link` to leave the file in place, or `--keep-name` to preserve a copied file's name. `resource add` links by default; copying requires `--copy`. Originals are never deleted. A successful copy retains one resource with its managed locator and a `copied_from` locator. A published copy that could not be registered remains on disk and is reported for inspection.
+`add --file PATH` moves a new file into the library by default: it copies and verifies the bytes, records the managed path, then deletes the original. Use `--copy` to retain the original or `--link` to leave it in place. `resource add` still links by default and offers the same three flags. Copy and move use the source's loc, assigning `Unfiled` only when it has none. Intake uses the filename convention unless `--keep-name`; reorg preserves names, adding collision suffixes when necessary.
+
+Loc is optional. Set it with `add --loc PATH` or revision-checked `update REF --set 'loc="Papers/Topic"'`; changing or clearing it never moves files. `show` displays loc, and `list --loc` and `search --loc` filter it. Reorg previews by default:
+
+```bash
+refs --no-project-config reorg --source KEY
+refs --no-project-config reorg --source KEY --execute
+refs --no-project-config reorg --loc Papers
+refs --no-project-config resource check --kind unfinished
+refs --no-project-config resource check --kind unrecorded
+```
+
+Use these commands only with the intended configuration and catalog explicitly selected. `--source` and `--loc` are alternatives; a loc prefix matches complete path segments. Reorg skips new work for sources without loc, but retries their unfinished operations. Repeat an interrupted command to resume the recorded operation. The report lists old and new paths and untouched extras; `--json` retains operation IDs and errors. Resource checks distinguish linked files without loc, linked files awaiting reorg, managed folder mismatches, unfinished moves and unrecorded library files. Backup excludes all attachment bytes, so retain an independent file backup before a bulk move.
 
 Only explicit export writes bibliography files. The portable profile reports missing facts and documented fallbacks, blocks meaning-changing losses, and blocks unknown mappings unless `--allow-unknown-mappings` is supplied for that run. To replace an existing unowned bibliography, import its exact current bytes, then use `export --adopt --overwrite`. Outside edits are refused unless replacement is explicitly authorized.
 
@@ -105,12 +117,12 @@ scripts/demo.sh --smoke
 
 Tests use synthetic inputs and temporary homes. Rendering checks use Pandoc, Biber and classic BibTeX with `elsarticle-num`. Dependency pins and the three-day cooldown remain in force. Unsupported Bib macros, inheritance and TeX constructs remain preserved with limitations. Copies protect against process interruption and ordinary I/O failures; they do not promise native filesystem metadata preservation or power-loss durability.
 
-The slice 1 checkpoint and real-paper trial are recorded in [slice 1 acceptance](specs/001-academic-catalog/reviews/slice-1-acceptance.md). Slice 2 adds Zotero ingest and read-only collection browsing. Its [synthetic acceptance](specs/001-academic-catalog/reviews/slice-2-acceptance.md) precedes the separate owner-assisted real cutover; that cutover has not run.
+The slice 1 checkpoint and real-paper trial are recorded in [slice 1 acceptance](specs/001-academic-catalog/reviews/slice-1-acceptance.md). Slice 2 adds Zotero ingest and read-only collection browsing. Its [acceptance record](specs/001-academic-catalog/reviews/slice-2-acceptance.md) includes the owner-executed cutover. Slice 3 adds explicit file organization; its [acceptance record](specs/001-academic-catalog/reviews/slice-3-acceptance.md) separates disposable rehearsal evidence from the pending owner-executed move.
 
 ## Zotero ingest
 
-[The one-time extractor](tools/zotero_extract/README.md) reads a Zotero 6 userdata-121 snapshot and produces the JSON directory; it is outside the installed package. The JSON interface also allows a future local API bridge. refs preserves item JSON, assigned keys, library/item identities, native creator roles, tags and collections. Child notes become imported context; file attachments stay linked at their original locations. Attachment outlines and annotations are accounted for separately and remain in the archived Zotero data. refs neither moves those files nor updates Zotero objects.
+[The one-time extractor](tools/zotero_extract/README.md) reads a Zotero 6 userdata-121 snapshot and produces the JSON directory; it is outside the installed package. The JSON interface also allows a future local API bridge. refs preserves item JSON, assigned keys, library/item identities, native creator roles, tags and collections. Child notes become imported context; file attachments stay linked at their original locations. Attachment outlines and annotations are accounted for separately and remain in the archived Zotero data. Import never moves those files or updates Zotero objects; a later explicit reorg can bring selected files into the library.
 
 A unique DOI or ISBN match binds compatible incoming metadata to an existing source and keeps its key. Missing fields can be filled; differing values and deliberate clears require review. `import show` presents those differences. Reconciliation previews never write. Its `batch_revision` is an opaque integer token covering the saved batch revision and the observed source revisions; pass it back unchanged for execution.
 
-Existing schema-1 catalogs require the [explicit migration](docs/restore.md#explicit-schema-upgrade). Ordinary open never upgrades them. Use explicit temporary homes for trials; the later real reset and extraction require the owner's participation.
+Existing catalogs at schema 1 through 3 require the [explicit migration](docs/restore.md#explicit-schema-upgrade). Ordinary open never upgrades them. Use explicit temporary homes for trials; the real file cutover requires the owner's participation.
