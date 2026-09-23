@@ -203,13 +203,27 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
     return outcome
 
 
+def start_batch(connection, batch: str, origin: str, fingerprint: str) -> None:
+    connection.execute('INSERT INTO imports (id,origin,file_digest,started_at) VALUES (?,?,?,?)', (batch, origin, fingerprint, datetime.now(UTC).isoformat()))
+
+
+def save_add_conflict(connection, raw: bytes, locator: str, result: dict) -> None:
+    if not result.get('binding', {}).get('conflicts'):
+        return
+    batch = str(uuid4())
+    start_batch(connection, batch, 'add', hashlib.sha256(raw).hexdigest())
+    save_entry(connection, batch, locator, result)
+    connection.execute('UPDATE imports SET conflict=1, revision=revision+1, finished_at=? WHERE id=?', (datetime.now(UTC).isoformat(), batch))
+    changed(connection)
+
+
 def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str | None = None, settings=None) -> dict:
     fingerprint = hashlib.sha256(raw).hexdigest()
     run_id = str(uuid4())
     counts = dict(applied=0, unchanged=0, conflict=0, invalid=0)
     if not dry_run:
         with connect(catalog, write=True) as connection:
-            connection.execute('INSERT INTO imports (id,origin,file_digest,started_at) VALUES (?,?,?,?)', (run_id, origin or locator, fingerprint, datetime.now(UTC).isoformat()))
+            start_batch(connection, run_id, origin or locator, fingerprint)
             preserve(connection, raw, locator, fingerprint, format='bib-file', origin='import-file')
             changed(connection)
     blocks = bibtex.partition(raw)
@@ -245,8 +259,10 @@ def add(catalog: Path, raw: bytes, locator: str, *, dry_run=False, settings=None
     blocks = [block for block in bibtex.partition(raw) if block['kind'] == 'entry']
     if len(blocks) != 1:
         raise RefError('invalid_bib_input', 'Use add for one entry, or import for a bibliography', 2)
-    result = run(catalog, raw, locator, dry_run=dry_run, settings=settings)
-    entry = result['entries'][0]
+    with connect(catalog, write=not dry_run) as connection:
+        entry = apply_entry(connection, blocks[0], locator, hashlib.sha256(raw).hexdigest(), dry_run=dry_run, settings=settings, origin='add')
+        if not dry_run:
+            save_add_conflict(connection, raw, locator, entry)
     if entry['outcome'] in ('conflict', 'invalid'):
         raise RefError(entry.get('code', 'import_conflict'), entry.get('message', 'Inspect conflicting fields and use update'), 2 if entry['outcome'] == 'invalid' else 3, details=entry,
                        data={'outcome':'needs_attention', 'citation_key':entry.get('citation_key')})
@@ -316,7 +332,7 @@ def run_zotero(catalog: Path, directory: Path, *, dry_run=False, origin=None, se
         isbn_groups = isbn_plan(connection,incoming)
     if not dry_run:
         with connect(catalog, write=True) as connection:
-            connection.execute('INSERT INTO imports (id,origin,file_digest,started_at) VALUES (?,?,?,?)', (batch, origin or str(directory), fingerprint, datetime.now(UTC).isoformat()))
+            start_batch(connection, batch, origin or str(directory), fingerprint)
             for name, raw in zip(('manifest.json','collections.json'), evidence, strict=True):
                 preserve(connection, raw, str(directory/name), fingerprint, format='zotero-evidence', origin='import-file')
             for entry in bundle['items']:

@@ -87,8 +87,8 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
     source = SourceCreate.model_validate(normalized)
     with connect(catalog, write=not dry_run) as connection:
         try:
-            from refs.importing import bind_and_fill, preserve
-            existing, binding = bind_and_fill(connection, source, raw, dry_run=dry_run)
+            from refs.importing import bind_and_fill, preserve, save_add_conflict
+            existing, binding = bind_and_fill(connection, source, raw, dry_run=dry_run, origin="add")
         except RefError as exc:
             exc.data = dict(outcome="needs_attention", id=None, citation_key=source.citation_key)
             raise
@@ -97,6 +97,9 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
                 preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key})
             current = record(connection,existing)
             if binding['conflicts']:
+                if not dry_run:
+                    original = preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key})
+                    save_add_conflict(connection,raw,locator,dict(status='conflict',source_id=existing,citation_key=current['citation_key'],binding=binding,conflicts=[item['path'] for item in binding['conflicts']],incoming=source.canonical(),original_ref=original))
                 return current | dict(outcome='needs_attention', binding=binding, warnings=warnings, dry_run=dry_run)
             return current | dict(unchanged=not binding['filled'], dry_run=dry_run, outcome='already_present', warnings=warnings, binding=binding)
         likely = [dict(row) for row in connection.execute(
