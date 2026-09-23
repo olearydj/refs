@@ -101,6 +101,7 @@ def render_text(command: str, data: dict, warnings: list[dict]) -> str:
     revision = data.get('revision', '')
     renderers = {
         'collection list': lambda: '\n'.join(f"{item['path']} ({item['count']} active sources) [{item['library_uri']}]" for item in data['items']) or '(no collections)',
+        'reorg': lambda: '\n'.join(f"{item['old_path']} -> {item['new_path']} ({item['state']})" for item in data['moves']) or '(no moves)',
         'paths': lambda: '\n'.join(f"{label}: {data[name]['path'] or '(not configured)'}" for name, label in [('config', 'Configuration'), ('catalog', 'Catalog'), ('library', 'Library')]),
         'config show': lambda: f"Configuration: {data['config']}" + ''.join(f"\n{name} = {value} ({data['origins'].get(name, 'default')})" for name,value in data['values'].items()),
         'backup': lambda: f"Wrote snapshot {data['output']} (external file bytes excluded)",

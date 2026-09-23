@@ -226,3 +226,55 @@ def intake(settings, reference, path: Path, *, keep_name=False, dry_run=False, l
     current=sources.show(settings.catalog_path(),source['id'])
     item=next(item for item in current['resources'] if item['id']==resource_id)
     return item | dict(citation_key=source['citation_key'],moved=True,destination=result['new_path'],moves=[result],unlinked_paths=[],warnings=plan['warnings'])
+
+
+def selection(settings, reference=None, loc=None):
+    from refs.models import normalize_loc
+
+    if reference and loc is not None:
+        raise RefError('invalid_invocation','Choose --source or --loc, not both',2)
+    try:
+        prefix=(normalize_loc(loc) or '').casefold()
+    except ValueError as exc:
+        raise RefError('invalid_loc',str(exc),2) from exc
+    with connect(settings.catalog_path()) as c:
+        source_id=sources.resolve(c,reference) if reference else None
+        records={row['id']:dict(row) for row in c.execute('SELECT id,loc,state FROM sources')}
+        items=resources.inventory(c)
+        unfinished=[dict(row) for row in c.execute("SELECT * FROM file_operations WHERE state!='removed' ORDER BY created_at,id")]
+    def selected(source, old_loc=None):
+        value=(source.get('loc') or old_loc or '').casefold()
+        return (source_id is None or source.get('id')==source_id) and (not prefix or value==prefix or value.startswith(prefix+'/'))
+    by_resource={item['id']:item for item in items}
+    pending=[row for row in unfinished if selected(records.get(by_resource.get(row['resource_id'],{}).get('source_id'),{}),row['loc'])]
+    reserved={row['new_path'].casefold() for row in unfinished}
+    busy={row['resource_id'] for row in unfinished}
+    planned=[]
+    for item in sorted(items,key=lambda item:(item['root']!='library',item['id'])):
+        source=records[item['source_id']]
+        if item['id'] in busy or source['state']!='active' or not source['loc'] or not selected(source):
+            continue
+        path=resources.resolve_path(settings,item)
+        if item['root']=='library' and unicodedata.normalize('NFC',str(path.parent.relative_to(settings.library))).casefold()==source['loc'].casefold():
+            continue
+        if settings.library is None or not settings.library.is_dir():
+            raise RefError('library_unavailable','Restore the library before reorganizing')
+        target=preserved_target(settings.library/source['loc'],path.name,reserved)
+        planned.append(dict(operation_id=None,resource_id=item['id'],old_path=str(path),new_path=str(target),old_name=path.name,new_name=target.name,state='planned',error=None))
+    return pending,planned
+
+
+def reorg(settings, *, reference=None, loc=None, execute=False):
+    pending,planned=selection(settings,reference,loc)
+    result=dict(dry_run=not execute,moves=[report(row) for row in pending]+planned,unlinked_paths=[])
+    if not execute:
+        return result
+    result['moves']=[]
+    for row in pending:
+        with files.file_lock(settings.catalog_path()):
+            result['moves'].append(report(resume(settings,row)))
+    # Finishing a recorded move can expose a later loc edit as a new mismatch.
+    _,planned=selection(settings,reference,loc)
+    for item in planned:
+        result['moves'].append(move(settings,item['resource_id'],Path(item['new_path'])))
+    return result

@@ -295,6 +295,15 @@ def resource_unlink(ctx: typer.Context, resource: str,
     report(ctx, 'resource unlink', resources.unlink(settings(ctx),resource,execute=execute and not dry_run))
 
 
+@app.command()
+def reorg(ctx: typer.Context,
+          source: Annotated[str | None, typer.Option()] = None,
+          loc: Annotated[str | None, typer.Option()] = None,
+          execute: Annotated[bool, typer.Option()] = False):
+    from refs import moves
+    report(ctx, 'reorg', moves.reorg(settings(ctx),reference=source,loc=loc,execute=execute))
+
+
 @resource_app.command('check')
 def resource_check(ctx: typer.Context, source: Annotated[str | None, typer.Option()] = None,
                    verify: Annotated[bool, typer.Option()] = False):
