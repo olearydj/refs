@@ -1,6 +1,6 @@
 # refs Design Packet
 
-**Current stage, 2026-09-22:** Slice 1 is built and accepted after the owner's Pipyer trial. Slice 2, Zotero ingest, is specified in the [plan](../specs/001-academic-catalog/plan.md#slice-2-brief-bring-the-library-across) and contracts; tasks are next. D1–D4 are decided. D3 requires resetting the trial catalog before the later authorized library import, then restoring Pipyer and Attention through the walkthrough. No migration or reset has run. File organization is slice 3.
+**Current stage, 2026-09-22:** Slices 1 and 2 are delivered. The owner's Zotero library (562 sources, 58 collections, 551 file links) was imported on 2026-09-22 with zero conflicts and a zero-finding fidelity gate against the live database; Zotero is now an archive, copied alongside the catalog snapshots. All 51 [tasks](../specs/001-academic-catalog/tasks.md) are complete; [slice 2 acceptance](../specs/001-academic-catalog/reviews/slice-2-acceptance.md) holds the cutover transcript and three open data-review items for the owner. Files remain linked in place under the old Zotero tree; slice 3 (organize files) has no brief yet and waits on the owner's use-list.
 
 ## Authority and read order
 

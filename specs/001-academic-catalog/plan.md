@@ -1,6 +1,6 @@
 # Implementation Plan: Slices 1 and 2
 
-**2026-09-22:** Slice 1 is delivered; [acceptance](reviews/slice-1-acceptance.md) records its checkpoint and real-paper trial. Constitution 2.0.0 applies. Slice 2 is specified below; tasks are next. No Zotero migration has run.
+**2026-09-22, slices 1 and 2 delivered.** [Slice 1 acceptance](reviews/slice-1-acceptance.md) and [slice 2 acceptance](reviews/slice-2-acceptance.md) record the checkpoints, the Pipyer trial and the owner-executed Zotero cutover. Slice 2 landed at about 4,130 application lines (+1,000 over slice 1 against an 800 estimate, the difference being six rule-level fixes from the real-import rehearsal), 14 tables, no new dependency, 500 tests. This plan remains the record of the design as built and of deferred work; slice 3 gets a brief when the owner's use-list calls for it.
 
 ## Delivery boundary
 
