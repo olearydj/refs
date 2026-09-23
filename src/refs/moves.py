@@ -1,0 +1,203 @@
+"""One persisted copy/verify/record/delete protocol for intake and reorganization."""
+
+import json
+import os
+import shutil
+import unicodedata
+from datetime import UTC, datetime
+from pathlib import Path
+from uuid import uuid4
+
+from refs import files, naming, resources, sources
+from refs.catalog import connect
+from refs.results import RefError
+
+
+def checkpoint(point, operation):
+    """Test seam for process interruption at real protocol boundaries."""
+
+
+def preserved_target(folder: Path, name: str, reserved: set) -> Path:
+    name = unicodedata.normalize('NFC', name)
+    candidate, index = folder/name, 0
+    while candidate.exists() or candidate.is_symlink() or str(candidate).casefold() in reserved:
+        index += 1
+        candidate = folder/(Path(name).stem + naming.suffix(index+1) + Path(name).suffix)
+    reserved.add(str(candidate).casefold())
+    return candidate
+
+
+def identity(path):
+    return list(files.file_identity(path))
+
+
+def safe_path(path: Path, base: Path | None = None):
+    if base is not None and not path.is_relative_to(base):
+        raise RefError('unsafe_path','Keep the destination inside the library')
+    if any(part.is_symlink() for part in [path, *path.parents]):
+        raise RefError('unsafe_path','Move paths cannot traverse symbolic links')
+
+
+def flush(path, directory=False):
+    descriptor = os.open(path, os.O_RDONLY | (os.O_DIRECTORY if directory else 0))
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def save(settings, row, **values):
+    values['updated_at'] = datetime.now(UTC).isoformat()
+    with connect(settings.catalog_path(),write=True) as c:
+        c.execute('UPDATE file_operations SET '+','.join(key+'=?' for key in values)+' WHERE id=?',(*values.values(),row['id']))
+    row.update(values)
+
+
+def verified(path, saved_identity, digest):
+    return path.is_file() and not path.is_symlink() and identity(path)==json.loads(saved_identity) and files.hash_file(path)==digest
+
+
+def pointer_matches(settings, row):
+    with connect(settings.catalog_path()) as c:
+        item = next((item for item in resources.inventory(c) if item['id']==row['resource_id']),None)
+    return item is not None and resources.resolve_path(settings,item)==Path(row['new_path'])
+
+
+def create(settings, resource_id, target):
+    with connect(settings.catalog_path()) as c:
+        item=next((item for item in resources.inventory(c) if item['id']==resource_id),None)
+        if item is None:
+            raise RefError('resource_missing','Select a recorded resource')
+        source=sources.record(c,item['source_id'])
+    original=resources.resolve_path(settings,item)
+    if settings.library is None or not settings.library.is_dir():
+        raise RefError('library_unavailable','Restore the library before moving')
+    safe_path(original)
+    safe_path(target,settings.library)
+    if not original.is_file():
+        raise RefError('unsafe_move_source','Move only a completed regular file')
+    if target.exists():
+        raise RefError('destination_exists','Inspect the occupied destination; moves never overwrite')
+    staging=settings.catalog_path()/'staging'
+    safe_path(staging)
+    staging.mkdir(exist_ok=True)
+    if staging.stat().st_dev != settings.library.stat().st_dev:
+        raise RefError('staging_volume_mismatch','Keep staging and library on the same volume')
+    stage=staging/('move-'+str(uuid4()))
+    stage.touch(exist_ok=False)
+    now=datetime.now(UTC).isoformat()
+    row=dict(id=str(uuid4()),resource_id=resource_id,old_path=str(original),new_path=str(target),old_name=original.name,new_name=target.name,staging_path=str(stage),original_identity=json.dumps(identity(original)),staging_identity=json.dumps(identity(stage)),destination_identity=None,digest=None,source_revision=source['revision'],resource_revision=item['revision'],loc=source.get('loc'),state='staged',last_state=None,error=None,created_at=now,updated_at=now)
+    with connect(settings.catalog_path(),write=True) as c:
+        c.execute('INSERT INTO file_operations ('+','.join(row)+') VALUES ('+','.join('?' for _ in row)+')',tuple(row.values()))
+    return row
+
+
+def record_destination(settings,row):
+    target=Path(row['new_path'])
+    locator=resources.locate(settings,path=target)
+    with connect(settings.catalog_path(),write=True) as c:
+        item=next((item for item in resources.inventory(c) if item['id']==row['resource_id']),None)
+        if item is None:
+            raise RefError('resource_missing','Inspect the unfinished operation')
+        source=sources.checked_record(c,item['source_id'],row['source_revision'])
+        if item['revision'] != row['resource_revision'] or source.get('loc') != row['loc'] or source['state'] != 'active':
+            raise RefError('stale_revision','Source placement or resource changed; inspect the move')
+        origin={key:item[key] for key in ('path','root','relative')}
+        c.execute('UPDATE resources SET locator=?,path=?,root=?,relative=?,digest=?,copied_from_json=?,revision=revision+1 WHERE id=?',
+                  (json.dumps(locator,sort_keys=True),locator['path'],locator['root'],locator['relative'],row['digest'],json.dumps(origin),item['id']))
+        resources.touch_source(c,source['id'])
+        c.execute("UPDATE file_operations SET state='recorded',updated_at=? WHERE id=?",(datetime.now(UTC).isoformat(),row['id']))
+    row['state']='recorded'
+
+
+def resume(settings,row):
+    original,target,stage=(Path(row[key]) for key in ('old_path','new_path','staging_path'))
+    if row['state']=='failed':
+        save(settings,row,state=row['last_state'],error=None)
+    publication_verified = False
+    try:
+        if row['state']=='staged':
+            if target.exists() or target.is_symlink():
+                if not row['digest'] or not verified(target,row['staging_identity'],row['digest']):
+                    raise RefError('destination_exists','Occupied destination is not the recorded staged file')
+            else:
+                if identity(original)!=json.loads(row['original_identity']):
+                    raise RefError('source_changed','Original changed; inspect the unfinished move')
+                safe_path(stage)
+                if not stage.is_file() or identity(stage)[:2]!=json.loads(row['staging_identity'])[:2]:
+                    raise RefError('staging_changed','Inspect the staging file before retrying')
+                if stage.stat().st_size:
+                    previous=stage
+                    stage=stage.with_name('move-'+str(uuid4()))
+                    stage.touch(exist_ok=False)
+                    save(settings,row,staging_path=str(stage),staging_identity=json.dumps(identity(stage)))
+                    previous.unlink()
+                with stage.open('wb') as outgoing, original.open('rb') as incoming:
+                    shutil.copyfileobj(incoming,outgoing)
+                    outgoing.flush()
+                    os.fsync(outgoing.fileno())
+                digest=files.hash_file(original)
+                if identity(original)!=json.loads(row['original_identity']) or files.hash_file(stage)!=digest:
+                    raise RefError('source_changed','Original changed during copying; keep it and inspect')
+                save(settings,row,staging_identity=json.dumps(identity(stage)),digest=digest)
+                checkpoint('staged',row)
+                safe_path(target,settings.library)
+                target.parent.mkdir(parents=True,exist_ok=True)
+                os.link(stage,target)
+                if files.hash_file(target)!=digest:
+                    raise RefError('integrity_error','Published bytes differ; original retained')
+                checkpoint('published_uncommitted',row)
+            publication_verified = True
+            save(settings,row,state='published',destination_identity=json.dumps(identity(target)))
+            checkpoint('published',row)
+        if row['state']=='published':
+            if not publication_verified and not verified(target,row['destination_identity'],row['digest']):
+                raise RefError('destination_changed','Published file changed; original retained')
+            record_destination(settings,row)
+            checkpoint('recorded',row)
+        if row['state']=='recorded':
+            if not verified(target,row['destination_identity'],row['digest']) or not pointer_matches(settings,row):
+                raise RefError('move_conflict','Destination or resource pointer changed; original retained')
+            if original.exists() or original.is_symlink():
+                if not verified(original,row['original_identity'],row['digest']):
+                    raise RefError('source_changed','Original changed; it was not deleted')
+                flush(target)
+                flush(target.parent,directory=True)
+                original.unlink()
+                checkpoint('unlinked',row)
+            save(settings,row,state='removed',error=None)
+            checkpoint('removed',row)
+        if stage.exists() and not stage.is_symlink() and identity(stage)[:2]==json.loads(row['staging_identity'])[:2]:
+            stage.unlink()
+        return row
+    except (OSError,RefError) as exc:
+        save(settings,row,last_state=row['state'],state='failed',error=str(exc))
+        raise RefError('move_incomplete','Move incomplete; inspect the report and rerun the command',4,data=report(row),details={'cause':str(exc)}) from exc
+
+
+def report(row):
+    return {key:row.get('id') if key=='operation_id' else row.get(key) for key in ('operation_id','resource_id','old_path','new_path','old_name','new_name','state','error')}
+
+
+def move(settings, resource_id, target: Path):
+    target=target.with_name(unicodedata.normalize("NFC",target.name))
+    with files.file_lock(settings.catalog_path()):
+        with connect(settings.catalog_path()) as c:
+            previous=c.execute('SELECT * FROM file_operations WHERE resource_id=? ORDER BY created_at DESC LIMIT 1',(resource_id,)).fetchone()
+        row=dict(previous) if previous else None
+        if row and row['state']=='removed' and row['new_path']!=str(target):
+            row=None
+        if row and (row['last_state'] if row['state']=='failed' else row['state']) not in ('recorded','removed') and row['new_path']!=str(target):
+            raise RefError('move_conflict','Requested destination differs from the unfinished move')
+        if row is None:
+            row=create(settings,resource_id,target)
+        return report(resume(settings,row))
+
+
+def admit(settings, path: Path):
+    """Reject a new move of an already recorded file, including hard-link aliases."""
+    with connect(settings.catalog_path()) as c:
+        for item in resources.inventory(c):
+            existing=resources.resolve_path(settings,item)
+            if existing==path.resolve() or existing.exists() and path.exists() and existing.samefile(path):
+                raise RefError('resource_already_recorded',f"File is already resource {item['id']}; use reorg",details={'resource_id':item['id']})

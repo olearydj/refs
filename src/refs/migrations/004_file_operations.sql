@@ -9,7 +9,8 @@ INSERT INTO catalog_meta SELECT singleton, catalog_id, 4, revision FROM catalog_
 DROP TABLE catalog_meta_v3;
 CREATE TABLE file_operations (
     id TEXT PRIMARY KEY,
-    resource_id TEXT NOT NULL REFERENCES resources(id),
+    -- Historical ID survives resource unlink; operation creation validates it.
+    resource_id TEXT NOT NULL,
     old_path TEXT NOT NULL,
     new_path TEXT NOT NULL,
     old_name TEXT NOT NULL,

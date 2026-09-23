@@ -70,8 +70,6 @@ def test_move_operations_schema_and_constraints(cli, tmp_path):
         assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == 4
         assert c.execute("SELECT name FROM sqlite_master WHERE name='file_operations'").fetchone()
         with pytest.raises(sqlite3.IntegrityError):
-            c.execute("INSERT INTO file_operations (id,resource_id,old_path,new_path,old_name,new_name,staging_path,state,created_at,updated_at) VALUES ('op','missing','old','new','old','new','stage','staged','now','now')")
-        with pytest.raises(sqlite3.IntegrityError):
             c.execute("INSERT INTO file_operations (id,resource_id,old_path,new_path,old_name,new_name,staging_path,state,created_at,updated_at) VALUES ('op','missing','old','new','old','new','stage','other','now','now')")
 
 
