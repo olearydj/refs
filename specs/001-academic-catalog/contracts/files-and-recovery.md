@@ -4,11 +4,11 @@
 
 ## Ownership and naming
 
-A recorded named-root path resolving within library_root is managed; other files are linked. A source without loc uses Unfiled. Linking/import and root changes leave files untouched. Explicit intake and reorg use lib/<loc>.
+A recorded named-root path resolving within library_root is managed; other files are linked. Loc is optional: no loc means not placed, and reorg ignores those files. Move intake writes Unfiled explicitly when no --loc is given; --link leaves loc empty. Linking/import and root changes leave files untouched. Explicit intake and reorg use lib/<loc>.
 
 Both intake commands offer mutually exclusive --link, --copy and --move. `add --file` defaults to move; `resource add` defaults to link. Copy retains the original; move verifies before deleting it. Move admission refuses a file already recorded as any source's resource, naming that resource; this does not prevent resuming an admitted move or reorg. Check move admission before initial link registration. Copy and move require a reachable library.
 
-New copy and move intake use the accepted filename convention: a short title, an optional edition or version, and the year, with no spaces and the original extension. Examples are PracticalVim-2E-2015.pdf and ZeroToSold-v1.2.4-2020.pdf. A label supplied at intake adds a final segment after the year, keeping only letters, digits, dots and hyphens from the label, as in BoostYourGitDX-2023-r2023-06-03.pdf. An empty resulting segment is omitted. Unlabelled copies retain the same names. The owner's “Rename by default” decision applies to new intake. --keep-name preserves the original basename. If the short title or issued year is unusable, keep the original basename and report filename_unavailable. A collision does not authorize a suffix or overwrite. Later reorganize preserves existing names.
+New copy and move intake use the accepted filename convention: a short title, an optional edition or version, and the year, with no spaces and the original extension. A label supplied at intake adds a final segment after the year, keeping only letters, digits, dots and hyphens from the label, as in BoostYourGitDX-2023-r2023-06-03.pdf. An empty resulting segment is omitted. --keep-name preserves the original basename. If the short title or issued year is unusable, keep the original basename and report filename_unavailable. An intake collision does not authorize a suffix or overwrite. Reorg preserves names subject to D6 collisions below.
 
 Use pathlib for ordinary paths and narrowly scoped filesystem calls for exclusive publication. Reject paths that escape the library, unsafe symlink traversal, nonregular copy inputs and unsupported bundles. Those resources may be linked in place. If a cloud placeholder cannot supply readable bytes, the copy fails and the original remains.
 
@@ -25,33 +25,35 @@ Before copying, validate the source record, destination, filename and permission
 
 Publication is atomic, but the whole sequence is not. A crash before publication can leave a temporary file. A crash after publication but before registration can leave a finished copy without a catalog link. Report its path when possible and never delete that published copy automatically. After inspection, resource add can register the existing destination. Retrying the copy encounters a collision instead of silently adopting the file. A repeated link to the same registered source and path is a no-op.
 
-Adding a reference with a file first saves the metadata and a link to the original path. After the copy is verified and registered, replace that resource’s locator with the managed destination; retain the same resource ID, and record its pre-copy locator as `copied_from` in JSON output. One resource remains, and `open SOURCE` opens the managed copy. The original file remains untouched on disk. If copying fails, keep the resource’s original locator and return a partial result with those IDs and paths. Retry resource add --copy for that source instead of creating the reference again. If the source record changed before registration, report the finished but unregistered destination. Clean up only the temporary file created and still identified by this invocation.
+Adding a reference with a file first saves metadata and an original-path link. Once verified, register the managed destination on that resource, preserving its ID and exposing the old locator as `copied_from`. Open then uses the managed copy. On failure, retain the original locator and return a partial result; retry resource add --copy. A stale source revision leaves the published destination unregistered and reported. Clean up only this invocation's identified temporary file; never delete the original.
 
 Copies retain originals and promise content verification, not native metadata preservation or power-loss durability. SQLite transaction durability remains configured. Transfers require a completed source with no concurrent external writer.
 
-Resource check reports current availability, digest differences and recognized sync-conflict filenames without changing files or stored observations. Unlink and source removal never delete file bytes. Open invokes an external application for the selected resource, or the sole resource when there is only one.
+Resource check reports current availability, digest differences and recognized sync-conflict filenames without changing files or stored observations. Unlink and source removal never delete file bytes.
 
 ## Move protocol and journal
 
-All moves, including reorg, use copy, verify, re-record, delete across volumes. The existing catalog file-effect lock serializes refs writers. Intake first registers the original link, retaining it on failure until the recorded transition. A `file_operations` row records intent before copying; no filesystem work holds a SQLite write transaction.
+Moves use copy, verify, re-record, delete. The catalog file-effect lock serializes refs writers. Intake registers the original link first, retaining it until recorded. Save `file_operations` intent before copying; keep filesystem work outside SQLite write transactions.
 
 | State | Meaning and next action |
 | --- | --- |
-| staged | Intent and exclusive staging path are saved. Copy under cat/staging, check source identity and hashes as above, and fsync the staged file. Persist its filesystem identity and digest before publication. |
-| published | Publish without overwrite and verify the destination digest. Retain the staging name until this state commits; the same file identity at staging and destination proves publication if the process died before that commit. Equal bytes alone never authorize adopting an occupied destination. |
-| recorded | In one transaction, recheck source/resource revisions and loc, record the resource as library root plus relative destination, and mark the original pending removal by setting this state. Keep the resource ID and save the resulting revisions for resume checks. |
-| removed | Original deletion succeeded; the operation is complete. |
-| failed | Record the error and last completed state. Preserve existing files; retry only after its checks pass. |
+| staged | Save intent and exclusive staging path. Copy under cat/staging with the checks above; fsync. Persist filesystem identity, size, mtime and digest before publication. |
+| published | Publish without overwrite; verify the destination digest. Retain the staging name until this state commits. Matching staging/destination identity proves publication after interruption; equal bytes alone cannot authorize adoption. |
+| recorded | In one transaction, recheck source/resource revisions and loc, re-record the resource as library root plus relative destination, and set this state to mark pending removal. Keep the resource ID. |
+| removed | Original deletion succeeded; complete. |
+| failed | Save the error and last completed state. Preserve existing files; retry that state's checks. |
 
-Before deletion, re-verify the destination digest, fsync its file and containing directory, and recheck that the original still has the recorded identity and digest. Recheck the recorded revisions and loc. Any mismatch, unsafe path or sync failure stops deletion. These fsyncs are required ordering, not a claim of power-loss durability on macOS. After unlink, commit removed. If interrupted after unlink, a retry verifies the destination and observes the missing original before completing the row.
+Before deletion, check exactly: destination identity and digest match the recorded values; original identity and digest match; the resource row points at the destination. Fsync the destination file and directory before unlink; sync failure stops deletion. This is not a macOS power-loss guarantee. Commit removed after unlink. If interrupted after unlink, verify destination and resource pointer, observe the missing original, and complete. Original and destination are each hashed twice by design: at staging/publication and before deletion.
 
-Re-running the same command resumes unfinished rows for its selected sources before selecting new misplaced files, even when their locators now agree with loc. Identify an operation by resource and recorded old/new paths, not a request ID. A changed requested destination is a conflict. Staged work can be rebuilt from the unchanged original; published work re-verifies and re-records; recorded work re-verifies before deletion. Failed work retains the last completed state for this same procedure.
+Re-running resumes unfinished operations for selected sources before selecting new mismatches, even with loc now empty. Identify operations by resource and saved paths. Before recorded, a changed destination conflicts; staged work can be rebuilt from an unchanged original, and published work verified and recorded. Recorded work uses only the pre-delete checks above. A later loc change is a new mismatch for the next reorg, never a deletion block.
 
-The rehearsal kills execution between publish and re-record, then between re-record and delete. The first retry proves publication and finishes registration; the second resumes pending removal. Neither overwrites a destination or creates another resource. New destination basenames use NFC; reorg otherwise preserves names. All files of each source follow its loc, including sources with several attachments.
+Rehearse kills between publish and re-record, and between re-record and delete. Retry proves publication and completes registration in the first case; it completes pending removal in the second, without duplicate resources or overwrite.
 
-Completed reports list every old path beside its new path and list unlinked files left untouched. The owner uses this report to repair seven vault references; refs does not edit the vault. Resource check adds unfinished operations and folder/loc disagreements, without repairing either.
+Write NFC basenames. Under D6, when preserved names collide, the first file keeps its name; later files take -b, -c before the extension. Record old/new names in the operation and report. Eight Zotero snapshots would otherwise occupy three names in lib/papers/aiml. Intake convention collisions still refuse.
 
-Before cutover, the owner runs CCC covering Box and Zotero storage. A one-time `tools/assign_initial_loc.py` previews and reports assignments for 575 sources through the application's revision-checked update path: Box-relative file folder first, otherwise the single collection, otherwise Unfiled. It moves nothing and is not a CLI command. The independent protocol review and rehearsal precede the owner-authorized real move.
+Completed reports pair every old/new path and list untouched unlinked extras, enabling the owner's seven vault repairs. Resource check separately reports linked with no loc (untouched), linked with loc (pending reorg), managed in the wrong folder, and unfinished operations. An unfinished intake's original is an unfinished move, not an ordinary link.
+
+Cutover follows CCC backup, review and rehearsal. `tools/assign_initial_loc.py` previews and reports through the application's update path without marking corrected fields: the folder of a Box-tree file; otherwise the single collection; otherwise none. For 35 sources with files in both trees, storage files follow the Box folder. File-less sources keep empty loc. Assign locs to every source with a file, then run reorg. The tool moves nothing.
 
 ## Adoption and export publication
 

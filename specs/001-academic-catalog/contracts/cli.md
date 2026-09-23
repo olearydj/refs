@@ -71,12 +71,12 @@ BATCH is the saved import ID. Collection paths identify the imported hierarchy; 
 | add --loc PATH | Set source loc; show includes it. |
 | add --file PATH | --move by default; --copy retains the original; --link leaves it in place. |
 | resource add REF | --link by default; --copy and --move bring files into lib/<loc>. |
-| update REF --set loc=JSON | Change loc through the existing revision-checked update; no file moves. Clear restores Unfiled. |
+| update REF --set loc=JSON | Change loc through the existing revision-checked update; no file moves. Clear leaves it unplaced; loc never marks corrected_fields. |
 | list/search --loc PATH | Exact case-insensitive loc filter, combined with existing filters. |
-| reorg [--source REF \| --loc PREFIX] [--execute] | Preview by default. Select folder/loc mismatches, including linked files entering lib, and unfinished moves. Prefix matches complete path segments. Execute the [move protocol](files-and-recovery.md#move-protocol-and-journal), preserving names. |
-| resource check | Also report incomplete operations and folder/loc mismatches. |
+| reorg [--source REF \| --loc PREFIX] [--execute] | Preview by default. Select managed files disagreeing with a set loc, linked files with a set loc, and unfinished moves. Prefix matches complete path segments. Execute the [move protocol](files-and-recovery.md#move-protocol-and-journal), using D6 collision suffixes. |
+| resource check | Separate linked without loc, linked awaiting reorg, managed folder mismatches, and unfinished moves (including intake originals). |
 
-The three intake flags are mutually exclusive. Only --move refuses files already recorded as resources of any source. Reorg is explicit intake for selected outside files under Principle II. Its completed report has `data.moves`, each with `operation_id`, `resource_id`, `old_path`, `new_path`, `state` and `error`; `data.unlinked_paths` lists untouched extras. Preview uses the same paths with null operation_id for new work, without creating operations. Human output lists every old/new pair. The initial loc assignment is the contract's one-time tool, not another command.
+The intake flags are mutually exclusive. Move without --loc writes Unfiled; --link leaves loc empty. Only --move refuses files already recorded as resources of any source. Reorg is explicit intake for selected outside files under Principle II. Its completed report has `data.moves`, each with `operation_id`, `resource_id`, `old_path`, `new_path`, `old_name`, `new_name`, `state` and `error`; `data.unlinked_paths` lists untouched extras. Preview uses the same paths with null operation_id for new work, without creating operations. Human output lists every old/new pair.
 
 ## `add` and `import` are one engine with two contracts
 

@@ -12,7 +12,7 @@ The [constitution, version 2.0.0](../../.specify/memory/constitution.md), the [a
 - Citation key: the short name used to cite a source in a manuscript, for example `smith-2024-turingTrap`.
 - Original entry: the exact text or JSON that a source was imported or submitted from, kept unchanged as evidence.
 - Revision: a counter on each source that goes up with every change. An edit must say which revision it was based on, so two agents cannot silently overwrite each other.
-- Library: the folder `/Volumes/Casa/refs/lib`, where refs keeps copies of files it has been asked to take in. `Unfiled` is the destination when a source has no loc.
+- Library: the folder `/Volumes/Casa/refs/lib`, where refs keeps copies of files it has been asked to take in. Loc is optional placement: empty means not placed; reorg ignores those files.
 - Managed and linked: a file stored inside the library is managed by refs. A file anywhere else is linked: refs leaves it untouched except through explicit intake.
 - Catalog: the SQLite database in `/Volumes/Casa/refs/cat`. Configuration lives separately in `~/.config/refs/config.toml`.
 - Project: a paper or other piece of writing. In this slice a project is simply the set of sources cited in it.
@@ -46,7 +46,7 @@ Slice 3 replies (2026-09-23), distinct from the slice 2 D1–D4 above:
 
 | Question/topic | Literal owner reply | Interpretation applied here |
 | --- | --- | --- |
-| D1: Filing | “a source (bib entry) can refer to several files, but will have only one loc, and all files will go there” | One source loc determines every attachment's folder. |
+| D1: Filing | “a source (bib entry) can refer to several files, but will have only one loc, and all files will go there” | Optional source loc determines every attachment's folder; empty means not placed (D5). |
 | D2: Names | “I agree with A”; “not no, deferred”; “as an optional part of the reorg process” | Preserve names during reorg; bulk rename is a later reorg option. |
 | D3: Unlinked files | “I don't mind the extras in the Box folder. it is essentially an archive / backup of zotero db for now.” | Leave unlinked files and list them. |
 | D4: Intake | “I think move should be the default”; “I would probably block this. it seems unlikely that it would be intentional. if so we can fix it later.” | `add --file` moves by default. `resource add` keeps linking by default because attaching an existing file in place is its ordinary use. Both offer --link, --copy and --move; only move refuses an already recorded file. |
@@ -105,7 +105,7 @@ In the first clarification session the owner answered five multiple-choice quest
 - FR-026: refs shows where each file is and whether it can currently be found. Removing a file's link removes only the catalog record. A missing file or folder is reported and nothing is moved or deleted in response.
 - FR-027: `refs open` opens a source's only file, or a file chosen explicitly. When there are several and none was chosen, it lists them instead of guessing. Files are opened in their usual application and never modified.
 - FR-028: **Slice 2:** Import collection hierarchy and source memberships. `collection list` shows the hierarchy with counts; `list` and `search` accept `--collection PATH`. Collections remain imported history; loc governs slice 3 filing.
-- FR-030: Unfiled is the destination when no loc is assigned.
+- FR-030: Move intake writes Unfiled explicitly when no --loc is given; --link leaves loc empty.
 - FR-031: Before transfer, refs shows the destination and name. Intake requires a reachable library; otherwise it fails without touching the original. Slice 3 intake follows FR-052.
 - FR-032: Library files are managed; others remain linked except through explicit intake. Changing a named root never moves files.
 - FR-033: Copies retain their originals and follow the [copy protocol](contracts/files-and-recovery.md#copy-protocol-and-interruption). Slice 3 moves follow FR-052.
@@ -131,11 +131,11 @@ In the first clarification session the owner answered five multiple-choice quest
 
 ### Organizing files
 
-- FR-050: **Slice 3, D1:** “will have only one loc, and all files will go there.” Store one validated source loc. Add and update can set it; show, list and search expose it. Changing loc never moves files.
-- FR-051: **Slice 3, D2:** “I agree with A.” Reorg previews selected folder/loc mismatches and moves them only with execute, preserving names apart from NFC normalization.
+- FR-050: **Slice 3, D1:** “will have only one loc, and all files will go there.” Store one optional validated source loc; empty means not placed and reorg ignores its files. Add and update can set it; show, list and search expose it. Changing loc never moves files.
+- FR-051: **Slice 3, D2:** “I agree with A.” Reorg previews selected folder/loc mismatches and moves them only with execute, preserving NFC names except for D6 collision suffixes (-b, -c).
 - FR-052: **Slice 3, D4:** “I think move should be the default.” `add --file` defaults to move; `resource add` defaults to link. Moves use the [move protocol](contracts/files-and-recovery.md#move-protocol-and-journal), with verified publication before deletion and resumable interruption. An explicit copy retains the original; linking remains available.
 - FR-053: **Slice 3, D4:** “I would probably block this.” Refuse move intake of a file already recorded for any source, naming its resource. This admission rule does not prevent resuming an existing move.
-- FR-054: **Slice 3, D3:** “I don't mind the extras in the Box folder.” Leave unlinked files untouched and report them alongside every completed old/new path pair. Resource check reports incomplete moves and folder/loc disagreements.
+- FR-054: **Slice 3, D3:** “I don't mind the extras in the Box folder.” Leave unlinked files untouched and report them alongside every completed old/new path pair. Resource check distinguishes linked without loc, linked awaiting reorg, managed folder mismatches and unfinished moves, including intake originals.
 
 ## Deferred identifiers
 
