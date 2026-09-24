@@ -16,6 +16,20 @@ FIXTURES = Path(__file__).parents[1] / 'fixtures/bibliography'
 GOOD = b'@article{x,title={A Python Example},author={Smith, Alex},year={2024},doi={10.1000/example}}'
 
 
+def test_empty_key_fixture_names_entry_position_and_preserves_bytes(initialized, tmp_path):
+    fixture = Path(__file__).parents[1] / 'fixtures/real-trial/minimized/empty-key.bib'
+    raw = fixture.read_bytes()
+    report = importing.run(tmp_path / 'cat', raw, str(fixture))
+    assert report['counts'] == dict(applied=0, unchanged=0, conflict=0, invalid=1)
+    entry = report['entries'][0]
+    assert entry['code'] == 'invalid_bib_entry'
+    assert entry['start'] == 0
+    assert entry['message'] == 'Entry at byte 0: citation key is empty'
+    with connect(tmp_path / 'cat') as connection:
+        assert connection.execute('SELECT count(*) FROM sources').fetchone()[0] == 0
+        assert raw in [bytes(row[0]) for row in connection.execute('SELECT raw_bytes FROM originals')]
+
+
 @pytest.mark.parametrize('raw', [
     b'@article{x,title={First},title={Second}}',
     b'@article{x,title={First},TITLE={Second}}',
