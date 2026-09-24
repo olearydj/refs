@@ -42,7 +42,7 @@ def test_five_kinds_and_filter_are_read_only(initialized,tmp_path,reference_path
     assert 'Use resource add SOURCE --path' in text
     assert 'unfinished move: '+str(tmp_path/'interrupted.pdf') in text
     assert initialized('resource','check','--source',source['id'],'--kind','unrecorded')['data']['items']==[]
-    initialized('resource','check','--kind','bad',expected=2)
+    assert initialized('resource','check','--kind','bad',expected=2)['errors'][0]['code']=='invalid_kind'
     assert before==(tmp_path/'cat/catalog.sqlite').read_bytes()
     assert extra.read_bytes()==b'unrecorded' and unplaced.read_bytes()==b'untouched'
 

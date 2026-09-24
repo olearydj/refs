@@ -2,7 +2,7 @@ def test_project_repeats_and_conflicts(initialized, tmp_path, reference_path):
     source = initialized("add", "--format", "refs", "--input", reference_path)["data"]
     created = initialized("project", "create", "demo", "--description", "Synthetic project")["data"]
     assert initialized("project", "create", "demo", "--description", "Synthetic project")["data"]["id"] == created["id"]
-    initialized("project", "create", "demo", "--description", "Different", expected=3)
+    assert initialized("project", "create", "demo", "--description", "Different", expected=3)['errors'][0]['code']=='project_conflict'
     initialized("project", "cite", "demo", source["citation_key"])
     db = tmp_path / "cat" / "catalog.sqlite"
     before = db.read_bytes()

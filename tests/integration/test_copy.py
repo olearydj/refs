@@ -151,3 +151,24 @@ def test_filename_fallback_is_explicit(initialized,tmp_path):
     data=initialized('add','--format','refs','--input',record,'--file',path,'--copy')['data']
     assert data['resources'][0]['relative'] == 'unfiled/undated.pdf'
     assert any(item['code']=='filename_unavailable' for item in data['warnings'])
+
+
+def test_staging_volume_mismatch_refuses_before_copy(initialized,tmp_path,reference_path,monkeypatch):
+    import os
+    from pathlib import Path
+
+    settings, source, path = prepare(initialized,tmp_path,reference_path)
+    stat = Path.stat
+    def different_device(self,*args,**kwargs):
+        result = stat(self,*args,**kwargs)
+        if self == settings.catalog_path():
+            fields = list(result)
+            fields[2] += 1
+            return os.stat_result(fields)
+        return result
+    monkeypatch.setattr(Path,'stat',different_device)
+    with pytest.raises(RefError) as error:
+        resources.copy(settings,source['id'],path)
+    assert error.value.issue['code'] == 'staging_volume_mismatch'
+    assert path.read_bytes() == b'synthetic PDF content'
+    assert not (settings.library/'unfiled').exists()

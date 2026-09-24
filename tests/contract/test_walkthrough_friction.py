@@ -174,8 +174,8 @@ def test_cite_from_import_applied_active_only(human, initialized, tmp_path):
     assert human('project','cite','paper','--from-import','first').strip()=='Cited 1 in paper (1 already cited)'
     assert human('project','cite','paper','--from-import','first').strip()=='Cited 0 in paper (2 already cited)'
     assert [s['citation_key'] for s in initialized('project','show','paper')['data']['sources']]==['one','two']
-    initialized('project','cite','paper','one','--from-import','first',expected=2)
-    initialized('project','cite','paper','--from-import','missing',expected=3)
+    assert initialized('project','cite','paper','one','--from-import','first',expected=2)['errors'][0]['code']=='invalid_arguments'
+    assert initialized('project','cite','paper','--from-import','missing',expected=3)['errors'][0]['code']=='import_origin_missing'
 
 
 def test_cite_from_legacy_import_uses_creation_time(initialized, tmp_path):
