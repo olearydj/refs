@@ -1,5 +1,6 @@
 import json
 import runpy
+import shutil
 from pathlib import Path
 
 import pytest
@@ -36,12 +37,16 @@ def sample(tmp_path):
 
 def test_clean_and_actual_kill_resume(tmp_path):
     root=sample(tmp_path)
-    results=harness['run'](root)
-    assert [row['scenario'] for row in results]==['clean','published_uncommitted','recorded']
-    assert all(row['resources']==6 and row['moves']==6 and row['unlinked_files']==1 and row['findings']==0 for row in results)
-    for row in results:
-        folder=Path(row['home'])/'lib/Café'
-        assert {path.name for path in folder.glob('*.html')}=={'snapshot.html','snapshot-b.html','snapshot-c.html'}
+    results=harness['run'](root,keep=True)
+    try:
+        assert [row['scenario'] for row in results]==['clean','published_uncommitted','recorded']
+        assert all(row['resources']==6 and row['moves']==6 and row['unlinked_files']==1 and row['findings']==0 for row in results)
+        for row in results:
+            folder=Path(row['home'])/'lib/Café'
+            assert {path.name for path in folder.glob('*.html')}=={'snapshot.html','snapshot-b.html','snapshot-c.html'}
+    finally:
+        for row in results:
+            shutil.rmtree(Path(row['home']).parent)
 
 
 @pytest.mark.parametrize('damage',['escape','symlink'])

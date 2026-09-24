@@ -20,6 +20,7 @@ for p in pipyer-paper 2026-jose-danvas 2026-insight-dema-llm manufacturing-train
   jq -c '{status, counts: .data.counts, warnings: [.warnings[].code] | unique, errors: [.errors[].code] | unique}' "$OUT/$p/import.json" 2>/dev/null || cat "$OUT/$p/import.err"
   echo "exit=$ec"
   jq -e '.data.counts.invalid == 0 and .data.counts.conflict == 0' "$OUT/$p/import.json" >/dev/null || failures=$((failures+1))
+  jq -e --argjson count "$n" '.data.counts.applied == $count' "$OUT/$p/import.json" >/dev/null || { log "[$p] unexpected import count"; failures=$((failures+1)); }
   # limitations by kind
   jq -r '[.data.entries[]? | .limitations[]? | .field] | group_by(.) | map("\(.[0]) x\(length)") | .[]' "$OUT/$p/import.json" 2>/dev/null | sed 's/^/  limitation: /'
   jq -r '[.data.entries[]? | select(.status!="applied") | "\(.status) \(.citation_key)"] | .[]' "$OUT/$p/import.json" 2>/dev/null | head -8 | sed 's/^/  /'
@@ -44,7 +45,7 @@ print(f"  titles changed by normalization: {len(diffs)} of {len(items)}")
 for d in diffs[:6]: print("   ",d[0],"|",d[1],"->",d[2])
 PY
   # every source: show must work
-  fails=0; while IFS= read -r k; do R show "$k" >/dev/null 2>&1 || { fails=$((fails+1)); log "[$p] show failed for $k"; }; done < <(jq -r '.data.items[].citation_key' "$OUT/$p/list.json"); echo "  show failures: $fails"
+  fails=0; while IFS= read -r k; do R show "$k" >/dev/null 2>&1 || { fails=$((fails+1)); log "[$p] show failed for $k"; }; done < <(jq -r '.data.items[].citation_key' "$OUT/$p/list.json"); echo "  show failures: $fails"; failures=$((failures+fails))
   # project + export dry run against the real (copied) file
   R project create "$p" >/dev/null; while IFS= read -r k; do R project cite "$p" "$k" >/dev/null; done < <(jq -r '.data.items[].citation_key' "$OUT/$p/list.json")
   R --json export --project "$p" --output "$OUT/$p/exported.bib" --dry-run > "$OUT/$p/export-dry.json" 2>&1
@@ -66,6 +67,7 @@ R add --format csljson --input "$T/inputs/attention.json" 2>&1 | head -3
 echo "===== library-wide BBT export (562, BibLaTeX dialect)"; home library
 R --json import --format bib --input "$T/inputs/zotero-bbt-export.bib" --origin zotero > "$OUT/library/import.json" 2>"$OUT/library/import.err"; echo "exit=$?"
 jq -c '{status, counts: .data.counts, errors: [.errors[].code]|unique}' "$OUT/library/import.json" 2>/dev/null || head -3 "$OUT/library/import.err"
+jq -e '.data.counts.applied == 562 and .data.counts.conflict == 0 and .data.counts.invalid == 0' "$OUT/library/import.json" >/dev/null || { log '[library] unexpected import status'; failures=$((failures+1)); }
 jq -r '[.data.entries[]? | .limitations[]? | .field] | group_by(.) | map("\(.[0]) x\(length)") | .[]' "$OUT/library/import.json" 2>/dev/null | sed 's/^/  limitation: /'
 jq -r '[.data.entries[]? | select(.status=="invalid" or .status=="conflict") | "\(.status) \(.citation_key): \(.reason // (.conflicts[0].code? // ""))"] | .[]' "$OUT/library/import.json" 2>/dev/null | head -10 | sed 's/^/  /'
 # Whole-library reporting: retained facts are JSON info, not human warnings.
@@ -75,11 +77,13 @@ R --json export --project library --output "$OUT/library/exported.bib" > "$OUT/l
 R export --project library --output "$OUT/library/exported.bib" > "$OUT/library/export.txt"
 echo "===== files"; 
 key=$(R --json list | jq -r '.data.items[0].citation_key'); cp "$T/downloads/00265218.pdf" "$OUT/library/dl.pdf"
-R resource add "$key" --path "$OUT/library/dl.pdf" --copy; ls "$OUT/library/lib/Unfiled" 2>/dev/null
-R resource add "$key" --path "$OUT/library/dl.pdf" --copy --keep-name; ls "$OUT/library/lib/Unfiled" 2>/dev/null
+R resource add "$key" --path "$OUT/library/dl.pdf" --copy || failures=$((failures+1)); ls "$OUT/library/lib/unfiled" || failures=$((failures+1))
+R resource add "$key" --path "$OUT/library/dl.pdf" --copy --keep-name || failures=$((failures+1)); ls "$OUT/library/lib/unfiled" || failures=$((failures+1))
 R open --help | head -6
 echo "===== search"; R search "workflow" | head -5; R search "köster"; R search "koster" | head -2
+R --json search "koster" > "$OUT/library/search.json"; jq -e '.data.total > 0' "$OUT/library/search.json" >/dev/null || failures=$((failures+1))
 echo "===== backup/restore"; R backup --output "$OUT/library/bk" | head -1
+test -f "$OUT/library/bk/manifest.json" || failures=$((failures+1))
 
 uv run --project "$REPO" --locked python "$T/check_counts.py" "$T" || failures=$((failures+1))
 echo "Trial failures: $failures"

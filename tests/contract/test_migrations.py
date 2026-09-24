@@ -4,6 +4,7 @@ from contextlib import closing
 from importlib.resources import files
 
 import pytest
+from conftest import SCHEMA_VERSION, TABLE_COUNT
 
 from refs.catalog import connect, migrate
 from refs.results import RefError
@@ -23,17 +24,17 @@ def test_automatic_migration_preserves_identity(tmp_path):
     old_catalog(path)
     with connect(path):
         pass
-    assert len(list(path.glob("before-schema-5-*.sqlite"))) == 1
+    assert len(list(path.glob(f"before-schema-{SCHEMA_VERSION}-*.sqlite"))) == 1
     migrate(path)
     migrate(path)
     with connect(path) as c:
-        assert tuple(c.execute("SELECT * FROM catalog_meta").fetchone()) == (1, "stable", 5, 7)
+        assert tuple(c.execute("SELECT * FROM catalog_meta").fetchone()) == (1, "stable", SCHEMA_VERSION, 7)
         assert c.execute("PRAGMA foreign_key_check").fetchall() == []
         assert (
             c.execute(
                 "SELECT count(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'search_projection_%'"
             ).fetchone()[0]
-            == 15
+            == TABLE_COUNT
         )
 
 
@@ -62,14 +63,14 @@ def test_reuse_config(cli, tmp_path):
     assert config.read_bytes() == before
     assert (tmp_path / "lib").is_dir()
     with connect(tmp_path / "cat") as c:
-        assert c.execute("SELECT schema_version FROM catalog_meta").fetchone()[0] == 5
+        assert c.execute("SELECT schema_version FROM catalog_meta").fetchone()[0] == SCHEMA_VERSION
     cli("--catalog", tmp_path / "other", "init", "--reuse-config", expected=3)
 
 
 def test_move_operations_schema_and_constraints(cli, tmp_path):
     cli('init', '--library-root', tmp_path/'lib')
     with connect(tmp_path/'cat', write=True) as c:
-        assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == 5
+        assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == SCHEMA_VERSION
         assert c.execute("SELECT name FROM sqlite_master WHERE name='file_operations'").fetchone()
         with pytest.raises(sqlite3.IntegrityError):
             c.execute("INSERT INTO file_operations (id,resource_id,old_path,new_path,old_name,new_name,staging_path,state,created_at,updated_at) VALUES ('op','missing','old','new','old','new','stage','other','now','now')")
@@ -124,7 +125,7 @@ def test_read_upgrades_with_notice_and_copy(tmp_path, json_output):
     command = ['refs', '--no-project-config', '--config', str(tmp_path/'config.toml'), '--catalog', str(path)]
     result = subprocess.run(command + (['--json'] if json_output else []) + ['list'], capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
-    safety, = path.glob('before-schema-5-*.sqlite')
+    safety, = path.glob(f'before-schema-{SCHEMA_VERSION}-*.sqlite')
     with closing(sqlite3.connect(safety)) as c, c:
         assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == 1
     assert safety.stat().st_size == len(original)
@@ -173,7 +174,7 @@ def test_upgrade_inside_existing_file_lock(tmp_path):
     path = tmp_path/'cat'
     old_catalog(path)
     with file_lock(path), connect(path) as c:
-        assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == 5
+        assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == SCHEMA_VERSION
 
 
 def test_dry_run_upgrades(cli, tmp_path):

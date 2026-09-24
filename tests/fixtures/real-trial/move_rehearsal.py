@@ -74,8 +74,16 @@ def command(settings):
     return [sys.executable,'-m','refs','--json','--no-project-config','--config',str(settings.config),'--catalog',str(settings.catalog_path()),'reorg','--execute']
 
 
-def run_scenario(sample, scenario):
+def run_scenario(sample, scenario, *, keep=False):
     work=Path(tempfile.mkdtemp(prefix='refs-move-rehearsal-')).resolve()/'home'
+    try:
+        return _run_scenario(sample, scenario, work)
+    finally:
+        if not keep:
+            shutil.rmtree(work.parent)
+
+
+def _run_scenario(sample, scenario, work):
     settings=prepare(sample,work)
     with catalog.connect(settings.catalog_path()) as c:
         before=resources.inventory(c)
@@ -121,13 +129,13 @@ moves.reorg(select(sys.argv[1],sys.argv[2],no_project_config=True),execute=True)
     return dict(scenario=scenario,resources=len(after),sources_with_files=with_files,sources_assigned=assigned,fileless_sources=fileless,moves=len(report['moves']),already_placed=len(after)-len(report['moves']),unlinked_files=len(extras),findings=0,home=str(work))
 
 
-def run(sample):
+def run(sample, *, keep=False):
     sample=Path(sample).expanduser().resolve()
     allowed=[Path(tempfile.gettempdir()).resolve(),Path('/private/tmp'),Path('/Volumes/Casa/tmp'),REPO/'tests/fixtures/real-trial']
     if not any(sample.is_relative_to(root) for root in allowed):
         raise ValueError('Put the disposable sample under the trial fixtures or a temporary directory')
     baseline={str(path.relative_to(sample)):files.hash_file(path) for path in sample.rglob('*') if not path.is_symlink() and path.is_file()}
-    results=[run_scenario(sample,scenario) for scenario in ('clean','published_uncommitted','recorded')]
+    results=[run_scenario(sample,scenario,keep=keep) for scenario in ('clean','published_uncommitted','recorded')]
     assert baseline=={str(path.relative_to(sample)):files.hash_file(path) for path in sample.rglob('*') if not path.is_symlink() and path.is_file()}, 'Input sample changed'
     return results
 
@@ -135,5 +143,6 @@ def run(sample):
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sample',required=True)
+    parser.add_argument('--keep',action='store_true',help='retain disposable rehearsal homes for inspection')
     args=parser.parse_args()
-    print(json.dumps(run(args.sample),indent=2))
+    print(json.dumps(run(args.sample,keep=args.keep),indent=2))

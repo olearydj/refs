@@ -29,7 +29,7 @@ def test_init_and_repeat(cli, tmp_path):
 
 def test_init_preview_has_no_effect(cli, tmp_path):
     cli("init", "--library-root", tmp_path / "lib", "--dry-run")
-    assert list(tmp_path.iterdir()) == []
+    assert list(tmp_path.iterdir()) == [tmp_path / "work"]
 
 
 def test_unknown_directory_not_overwritten(cli, tmp_path):

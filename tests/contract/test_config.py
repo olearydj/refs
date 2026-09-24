@@ -104,6 +104,7 @@ def test_inspection_and_policy_overrides(initialized,tmp_path):
 
 
 def test_project_export_defaults_and_invocation_override(initialized,tmp_path):
+    import sys
     record=tmp_path/'record.json'
     record.write_text(json.dumps({'schema_version':'1.0','citation_key':'one','metadata':{'title':'Example'}}))
     initialized('add','--format','refs','--input',record)
@@ -112,11 +113,16 @@ def test_project_export_defaults_and_invocation_override(initialized,tmp_path):
     initialized('project','cite','one','one')
     selected=tmp_path/'paper.toml'
     selected.write_text('project="one"\n[export]\noutput="default.bib"\n')
-    result=initialized('--project-file',selected,'export')['data']
+    def configured(*args, expected=0):
+        result=subprocess.run([sys.executable,'-m','refs','--json','--project-file',str(selected),*map(str,args)],env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(tmp_path/'cat')),cwd=tmp_path,capture_output=True,text=True)
+        assert result.returncode==expected, result.stdout+result.stderr
+        assert result.stderr==''
+        return json.loads(result.stdout)
+    result=configured('export')['data']
     assert result['count']==1 and result['output']==str(tmp_path/'default.bib')
-    result=initialized('--project-file',selected,'export','--project','two','--output',tmp_path/'other.bib')['data']
+    result=configured('export','--project','two','--output',tmp_path/'other.bib')['data']
     assert result['count']==0
-    initialized('--project-file',selected,'--no-project-config','paths',expected=2)
+    configured('--no-project-config','paths',expected=2)
 
 
 def test_changed_policy_does_not_rewrite_existing_correction(initialized,tmp_path,reference_path):

@@ -1,6 +1,6 @@
 import json
 
-from test_zotero_mapping import extracted
+from conftest import extracted
 
 from refs.catalog import connect
 

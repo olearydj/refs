@@ -1,22 +1,11 @@
 import json
-import runpy
 
 import pytest
+from conftest import extracted
 
 from refs import bibliography, search, sources
 from refs.adapters import bibtex, csl, zotero
 from refs.results import RefError
-
-
-def extracted(database, output):
-    runpy.run_path("tools/zotero_extract/extract.py")["extract"](
-        database,
-        output,
-        database.parent,
-        database.parent / "base",
-        database.parent / "better-bibtex.sqlite",
-    )
-    return zotero.read(output)
 
 
 def test_fixture_mapping(zotero_fixture, tmp_path):

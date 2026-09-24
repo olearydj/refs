@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-from test_zotero_mapping import extracted
+from conftest import extracted
 
 
 def test_plain_hierarchy_and_filtered_sources(initialized,zotero_fixture,tmp_path):

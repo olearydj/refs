@@ -1,0 +1,8 @@
+[run]
+branch = True
+source = src/refs
+parallel = True
+
+[report]
+show_missing = True
+skip_covered = True

@@ -1,17 +1,5 @@
 """Regressions from the owner's slice 1 walkthrough, in isolated homes."""
-import os
-import subprocess
 
-import pytest
-
-
-@pytest.fixture
-def human(initialized, tmp_path):
-    def run(*args, expected=0):
-        result = subprocess.run(['refs', '--no-project-config', *map(str,args)], env=dict(os.environ, REFS_CONFIG=str(tmp_path/'config.toml'), REFS_CATALOG=str(tmp_path/'cat')), capture_output=True, text=True)
-        assert result.returncode == expected, result.stdout + result.stderr
-        return result.stdout + result.stderr
-    return run
 
 
 def test_add_file_confirms_copy(human, reference_path, tmp_path):

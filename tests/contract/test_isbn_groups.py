@@ -1,7 +1,7 @@
 import json
 
 import pytest
-from test_zotero_mapping import extracted
+from conftest import extracted
 
 from refs import importing, sources
 from refs.catalog import connect

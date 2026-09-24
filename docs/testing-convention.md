@@ -10,4 +10,4 @@ A generator needs an invariant that can fail on a wrong result and a small, save
 
 ## Coverage run
 
-The ordinary test run does not start subprocess coverage. Run the separate command recorded here after the subprocess configuration lands; combine child data and report both line and branch coverage. Coverage is a data point, not a gate.
+The ordinary test run does not start subprocess coverage. From the repository root, run `COVERAGE_PROCESS_START="$PWD/.coveragerc" PYTHONPATH="$PWD/tests/coverage_bootstrap${PYTHONPATH:+:$PYTHONPATH}" uv run --locked coverage run -m pytest`, then `uv run --locked coverage combine` and `uv run --locked coverage report`. This measures the Python CLI subprocesses as well as the test process. Coverage is a data point, not a gate.
