@@ -1,8 +1,10 @@
 
 import pytest
+from pathlib import Path
 
 from refs import bibliography
-from refs.models import SourceCreate
+from refs.adapters.bibtex import parse, partition
+from refs.models import REGISTRY, SourceCreate
 from refs.results import RefError
 
 
@@ -28,6 +30,19 @@ def test_four_classes_and_unknown_override():
     with pytest.raises(RefError) as error:
         bibliography.serialize([value], allow_unknown=True)
     assert any(item['code'] == 'issued_date_lost_or_changed' for item in error.value.issue['details']['entries'])
+
+
+def test_translated_chapter_is_an_assessed_portable_omission():
+    fixture = Path(__file__).parents[1] / 'fixtures/real-trial/minimized/translated-chapter.bib'
+    source = parse(partition(fixture.read_bytes())[0]['raw'])['source'].canonical()
+    assert source['metadata']['translator'] == [{'given': 'Bea', 'family': 'Sample'}]
+    rows = [row for row in REGISTRY['rows'] if row['canonical_path'] == 'metadata.translator']
+    assert rows and all(row['export_class'] == 'documented_fallback' for row in rows)
+    output, warnings = bibliography.serialize([source])
+    assert b'author = {Example, Ada}' in output
+    assert b'translator =' not in output
+    assert source['metadata']['translator'] == [{'given': 'Bea', 'family': 'Sample'}]
+    assert any(item['code'] == 'field_omitted' and item['details']['class'] == 'documented_fallback' for item in warnings)
 
 
 @pytest.mark.parametrize('code', ['issued_date_lost_or_changed', 'work_identity_changed'])

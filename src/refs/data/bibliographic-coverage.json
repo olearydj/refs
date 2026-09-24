@@ -2273,10 +2273,10 @@
       "canonical_path": "metadata.translator",
       "transform": "Ordered CSL personal/literal names; original role is provenance",
       "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
-      "export_class": "value-dependent",
-      "fixture": "names",
-      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+      "portable_projection": "Documented omission of a non-cited role; retain the translator in the catalog without reassigning author.",
+      "export_class": "documented_fallback",
+      "fixture": "translated-chapter",
+      "assessment_rule": "Portable BibTeX omits translator without changing the cited author."
     },
     {
       "input_format": "zotero-json",
@@ -2504,10 +2504,10 @@
       "canonical_path": "metadata.translator",
       "transform": "Parse ordered names and explicit von parts; fully grouped corporate names remain literals",
       "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
-      "export_class": "value-dependent",
-      "fixture": "names",
-      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+      "portable_projection": "Documented omission of a non-cited role; retain the translator in the catalog without reassigning author.",
+      "export_class": "documented_fallback",
+      "fixture": "translated-chapter",
+      "assessment_rule": "Portable BibTeX omits translator without changing the cited author."
     },
     {
       "input_format": "bib",
@@ -2857,10 +2857,10 @@
       "canonical_path": "metadata.translator",
       "transform": "Validate canonical field; normalize only documented policy; id becomes provenance",
       "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "Retain role; no automatic author reassignment. Omission/projection is value-dependent and unknown until assessed for type/consumer.",
-      "export_class": "value-dependent",
-      "fixture": "agent",
-      "assessment_rule": "Representable author/editor names: faithful. Known omitted non-cited roles: assessed omission warning. Changed cited author set: cited_authors_changed block. Unparsed names or unassessed role projection: unknown."
+      "portable_projection": "Documented omission of a non-cited role; retain the translator in the catalog without reassigning author.",
+      "export_class": "documented_fallback",
+      "fixture": "translated-chapter",
+      "assessment_rule": "Portable BibTeX omits translator without changing the cited author."
     },
     {
       "input_format": "csljson",
@@ -4065,25 +4065,7 @@
       "thesis",
       "webpage"
     ],
-    "translator": [
-      "article",
-      "article-journal",
-      "article-magazine",
-      "article-newspaper",
-      "book",
-      "chapter",
-      "document",
-      "manuscript",
-      "paper-conference",
-      "patent",
-      "post-weblog",
-      "report",
-      "software",
-      "speech",
-      "standard",
-      "thesis",
-      "webpage"
-    ],
+    "translator": [],
     "accessed": [
       "article",
       "article-journal",

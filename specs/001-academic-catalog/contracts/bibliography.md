@@ -57,7 +57,7 @@ Only month macros are resolved natively in slice 1. crossref/xdata, arbitrary st
 
 ## Value-dependent assessment
 
-Registry export_class is value-dependent; assessment_rule supplies the positive, loss and unknown branches. It is not an unconditional claim that a field is faithful. Single calendar dates may emit supplementary date in addition to legacy year/month to retain supplied day precision; the declared-consumer golden fixtures govern that mapping. The explicit range projection above is a documented precision fallback. Other supplied issued facts lost by projection are classified issued_date_lost_or_changed. Role omission must be assessed for the actual type and cited authors; unassessed translator behavior is unknown. Core property fragments are not standalone JSON Schema: package and hash-check complete upstream definitions, then narrow with the profile enum/applicability.
+Registry export_class is value-dependent; assessment_rule supplies the positive, loss and unknown branches. It is not an unconditional claim that a field is faithful. Single calendar dates may emit supplementary date in addition to legacy year/month to retain supplied day precision; the declared-consumer golden fixtures govern that mapping. The explicit range projection above is a documented precision fallback. Other supplied issued facts lost by projection are classified issued_date_lost_or_changed. Role omission must be assessed for the actual type and cited authors; translator is an assessed, documented omission in the portable profile. Core property fragments are not standalone JSON Schema: package and hash-check complete upstream definitions, then narrow with the profile enum/applicability.
 
 ## Traditional part records and remaining input dispositions
 
