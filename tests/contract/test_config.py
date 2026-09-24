@@ -5,6 +5,7 @@ import os
 import subprocess
 
 import pytest
+from conftest import REFS_COMMAND
 
 from refs.config import select
 from refs.results import RefError
@@ -99,7 +100,7 @@ def test_inspection_and_policy_overrides(initialized,tmp_path):
     from refs.naming import MINOR
     assert inspected['values']['titles.minor_words']==sorted(MINOR)+['With']
     assert inspected['origins']['keys.template']==str(config)
-    run=subprocess.run(['refs','config','show'],env=dict(os.environ,REFS_CONFIG=str(config),REFS_CATALOG=str(tmp_path/'cat')),text=True,capture_output=True)
+    run=subprocess.run([*REFS_COMMAND,'config','show'],env=dict(os.environ,REFS_CONFIG=str(config),REFS_CATALOG=str(tmp_path/'cat')),text=True,capture_output=True)
     assert run.returncode==0 and run.stdout.startswith('Configuration:')
 
 

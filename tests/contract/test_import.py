@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 import pytest
+from conftest import REFS_COMMAND, isolated_env
 
 from refs import importing, sources
 from refs.adapters import bibtex
@@ -140,13 +141,12 @@ def test_legacy_key_remains_editable_but_blocks_export(initialized,tmp_path):
 
 
 def test_import_entry_status_and_human_order(initialized,tmp_path):
-    import os
     import subprocess
     path=tmp_path/'mixed.bib'
     path.write_bytes((FIXTURES/'mixed.bib').read_bytes())
     result=initialized('import','--input',path,expected=4)
     assert [entry['status'] for entry in result['data']['entries']]==['applied','applied','invalid']
-    run=subprocess.run(['refs','import','--input',str(path)],env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(tmp_path/'cat')),stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+    run=subprocess.run([*REFS_COMMAND,'import','--input',str(path)],env=isolated_env(tmp_path),stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
     assert run.returncode==4
     assert run.stdout.splitlines()[0].startswith('Imported 0, unchanged 2, conflicts 0, invalid 1')
     assert 'Inspect reported entries' in run.stdout

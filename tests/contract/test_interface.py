@@ -1,6 +1,7 @@
 import json
-import os
 import subprocess
+
+from conftest import REFS_COMMAND, isolated_env
 
 
 def test_csl_input_and_four_schemas(initialized, tmp_path):
@@ -20,9 +21,9 @@ def test_csl_input_and_four_schemas(initialized, tmp_path):
 
 def test_readable_output_and_json_others(initialized, tmp_path, reference_path):
     initialized('add', '--format', 'refs', '--input', reference_path)
-    env = dict(os.environ, REFS_CONFIG=str(tmp_path/'config.toml'), REFS_CATALOG=str(tmp_path/'cat'))
+    env = isolated_env(tmp_path)
     for args in [('show', 'smith-2024-learningPython'), ('search', 'Python'), ('list',)]:
-        result = subprocess.run(['refs', *args], env=env, text=True, capture_output=True)
+        result = subprocess.run([*REFS_COMMAND, *args], env=env, text=True, capture_output=True)
         assert result.returncode == 0, result.stderr
         assert 'smith-2024-learningPython' in result.stdout
         assert 'Alex Smith' in result.stdout
@@ -36,5 +37,5 @@ def test_readable_output_and_json_others(initialized, tmp_path, reference_path):
         assert '2024' in result.stdout
         assert not result.stdout.startswith('{')
         assert '\x1b' not in result.stdout
-    result = subprocess.run(['refs', 'paths'], env=env, text=True, capture_output=True)
+    result = subprocess.run([*REFS_COMMAND, 'paths'], env=env, text=True, capture_output=True)
     assert result.stdout.splitlines()[0] == f"Configuration: {tmp_path/'config.toml'}"

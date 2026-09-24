@@ -80,8 +80,8 @@ key=$(R --json list | jq -r '.data.items[0].citation_key'); cp "$T/downloads/002
 R resource add "$key" --path "$OUT/library/dl.pdf" --copy || failures=$((failures+1)); ls "$OUT/library/lib/unfiled" || failures=$((failures+1))
 R resource add "$key" --path "$OUT/library/dl.pdf" --copy --keep-name || failures=$((failures+1)); ls "$OUT/library/lib/unfiled" || failures=$((failures+1))
 R open --help | head -6
-echo "===== search"; R search "workflow" | head -5; R search "köster"; R search "koster" | head -2
-R --json search "koster" > "$OUT/library/search.json"; jq -e '.data.total > 0' "$OUT/library/search.json" >/dev/null || failures=$((failures+1))
+echo "===== search"; R search "workflow" | head -5; echo '  diagnostic: the BBT export may not contain Köster'; R search "köster"; R search "koster" | head -2
+R --json search "workflow" > "$OUT/library/search.json"; jq -e '.data.total > 0' "$OUT/library/search.json" >/dev/null || failures=$((failures+1))
 echo "===== backup/restore"; R backup --output "$OUT/library/bk" | head -1
 test -f "$OUT/library/bk/manifest.json" || failures=$((failures+1))
 

@@ -4,7 +4,7 @@ from contextlib import closing
 from importlib.resources import files
 
 import pytest
-from conftest import SCHEMA_VERSION, TABLE_COUNT
+from conftest import REFS_COMMAND, SCHEMA_VERSION, TABLE_COUNT
 
 from refs.catalog import connect, migrate
 from refs.results import RefError
@@ -110,7 +110,7 @@ def test_lowercase_migration_preserves_locator_identity_and_disk(tmp_path):
         assert row['id']=='r' and row['relative']=='unfiled/Café/Unfiled/file.pdf'
         assert row['locator']==json.dumps(locator | {'relative':row['relative']},sort_keys=True)
         assert c.execute('SELECT loc FROM sources').fetchone()[0]=='unfiled'
-        assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0]==5
+        assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0]==SCHEMA_VERSION
     assert [p.name for p in (tmp_path/'lib').iterdir()]==['Unfiled']
     assert (old_folder/'Café.pdf').read_bytes()==b'untouched'
 
@@ -122,7 +122,7 @@ def test_read_upgrades_with_notice_and_copy(tmp_path, json_output):
     path = tmp_path/'cat'
     old_catalog(path)
     original = (path/'catalog.sqlite').read_bytes()
-    command = ['refs', '--no-project-config', '--config', str(tmp_path/'config.toml'), '--catalog', str(path)]
+    command = [*REFS_COMMAND, '--config', str(tmp_path/'config.toml'), '--catalog', str(path)]
     result = subprocess.run(command + (['--json'] if json_output else []) + ['list'], capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
     safety, = path.glob(f'before-schema-{SCHEMA_VERSION}-*.sqlite')

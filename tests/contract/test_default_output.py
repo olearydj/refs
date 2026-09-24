@@ -1,17 +1,17 @@
 """Installed commands use plain text unless the envelope is requested."""
 
-import os
 import subprocess
 
 import pytest
+from conftest import REFS_COMMAND, isolated_env
 
 
 def test_command_confirmations(initialized, tmp_path, reference_path):
     key = 'smith-2024-learningPython'
-    env = dict(os.environ, REFS_CONFIG=str(tmp_path/'config.toml'), REFS_CATALOG=str(tmp_path/'cat'))
+    env = isolated_env(tmp_path)
 
     def check(args, first):
-        result = subprocess.run(['refs', *map(str, args)], env=env, capture_output=True, text=True)
+        result = subprocess.run([*REFS_COMMAND, *map(str, args)], env=env, capture_output=True, text=True)
         assert result.returncode == 0, result.stderr
         assert result.stdout.splitlines()[0] == first
         assert '\x1b' not in result.stdout
@@ -29,7 +29,7 @@ def test_command_confirmations(initialized, tmp_path, reference_path):
     check(['key', 'set', key, '--key', 'smith-example', '--if-revision', '2', '--execute'], f'Renamed {key} to smith-example')
     check(['remove', 'smith-example', '--if-revision', '3', '--execute'], 'Removed smith-example')
     check(['reactivate', 'smith-example', '--if-revision', '4', '--execute'], 'Reactivated smith-example')
-    result = subprocess.run(['refs', 'show', 'missing'], env=env, capture_output=True, text=True)
+    result = subprocess.run([*REFS_COMMAND, 'show', 'missing'], env=env, capture_output=True, text=True)
     assert result.returncode == 3
     assert not result.stdout
     assert 'Use one exact source ID or citation key' in result.stderr
@@ -64,7 +64,7 @@ def test_each_command_first_line(initialized, tmp_path, reference_path, args, fi
         args += ['--input', str(reference_path)]
     if args[0] == 'export':
         args += ['--output', str(tmp_path/'out.bib')]
-    result = subprocess.run(['refs', *args], env=dict(os.environ, REFS_CONFIG=str(tmp_path/'config.toml'), REFS_CATALOG=str(tmp_path/'cat')), capture_output=True, text=True)
+    result = subprocess.run([*REFS_COMMAND, *args], env=isolated_env(tmp_path), capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
     assert result.stdout.splitlines()[0].startswith(first)
 
@@ -88,15 +88,14 @@ def test_file_commands_first_line(initialized,tmp_path,reference_path,command):
     if command=='open':
         initialized('resource','add',source['id'],'--path',paths[1])
     args,expected=cases[command]
-    result=subprocess.run(['refs',*args],env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(tmp_path/'cat')),capture_output=True,text=True)
+    result=subprocess.run([*REFS_COMMAND,*args],env=isolated_env(tmp_path),capture_output=True,text=True)
     assert result.returncode == 0,result.stderr
     assert result.stdout.splitlines()[0]==expected
 
 
 
 def test_paths_has_three_readable_lines_before_init(tmp_path):
-    env = dict(os.environ, REFS_CONFIG=str(tmp_path/'config.toml'), REFS_CATALOG=str(tmp_path/'cat'))
-    result = subprocess.run(['refs','paths'],env=env,capture_output=True,text=True)
+    result = subprocess.run([*REFS_COMMAND, 'paths'], env=isolated_env(tmp_path), capture_output=True, text=True)
     assert result.returncode == 0
     assert result.stdout.splitlines() == [f"Configuration: {tmp_path/'config.toml'}", f"Catalog: {tmp_path/'cat'}", 'Library: (not configured)']
     assert not (tmp_path/'cat').exists()
@@ -104,8 +103,7 @@ def test_paths_has_three_readable_lines_before_init(tmp_path):
 
 
 def test_open_help_explains_effects(tmp_path):
-    env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(tmp_path/'cat'))
-    result=subprocess.run(['refs','open','--help'],env=env,capture_output=True,text=True)
+    result=subprocess.run([*REFS_COMMAND,'open','--help'],env=isolated_env(tmp_path),capture_output=True,text=True)
     assert result.returncode==0
     text=' '.join(result.stdout.split())
     assert 'default application' in text and 'Never modifies the file' in text

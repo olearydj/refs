@@ -1,9 +1,9 @@
 import json
-import os
 import re
 import subprocess
 
 import pytest
+from conftest import REFS_COMMAND, isolated_env
 
 from refs import importing, sources
 from refs.results import RefError
@@ -24,8 +24,8 @@ def test_saved_batches_list_newest_first_with_review_tokens(initialized,tmp_path
     for row in items:
         assert row['created'] and row['batch_revision']==importing.show(cat,row['import_id'])['batch_revision']
     assert (cat/'catalog.sqlite').read_bytes()==before
-    env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(cat))
-    result=subprocess.run(['refs','import','list'],env=env,capture_output=True,text=True)
+    env=isolated_env(tmp_path)
+    result=subprocess.run([*REFS_COMMAND,'import','list'],env=env,capture_output=True,text=True)
     assert result.returncode==0 and len(result.stdout.splitlines())==2
     assert result.stdout.startswith(items[0]['import_id']+' add ')
     assert 'conflict 1' in result.stdout and 'batch revision' not in result.stdout

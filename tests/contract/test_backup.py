@@ -5,6 +5,7 @@ import sqlite3
 from contextlib import closing
 
 import pytest
+from conftest import REFS_COMMAND, isolated_env
 
 from refs import recovery
 from refs.config import select
@@ -64,10 +65,9 @@ def test_missing_table_is_not_a_supported_snapshot(initialized,tmp_path):
 
 
 def test_backup_human_confirmation(initialized,tmp_path):
-    import os
     import subprocess
     target=tmp_path/'snapshot'
-    result=subprocess.run(['refs','backup','--output',str(target)],env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(tmp_path/'cat')),text=True,capture_output=True)
+    result=subprocess.run([*REFS_COMMAND,'backup','--output',str(target)],env=isolated_env(tmp_path),text=True,capture_output=True)
     assert result.returncode==0,result.stderr
     assert result.stdout.splitlines()[0]==f'Wrote snapshot {target} (external file bytes excluded)'
 

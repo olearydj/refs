@@ -1,6 +1,5 @@
 """Execute the documented procedure itself in disposable homes."""
 
-import os
 import re
 import sqlite3
 import subprocess
@@ -8,6 +7,7 @@ from contextlib import closing
 from pathlib import Path
 
 import pytest
+from conftest import REFS_COMMAND, TABLE_COUNT, isolated_env
 
 from refs import recovery
 from refs.config import select
@@ -41,9 +41,9 @@ def test_documented_restore_and_all_tables(initialized,tmp_path,reference_path):
     with closing(sqlite3.connect(snapshot/'catalog.sqlite')) as saved, saved,closing(sqlite3.connect(home/'cat'/'catalog.sqlite')) as restored, restored:
         for (name,) in saved.execute("SELECT name FROM sqlite_master WHERE type='table'"):
             assert saved.execute(f'SELECT * FROM "{name}"').fetchall()==restored.execute(f'SELECT * FROM "{name}"').fetchall(),name
-    env=dict(os.environ,REFS_CONFIG=str(home/'config.toml'),REFS_CATALOG=str(home/'cat'))
+    env=isolated_env(home)
     for args in [('paths',),('list',),('show',source['id']),('project','show','paper'),('resource','check')]:
-        result=subprocess.run(['refs','--json',*args],env=env,text=True,capture_output=True)
+        result=subprocess.run([*REFS_COMMAND,'--json',*args],env=env,text=True,capture_output=True)
         assert result.returncode==0,result.stderr
     assert run_restore(snapshot,home).returncode!=0
 
@@ -115,7 +115,7 @@ def test_zotero_decisions_and_all_tables_restore(initialized,zotero_fixture,tmp_
     assert result.returncode==0,result.stderr
     with connect(tmp_path/'cat') as original, connect(tmp_path/'restored/cat') as restored:
         tables=[row[0] for row in original.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'search_projection_%'")]
-        assert len(tables)==15
+        assert len(tables)==TABLE_COUNT
         for name in tables:
             assert [tuple(r) for r in original.execute(f'SELECT * FROM "{name}"')]==[tuple(r) for r in restored.execute(f'SELECT * FROM "{name}"')],name
         for name in ('import_entries','collections','source_collections','source_relations','origin_identities','originals'):

@@ -11,6 +11,7 @@ import pytest
 
 SCHEMA_VERSION = 5
 TABLE_COUNT = 15
+REFS_COMMAND = [sys.executable, "-m", "refs", "--no-project-config"]
 
 
 def pytest_addoption(parser):
@@ -51,7 +52,7 @@ def cli_cwd(tmp_path):
 @pytest.fixture
 def human(initialized, cli_env, cli_cwd):
     def run(*args, expected=0):
-        result = subprocess.run([sys.executable, "-m", "refs", "--no-project-config", *map(str, args)], env=cli_env, cwd=cli_cwd, capture_output=True, text=True, check=False)
+        result = subprocess.run([*REFS_COMMAND, *map(str, args)], env=cli_env, cwd=cli_cwd, capture_output=True, text=True, check=False)
         assert result.returncode == expected, result.stdout + result.stderr
         return result.stdout + result.stderr
     return run

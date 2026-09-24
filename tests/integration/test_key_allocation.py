@@ -1,11 +1,12 @@
 import json
-import os
 import subprocess
 from pathlib import Path
 
+from conftest import isolated_env
+
 
 def test_two_process_key_allocation(initialized, tmp_path):
-    env = dict(os.environ, REFS_CONFIG=str(tmp_path/'config.toml'), REFS_CATALOG=str(tmp_path/'cat'))
+    env = isolated_env(tmp_path)
     children = []
     for last_word in ['Alpha', 'Beta']:
         path = tmp_path / f'{last_word}.json'

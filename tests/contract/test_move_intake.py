@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+from conftest import REFS_COMMAND
 
 
 def test_add_moves_and_resource_add_links(initialized,tmp_path,reference_path):
@@ -73,7 +74,7 @@ def test_add_move_preview_loc_and_text(initialized, tmp_path, reference_path):
     preview = initialized('add','--format','refs','--input',reference_path,'--file',path,'--loc','Papers','--dry-run')['data']
     assert preview['resources'][0]['destination'].endswith('/Papers/LearningPython-2024.pdf')
     import subprocess
-    result = subprocess.run(['refs','--no-project-config','--config',str(tmp_path/'config.toml'),'--catalog',str(tmp_path/'cat'),'add','--format','refs','--input',str(reference_path),'--file',str(path)],capture_output=True,text=True)
+    result = subprocess.run([*REFS_COMMAND,'--config',str(tmp_path/'config.toml'),'--catalog',str(tmp_path/'cat'),'add','--format','refs','--input',str(reference_path),'--file',str(path)],capture_output=True,text=True)
     assert result.returncode == 0, result.stderr
     text = result.stdout
     assert text.splitlines()[1] == f"Moved {path} to {tmp_path/'lib/unfiled/LearningPython-2024.pdf'} for smith-2024-learningPython"

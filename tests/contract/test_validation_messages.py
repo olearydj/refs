@@ -1,6 +1,7 @@
 import json
-import os
 import subprocess
+
+from conftest import REFS_COMMAND, isolated_env
 
 
 def test_context_type_error_has_path_and_reason(initialized,tmp_path):
@@ -9,8 +10,8 @@ def test_context_type_error_has_path_and_reason(initialized,tmp_path):
     result=initialized('add','--format','refs','--input',path,expected=2)
     issue=result['errors'][0]['details']['issues'][0]
     assert issue['loc']==['context'] and issue['msg']=='Input should be a valid array'
-    env=dict(os.environ,REFS_CONFIG=str(tmp_path/'config.toml'),REFS_CATALOG=str(tmp_path/'cat'))
-    human=subprocess.run(['refs','add','--format','refs','--input',str(path)],env=env,capture_output=True,text=True)
+    env=isolated_env(tmp_path)
+    human=subprocess.run([*REFS_COMMAND,'add','--format','refs','--input',str(path)],env=env,capture_output=True,text=True)
     assert human.returncode==2
     assert human.stderr.startswith('context: Input should be a valid array;')
     assert len(human.stderr.splitlines())==1
