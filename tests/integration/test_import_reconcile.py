@@ -70,9 +70,11 @@ def test_stale_source_and_batch_refuse_atomically(initialized, tmp_path):
 def test_bad_selector_identity_and_missing_revision(initialized, tmp_path):
     catalog = tmp_path / "cat"
     batch = conflict(catalog)
-    for selectors in (["absent"], ["a.metadata.not_a_field"], []):
-        with pytest.raises(RefError):
+    for selectors, code in ((["absent"], "ambiguous_selection"), (["a.metadata.not_a_field"], "invalid_selection"), ([], "invalid_selection")):
+        with pytest.raises(RefError) as error:
             importing.reconcile(catalog, batch, selectors)
+        assert error.value.issue['code'] == code
+        assert sources.show(catalog, 'a')['metadata']['title'] == 'First'
     with pytest.raises(RefError, match="Preview"):
         importing.reconcile(catalog, batch, ["a"], execute=True)
     ambiguous = importing.run(

@@ -28,8 +28,10 @@ def test_snapshot_members_and_incomplete_import(initialized,tmp_path,reference_p
     assert inventory[0]['path']==str(missing)
     with closing(sqlite3.connect(target/'catalog.sqlite')) as connection, connection:
         assert connection.execute("SELECT finished_at FROM imports WHERE id='unfinished'").fetchone()[0] is None
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         recovery.backup(selected,target)
+    assert error.value.issue['code'] == 'backup_exists'
+    assert recovery.validate_snapshot(target) == manifest
 
 
 def test_configuration_change_refuses_publication(initialized,tmp_path,monkeypatch):
@@ -39,8 +41,9 @@ def test_configuration_change_refuses_publication(initialized,tmp_path,monkeypat
         original(*args)
         selected.config.write_text(selected.config.read_text()+'\n# changed\n')
     monkeypatch.setattr(recovery,'snapshot_database',changed)
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         recovery.backup(selected,tmp_path/'snapshot')
+    assert error.value.issue['code'] == 'configuration_changed'
     assert not (tmp_path/'snapshot').exists()
 
 
@@ -85,5 +88,6 @@ def test_snapshot_format_is_required(initialized,tmp_path,marker):
     else:
         manifest['format']=marker
     path.write_text(json.dumps(manifest))
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         recovery.validate_snapshot(target)
+    assert error.value.issue['code'] == 'snapshot_invalid'

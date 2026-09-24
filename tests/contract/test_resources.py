@@ -61,5 +61,7 @@ def test_import_file_paths_are_idempotent_links(initialized, tmp_path):
 def test_unsafe_symlink_root(initialized, tmp_path, reference_path):
     source = initialized('add','--format','refs','--input',reference_path)['data']
     (tmp_path/'lib'/'escape').symlink_to(tmp_path, target_is_directory=True)
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         resources.link(select(str(tmp_path/'config.toml'),str(tmp_path/'cat')), source['id'], root='library', relative='escape/out.pdf')
+    assert error.value.issue['code'] == 'unsafe_path'
+    assert not initialized('show', source['id'])['data']['resources']

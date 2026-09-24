@@ -149,8 +149,9 @@ def test_legacy_key_remains_editable_but_blocks_export(initialized,tmp_path):
     SourceRecord.model_validate(record)
     edited=sources.update(tmp_path/'cat','legacy key',{'schema_version':'1.0','set':{'metadata.title':'Corrected Title'}},record['revision'])
     assert edited['citation_key']=='legacy key'
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         bibliography.serialize([edited])
+    assert error.value.issue['code'] == 'export_blocked'
 
 
 def test_import_entry_status_and_human_order(initialized,tmp_path):

@@ -54,8 +54,9 @@ def test_predelete_guards(initialized,tmp_path,reference_path,monkeypatch,failur
         else:
             monkeypatch.setattr(moves,'flush',lambda *args: (_ for _ in ()).throw(OSError('flush failed')))
     monkeypatch.setattr(moves,'checkpoint',change)
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         moves.move(settings,resource['id'],target)
+    assert error.value.issue['code'] == 'move_incomplete'
     assert original.exists()
     with connect(settings.catalog_path()) as c:
         row=c.execute('SELECT state,last_state FROM file_operations').fetchone()
@@ -80,8 +81,9 @@ def test_failed_state_retry_and_stale_registration(initialized,tmp_path,referenc
         if at=='published':
             raise OSError('synthetic failure')
     monkeypatch.setattr(moves,'checkpoint',fail)
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         moves.move(settings,resource['id'],target)
+    assert error.value.issue['code'] == 'move_incomplete'
     assert original.exists()
     monkeypatch.setattr(moves,'checkpoint',lambda *args:None)
     assert moves.move(settings,resource['id'],target)['state']=='removed'
@@ -91,8 +93,9 @@ def test_occupied_equal_bytes_are_not_adopted(initialized,tmp_path,reference_pat
     settings, source, resource, original, target=prepare(initialized,tmp_path,reference_path)
     target.parent.mkdir()
     target.write_bytes(original.read_bytes())
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         moves.move(settings,resource['id'],target)
+    assert error.value.issue['code'] == 'destination_exists'
     assert original.exists() and target.exists()
 
 
@@ -123,8 +126,9 @@ def test_stale_before_record_retains_original(initialized,tmp_path,reference_pat
             current=sources.show(settings.catalog_path(),source['id'])
             sources.update(settings.catalog_path(),source['id'],{'schema_version':'1.0','set':{'metadata.publisher':'Changed'}},current['revision'])
     monkeypatch.setattr(moves,'checkpoint',edit)
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         moves.move(settings,resource['id'],target)
+    assert error.value.issue['code'] == 'move_incomplete'
     assert original.exists() and target.exists()
     assert resources.resolve_path(settings,sources.show(settings.catalog_path(),source['id'])['resources'][0])==original
 
@@ -139,8 +143,9 @@ def test_unsafe_paths(initialized,tmp_path,reference_path,kind):
         target.parent.symlink_to(tmp_path, target_is_directory=True)
     else:
         target=tmp_path/'outside.pdf'
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         moves.move(settings,resource['id'],target)
+    assert error.value.issue['code'] == {'directory':'unsafe_move_source','symlink':'unsafe_path','escape':'unsafe_path'}[kind]
     assert original.exists()
 
 
@@ -153,8 +158,9 @@ def test_source_changes_during_copy(initialized,tmp_path,reference_path,monkeypa
             original.write_bytes(b'changed during copy')
         return digest
     monkeypatch.setattr(files,'hash_file',change)
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         moves.move(settings,resource['id'],target)
+    assert error.value.issue['code'] == 'move_incomplete'
     assert original.read_bytes()==b'changed during copy' and not target.exists()
 
 
@@ -165,6 +171,7 @@ def test_admission_names_existing_resource(initialized,tmp_path,reference_path):
     for path in (original,alias):
         with pytest.raises(RefError) as error:
             moves.admit(settings,path)
+        assert error.value.issue['code'] == 'resource_already_recorded'
         assert error.value.issue['details']['resource_id']==resource['id']
     assert original.exists()
 
@@ -178,8 +185,9 @@ def test_staged_retry_rejects_changed_destination(initialized,tmp_path,reference
     with pytest.raises(KeyboardInterrupt):
         moves.move(settings,resource['id'],target)
     monkeypatch.setattr(moves,'checkpoint',lambda *args:None)
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         moves.move(settings,resource['id'],target.with_name('changed.pdf'))
+    assert error.value.issue['code'] == 'move_conflict'
     assert original.exists()
 
 
@@ -198,8 +206,9 @@ def test_unknown_staging_file_is_never_deleted(initialized,tmp_path,reference_pa
     stage.unlink()
     stage.hardlink_to(outsider)
     monkeypatch.setattr(moves,'checkpoint',lambda *args:None)
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         moves.move(settings,resource['id'],target)
+    assert error.value.issue['code'] == 'move_incomplete'
     assert stage.read_bytes()==b'not ours' and original.exists()
 
 
@@ -211,5 +220,7 @@ def test_unlink_preserves_move_history_and_file(initialized,tmp_path,reference_p
         row=c.execute('SELECT resource_id,state FROM file_operations').fetchone()
         assert tuple(row)==(resource['id'],'removed')
     assert target.exists() and not original.exists()
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         moves.move(settings,'missing',target.with_name('missing.pdf'))
+    assert error.value.issue['code'] == 'resource_missing'
+    assert target.exists()

@@ -14,8 +14,9 @@ def test_saved_batches_list_newest_first_with_review_tokens(initialized,tmp_path
     assert initialized('import','list')['data']['items']==[]
     first=importing.run(cat,b'@book{assigned,title={Attention Is All You Need},doi={10.5555/attention},year={2017}}','fixture.bib',origin='zotero')['import_id']
     raw=json.dumps({'type':'book','title':'Attention Is All You Need','DOI':'10.5555/attention','issued':{'date-parts':[[2018]]}}).encode()
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         sources.add(cat,raw,'incoming.json',format='csljson')
+    assert error.value.issue['code'] == 'identity_conflict'
     before=(cat/'catalog.sqlite').read_bytes()
     items=initialized('import','list')['data']['items']
     assert [row['origin'] for row in items]==['add','zotero']

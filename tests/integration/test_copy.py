@@ -42,8 +42,9 @@ def test_copy_failure_retains_original_and_published_copy(initialized, tmp_path,
                 path.write_bytes(b'changed externally')
             return result
         monkeypatch.setattr(files,'hash_file',change)
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         resources.copy(settings, source['id'], path, resource_id=linked['id'])
+    assert error.value.issue['code'] == {'before':'copy_failed','after':'copy_published_unregistered','changed':'source_changed'}[failure]
     assert path.exists()
     copies = list((settings.library/'unfiled').glob('*')) if (settings.library/'unfiled').exists() else []
     assert len(copies) == (1 if failure == 'after' else 0)
@@ -57,8 +58,10 @@ def test_collision_keep_name_and_preview(initialized, tmp_path, reference_path):
     copied = resources.copy(settings,source['id'],path,keep_name=True)
     assert copied['relative'] == 'unfiled/download.pdf'
     path.write_bytes(b'different content, same destination')
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         resources.copy(settings,source['id'],path,keep_name=True)
+    assert error.value.issue['code'] == 'destination_exists'
+    assert (settings.library/'unfiled/download.pdf').read_bytes() == b'synthetic PDF content'
     assert path.exists()
 
 
@@ -67,15 +70,18 @@ def test_unavailable_library_bundle_and_symlink(initialized,tmp_path,reference_p
     bundle=tmp_path/'bundle.app'
     bundle.mkdir()
     for candidate in [bundle]:
-        with pytest.raises(RefError):
+        with pytest.raises(RefError) as error:
             resources.copy(settings,source['id'],candidate)
+        assert error.value.issue['code'] == 'unsafe_copy_source'
     symlink=tmp_path/'symlink.pdf'
     symlink.symlink_to(path)
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         resources.copy(settings,source['id'],symlink)
+    assert error.value.issue['code'] == 'unsafe_copy_source'
     settings.library.rmdir()
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         resources.copy(settings,source['id'],path)
+    assert error.value.issue['code'] == 'library_unavailable'
     assert path.exists()
 
 
@@ -130,6 +136,7 @@ def test_revision_change_after_publication_preserves_copy(initialized,tmp_path,r
     with pytest.raises(RefError) as error:
         resources.copy(settings,source['id'],path)
     assert error.value.exit_code == 4
+    assert error.value.issue['code'] == 'copy_published_unregistered'
     assert list((settings.library/'unfiled').iterdir())
     assert not sources.show(settings.catalog_path(),source['id'])['resources']
     assert path.exists()

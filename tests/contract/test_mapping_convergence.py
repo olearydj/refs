@@ -49,8 +49,10 @@ def test_bib_refs_csl_convergence_and_clear(initialized, tmp_path, case):
     'language={en},langid={de}',
 ])
 def test_alias_conflicts_are_not_route_priority(fields):
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         bibtex.parse(('@article{x,title={Test},'+fields+'}').encode())
+    assert error.value.issue['code'] == 'invalid_bib_entry'
+    assert error.value.issue['message'].startswith('Conflicting aliases for metadata.')
 
 
 def test_extensions_remain_distinct_and_assessed():

@@ -23,12 +23,14 @@ def test_bound_add_conflicts_persist_and_reconcile(initialized, tmp_path, format
         incoming = f'@book{{assigned,title={{Attention Is All You Need}},year={{2017}},publisher={{Synthetic Press}},{identifier.lower()}={{{identity[identifier]}}}}}'.encode()
     def add(dry_run=False):
         return importing.add(catalog,incoming,'incoming.bib',dry_run=dry_run) if format=='bib' else sources.add(catalog,incoming,'incoming.json',format=format,dry_run=dry_run)
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         add(True)
+    assert error.value.issue['code'] == ('value_conflict' if format == 'bib' else 'identity_conflict')
     with connect(catalog) as connection:
         assert connection.execute('SELECT count(*) FROM imports').fetchone()[0]==0
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         add()
+    assert error.value.issue['code'] == ('value_conflict' if format == 'bib' else 'identity_conflict')
     with connect(catalog) as connection:
         batch = connection.execute('SELECT * FROM imports').fetchone()
         assert batch['origin']=='add' and batch['conflict']==1

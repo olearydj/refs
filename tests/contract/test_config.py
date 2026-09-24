@@ -58,6 +58,7 @@ def test_invalid_project_settings(tmp_path,text):
     project.write_text(text)
     with pytest.raises(RefError) as error:
         select(str(config),str(tmp_path/'cat'),project_file=str(project))
+    assert error.value.issue['code'] == 'invalid_config'
     assert error.value.issue['path']==str(project)
     assert not (tmp_path/'cat').exists()
 
@@ -73,8 +74,10 @@ def test_invalid_project_settings(tmp_path,text):
 def test_invalid_user_values(tmp_path,text):
     config=tmp_path/'user.toml'
     config.write_text('schema_version=1\n'+text)
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         select(str(config),str(tmp_path/'cat'))
+    assert error.value.issue['code'] == 'invalid_config'
+    assert not (tmp_path/'cat').exists()
 
 
 def test_missing_and_unwritable_catalog(initialized,tmp_path):

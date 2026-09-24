@@ -4,7 +4,6 @@ import pytest
 
 from refs import moves, resources
 from refs.config import select
-from refs.render import render_text
 from refs.results import RefError, emit
 
 
@@ -21,7 +20,7 @@ def prepare(initialized,tmp_path,reference_path):
     return settings,path,extra
 
 
-def test_preview_success_and_extras(initialized,tmp_path,reference_path):
+def test_preview_success_and_extras(initialized,human,tmp_path,reference_path):
     settings,path,extra=prepare(initialized,tmp_path,reference_path)
     occupied=tmp_path/'lib/Placed/file.pdf'
     occupied.parent.mkdir()
@@ -31,7 +30,7 @@ def test_preview_success_and_extras(initialized,tmp_path,reference_path):
     assert set(entry)=={'operation_id','resource_id','old_path','new_path','old_name','new_name','state','error'}
     assert entry['operation_id'] is None and entry['new_name']=='file-b.pdf'
     assert preview['unlinked_paths']==[str(extra)]
-    text=render_text('reorg',preview,[])
+    text=human('reorg')
     assert f'{path} -> {occupied.with_name("file-b.pdf")}' in text
     assert f'Left untouched (not linked): {extra}' in text
     result=moves.reorg(settings,execute=True)

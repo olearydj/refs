@@ -83,8 +83,9 @@ def test_directory_admission(zotero_fixture, tmp_path, damage):
     else:
         value["key"] = "../wrong"
     path.write_text(json.dumps(value))
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         zotero.read(folder)
+    assert error.value.issue['code'] == 'invalid_zotero_input'
 
 
 def test_identifier_search_and_portable_fallback(initialized, tmp_path):

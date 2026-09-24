@@ -16,8 +16,10 @@ def test_four_classes_and_unknown_override():
     assert b'@misc{' in data
     assert {'faithful_incomplete', 'documented_fallback'} <= {item['details']['class'] for item in warnings}
     value['metadata']['translator'] = [{'family': 'Jones'}]
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         bibliography.serialize([value])
+    assert error.value.issue['code'] == 'export_blocked'
+    assert any(item['code'] == 'unassessed_mapping' for item in error.value.issue['details']['entries'])
     data, warnings = bibliography.serialize([value], allow_unknown=True)
     assert any(item['details'].get('override') for item in warnings)
     assert b'Synthetic Work' in data
@@ -29,16 +31,19 @@ def test_four_classes_and_unknown_override():
 
 @pytest.mark.parametrize('code', ['cited_authors_changed', 'issued_date_lost_or_changed', 'work_identity_changed', 'in_text_citation_changed', 'protected_spelling_changed'])
 def test_known_losses_cannot_be_waived(code):
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         bibliography.enforce_losses([{'code': code, 'class': 'blocking', 'citation_key': 'example'}], allow_unknown=True)
+    assert error.value.issue['code'] == 'export_blocked'
 
 
 def test_structural_conflicts_and_all_affected_entries():
     first = record()
     second = record()
     second['citation_key'] = first['citation_key'].upper()
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         bibliography.serialize([first, second], allow_unknown=True)
+    assert error.value.issue['code'] == 'export_blocked'
+    assert any(item['code'] == 'case_colliding_key' for item in error.value.issue['details']['entries'])
     first['metadata']['issued'] = {'date-parts': [[2024]], 'circa': True}
     second['citation_key'] = 'another-key'
     second['metadata']['issued'] = {'date-parts': [[2020], [2024]], 'circa': True}
@@ -111,37 +116,6 @@ def test_literal_institutions_containing_and(kind, field):
         metadata['genre'] = 'PhD'
     data, _ = bibliography.serialize([record(kind, **metadata)])
     assert (field + ' = {{Research and Development}}').encode() in data
-
-
-def test_adoption_requires_exact_completed_import(initialized, tmp_path):
-    from refs import bibliography, importing, projects
-    from refs.results import RefError
-    catalog = tmp_path/'cat'
-    path = tmp_path/'adopt.bib'
-    raw = b'@book{x,title={Synthetic Book},author={Smith, Alex},year={2024}}'
-    path.write_bytes(raw)
-    projects.create(catalog, 'adoption', '')
-    with pytest.raises(RefError) as error:
-        bibliography.export(catalog, 'adoption', path, adopt=True, overwrite=True)
-    assert error.value.issue['code'] == 'adoption_requires_import'
-    assert path.read_bytes() == raw
-    importing.run(catalog, raw, str(path))
-    projects.cite(catalog, 'adoption', 'x')
-    with pytest.raises(RefError) as error:
-        bibliography.export(catalog, 'adoption', path, adopt=True)
-    assert error.value.issue['code'] == 'adoption_requires_overwrite'
-    assert path.read_bytes() == raw
-    path.write_bytes(raw+b'\n% outside change')
-    with pytest.raises(RefError) as error:
-        bibliography.export(catalog, 'adoption', path, adopt=True, overwrite=True)
-    assert error.value.issue['code'] == 'adoption_requires_import'
-    assert path.read_bytes() == raw+b'\n% outside change'
-    path.write_bytes(raw)
-    result = bibliography.export(catalog, 'adoption', path, adopt=True, overwrite=True)
-    assert result['count'] == 1
-    assert path.read_bytes().startswith(b'@book{x,')
-    assert b'author = {Smith, Alex}' in path.read_bytes()
-    assert b'year = {2024}' in path.read_bytes()
 
 
 def test_catalog_only_facts_and_ascii_language_are_quiet():

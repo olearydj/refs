@@ -64,8 +64,9 @@ def test_corruption_is_refused(initialized,tmp_path,damage):
         value=json.loads(path.read_text())
         value['schema_version']=999
         path.write_text(json.dumps(value))
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         recovery.validate_snapshot(target)
+    assert error.value.issue['code'] == 'snapshot_invalid'
 
 
 def test_documented_hot_journal_recovery(initialized,tmp_path):

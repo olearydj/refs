@@ -102,12 +102,16 @@ def test_changed_binding_and_symlink_are_rejected(initialized, cited):
     catalog, output = cited
     bibliography.export(catalog, "demo", output)
     initialized("project", "create", "other")
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         bibliography.export(catalog, "other", output)
+    assert error.value.issue['code'] == 'target_binding_conflict'
+    before = output.read_bytes()
     link = output.parent / "symlink.bib"
     link.symlink_to(output)
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         bibliography.export(catalog, "demo", link)
+    assert error.value.issue['code'] == 'unsafe_target'
+    assert output.read_bytes() == before
 
 
 def test_protection_and_tex_are_not_executable(cited):
