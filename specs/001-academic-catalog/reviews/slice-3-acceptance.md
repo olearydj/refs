@@ -2,9 +2,48 @@
 
 ## Status
 
-T052–T060 are implemented and the supplied disposable sample passed all three move-integrity scenarios. T061 verification is complete; the build is stopped for owner review. T062–T067 remain owner-executed and have not run. This record does not authorize the real cutover.
+Slice 3 cutover is complete on the owner's reported evidence of 2026-09-24. T062, T062a and T063–T067 are marked done at the owner's direction. All 556 resources are available under the library, and the two execution reports account for all 554 moves as removed. Representative-resource opening remains to be confirmed; it is not claimed as verified here.
 
-The placement decision is resolved by the owner's pre-cutover rules below. T061a is complete. The earlier rehearsal is retained here as historical evidence; its collection fallback and two unassigned managed sources are superseded.
+The following T067 record is the current acceptance state. Later sections retain rehearsal and implementation evidence as recorded at those stages, including statements that the owner steps were then pending. No live catalog, report file, attachment tree or vault was inspected to prepare this record.
+
+## T067: owner-executed acceptance, 2026-09-24
+
+### Backup and automatic upgrade (T062, T062a)
+
+The owner completed a CCC full-system backup on 2026-09-24 before any move. Coverage included the Box tree, Zotero storage and `/Volumes/Casa/refs`. The backup destination was not supplied in this evidence.
+
+The owner renamed `lib/Unfiled` to `lib/unfiled` with `mv`. The first open, `refs show johnson2023boost`, upgraded schema 2 to 5 automatically. The safety copy is `/Volumes/Casa/refs/cat/before-schema-5-2026-09-24.sqlite`, 21,762,048 bytes, mode 600.
+
+### Initial assignment (T063)
+
+Preview reported 575 entries: 510 planned assignments, comprising 503 Box folders, five non-topic storage sources and two managed folders; 65 file-less sources were unchanged. There were no warnings. Apply reported 510 applied and 65 unchanged. Collections supplied no placement values.
+
+The five storage-only sources bailenson2018exper, creswell2019educa, likert1932techn, roscoe1971incre and shabanov2024effor received `unfiled`, as did the already-managed thomas-2025-aiValue and zhang-2023-exploringMIT. Three sources received `Elicit - what is cognitive load theory`.
+
+Reports: `~/Downloads/refs-cutover/assignments-preview.json` and `~/Downloads/refs-cutover/assignments-applied.json`.
+
+### Reorganization and interruption recovery (T064)
+
+Preview proposed 554 moves: 514 from Box and 40 from Zotero storage. Five preserved-name collisions were renamed to 2402-b, 2402-c, 2311-b, 2311-c and 2310-b, retaining their extensions. The preview listed 50 unlinked extras.
+
+The first execution stopped after 31 attempted moves with exit 5 and storage_error, "unable to open database file". It left 30 operations removed and one recorded, with no staging leftovers. The descriptor leak and its correction are documented below; fix commit `cd9e15b` closes SQLite connections deterministically and reuses the catalog connection for schema checks.
+
+The second execution exited 0 and reported 524 moves, all removed, including the resumed recorded operation. Together the runs account for 554 completed operations: 30 removed before the interruption plus 524 removed by the resumed run. Two resources were already correctly placed, giving 556 managed resources overall. The second report listed 47 unlinked extras; three .DS_Store files were in folders emptied by the first run and therefore outside the second run's folder report. The reduced report count is not a claim that refs deleted those files.
+
+Reports under `~/Downloads/refs-cutover/`: `reorg-preview.json`, `reorg-report.json` (interrupted run) and `reorg-report-2.json` (successful resume).
+
+### Resource verification and vault references (T065, T066)
+
+Resource check reported 557 items: 556 resources available under lib and one unrecorded `lib/.DS_Store` left by the folder rename. The owner subsequently deleted that metadata file. Resource check with `--verify` reported every resource available. This is owner-returned verification evidence; no additional ID or digest audit was run by the authoring session. Opening representative resources remains awaiting confirmation.
+
+The seven vault references occur in one historical setup note. They describe the old root as configuration rather than linking to individual files. No repair was needed, and neither refs nor the agent edited the vault.
+
+### Remaining limitations and owner follow-up
+
+The owner retains the five unlinked PDFs and OS files in the Box tree as an archive. Zotero storage retains only cache files. Syncthing sharing of lib is the owner's next step outside refs. The owner deleted the disposable rehearsal sample at `/Volumes/Casa/tmp/refs-rehearsal-20260923`; historical references to retaining that sample below describe the earlier rehearsal state.
+
+The two requested polish items are recorded in the plan, not implemented here: resource check's library scan should ignore OS metadata such as .DS_Store by rule, and `open --resource` should accept a label as well as an ID. Representative-resource opening is the remaining confirmation. Task completion follows the owner's explicit instruction and does not turn that pending confirmation into evidence.
+
 
 ## Real sample and results
 
