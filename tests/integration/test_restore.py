@@ -91,6 +91,42 @@ os._exit(0)
         assert connection.execute('SELECT value FROM synthetic_padding LIMIT 1').fetchone()[0]==b'a'*4096
 
 
+def test_restored_recorded_move_resumes_without_losing_file(initialized,tmp_path,reference_path,monkeypatch):
+    from refs import files, moves, resources
+    from refs.catalog import connect
+
+    source=initialized('add','--format','refs','--input',reference_path,'--loc','Topic')['data']
+    original=tmp_path/'download.pdf'
+    original.write_bytes(b'synthetic completed PDF')
+    settings=select(str(tmp_path/'config.toml'),str(tmp_path/'cat'),no_project_config=True)
+    resource=resources.link(settings,source['id'],path=original)
+    destination=tmp_path/'lib/Topic/download.pdf'
+    def interrupt(point,row):
+        if point=='recorded':
+            raise KeyboardInterrupt
+    monkeypatch.setattr(moves,'checkpoint',interrupt)
+    with pytest.raises(KeyboardInterrupt):
+        moves.move(settings,resource['id'],destination)
+    assert original.exists() and destination.read_bytes()==b'synthetic completed PDF'
+    with connect(settings.catalog_path()) as connection:
+        assert connection.execute('SELECT state FROM file_operations').fetchone()[0]=='recorded'
+    snapshot=tmp_path/'mid-move-snapshot'
+    recovery.backup(settings,snapshot)
+    home=tmp_path/'restored-move'
+    result=run_restore(snapshot,home)
+    assert result.returncode==0,result.stderr
+    restored=select(str(home/'config.toml'),str(home/'cat'),no_project_config=True)
+    monkeypatch.setattr(moves,'checkpoint',lambda *args:None)
+    report=moves.reorg(restored,execute=True)
+    assert report['moves'][0]['state']=='removed'
+    assert not original.exists()
+    assert files.hash_file(destination)==files.digest(b'synthetic completed PDF')
+    with connect(restored.catalog_path()) as connection:
+        assert connection.execute('SELECT state FROM file_operations').fetchone()[0]=='removed'
+        row=connection.execute('SELECT root,relative FROM resources WHERE id=?',(resource['id'],)).fetchone()
+        assert tuple(row)==('library','Topic/download.pdf')
+
+
 def test_zotero_decisions_and_all_tables_restore(initialized,zotero_fixture,tmp_path):
     import json
     import runpy

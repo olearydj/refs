@@ -55,3 +55,13 @@ The table below gives a disposition for each literal `RefError` code defined in 
 | `unsupported_format` | Boundary guard | Capture format refusals are checked in `test_capture.py`. |
 
 `staging_volume_mismatch`, `invalid_kind`, `project_conflict`, `invalid_arguments`, and `import_origin_missing` gained direct code assertions after the coverage run above and are absent from the remaining inventory. The final phase 4 commit will rerun the full gate with these additions.
+
+## Phase 5
+
+Hypothesis `6.168.0` resolved under the project's three-day cooldown and is locked as a development dependency. Eight named properties cover partitioning arbitrary bytes, a supported book's parse–serialize–parse round trip, identifier normalization idempotence, key syntax, preserved-name collisions, loc normalization, date zeros, and protected title terms. Each has a falsifiable invariant in its docstring and at least one saved explicit example from a real shape or boundary. The first run found two test mistakes rather than product defects: an exported bibliography entry must be partitioned before the one-entry parser reads it, and an all-stopword title may correctly refuse key generation with `citation_key_required`. The corrected properties pass without changing `src/refs`.
+
+The new restore test captures a move at the recorded state, backs up the catalog, restores it into a second temporary home with the documented procedure, resumes reorg, and checks the resource pointer, operation state, and file digest. No owner files are involved.
+
+The corpus pilot classified the five bibliography copies under `tests/fixtures/real-trial/papers`: 7 DEMA entries, 11 Danvas entries, 292 dissertation entries, 41 manufacturing entries, and 11 Pipyer entries. All 362 entries partitioned and parsed individually, with zero file-level refusals and zero invalid entries. The existing real-trial run then reported zero failures for import, re-import, project export, rendering comparison, copy intake, and backup. This pilot uses the repository copies only; the larger phase 6 corpus and owner-supplied catalog copy have not been run.
+
+The phase 5 gate passed: 620 tests, Ruff clean, ty clean, demo 121 checks, and real-trial failures 0. The phase 4 coverage measurement above predates the nine new phase 5 test cases; no coverage percentage is claimed for the enlarged suite yet.

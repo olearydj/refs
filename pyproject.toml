@@ -13,7 +13,13 @@ dependencies = ["typer>=0.27.2,<0.28", "pydantic>=2.13,<3", "bibtexparser==2.0.1
 refs = "refs.cli:main"
 
 [dependency-groups]
-dev = ["pytest>=9,<10", "pytest-cov>=7,<8", "ruff", "ty==0.0.82"]
+dev = [
+    "hypothesis>=6.168.0",
+    "pytest>=9,<10",
+    "pytest-cov>=7,<8",
+    "ruff",
+    "ty==0.0.82",
+]
 
 [tool.uv]
 exclude-newer = "3 days"
