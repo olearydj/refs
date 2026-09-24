@@ -1,5 +1,6 @@
-import pytest
 from pathlib import Path
+
+import pytest
 
 from refs.adapters.bibtex import parse, partition
 from refs.results import RefError
