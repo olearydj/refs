@@ -42,7 +42,7 @@ The seven vault references occur in one historical setup note. They describe the
 
 The owner retains the five unlinked PDFs and OS files in the Box tree as an archive. Zotero storage retains only cache files. Syncthing sharing of lib is the owner's next step outside refs. The owner deleted the disposable rehearsal sample at `/Volumes/Casa/tmp/refs-rehearsal-20260923`; historical references to retaining that sample below describe the earlier rehearsal state.
 
-The two requested polish items are recorded in the plan, not implemented here: resource check's library scan should ignore OS metadata such as .DS_Store by rule, and `open --resource` should accept a label as well as an ID. Representative-resource opening is the remaining confirmation. Task completion follows the owner's explicit instruction and does not turn that pending confirmation into evidence.
+The two requested polish items are recorded in the plan, not implemented here: resource check's library scan should ignore OS metadata such as .DS_Store by rule, and `open --resource` should accept a label as well as an ID. Representative-resource opening, confirmed by the owner on 2026-09-24: `refs open sclar2023quant --resource df64a032-8fa8-4318-bb98-22f0677a5691` opened the renamed snapshot `lib/papers/aiml/2310-b.html`; `refs open johnson2023boost` listed its three releases under `lib/lib/sw-dev/carpentry`; `refs open kahl2020zero --resource mobile` was refused because the option takes an ID, which is the recorded polish item.
 
 
 ## Real sample and results

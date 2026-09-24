@@ -1,6 +1,6 @@
 # Feature Specification: Academic Catalog, Slices 1–3
 
-Slices 1 and 2 are delivered. Slice 3 specifies file organization under the [final D1–D4 decisions](plan.md#slice-3-brief-organize-files). Its move protocol awaits independent review before tasks or implementation. refs remains a personal offline catalog with explicit bibliography export.
+Slices 1 to 3 are delivered; slice 3 (file organization under the [brief's decisions](plan.md#slice-3-brief-organize-files)) was cut over on 2026-09-24. refs remains a personal offline catalog with explicit bibliography export.
 
 ## Authority
 

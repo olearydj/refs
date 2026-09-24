@@ -1,6 +1,6 @@
 # CLI and Configuration Contract v1
 
-**Scope:** Slices 1 and 2 are delivered. Slice 3 adds loc, explicit reorg and the move protocol below; implementation awaits independent review.
+**Scope:** Slices 1 and 2 are delivered. Slice 3, delivered 2026-09-24, adds loc, explicit reorg and the move protocol.
 
 ## Invocation and results
 

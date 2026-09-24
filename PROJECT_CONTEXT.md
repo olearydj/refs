@@ -1,6 +1,6 @@
 # refs Context
 
-refs retains sources gathered during research and agent-assisted writing in a reusable SQLite catalog. Slices 1 and 2 (capture, correction, search, cited-only projects, portable BibTeX export, linked or copied files, snapshot and restore; and the Zotero ingest, which brought 562 sources and 58 collections across on 2026-09-22) are built and in use; the owner's catalog is at `/Volumes/Casa/refs` with configuration in `~/.config/refs/config.toml`. File organization (relocating the library tree, filing, moves, reorganize) is slice 3.
+refs retains sources gathered during research and agent-assisted writing in a reusable SQLite catalog. Slices 1 and 2 (capture, correction, search, cited-only projects, portable BibTeX export, linked or copied files, snapshot and restore; and the Zotero ingest, which brought 562 sources and 58 collections across on 2026-09-22) are built and in use; the owner's catalog is at `/Volumes/Casa/refs` with configuration in `~/.config/refs/config.toml`. Slice 3 (2026-09-24) organized the files: each source carries an optional `loc`, every managed file sits under `lib/<loc>`, `reorg` moves files by a verified copy-then-delete protocol with a journal, and the catalog is at schema 5.
 
 ## Source Map
 
