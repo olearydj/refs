@@ -58,3 +58,25 @@ def test_intake_modes_are_mutually_exclusive(initialized, tmp_path, reference_pa
     assert result['errors'][0]['code'] == 'invalid_invocation'
     assert (tmp_path/'cat/catalog.sqlite').read_bytes() == before
     assert path.read_bytes() == b'synthetic'
+
+
+def test_resource_intake_modes_are_mutually_exclusive(initialized, tmp_path, reference_path):
+    source = initialized('add', '--format', 'refs', '--input', reference_path)['data']
+    path = tmp_path/'incoming.pdf'
+    path.write_bytes(b'synthetic')
+    before = (tmp_path/'cat/catalog.sqlite').read_bytes()
+    result = initialized('resource', 'add', source['citation_key'], '--path', path, '--copy', '--move', expected=2)
+    assert result['errors'][0]['code'] == 'invalid_invocation'
+    assert (tmp_path/'cat/catalog.sqlite').read_bytes() == before
+    assert path.read_bytes() == b'synthetic'
+
+
+def test_update_requires_exactly_one_patch_form(initialized, tmp_path, reference_path):
+    source = initialized('add', '--format', 'refs', '--input', reference_path)['data']
+    patch = tmp_path/'patch.json'
+    patch.write_text('{"schema_version":"1.0","set":{"metadata.publisher":"Other"}}')
+    before = (tmp_path/'cat/catalog.sqlite').read_bytes()
+    for extra in ((), ('--patch', patch, '--set', 'metadata.publisher="Other"')):
+        result = initialized('update', source['citation_key'], '--if-revision', source['revision'], *extra, expected=2)
+        assert result['errors'][0]['code'] == 'invalid_invocation'
+        assert (tmp_path/'cat/catalog.sqlite').read_bytes() == before
