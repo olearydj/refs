@@ -81,7 +81,7 @@ assert_jq '.data.type == "object"' "$LAST" 'offline schema'
 run 0 preview add --format refs --input tests/fixtures/reference.json --dry-run
 assert_jq '.data.dry_run == true' "$LAST" 'capture preview'
 run 0 empty list
-assert_jq '.data.total == 0' "$LAST" 'preview created no source'
+assert_jq '.data.total == 0 and .data.items == []' "$LAST" 'preview created no source'
 run 0 capture add --format refs --input tests/fixtures/reference.json
 assert_jq '.data.outcome == "created" and .data.revision == 1' "$LAST" 'source created'
 KEY="$(jq -r '.data.citation_key' "$LAST")"
@@ -185,7 +185,7 @@ printf 'Different content for collision test\n' >"$DEMO_ROOT/download.pdf"
 run 3 collision resource add "$KEY" --path "$DEMO_ROOT/download.pdf" --copy
 assert_jq '.errors[0].code == "destination_exists"' "$LAST" 'collision refuses overwrite'
 run 0 checked resource check --source "$KEY" --verify
-assert_jq 'all(.data.items[]; .status == "available")' "$LAST" 'registered copies verify'
+assert_jq '(.data.items | length) > 0 and all(.data.items[]; .status == "available")' "$LAST" 'registered copies verify'
 cat >"$DEMO_ROOT/file-source.json" <<'JSON'
 {"schema_version":"1.0","citation_key":"file-capture","metadata":{"title":"File Capture","issued":{"date-parts":[[2024]]}}}
 JSON
