@@ -19,6 +19,8 @@ Explicit user decisions take precedence. `docs/vision.md` owns product intent; `
 
 ## Right-Sizing
 
+The [testing convention](docs/testing-convention.md) governs test expectations, refusals, fault injection and generated cases.
+
 refs aims for a 5 on the owner's scale (1 crude script, 10 comically over-engineered): good, well designed, professionally built and packaged, not elaborate. Calibration, reference tools, and checkpoints are in `docs/right-sizing.md`. Agents measure and ask; the owner judges.
 
 - Slice 1 budget: about 12 commands, 7 tables, 4 runtime dependencies, 3,000 source lines. Going over is allowed only after naming the incident in the owner's workflow that it prevents and asking the owner.
