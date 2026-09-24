@@ -1,6 +1,7 @@
 import json
 import runpy
 import sqlite3
+from contextlib import closing
 
 import pytest
 
@@ -25,7 +26,7 @@ def test_extraction_matches_independent_oracle(zotero_fixture, tmp_path):
     sample = json.loads((output/'items/ITEM0001.json').read_text())
     assert sample['data']['date'] == 'May 4, 2020'
     assert sample['meta']['parsedDate'] == '2020-05-04'
-    with sqlite3.connect(zotero_fixture) as c:
+    with closing(sqlite3.connect(zotero_fixture)) as c, c:
         assert c.execute("SELECT version FROM version WHERE schema='globalSchema'").fetchone() == (28,)
         assert c.execute("SELECT version FROM version WHERE schema='global'").fetchone() is None
     assert manifest['global_version'] == 28
@@ -54,7 +55,7 @@ def test_extraction_matches_independent_oracle(zotero_fixture, tmp_path):
 
 @pytest.mark.parametrize("damage", ["schema", "parent", "identity"])
 def test_extract_refuses_unsupported_or_inconsistent_input(zotero_fixture, tmp_path, damage):
-    with sqlite3.connect(zotero_fixture) as c:
+    with closing(sqlite3.connect(zotero_fixture)) as c, c:
         c.execute(
             {
                 "schema": "UPDATE version SET version=999 WHERE schema='userdata'",

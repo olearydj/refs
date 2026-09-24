@@ -4,6 +4,7 @@ import os
 import re
 import sqlite3
 import subprocess
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -37,7 +38,7 @@ def test_documented_restore_and_all_tables(initialized,tmp_path,reference_path):
     result=run_restore(snapshot,home)
     assert result.returncode==0,result.stderr
     assert (home/'config.toml').read_text()==(snapshot/'config.toml').read_text().replace(str(tmp_path/'cat'),str(home/'cat'))
-    with sqlite3.connect(snapshot/'catalog.sqlite') as saved,sqlite3.connect(home/'cat'/'catalog.sqlite') as restored:
+    with closing(sqlite3.connect(snapshot/'catalog.sqlite')) as saved, saved,closing(sqlite3.connect(home/'cat'/'catalog.sqlite')) as restored, restored:
         for (name,) in saved.execute("SELECT name FROM sqlite_master WHERE type='table'"):
             assert saved.execute(f'SELECT * FROM "{name}"').fetchall()==restored.execute(f'SELECT * FROM "{name}"').fetchall(),name
     env=dict(os.environ,REFS_CONFIG=str(home/'config.toml'),REFS_CATALOG=str(home/'cat'))
@@ -70,7 +71,7 @@ def test_corruption_is_refused(initialized,tmp_path,damage):
 def test_documented_hot_journal_recovery(initialized,tmp_path):
     catalog=tmp_path/'cat'
     database=catalog/'catalog.sqlite'
-    with sqlite3.connect(database) as connection:
+    with closing(sqlite3.connect(database)) as connection, connection:
         connection.execute('CREATE TABLE synthetic_padding (value BLOB)')
         connection.executemany('INSERT INTO synthetic_padding VALUES (?)',[(b'a'*4096,)]*100)
     crash="""import os,sqlite3,sys
@@ -85,7 +86,7 @@ os._exit(0)
     assert journal.exists() and journal.stat().st_size>0
     result=subprocess.run(['python','-',str(catalog)],input=procedure('hot-journal'),text=True,capture_output=True)
     assert result.returncode==0,result.stderr
-    with sqlite3.connect(database) as connection:
+    with closing(sqlite3.connect(database)) as connection, connection:
         assert connection.execute('SELECT value FROM synthetic_padding LIMIT 1').fetchone()[0]==b'a'*4096
 
 
@@ -125,7 +126,7 @@ def test_zotero_decisions_and_all_tables_restore(initialized,zotero_fixture,tmp_
 
 def test_schema_two_table_damage_is_refused(initialized,tmp_path):
     database=tmp_path/'cat/catalog.sqlite'
-    with sqlite3.connect(database) as c:
+    with closing(sqlite3.connect(database)) as c, c:
         c.execute('ALTER TABLE import_entries RENAME COLUMN decisions_json TO wrong')
     with pytest.raises(RefError,match='schema'):
         recovery.validate_database(database)

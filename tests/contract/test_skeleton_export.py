@@ -1,6 +1,7 @@
 import hashlib
 import json
 import sqlite3
+from contextlib import closing
 
 import pytest
 
@@ -35,7 +36,7 @@ def test_interrupted_publication_recovers(cited, monkeypatch, prior_export):
     if prior_export:
         bibliography.export(catalog, "demo", output)
         # Synthetic edit makes a different candidate without implementing update.
-        with sqlite3.connect(catalog / "catalog.sqlite") as connection:
+        with closing(sqlite3.connect(catalog / "catalog.sqlite")) as connection, connection:
             connection.execute("UPDATE sources SET metadata_json=json_set(metadata_json, '$.volume', '13')")
     original = bibliography.finish_export
 
@@ -47,7 +48,7 @@ def test_interrupted_publication_recovers(cited, monkeypatch, prior_export):
         bibliography.export(catalog, "demo", output)
     assert error.value.exit_code == 4
     published = output.read_bytes()
-    with sqlite3.connect(catalog / "catalog.sqlite") as connection:
+    with closing(sqlite3.connect(catalog / "catalog.sqlite")) as connection, connection:
         baseline, pending = connection.execute("SELECT baseline_digest, pending_digest FROM export_targets").fetchone()
         assert pending == hashlib.sha256(published).hexdigest()
         assert baseline != pending
@@ -58,7 +59,7 @@ def test_interrupted_publication_recovers(cited, monkeypatch, prior_export):
     result = bibliography.export(catalog, "demo", output)
     assert result["recovered"]
     assert output.read_bytes() == published
-    with sqlite3.connect(catalog / "catalog.sqlite") as connection:
+    with closing(sqlite3.connect(catalog / "catalog.sqlite")) as connection, connection:
         assert connection.execute("SELECT baseline_digest, pending_digest FROM export_targets").fetchone() == (hashlib.sha256(published).hexdigest(), None)
 
 
@@ -66,7 +67,7 @@ def test_failure_before_publication_preserves_baseline(cited, monkeypatch):
     catalog, output = cited
     bibliography.export(catalog, "demo", output)
     before = output.read_bytes()
-    with sqlite3.connect(catalog / "catalog.sqlite") as connection:
+    with closing(sqlite3.connect(catalog / "catalog.sqlite")) as connection, connection:
         connection.execute("UPDATE sources SET metadata_json=json_set(metadata_json, '$.volume', '13')")
     real_publish = files.publish
 
@@ -85,14 +86,14 @@ def test_failure_before_publication_preserves_baseline(cited, monkeypatch):
 
 def test_unknown_stored_field_blocks_before_staging(cited):
     catalog, output = cited
-    with sqlite3.connect(catalog / "catalog.sqlite") as connection:
+    with closing(sqlite3.connect(catalog / "catalog.sqlite")) as connection, connection:
         connection.execute("UPDATE sources SET metadata_json=json_set(metadata_json, '$.unexpected', 'retained')")
     with pytest.raises(RefError) as error:
         bibliography.export(catalog, "demo", output)
     assert error.value.issue["code"] == "export_blocked"
     assert not output.exists()
     assert not list(output.parent.glob(".refs-*.tmp"))
-    with sqlite3.connect(catalog / "catalog.sqlite") as connection:
+    with closing(sqlite3.connect(catalog / "catalog.sqlite")) as connection, connection:
         assert connection.execute("SELECT count(*) FROM export_targets").fetchone()[0] == 0
 
 
@@ -110,7 +111,7 @@ def test_changed_binding_and_symlink_are_rejected(initialized, cited):
 
 def test_protection_and_tex_are_not_executable(cited):
     catalog, output = cited
-    with sqlite3.connect(catalog / "catalog.sqlite") as connection:
+    with closing(sqlite3.connect(catalog / "catalog.sqlite")) as connection, connection:
         metadata = json.loads(connection.execute("SELECT metadata_json FROM sources").fetchone()[0])
         metadata["title"] = r"Python & Pythonic: \input{unsafe}"
         metadata["author"] = [{"literal": "Research and Development"}]
@@ -129,7 +130,7 @@ def test_explicit_overwrite_preserves_outside_bytes_and_cannot_adopt(initialized
     output.write_bytes(outside)
     initialized('export', '--project', 'demo', '--output', output, '--overwrite')
     assert output.read_bytes() != outside
-    with sqlite3.connect(catalog/'catalog.sqlite') as connection:
+    with closing(sqlite3.connect(catalog/'catalog.sqlite')) as connection, connection:
         assert connection.execute("SELECT raw_bytes FROM originals WHERE origin='export-overwrite'").fetchone()[0] == outside
     unrelated = output.parent/'unowned.bib'
     unrelated.write_bytes(outside)

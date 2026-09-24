@@ -1,5 +1,6 @@
 import shutil
 import sqlite3
+from contextlib import closing
 from importlib.resources import files
 
 import pytest
@@ -12,7 +13,7 @@ def old_catalog(path):
     path.mkdir()
     (path / "ready").touch()
     (path / "files.lock").touch()
-    with sqlite3.connect(path / "catalog.sqlite") as c:
+    with closing(sqlite3.connect(path / "catalog.sqlite")) as c, c:
         c.executescript(files("refs").joinpath("migrations/001_initial.sql").read_text())
         c.execute("INSERT INTO catalog_meta VALUES (1,'stable',1,7)")
 
@@ -39,11 +40,11 @@ def test_automatic_migration_preserves_identity(tmp_path):
 def test_migration_rolls_back_failed_statement(tmp_path):
     path = tmp_path / "old"
     old_catalog(path)
-    with sqlite3.connect(path / "catalog.sqlite") as c:
+    with closing(sqlite3.connect(path / "catalog.sqlite")) as c, c:
         c.execute("CREATE TABLE collections (collision TEXT)")
     with pytest.raises(sqlite3.OperationalError):
         migrate(path)
-    with sqlite3.connect(path / "catalog.sqlite") as c:
+    with closing(sqlite3.connect(path / "catalog.sqlite")) as c, c:
         assert c.execute("SELECT schema_version FROM catalog_meta").fetchone()[0] == 1
         assert not c.execute("SELECT 1 FROM sqlite_master WHERE name='import_entries'").fetchone()
 
@@ -77,13 +78,13 @@ def test_move_operations_schema_and_constraints(cli, tmp_path):
 def test_failed_move_migration_rolls_back(tmp_path):
     path = tmp_path/'old'
     old_catalog(path)
-    with sqlite3.connect(path/'catalog.sqlite') as c:
+    with closing(sqlite3.connect(path/'catalog.sqlite')) as c, c:
         c.executescript(files('refs').joinpath('migrations/002_zotero_ingest.sql').read_text())
         c.executescript(files('refs').joinpath('migrations/003_source_loc.sql').read_text())
         c.execute('CREATE TABLE file_operations (collision TEXT)')
     with pytest.raises(sqlite3.OperationalError):
         migrate(path)
-    with sqlite3.connect(path/'catalog.sqlite') as c:
+    with closing(sqlite3.connect(path/'catalog.sqlite')) as c, c:
         assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == 3
 
 
@@ -96,7 +97,7 @@ def test_lowercase_migration_preserves_locator_identity_and_disk(tmp_path):
     (old_folder/'Café.pdf').write_bytes(b'untouched')
     relative='Unfiled/Café/Unfiled/file.pdf'
     locator=dict(path=None,root='library',relative=relative)
-    with sqlite3.connect(path/'catalog.sqlite') as c:
+    with closing(sqlite3.connect(path/'catalog.sqlite')) as c, c:
         for name in ['002_zotero_ingest.sql','003_source_loc.sql','004_file_operations.sql']:
             c.executescript(files('refs').joinpath('migrations/'+name).read_text())
         c.execute("INSERT INTO sources (id,citation_key,created_at,updated_at,metadata_json,details_json,key_provenance_json,loc) VALUES ('s','key','now','now','{}','{}','{}','Unfiled')")
@@ -124,7 +125,7 @@ def test_read_upgrades_with_notice_and_copy(tmp_path, json_output):
     result = subprocess.run(command + (['--json'] if json_output else []) + ['list'], capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
     safety, = path.glob('before-schema-5-*.sqlite')
-    with sqlite3.connect(safety) as c:
+    with closing(sqlite3.connect(safety)) as c, c:
         assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == 1
     assert safety.stat().st_size == len(original)
     if json_output:
@@ -156,7 +157,7 @@ def test_safety_copy_failure_refuses_before_migration(tmp_path, monkeypatch):
 def test_newer_schema_still_refuses(tmp_path):
     path = tmp_path/'cat'
     old_catalog(path)
-    with sqlite3.connect(path/'catalog.sqlite') as c:
+    with closing(sqlite3.connect(path/'catalog.sqlite')) as c, c:
         c.execute('PRAGMA ignore_check_constraints=ON')
         c.execute('UPDATE catalog_meta SET schema_version=99')
     with pytest.raises(RefError) as error:

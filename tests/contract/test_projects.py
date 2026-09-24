@@ -1,4 +1,5 @@
 import sqlite3
+from contextlib import closing
 
 
 def test_project_repeats_and_conflicts(initialized, tmp_path, reference_path):
@@ -23,7 +24,7 @@ def test_project_previews_and_removed_source(initialized, tmp_path, reference_pa
     before = db.read_bytes()
     initialized("project", "cite", "demo", source["id"], "--dry-run")
     assert db.read_bytes() == before
-    with sqlite3.connect(db) as connection:
+    with closing(sqlite3.connect(db)) as connection, connection:
         connection.execute("UPDATE sources SET state='removed' WHERE id=?", (source["id"],))
     result = initialized("project", "cite", "demo", source["id"], expected=3)
     assert result["errors"][0]["code"] == "source_removed"

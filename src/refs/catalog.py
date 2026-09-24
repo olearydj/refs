@@ -1,9 +1,12 @@
-"""SQLite lifecycle and short application transactions."""
+"""SQLite lifecycle and short application transactions.
+
+SQLite connection contexts commit or roll back; closing/finally owns their lifetime.
+"""
 
 import os
 import sqlite3
 import tomllib
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 from datetime import date
 from importlib.resources import files
 from pathlib import Path
@@ -20,7 +23,6 @@ def connect(catalog: Path, *, write: bool = False):
         raise RefError("catalog_missing", "Selected catalog is missing", path=str(catalog))
     if not (catalog / "ready").is_file():
         raise RefError("recovery_required", "Catalog initialization is incomplete", 5, path=str(catalog))
-    ensure_schema(catalog)
     if write and (not os.access(catalog,os.W_OK) or not os.access(db,os.W_OK)):
         raise RefError('home_not_writable','Allow write access to the selected catalog and its staging directory, then retry',5,path=str(catalog))
     connection = sqlite3.connect(db.as_uri() + ("?mode=rw" if write else "?mode=ro"), uri=True, timeout=5)
@@ -29,6 +31,7 @@ def connect(catalog: Path, *, write: bool = False):
         connection.execute("PRAGMA foreign_keys=ON")
         connection.execute("PRAGMA busy_timeout=5000")
         try:
+            ensure_schema(catalog, connection)
             meta = connection.execute("SELECT * FROM catalog_meta WHERE singleton=1").fetchone()
         except sqlite3.OperationalError as exc:
             if not write and "readonly" in str(exc):
@@ -94,7 +97,7 @@ def init(settings: Settings, library: Path | None, dry_run: bool = False, *, reu
     db = catalog / "catalog.sqlite"
     db.touch(mode=0o600, exist_ok=False)
     catalog_id = str(uuid4())
-    with sqlite3.connect(db) as connection:
+    with closing(sqlite3.connect(db)) as connection, connection:
         connection.execute("PRAGMA foreign_keys=ON")
         connection.execute("PRAGMA journal_mode=DELETE")
         connection.execute("PRAGMA synchronous=FULL")
@@ -134,18 +137,17 @@ def migrate(catalog: Path) -> None:
     """Explicit offline upgrade; caller must stop writers and retain a snapshot."""
     if not (catalog/'ready').is_file():
         raise RefError('recovery_required', 'Inspect the incomplete catalog before migrating', 5)
-    with sqlite3.connect((catalog/'catalog.sqlite').resolve().as_uri()+'?mode=rw', uri=True) as connection:
+    with closing(sqlite3.connect((catalog/'catalog.sqlite').resolve().as_uri()+'?mode=rw', uri=True)) as connection, connection:
         connection.execute('PRAGMA foreign_keys=ON')
         upgrade_connection(connection)
 
 
-def ensure_schema(catalog: Path) -> None:
+def ensure_schema(catalog: Path, connection: sqlite3.Connection) -> None:
     """Upgrade an existing catalog only after saving a consistent safety copy."""
     from refs.files import file_lock
     db = catalog / 'catalog.sqlite'
     def version():
-        with sqlite3.connect(db.as_uri()+'?mode=ro', uri=True) as c:
-            return c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0]
+        return connection.execute('SELECT schema_version FROM catalog_meta').fetchone()[0]
     current = version()
     if current == 5:
         return
@@ -158,12 +160,12 @@ def ensure_schema(catalog: Path) -> None:
         if current not in (1, 2, 3, 4):
             raise RefError('unsupported_schema', 'Catalog schema is newer or unsupported; use a compatible refs version', 5)
         safety = catalog / f'before-schema-5-{date.today().isoformat()}.sqlite'
-        with sqlite3.connect(db.as_uri()+'?mode=rw', uri=True) as c:
+        with closing(sqlite3.connect(db.as_uri()+'?mode=rw', uri=True)) as c, c:
             c.execute('BEGIN IMMEDIATE')
             try:
                 with safety.open('xb'):
                     safety.chmod(0o600)
-                with sqlite3.connect(db.as_uri()+'?mode=ro', uri=True) as source, sqlite3.connect(safety) as target:
+                with closing(sqlite3.connect(db.as_uri()+'?mode=ro', uri=True)) as source, source, closing(sqlite3.connect(safety)) as target, target:
                     source.backup(target)
                 with safety.open('rb') as stream:
                     os.fsync(stream.fileno())

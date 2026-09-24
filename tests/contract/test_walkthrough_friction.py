@@ -192,12 +192,13 @@ def test_cite_from_import_applied_active_only(human, initialized, tmp_path):
 
 def test_cite_from_legacy_import_uses_creation_time(initialized, tmp_path):
     import sqlite3
+    from contextlib import closing
     path=tmp_path/'entries.bib'
     path.write_text('@book{legacy,title={Old Import},author={Smith, Alex},year={2024}}')
     initialized('import','--input',path,'--origin','original')
     initialized('import','--input',path,'--origin','later')
     # Reproduce the previous on-disk evidence shape in this synthetic catalog.
-    with sqlite3.connect(tmp_path/'cat/catalog.sqlite') as connection:
+    with closing(sqlite3.connect(tmp_path/'cat/catalog.sqlite')) as connection, connection:
         connection.execute('DROP TRIGGER originals_no_update')
         connection.execute("UPDATE originals SET definitions_json=json_remove(definitions_json,'$.import_id')")
     initialized('project','create','paper')

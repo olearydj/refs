@@ -4,6 +4,7 @@ import argparse
 import json
 import re
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 ROLES = {
@@ -21,7 +22,7 @@ SCHEMES = {"arxiv", "doi", "pmid", "pmcid", "oclc", "issn"}
 
 
 def ro(path):
-    return sqlite3.connect(Path(path).resolve().as_uri() + "?mode=ro", uri=True)
+    return closing(sqlite3.connect(Path(path).resolve().as_uri() + "?mode=ro", uri=True))
 
 
 def normalized_identifier(scheme, value):

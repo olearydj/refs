@@ -2,6 +2,7 @@
 
 import runpy
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 GATE = runpy.run_path(str(Path(__file__).parents[1] / "fixtures/real-trial/zotero_gate.py"))
@@ -34,7 +35,7 @@ def test_empty_catalog_gate(initialized, tmp_path, zotero_fixture):
 
 
 def test_local_identity(zotero_fixture):
-    with sqlite3.connect(zotero_fixture) as c:
+    with closing(sqlite3.connect(zotero_fixture)) as c, c:
         c.execute("UPDATE settings SET key='localUserKey',value='LOCAL123'")
     assert (
         GATE["expected"](zotero_fixture, zotero_fixture.parent / "base")[0]
@@ -48,7 +49,7 @@ def populated(initialized, tmp_path, zotero_fixture):
     from refs import sources
 
     uri, items, collections = GATE["expected"](zotero_fixture, zotero_fixture.parent / "base")
-    with sqlite3.connect(tmp_path / "cat/catalog.sqlite") as c:
+    with closing(sqlite3.connect(tmp_path / "cat/catalog.sqlite")) as c, c:
         c.execute("CREATE TABLE IF NOT EXISTS collections (id TEXT,library_uri TEXT,path TEXT)")
         c.execute("CREATE TABLE IF NOT EXISTS source_collections (source_id TEXT,collection_id TEXT)")
         c.executemany("INSERT INTO collections (id,library_uri,item_key,parent,name,path) VALUES (?,?,?,?,?,?)", [('Research',uri,'COLL0001',None,'Research','Research'),('Research/Methods',uri,'COLL0002','Research','Methods','Research/Methods'),('Empty',uri,'COLL0003',None,'Empty','Empty')])
@@ -81,7 +82,7 @@ def populated(initialized, tmp_path, zotero_fixture):
             ],
             "extensions": {"identifiers": {k: v for k, v in e["ids"] if k in ("arxiv", "oclc")}},
         }
-        with sqlite3.connect(tmp_path / "cat/catalog.sqlite") as c:
+        with closing(sqlite3.connect(tmp_path / "cat/catalog.sqlite")) as c, c:
             c.execute(
                 "UPDATE sources SET metadata_json=?,details_json=? WHERE id=?",
                 (json.dumps(metadata), json.dumps(details), record["id"]),
@@ -99,7 +100,7 @@ def populated(initialized, tmp_path, zotero_fixture):
                     "INSERT INTO resources (id,source_id,locator,path) VALUES (?,?,?,?)",
                     (path, record["id"], path, path),
                 )
-    with sqlite3.connect(tmp_path/'cat/catalog.sqlite') as c:
+    with closing(sqlite3.connect(tmp_path/'cat/catalog.sqlite')) as c, c:
         bindings=dict(c.execute("SELECT item_key,source_id FROM origin_identities WHERE namespace='zotero'"))
         for key,e in items.items():
             for target in e['relations']:
@@ -148,7 +149,7 @@ def test_gate_negative_controls(initialized, tmp_path, zotero_fixture):
     baseline = (catalog / "catalog.sqlite").read_bytes()
     for sql, kind in cases:
         (catalog / "catalog.sqlite").write_bytes(baseline)
-        with sqlite3.connect(catalog / "catalog.sqlite") as c:
+        with closing(sqlite3.connect(catalog / "catalog.sqlite")) as c, c:
             c.execute(sql)
         assert kind in {f["kind"] for f in check()["findings"]}
 
@@ -172,7 +173,7 @@ def test_complete_extractor_importer_gate(initialized,tmp_path,zotero_fixture):
 
 
 def test_gate_normalization_preserves_version_and_identity(initialized,tmp_path,zotero_fixture):
-    with sqlite3.connect(zotero_fixture) as c:
+    with closing(sqlite3.connect(zotero_fixture)) as c, c:
         row=c.execute("SELECT d.valueID,v.value FROM itemData d JOIN fields f USING(fieldID) JOIN itemDataValues v USING(valueID) WHERE d.itemID=1 AND f.fieldName='extra'").fetchone()
         lines=[line for line in row[1].splitlines() if not line.lower().startswith(('arxiv:','doi:'))]
         c.execute('UPDATE itemDataValues SET value=? WHERE valueID=?',('\n'.join(lines+['arxiv: arXiv:2407.01502v2 [cs.AI]','doi: https://doi.org/10.1234/Mixed']),row[0]))
@@ -180,10 +181,10 @@ def test_gate_normalization_preserves_version_and_identity(initialized,tmp_path,
     def check():
         return GATE['compare'](catalog,zotero_fixture,zotero_fixture.parent/'base')
     assert check()['summary']['findings']==0
-    with sqlite3.connect(catalog/'catalog.sqlite') as c:
+    with closing(sqlite3.connect(catalog/'catalog.sqlite')) as c, c:
         c.execute("UPDATE sources SET details_json=json_set(details_json,'$.extensions.identifiers.arxiv','2407.01502') WHERE citation_key='native1'")
     assert 'identifier_arxiv' in {item['kind'] for item in check()['findings']}
-    with sqlite3.connect(catalog/'catalog.sqlite') as c:
+    with closing(sqlite3.connect(catalog/'catalog.sqlite')) as c, c:
         c.execute("UPDATE sources SET metadata_json=json_set(metadata_json,'$.DOI','10.1234/different') WHERE citation_key='native1'")
     assert 'identifier_doi' in {item['kind'] for item in check()['findings']}
 
@@ -191,11 +192,11 @@ def test_gate_normalization_preserves_version_and_identity(initialized,tmp_path,
 def test_gate_range_oracle_and_start_only_negative_control(initialized,tmp_path,zotero_fixture):
     for raw,expected in [('2011-03-19 19-23 March 2011',[[2011,3,19],[2011,3,23]]),('2022-09-08 08–13 Sep 2022',[[2022,9,8],[2022,9,13]]),('2019-00-00 2019/2020',[[2019],[2020]])]:
         assert GATE['expected_issued'](raw)=={'date-parts':expected}
-    with sqlite3.connect(zotero_fixture) as c:
+    with closing(sqlite3.connect(zotero_fixture)) as c, c:
         c.execute("INSERT INTO itemDataValues (value) VALUES ('2011-03-19 19-23 March 2011')")
         c.execute("UPDATE itemData SET valueID=(SELECT valueID FROM itemDataValues WHERE value='2011-03-19 19-23 March 2011') WHERE itemID=1 AND fieldID=(SELECT fieldID FROM fields WHERE fieldName='date')")
     catalog=populated(initialized,tmp_path,zotero_fixture)
     assert GATE['compare'](catalog,zotero_fixture,zotero_fixture.parent/'base')['summary']['findings']==0
-    with sqlite3.connect(catalog/'catalog.sqlite') as c:
+    with closing(sqlite3.connect(catalog/'catalog.sqlite')) as c, c:
         c.execute("UPDATE sources SET metadata_json=json_remove(metadata_json,'$.issued.date-parts[1]') WHERE citation_key='native1'")
     assert 'issued' in {item['kind'] for item in GATE['compare'](catalog,zotero_fixture,zotero_fixture.parent/'base')['findings']}

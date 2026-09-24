@@ -1,5 +1,6 @@
 import sqlite3
 import stat
+from contextlib import closing
 
 
 def test_paths_before_init(cli, tmp_path):
@@ -21,7 +22,7 @@ def test_init_and_repeat(cli, tmp_path):
     assert stat.S_IMODE(db.stat().st_mode) == 0o600
     assert stat.S_IMODE(db.parent.stat().st_mode) == 0o700
     assert (db.parent / "ready").exists()
-    with sqlite3.connect(db) as connection:
+    with closing(sqlite3.connect(db)) as connection, connection:
         assert connection.execute("PRAGMA integrity_check").fetchone() == ("ok",)
         assert connection.execute("PRAGMA journal_mode").fetchone() == ("delete",)
 

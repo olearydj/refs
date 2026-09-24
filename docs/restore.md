@@ -78,13 +78,14 @@ Stop all refs processes using this catalog. Retain the database and its journal 
 
 ```python hot-journal
 import sqlite3
+from contextlib import closing
 import sys
 from pathlib import Path
 from refs.recovery import validate_database
 
 catalog = Path(sys.argv[1]).resolve()
 database = catalog / "catalog.sqlite"
-with sqlite3.connect(database.as_uri() + "?mode=rw", uri=True) as connection:
+with closing(sqlite3.connect(database.as_uri() + "?mode=rw", uri=True)) as connection, connection:
     connection.execute("SELECT count(*) FROM sqlite_master").fetchone()
     if connection.execute("PRAGMA integrity_check").fetchall() != [("ok",)]:
         raise ValueError("SQLite integrity check failed")

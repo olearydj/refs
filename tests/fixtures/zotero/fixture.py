@@ -1,6 +1,7 @@
 """Synthetic rows inserted into the unmodified Zotero 6.0.37 schema."""
 
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 
@@ -8,7 +9,7 @@ def build(folder):
     folder = Path(folder)
     folder.mkdir(parents=True, exist_ok=True)
     database = folder / "zotero.sqlite.bak"
-    with sqlite3.connect(database) as c:
+    with closing(sqlite3.connect(database)) as c, c:
         c.executescript(Path(__file__).with_name("userdata.sql").read_text())
         c.executemany("INSERT INTO version VALUES (?,?)", [("userdata", 121), ("globalSchema", 28)])
         c.execute("INSERT INTO settings VALUES ('account','userID','123')")
@@ -139,7 +140,7 @@ def build(folder):
         )
         item(30, "book", "TRASH030")
         c.execute("INSERT INTO deletedItems (itemID) VALUES (30)")
-    with sqlite3.connect(folder / "better-bibtex.sqlite") as bbt:
+    with closing(sqlite3.connect(folder / "better-bibtex.sqlite")) as bbt, bbt:
         bbt.execute("CREATE TABLE citationkey (itemID INTEGER, citationKey TEXT)")
         bbt.executemany("INSERT INTO citationkey VALUES (?,?)", [(1, "legacy1"), (6, "legacy6")])
     return database

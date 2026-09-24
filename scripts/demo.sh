@@ -270,7 +270,7 @@ code = re.search(r'```python restore\n(.*?)\n```', text, re.S).group(1)
 sys.argv = ['restore', str(root/'snapshot'), str(root/'restored')]
 with contextlib.redirect_stdout(io.StringIO()):
     exec(compile(code, 'docs/restore.md', 'exec'), {})
-with sqlite3.connect(root/'snapshot/catalog.sqlite') as saved, sqlite3.connect(root/'restored/cat/catalog.sqlite') as restored:
+with contextlib.closing(sqlite3.connect(root/'snapshot/catalog.sqlite')) as saved, saved, contextlib.closing(sqlite3.connect(root/'restored/cat/catalog.sqlite')) as restored, restored:
     for name, in saved.execute("SELECT name FROM sqlite_master WHERE type='table'"):
         assert saved.execute(f'SELECT * FROM "{name}"').fetchall() == restored.execute(f'SELECT * FROM "{name}"').fetchall(), name
 PYCODE

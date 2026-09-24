@@ -2,6 +2,7 @@
 
 import json
 import sqlite3
+from contextlib import closing
 
 import pytest
 
@@ -14,7 +15,7 @@ def test_snapshot_members_and_incomplete_import(initialized,tmp_path,reference_p
     source=initialized('add','--format','refs','--input',reference_path)['data']
     missing=tmp_path/'missing.pdf'
     initialized('resource','add',source['id'],'--path',missing)
-    with sqlite3.connect(tmp_path/'cat'/'catalog.sqlite') as connection:
+    with closing(sqlite3.connect(tmp_path/'cat'/'catalog.sqlite')) as connection, connection:
         connection.execute("INSERT INTO imports (id,origin,file_digest,started_at) VALUES ('unfinished','synthetic','abc','today')")
     selected=select(str(tmp_path/'config.toml'),str(tmp_path/'cat'))
     target=tmp_path/'snapshot'
@@ -24,7 +25,7 @@ def test_snapshot_members_and_incomplete_import(initialized,tmp_path,reference_p
     assert set(p.name for p in target.iterdir())=={'catalog.sqlite','config.toml','resources.jsonl','manifest.json'}
     inventory=[json.loads(line) for line in (target/'resources.jsonl').read_text().splitlines()]
     assert inventory[0]['path']==str(missing)
-    with sqlite3.connect(target/'catalog.sqlite') as connection:
+    with closing(sqlite3.connect(target/'catalog.sqlite')) as connection, connection:
         assert connection.execute("SELECT finished_at FROM imports WHERE id='unfinished'").fetchone()[0] is None
     with pytest.raises(RefError):
         recovery.backup(selected,target)
@@ -55,7 +56,7 @@ def test_snapshot_interruption_and_preview(initialized,tmp_path,monkeypatch):
 
 
 def test_missing_table_is_not_a_supported_snapshot(initialized,tmp_path):
-    with sqlite3.connect(tmp_path/'cat'/'catalog.sqlite') as connection:
+    with closing(sqlite3.connect(tmp_path/'cat'/'catalog.sqlite')) as connection, connection:
         connection.execute('DROP TABLE project_sources')
     with pytest.raises(RefError) as error:
         recovery.backup(select(str(tmp_path/'config.toml'),str(tmp_path/'cat')),tmp_path/'snapshot')

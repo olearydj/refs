@@ -4,6 +4,7 @@ import argparse
 import json
 import re
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 VERSION = "1"
@@ -19,7 +20,7 @@ def extract(
 ):
     if output.exists():
         raise ValueError("Choose a new extraction directory")
-    with sqlite3.connect(database.resolve().as_uri() + "?mode=ro", uri=True) as c:
+    with closing(sqlite3.connect(database.resolve().as_uri() + "?mode=ro", uri=True)) as c, c:
         c.execute("PRAGMA query_only=ON")
         c.execute("BEGIN")
         versions = dict(c.execute("SELECT schema,version FROM version"))
@@ -135,7 +136,7 @@ def extract(
                 )
         legacy_keys = {}
         if legacy:
-            with sqlite3.connect(legacy.resolve().as_uri() + "?mode=ro", uri=True) as b:
+            with closing(sqlite3.connect(legacy.resolve().as_uri() + "?mode=ro", uri=True)) as b, b:
                 legacy_keys = {
                     records[i]["key"]: key
                     for i, key in b.execute("SELECT itemID,citationKey FROM citationkey")

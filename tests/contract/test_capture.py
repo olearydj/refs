@@ -1,6 +1,7 @@
 import hashlib
 import json
 import sqlite3
+from contextlib import closing
 
 import pytest
 
@@ -15,7 +16,7 @@ def test_capture_original_and_show(initialized, tmp_path, reference_path):
     assert shown["provenance"][0]["source_identity"]["item_key"] == "article-1"
     assert shown["corrected_fields"] == []
     assert shown["originals"][0]["sha256"] == hashlib.sha256(reference_path.read_bytes()).hexdigest()
-    with sqlite3.connect(tmp_path / "cat" / "catalog.sqlite") as connection:
+    with closing(sqlite3.connect(tmp_path / "cat" / "catalog.sqlite")) as connection, connection:
         assert connection.execute("SELECT raw_bytes FROM originals").fetchone()[0] == reference_path.read_bytes()
         assert connection.execute("SELECT source_id FROM origin_identities").fetchone()[0] == data["id"]
 
@@ -74,5 +75,5 @@ def test_partial_origin_is_preserved_without_binding(initialized, tmp_path, refe
     result = initialized("add", "--format", "refs", "--input", path)["data"]
     assert result["provenance"][0]["source_identity"] == {"namespace": "synthetic"}
     assert result["context"][0]["original_ref"] == "upstream-note-7"
-    with sqlite3.connect(tmp_path / "cat" / "catalog.sqlite") as connection:
+    with closing(sqlite3.connect(tmp_path / "cat" / "catalog.sqlite")) as connection, connection:
         assert connection.execute("SELECT count(*) FROM origin_identities").fetchone()[0] == 0

@@ -1,5 +1,6 @@
 import json
 import sqlite3
+from contextlib import closing
 
 
 def test_outcomes_update_clear_rekey_and_tombstones(initialized, tmp_path, reference_path):
@@ -27,7 +28,7 @@ def test_outcomes_update_clear_rekey_and_tombstones(initialized, tmp_path, refer
     assert initialized('show', first['id'])['data']['state'] == 'removed'
     initialized('reactivate', first['id'], '--if-revision', 5, '--execute')
     assert initialized('show', first['id'])['data']['citation_key'] == 'new-key'
-    with sqlite3.connect(db) as connection:
+    with closing(sqlite3.connect(db)) as connection, connection:
         assert connection.execute('SELECT raw_bytes FROM originals').fetchone()[0] == reference_path.read_bytes()
 
 

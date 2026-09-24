@@ -2,6 +2,7 @@
 import json
 import sqlite3
 import sys
+from contextlib import closing
 from pathlib import Path
 
 import bibtexparser
@@ -10,7 +11,7 @@ root = Path(sys.argv[1])
 report = json.loads((root/'out/library/import.json').read_text())
 assert report['data']['counts'] == dict(applied=562, unchanged=0, conflict=0, invalid=0)
 inputs = bibtexparser.parse_string((root/'inputs/zotero-bbt-export.bib').read_text()).entries
-with sqlite3.connect((root/'out/library/cat/catalog.sqlite').resolve().as_uri()+'?mode=ro', uri=True) as connection:
+with closing(sqlite3.connect((root/'out/library/cat/catalog.sqlite').resolve().as_uri()+'?mode=ro', uri=True)) as connection, connection:
     records = {key:json.loads(metadata) for key,metadata in connection.execute('SELECT citation_key,metadata_json FROM sources')}
     declared_authors = editors_only = unnamed = 0
     for entry in inputs:

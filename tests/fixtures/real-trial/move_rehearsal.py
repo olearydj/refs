@@ -8,6 +8,7 @@ import sqlite3
 import subprocess
 import sys
 import tempfile
+from contextlib import closing
 from pathlib import Path
 
 from refs import catalog, files, moves, resources
@@ -45,7 +46,7 @@ def prepare(sample, work):
             if path.is_relative_to(prefix):
                 return contained(work,str(Path(relative)/path.relative_to(prefix)))
         raise ValueError('Unmapped attachment locator; refusing to read it')
-    with sqlite3.connect(work/'cat/catalog.sqlite') as c:
+    with closing(sqlite3.connect(work/'cat/catalog.sqlite')) as c, c:
         if c.execute('SELECT count(*) FROM file_operations').fetchone()[0]:
             raise ValueError('Supply a pre-move sample without operation history')
         for resource_id,path,root,relative in c.execute('SELECT id,path,root,relative FROM resources').fetchall():
