@@ -1,5 +1,7 @@
 """Cross-boundary guards from investigation lines 69-73."""
 
+import hashlib
+import json
 import subprocess
 import sys
 import time
@@ -109,3 +111,47 @@ def test_remove_preview_leaves_catalog_bytes_unchanged(initialized, tmp_path, re
     assert catalog_file.read_bytes() == before
     with connect(tmp_path / "cat") as connection:
         assert connection.execute("SELECT state FROM sources WHERE id=?", (source["id"],)).fetchone()[0] == "active"
+
+
+def test_title_edit_drops_stale_protection_once(initialized, reference_path):
+    source = initialized("add", "--format", "refs", "--input", reference_path)["data"]
+    result = initialized("update", source["id"], "--if-revision", source["revision"], "--set", 'metadata.title="Learning Rust"')
+    assert result["data"]["title_protection"]["title"]["protected_terms"] == []
+    notices = [item for item in result["warnings"] if item["code"] == "protected_terms_dropped"]
+    assert len(notices) == 1
+    assert notices[0]["details"]["terms"] == [{"field": "title", "term": "Python"}]
+    assert not [item for item in result["warnings"] if item["code"] == "protected_term_missing"]
+    assert initialized("show", source["id"])["data"]["title_protection"]["title"]["protected_terms"] == []
+
+
+def test_init_help_cautions_about_synchronized_catalog(tmp_path):
+    result = subprocess.run([sys.executable, "-m", "refs", "init", "--help"], cwd=tmp_path, capture_output=True, text=True, check=False)
+    assert result.returncode == 0
+    assert "outside folders synchronized by a file-copy service" in " ".join(result.stdout.split())
+
+
+@pytest.mark.parametrize(("loss_code", "patch"), [
+    ("issued_date_lost_or_changed", {'metadata.issued': {'date-parts': [[2024]], 'circa': True}}),
+    ("work_identity_changed", {'metadata.type': 'article', 'metadata.archive': 'arXiv', 'metadata.number': '2407.01502', 'extensions.identifiers.arxiv': '2407.01503'}),
+])
+def test_real_export_loss_blocks_without_touching_target(initialized, tmp_path, reference_path, loss_code, patch):
+    source = initialized("add", "--format", "refs", "--input", reference_path)["data"]
+    initialized("project", "create", "paper")
+    initialized("project", "cite", "paper", source["id"])
+    target = tmp_path / "paper.bib"
+    initialized("export", "--project", "paper", "--output", target)
+    before = target.read_bytes()
+    with connect(tmp_path / "cat") as connection:
+        baseline = connection.execute("SELECT baseline_digest, pending_digest FROM export_targets").fetchone()
+        assert tuple(baseline) == (hashlib.sha256(before).hexdigest(), None)
+    args = ["update", source["id"], "--if-revision", source["revision"]]
+    for path, value in patch.items():
+        args.extend(("--set", f"{path}={json.dumps(value)}"))
+    initialized(*args)
+    result = initialized("export", "--project", "paper", "--output", target, expected=3)
+    assert result["errors"][0]["code"] == "export_blocked"
+    assert any(item["code"] == loss_code for item in result["errors"][0]["details"]["entries"])
+    assert target.read_bytes() == before
+    assert not list(tmp_path.glob(".refs-*.tmp"))
+    with connect(tmp_path / "cat") as connection:
+        assert tuple(connection.execute("SELECT baseline_digest, pending_digest FROM export_targets").fetchone()) == tuple(baseline)

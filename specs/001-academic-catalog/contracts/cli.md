@@ -37,16 +37,16 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | key set REF | --key TEXT --if-revision N --execute; preview otherwise, warn external citations remain unchanged. |
 | import | --format bib --input PATH --origin TEXT; preview or apply .bib with per-entry report and aggregate run counts. |
 | resource add REF | --path PATH or --root NAME --relative PATH; --link (default), --copy or --move; optional --keep-name, --label and media type. Copy/move intake uses lib/<loc> and the labelled filename convention. |
-| resource unlink RESOURCE | --if-revision N --execute; association only, never file deletion. |
+| resource unlink RESOURCE | --execute; association only, never file deletion. |
 | resource check | Optional --source REF, --verify; availability/digest/root diagnostics, no repair/write. |
 | open REF | Optional --resource RESOURCE; use sole resource or return choices; external opener, no content editing. |
 | project create NAME | Optional description; unique name, repeats with identical values are no-ops. |
 | project show [PROJECT] | Project and active cited sources, plus removed-source diagnostics; no argument lists projects. |
-| project cite PROJECT REF | Add active source with cited=true; duplicate is no-op. |
+| project cite PROJECT REF | Add active source with cited=true; duplicate is no-op. `--from-import ORIGIN` refuses when a source belongs to more than one import origin. |
 | project uncite PROJECT REF | Delete that association, leave source/other projects/files; absent association is no-op. |
 | export | --project PROJECT --output PATH --profile portable-bibtex-v1; optional --adopt, --overwrite, --allow-unknown-mappings. Allowed defaults from config; complete four-class report. |
 | remove REF | --if-revision N --execute; tombstone while retaining identity/key/relationships. |
-| reactivate REF | --if-revision N --execute; restore same identity/key, report retained associations. |
+| reactivate REF | Optional --if-revision N and --execute; restore same identity/key, report retained associations. |
 | backup | --output NEW_DIRECTORY; consistent catalog/config snapshot and external-file inventory. |
 
 --keep-name is valid with add --file unless --link is supplied. For resource add, it requires --copy or --move. It is invalid without a file. Repeated resource linking of the same source/locator is a no-op. Add with a duplicate candidate reports the identity rather than silently creating another or merging differences. Search/list default limit=50, offset=0; limit 1–1000, nonnegative offset. Report total/catalog revision; separate pages need not share a snapshot. All project associations are cited, so no --cited flag is needed.
@@ -95,6 +95,8 @@ Both routes pass through the same validator, identity rule, binding, originals t
 Merging them would make one command carry two behaviours behind a flag; the shared interior is already one thing.
 
 ## Configuration and paths
+
+Keep the SQLite catalog and its working files outside folders synchronized by a file-copy service. This is setup guidance: refs reports the selected path but does not detect every sync service or forbid a chosen location.
 
 Select config by --config, then REFS_CONFIG, then ~/.config/refs/config.toml; select catalog by --catalog, then REFS_CATALOG, then config catalog.path. Explicit empty/invalid choices fail. No --home/REFS_HOME fallback. Canonical chosen data paths are /Volumes/Casa/refs/cat and /Volumes/Casa/refs/lib (owner's /casa aliases). Ordinary commands never create a missing catalog or substitute a location when Casa is unmounted.
 

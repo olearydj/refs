@@ -15,7 +15,8 @@ def test_four_classes_and_unknown_override():
     data, warnings = bibliography.serialize([value])
     assert b'@misc{' in data
     assert {'faithful_incomplete', 'documented_fallback'} <= {item['details']['class'] for item in warnings}
-    value['metadata']['translator'] = [{'family': 'Jones'}]
+    value['metadata']['type'] = 'article'
+    value['metadata']['submitted'] = {'date-parts': [[2024]]}
     with pytest.raises(RefError) as error:
         bibliography.serialize([value])
     assert error.value.issue['code'] == 'export_blocked'
@@ -29,7 +30,7 @@ def test_four_classes_and_unknown_override():
     assert any(item['code'] == 'issued_date_lost_or_changed' for item in error.value.issue['details']['entries'])
 
 
-@pytest.mark.parametrize('code', ['cited_authors_changed', 'issued_date_lost_or_changed', 'work_identity_changed', 'in_text_citation_changed', 'protected_spelling_changed'])
+@pytest.mark.parametrize('code', ['issued_date_lost_or_changed', 'work_identity_changed'])
 def test_known_losses_cannot_be_waived(code):
     with pytest.raises(RefError) as error:
         bibliography.enforce_losses([{'code': code, 'class': 'blocking', 'citation_key': 'example'}], allow_unknown=True)

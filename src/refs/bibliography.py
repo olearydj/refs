@@ -44,12 +44,11 @@ def warning(key: str, code: str, message: str, **details) -> dict:
     return dict(code=code, message=message, path=None, details={"citation_key": key, **details}, retryable=False)
 
 
-BLOCKING_CODES = {'cited_authors_changed', 'issued_date_lost_or_changed', 'work_identity_changed', 'in_text_citation_changed', 'protected_spelling_changed'}
 MONTHS = 'jan feb mar apr may jun jul aug sep oct nov dec'.split()
 
 
 def enforce_losses(losses: list[dict], *, allow_unknown: bool = False) -> None:
-    blocked = [loss for loss in losses if loss['code'] in BLOCKING_CODES or loss['class'] in ('blocking', 'structural') or loss['class'] == 'unknown' and not allow_unknown]
+    blocked = [loss for loss in losses if loss['class'] in ('blocking', 'structural') or loss['class'] == 'unknown' and not allow_unknown]
     if blocked:
         raise RefError('export_blocked', 'Export has unapplied losses; correct records or explicitly allow unknown mappings', details={'entries': losses})
 

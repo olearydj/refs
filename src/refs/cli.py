@@ -57,6 +57,7 @@ def paths(ctx: typer.Context):
 def init(ctx: typer.Context, reuse_config: Annotated[bool, typer.Option()] = False, library_root: Annotated[str | None, typer.Option()] = None,
          no_library: Annotated[bool, typer.Option()] = False,
          dry_run: Annotated[bool, typer.Option()] = False):
+    """Create a catalog explicitly. Keep its SQLite files outside folders synchronized by a file-copy service."""
     selected = settings(ctx)
     if no_library and library_root is not None:
         raise RefError("invalid_invocation", "Choose --library-root or --no-library", 2)

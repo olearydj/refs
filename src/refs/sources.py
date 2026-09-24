@@ -220,14 +220,19 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
         try:
             canonical = SourceCreate.model_validate(canonical).canonical()
             title_fields={field for field in canonical['metadata'] if 'metadata' in patch_model.set or 'metadata.'+field in patch_model.set}
+            dropped_terms = []
             for field in list(canonical['title_protection']):
                 supplied = any(path == 'title_protection' or path == 'title_protection.'+field or path.startswith('title_protection.'+field+'.') for path in patch_model.set)
                 if supplied:
                     title_fields.add(field)
                 elif original['metadata'].get(field) != canonical['metadata'].get(field):
                     protection = canonical['title_protection'][field]
+                    dropped_terms.extend((field, term) for term in protection['protected_terms'] if not naming.protected_spans(canonical['metadata'].get(field, ''), [term]))
                     protection['protected_terms'] = [term for term in protection['protected_terms'] if naming.protected_spans(canonical['metadata'].get(field, ''), [term])]
             canonical, warnings = naming.normalize(canonical,policy,title_fields)
+            if dropped_terms:
+                names = ', '.join(f'{field}: {term}' for field, term in dropped_terms)
+                warnings.append(dict(code='protected_terms_dropped', message=f'Protected terms no longer in the edited title were dropped: {names}', path='title_protection', details={'terms':[{'field':field,'term':term} for field,term in dropped_terms]}, retryable=False))
             canonical = SourceCreate.model_validate(canonical).canonical()
         except ValidationError as exc:
             raise RefError('invalid_patch', 'Patch does not match the supported record profile', 2, details={'issues':exc.errors(include_url=False,include_context=False,include_input=False)}) from exc
