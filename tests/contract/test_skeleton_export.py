@@ -81,7 +81,8 @@ def test_failure_before_publication_preserves_baseline(cited, monkeypatch):
     assert not list(output.parent.glob(".refs-*.tmp"))
     monkeypatch.setattr(files, "publish", real_publish)
     bibliography.export(catalog, "demo", output)
-    assert output.read_bytes() != before
+    assert b'volume = {13}' in output.read_bytes()
+    assert b'volume = {13}' not in before
 
 
 def test_unknown_stored_field_blocks_before_staging(cited):
@@ -129,7 +130,8 @@ def test_explicit_overwrite_preserves_outside_bytes_and_cannot_adopt(initialized
     outside = b'% Synthetic outside edit\n'
     output.write_bytes(outside)
     initialized('export', '--project', 'demo', '--output', output, '--overwrite')
-    assert output.read_bytes() != outside
+    assert output.read_bytes().startswith(b'@article{smith-2024-learningPython,')
+    assert b'journal = {Journal' in output.read_bytes()
     with closing(sqlite3.connect(catalog/'catalog.sqlite')) as connection, connection:
         assert connection.execute("SELECT raw_bytes FROM originals WHERE origin='export-overwrite'").fetchone()[0] == outside
     unrelated = output.parent/'unowned.bib'

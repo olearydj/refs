@@ -81,10 +81,23 @@ def test_lossy_reimport_keeps_richer_record(initialized, tmp_path):
     assert sources.show(tmp_path/'cat', 'web')['metadata']['type'] == 'webpage'
 
 
-@pytest.mark.parametrize('extra', [b'crossref={parent}', b'xdata={parent}', b'title=custom', b'title={A} # {B}', br'title={A \unknown{word}}'])
-def test_unsupported_constructs_are_explicit(initialized, tmp_path, extra):
+@pytest.mark.parametrize(('extra', 'status', 'field'), [
+    (b'crossref={parent}', 'applied', 'crossref'),
+    (b'xdata={parent}', 'applied', 'xdata'),
+    (b'title=custom', 'invalid', None),
+    (b'title={A} # {B}', 'invalid', None),
+    (br'title={A \unknown{word}}', 'invalid', None),
+])
+def test_unsupported_constructs_are_explicit(initialized, tmp_path, extra, status, field):
     result = importing.run(tmp_path/'cat', b'@book{x,title={Base},'+extra+b'}', 'input.bib')
-    assert result['entries'][0].get('limitations') or result['counts']['invalid']
+    assert result['entries'][0]['status'] == status
+    assert result['counts'][status] == 1
+    if field:
+        assert result['entries'][0]['limitations'] == [{'field': field, 'reason': 'Unmapped field preserved verbatim'}]
+        assert sources.show(tmp_path/'cat', 'x')['metadata']['title'] == 'Base'
+    else:
+        with connect(tmp_path/'cat') as connection:
+            assert connection.execute('SELECT count(*) FROM sources').fetchone()[0] == 0
 
 
 def test_unpartitionable_file_makes_no_sources(initialized, tmp_path):

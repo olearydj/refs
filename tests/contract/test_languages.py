@@ -25,8 +25,7 @@ def test_language_edit_and_unknown_limitations(initialized,tmp_path):
     for literal in ('eng','en-US','Uncatalogued Language'):
         source=sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','set':{'metadata.language':literal}},source['revision'])
         assert source['metadata']['language']==('en' if literal=='eng' else literal)
-    assert source['limitations']==languages.limitations(source['metadata'])
-    assert source['limitations'][0]['field']=='language'
+    assert source['limitations']==[{'field':'language','reason':'Unrecognized language retained literally: Uncatalogued Language; supply a language tag if known'}]
     output,warnings=bibliography.serialize([source])
     assert b'langid' not in output
     assert any(w['code']=='language_unrecognized' for w in warnings)

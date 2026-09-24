@@ -38,12 +38,9 @@ def test_bib_refs_csl_convergence_and_clear(initialized, tmp_path, case):
     created = edited
     current = sources.update(tmp_path/'cat', created['id'], {'schema_version':'1.0','clear':[field]}, created['revision'])
     assert case['path'] not in current['metadata']
-    try:
-        output, warnings = bibliography.serialize([current])
-        assert output.startswith(b'@')
-        assert all(warning['details']['class'] in ('faithful_incomplete','documented_fallback','unknown') for warning in warnings)
-    except RefError as exc:
-        assert exc.issue['code'] == 'export_blocked'
+    output, _ = bibliography.serialize([current])
+    assert b'{fixture,' in output
+    assert case['path'] not in current['metadata']
 
 
 @pytest.mark.parametrize('fields', [
@@ -100,11 +97,14 @@ def test_remaining_csl_rows_edit_clear_and_assessment(initialized,tmp_path,case)
     replacement={'date-parts':[[2025]]} if isinstance(case['expected'],dict) else [{'family':'Changed'}] if isinstance(case['expected'],list) else 'Changed Value'
     changed=sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','set':{path:replacement}},source['revision'])
     assert changed['metadata'][case['field']]==replacement
-    try:
+    if case['field'] in {'submitted','original-date','event-date'}:
+        with pytest.raises(RefError) as error:
+            bibliography.serialize([changed])
+        assert error.value.issue['code']=='export_blocked'
+        assert any(entry['code']=='unassessed_mapping' and entry['path']=='metadata.'+case['field'] for entry in error.value.issue['details']['entries'])
+    else:
         output,_=bibliography.serialize([changed])
-        assert output.startswith(b'@')
-    except RefError as error:
-        assert error.issue['code']=='export_blocked'
+        assert b'{' + changed['citation_key'].encode() + b',' in output
     cleared=sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','clear':[path]},changed['revision'])
     assert case['field'] not in cleared['metadata']
 
@@ -127,10 +127,12 @@ def test_extension_edits_and_clears(initialized,tmp_path,kind,extension,value,re
     changed=sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','set':{path:replacement}},source['revision'])
     if extension in ('patent.assignees','journal_series'):
         output,_=bibliography.serialize([changed])
-        assert b'@' in output
+        assert b'{'+changed['citation_key'].encode()+b',' in output
     else:
-        with pytest.raises(RefError):
+        with pytest.raises(RefError) as error:
             bibliography.serialize([changed])
+        assert error.value.issue['code']=='export_blocked'
+        assert {item['code'] for item in error.value.issue['details']['entries']} & {'unassessed_extension','unsupported_record'}
     cleared=sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','clear':[path]},changed['revision'])
     assert path in cleared['corrected_fields']
     if kind=='patent':

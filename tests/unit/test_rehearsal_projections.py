@@ -16,9 +16,8 @@ def test_assessed_rehearsal_projections(kind,metadata,extensions,expected,code):
     output,warnings=bibliography.serialize([record])
     assert expected in output
     assert all(w['details']['class']!='unknown' for w in warnings)
-    if code:
-        category = 'info' if code == 'assignee_in_note' else 'documented_fallback'
-        assert any(w['code']==code and w['details']['class']==category for w in warnings)
+    category = 'info' if code == 'assignee_in_note' else 'documented_fallback'
+    assert any(w['code']==code and w['details']['class']==category for w in warnings)
     if metadata.get('contributor'):
         assert b'Contributor' not in output
     if kind=='patent':
@@ -37,5 +36,5 @@ def test_collection_editors_preserve_existing_editors_and_deduplicate():
 def test_container_author_on_traditional_book_part():
     record={'schema_version':'1.0','citation_key':'part','metadata':{'type':'chapter','container-title':'Book','page':'3-7','container-author':[{'literal':'Research and Design'}]}}
     output,_=bibliography.serialize([record])
-    assert b'@inbook' in output
+    assert output.startswith(b'@inbook{part,')
     assert b'bookauthor = {{Research and Design}}' in output

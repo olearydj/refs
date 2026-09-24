@@ -62,9 +62,9 @@ def test_supported_type_projection(kind):
     data, _ = bibliography.serialize([record(kind)])
     expected = {'article': 'unpublished', 'article-journal': 'article', 'article-magazine': 'article', 'article-newspaper': 'article', 'book': 'book', 'chapter': 'incollection', 'paper-conference': 'inproceedings', 'report': 'techreport', 'manuscript': 'unpublished'}.get(kind, 'misc')
     assert data.startswith(('@' + expected + '{').encode())
-    assert b'example-2024-work' in data
-    assert b'Smith' in data
-    assert b'2024' in data
+    assert b'{example-2024-work,' in data
+    assert b'author = {Smith}' in data
+    assert b'year = {2024}' in data
 
 
 def test_type_scoped_numbers_and_traditional_part():
@@ -121,19 +121,27 @@ def test_adoption_requires_exact_completed_import(initialized, tmp_path):
     raw = b'@book{x,title={Synthetic Book},author={Smith, Alex},year={2024}}'
     path.write_bytes(raw)
     projects.create(catalog, 'adoption', '')
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         bibliography.export(catalog, 'adoption', path, adopt=True, overwrite=True)
+    assert error.value.issue['code'] == 'adoption_requires_import'
+    assert path.read_bytes() == raw
     importing.run(catalog, raw, str(path))
     projects.cite(catalog, 'adoption', 'x')
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         bibliography.export(catalog, 'adoption', path, adopt=True)
+    assert error.value.issue['code'] == 'adoption_requires_overwrite'
+    assert path.read_bytes() == raw
     path.write_bytes(raw+b'\n% outside change')
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         bibliography.export(catalog, 'adoption', path, adopt=True, overwrite=True)
+    assert error.value.issue['code'] == 'adoption_requires_import'
+    assert path.read_bytes() == raw+b'\n% outside change'
     path.write_bytes(raw)
     result = bibliography.export(catalog, 'adoption', path, adopt=True, overwrite=True)
     assert result['count'] == 1
-    assert path.read_bytes() != raw
+    assert path.read_bytes().startswith(b'@book{x,')
+    assert b'author = {Smith, Alex}' in path.read_bytes()
+    assert b'year = {2024}' in path.read_bytes()
 
 
 def test_catalog_only_facts_and_ascii_language_are_quiet():

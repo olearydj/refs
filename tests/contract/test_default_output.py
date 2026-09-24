@@ -22,8 +22,7 @@ def test_command_confirmations(initialized, tmp_path, reference_path):
     check(['project', 'create', 'paper'], 'Created project paper')
     check(['project', 'cite', 'paper', key], f'Cited {key} in paper')
     check(['project', 'show', 'paper'], 'Project: paper')
-    exported = initialized('export', '--project', 'paper', '--output', tmp_path/'previous.bib')['data']
-    check(['export', '--project', 'paper', '--output', tmp_path/'out.bib'], f"Wrote {tmp_path/'out.bib'} (1 entries, {len(exported['warnings'])} warnings)")
+    check(['export', '--project', 'paper', '--output', tmp_path/'out.bib'], f"Wrote {tmp_path/'out.bib'} (1 entries, 0 warnings)")
     check(['update', key, '--if-revision', '1', '--set', 'metadata.volume="2"'], f'Updated {key} (revision 2)')
     check(['project', 'uncite', 'paper', key], f'Uncited {key} from paper')
     check(['key', 'set', key, '--key', 'smith-example', '--if-revision', '2', '--execute'], f'Renamed {key} to smith-example')
