@@ -3,6 +3,10 @@
 set -uo pipefail
 T="$(cd "$(dirname "$0")" && pwd)"
 REPO="${REFS_TRIAL_REPO:-$(cd "$T/../../.." && pwd)}"
+if [[ "${1:-}" == --corpus ]]; then
+  shift
+  exec "$REPO/.venv/bin/python" "$T/move_rehearsal.py" "$@"
+fi
 if [[ "${REFS_TRIAL_ISOLATED:-}" != 1 ]]; then
   exec "$REPO/.venv/bin/python" "$T/isolated_trial.py"
 fi
