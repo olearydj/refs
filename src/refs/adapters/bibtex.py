@@ -12,7 +12,16 @@ from refs.models import REGISTRY, SourceCreate
 from refs.results import RefError
 
 MONTHS = dict(zip('jan feb mar apr may jun jul aug sep oct nov dec'.split(), range(1, 13), strict=True))
+FULL_MONTHS = dict(zip('january february march april may june july august september october november december'.split(), range(1, 13), strict=True))
 MARKER = re.compile(rb'@([A-Za-z]+)\s*([{(])')
+
+
+def month_number(value: str) -> int:
+    text = value.strip().casefold()
+    month = int(text) if text.isdecimal() else MONTHS.get(text) or FULL_MONTHS.get(text)
+    if month is None or not 1 <= month <= 12:
+        raise ValueError(f'Invalid month: {value}')
+    return month
 
 
 def partition(raw: bytes) -> list[dict]:
@@ -132,6 +141,7 @@ def parse(raw: bytes) -> dict:
         fields = {field.key.lower(): field.value for field in entry.fields}
         if len(fields) != len(entry.fields):
             raise ValueError('Case-colliding fields require inspection')
+        parsed_month = month_number(fields['month']) if 'month' in fields else None
         # Compare the library field list with surface assignments. This is a
         # corruption guard, not an alternative field parser.
         surface = re.sub(r'\\.', '  ', text)
@@ -162,7 +172,7 @@ def parse(raw: bytes) -> dict:
         protection = {}
         consumed = set()
         enclosing = {key.lower(): value for key,value in entry.parser_metadata.get('removed_enclosing', {}).items()}
-        unsupported = {field for field, contents in fields.items() if field not in enclosing and not contents.isdecimal() and not (field == 'month' and contents.lower() in MONTHS)}
+        unsupported = {field for field, contents in fields.items() if field not in enclosing and not contents.isdecimal() and field != 'month'}
         for field in unsupported:
             if field in ('author', 'editor', 'translator', 'bookauthor', 'holder'):
                 raise ValueError(f'Cannot resolve creator field {field}')
@@ -234,7 +244,7 @@ def parse(raw: bytes) -> dict:
                 parts = [int(year)]
                 month = fields.get('month', '')
                 if month and 'month' not in unsupported:
-                    parts.append(MONTHS.get(month.lower()) or int(month))
+                    parts.append(parsed_month)
             else:
                 metadata['issued'] = {'literal': year}
                 limitations.append(dict(field='year', reason='Unparseable year retained as literal date'))
@@ -247,7 +257,7 @@ def parse(raw: bytes) -> dict:
                     raise ValueError('Date and year/month disagree')
                 supplied = {'date-parts':[parts if len(parts)>len(supplied_parts) else supplied_parts]}
             if 'month' in fields and 'month' not in unsupported and 'date-parts' in supplied:
-                month = MONTHS.get(fields['month'].lower()) or int(fields['month'])
+                month = parsed_month
                 supplied_parts = supplied['date-parts'][0]
                 if len(supplied_parts)>1 and supplied_parts[1] != month:
                     raise ValueError('Date and month disagree')

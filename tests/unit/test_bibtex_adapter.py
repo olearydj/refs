@@ -1,4 +1,5 @@
 import pytest
+from pathlib import Path
 
 from refs.adapters.bibtex import parse, partition
 from refs.results import RefError
@@ -48,6 +49,19 @@ def test_date_aliases_compare_overlapping_precision():
     assert source.metadata.issued.date_parts == [[2024,1]]
     with pytest.raises(RefError):
         parse(b'@book{x,title={Test},month=feb,date={2024-01}}')
+
+
+def test_full_english_month_fixture_and_equivalent_spellings():
+    fixture = Path(__file__).parents[1] / 'fixtures/real-trial/minimized/month-name.bib'
+    assert parse(partition(fixture.read_bytes())[0]['raw'])['source'].canonical()['metadata']['issued'] == {'date-parts': [[1977, 8]]}
+    for spelling in ('8', '08', 'aug', 'AUG', 'August', 'aUgUsT'):
+        raw = f'@book{{month-{spelling},title={{A Study}},year={{1977}},month={{{spelling}}}}}'.encode()
+        assert parse(raw)['source'].canonical()['metadata']['issued'] == {'date-parts': [[1977, 8]]}
+    for spelling in ('Spring', '0', '13'):
+        with pytest.raises(RefError) as error:
+            parse(f'@book{{bad,title={{A Study}},year={{1977}},month={{{spelling}}}}}'.encode())
+        assert error.value.issue['code'] == 'invalid_bib_entry'
+        assert 'Invalid month' in error.value.issue['message']
 
 
 @pytest.mark.parametrize('flag, particle', [('true','non-dropping-particle'), ('false','dropping-particle')])
