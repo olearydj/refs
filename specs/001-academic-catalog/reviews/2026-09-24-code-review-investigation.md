@@ -1,6 +1,6 @@
 # Code review: investigation, 2026-09-24
 
-This is the reading half of the code review the owner asked for after slice 3 and then set aside while the tests pass runs: "for now, lets just treat this as a tests pass. we can come back to code review." It records what was found in `src/refs` at commit 473df8f. It decides nothing. The fixes wait for the test suite to be trustworthy, so that what they change is caught.
+This is the reading half of the code review the owner asked for after slice 3 and then set aside while the tests pass runs: "for now, lets just treat this as a tests pass. we can come back to code review." It records what was found in `src/refs` at commit 473df8f. It decides nothing. The readers' line-level tables are in the [appendix](2026-09-24-code-review-appendix.md). The fixes wait for the test suite to be trustworthy, so that what they change is caught.
 
 ## Method
 
