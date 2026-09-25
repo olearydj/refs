@@ -37,3 +37,5 @@ Keep the corpus manifest and fetched Better BibTeX fixture checkout outside the 
 ```bash
 tests/fixtures/real-trial/run.sh --corpus --sample "$SAMPLE" --phase6-work "$WORK" --corpus-manifest "$WORK/corpus-manifest.json"
 ```
+
+Round three keeps the TeX Live Beebe `.bib` files in the same corpus mode and gates Better BibTeX export JSON with `corpus_round_three.py --sample "$SAMPLE" --work "$WORK" --manifest "$WORK/json-manifest.json"`. Each JSON manifest row names its original path, source and route (`zotero`, `csl` or `inapplicable`). Native fixture items are wrapped in a disposable extracted-Zotero directory; absolute attachment paths are replaced with unavailable paths inside that directory so the gate cannot read fixture authors' files. Each CSL array element goes through the existing `add --format csljson` command in one sandboxed worker process; the worker repeats every element and counts created, already present, needs attention and invalid outcomes. Both gates keep the same free-space preflight, remaining-time subprocess deadlines, resource check, export/render check and backup/restore comparison, and remove only their working home.
