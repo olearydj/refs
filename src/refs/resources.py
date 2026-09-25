@@ -150,6 +150,8 @@ def check(settings: Settings, reference=None, *, verify=False, kind=None) -> dic
         result.append(dict(kind='unfinished',id=row['resource_id'],operation_id=row['id'],resolved_path=row['old_path'],old_path=row['old_path'],new_path=row['new_path'],state=row['state'],error=row['error'],status='unfinished'))
     if source_id is None and settings.library and settings.library.is_dir():
         for path in sorted(settings.library.rglob('*')):
+            if path.name in ('.DS_Store','Thumbs.db','desktop.ini') or path.name.startswith('._'):
+                continue
             if not path.is_symlink() and path.is_file() and unicodedata.normalize('NFC',str(path)).casefold() not in known:
                 result.append(dict(kind='unrecorded',resolved_path=str(path),status='available',hint='Use resource add SOURCE --path on this file to record it'))
     return {'items':[item for item in result if kind is None or item['kind']==kind]}

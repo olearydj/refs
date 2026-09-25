@@ -57,3 +57,23 @@ def test_correct_managed_file_keeps_health_check(initialized,tmp_path,reference_
     source=initialized('show',source['id'])['data']
     sources.update(tmp_path/'cat',source['id'],{'schema_version':'1.0','clear':['loc']},source['revision'])
     assert initialized('resource','check','--kind','managed_mismatch')['data']['items']==[]
+
+
+def test_library_scan_ignores_os_metadata_but_reports_unrecorded_files(initialized,tmp_path):
+    library=tmp_path/'lib'
+    topic=library/'Topic'
+    topic.mkdir()
+    metadata={
+        library/'.DS_Store':b'finder',
+        topic/'._article.pdf':b'appledouble',
+        topic/'Thumbs.db':b'thumbnails',
+        topic/'desktop.ini':b'windows',
+    }
+    for path,contents in metadata.items():
+        path.write_bytes(contents)
+    article=topic/'article.pdf'
+    article.write_bytes(b'not recorded')
+    result=initialized('resource','check','--kind','unrecorded')['data']
+    assert [item['resolved_path'] for item in result['items']]==[str(article)]
+    assert article.read_bytes()==b'not recorded'
+    assert all(path.read_bytes()==contents for path,contents in metadata.items())
