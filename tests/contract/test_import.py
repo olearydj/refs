@@ -3,6 +3,7 @@
 import hashlib
 import json
 import sqlite3
+from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
@@ -76,6 +77,37 @@ def test_batch_doi_index_matches_later_entry_without_row_scan(initialized, tmp_p
     full = importing.run(tmp_path/'cat', fixture.read_bytes(), str(fixture))
     assert full['counts'] == dict(applied=0, unchanged=2, conflict=0, invalid=0)
     assert importing.run(tmp_path/'cat', fixture.read_bytes(), str(fixture))['counts']['applied'] == 0
+
+
+def test_batch_doi_index_includes_a_fill_even_when_another_field_conflicts(initialized, tmp_path):
+    catalog = tmp_path/'cat'
+    importing.run(catalog,b'@article{same,title={Current Title},year={2024}}','first.bib')
+    raw = (b'@article{same,title={Incoming Title},year={2024},doi={10.1000/shared}}\n'
+           b'@article{other,title={Incoming Title},year={2024},doi={10.1000/shared}}')
+    result = importing.run(catalog,raw,'second.bib')
+    assert result['counts'] == dict(applied=0, unchanged=0, conflict=2, invalid=0)
+    assert result['entries'][0]['binding']['bound'] is True
+    with connect(catalog) as connection:
+        assert connection.execute('SELECT count(*) FROM sources').fetchone()[0] == 1
+        assert connection.execute("SELECT json_extract(metadata_json,'$.DOI') FROM sources").fetchone()[0] == '10.1000/shared'
+
+
+def test_reimport_reads_kept_decisions_once_per_batch(initialized, tmp_path, monkeypatch):
+    fixture = Path(__file__).parents[1] / 'fixtures/real-trial/minimized/no-doi-scan.bib'
+    raw = fixture.read_bytes()
+    importing.run(tmp_path/'cat',raw,str(fixture),origin='batch')
+    statements = []
+    actual_connect = importing.connect
+    @contextmanager
+    def traced_connect(*args,**kwargs):
+        with actual_connect(*args,**kwargs) as connection:
+            connection.set_trace_callback(statements.append)
+            yield connection
+    monkeypatch.setattr(importing,'connect',traced_connect)
+    result = importing.run(tmp_path/'cat',raw,str(fixture),origin='batch')
+    assert result['counts'] == dict(applied=0, unchanged=3, conflict=0, invalid=0)
+    assert sum('SELECT e.source_id,e.decisions_json FROM import_entries' in statement for statement in statements) == 1
+    assert not any('SELECT e.decisions_json FROM import_entries' in statement for statement in statements)
 
 
 @pytest.mark.parametrize('raw', [

@@ -70,6 +70,13 @@ def doi_plan(connection) -> dict[str, set[str]]:
     return existing
 
 
+def decisions_plan(connection, origin: str) -> dict[str, list[dict]]:
+    kept: dict[str, list[dict]] = {}
+    for row in connection.execute("SELECT e.source_id,e.decisions_json FROM import_entries e JOIN imports i ON i.id=e.import_id WHERE i.origin=? AND e.source_id IS NOT NULL AND e.decisions_json!='[]'",(origin,)):
+        kept.setdefault(row['source_id'],[]).extend(decision for decision in json.loads(row['decisions_json']) if decision['action']=='keep_current')
+    return kept
+
+
 def match(connection, source: SourceCreate, fingerprint: str, *, isbn_groups=None, doi_groups=None) -> tuple[str | None, list[str]]:
     ids = {row[0] for row in connection.execute('SELECT id FROM sources WHERE citation_key=?', (source.citation_key,))}
     ids.update(row[0] for row in connection.execute('SELECT source_id FROM originals WHERE sha256=? AND source_id IS NOT NULL', (fingerprint,)))
@@ -106,7 +113,7 @@ def match(connection, source: SourceCreate, fingerprint: str, *, isbn_groups=Non
     return source_id, differences(source.canonical(), current)
 
 
-def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False, isbn_groups=None, doi_groups=None, origin=None) -> tuple[str | None, dict]:
+def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False, isbn_groups=None, doi_groups=None, kept_by_source=None, origin=None) -> tuple[str | None, dict]:
     source_id, paths = match(connection, source, hashlib.sha256(raw).hexdigest(),isbn_groups=isbn_groups,doi_groups=doi_groups)
     if not source_id:
         return None, {}
@@ -125,8 +132,8 @@ def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False
     canonical = {key: current[key] for key in SourceCreate.model_fields if key in current}
     canonical = json.loads(json.dumps(canonical))
     fills, conflicts = [], []
-    kept = []
-    if origin is not None:
+    kept = kept_by_source.get(source_id,[]) if kept_by_source is not None else []
+    if kept_by_source is None and origin is not None:
         for row in connection.execute('SELECT e.decisions_json FROM import_entries e JOIN imports i ON i.id=e.import_id WHERE e.source_id=? AND i.origin=?', (source_id,origin)):
             kept.extend(decision for decision in json.loads(row[0]) if decision['action']=='keep_current')
     for path in paths:
@@ -163,7 +170,7 @@ def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False
     return source_id, dict(bound=compatible, incoming_key=source.citation_key, catalog_key=current['citation_key'], filled=fills, conflicts=conflicts)
 
 
-def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None, doi_groups=None, origin=None) -> dict:
+def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None, doi_groups=None, kept_by_source=None, origin=None) -> dict:
     raw = block['raw']
     parsed = None
     incoming = None
@@ -182,7 +189,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         source = SourceCreate.model_validate(canonical)
         source.citation_key = key
         incoming = source.canonical()
-        source_id, binding = bind_and_fill(connection, source, raw, dry_run=dry_run,isbn_groups=isbn_groups,doi_groups=doi_groups,origin=origin or locator)
+        source_id, binding = bind_and_fill(connection, source, raw, dry_run=dry_run,isbn_groups=isbn_groups,doi_groups=doi_groups,kept_by_source=kept_by_source,origin=origin or locator)
         conflicts = [item['path'] for item in binding.get('conflicts', [])]
         if conflicts:
             outcome = dict(outcome='conflict', code='value_conflict', source_id=source_id, citation_key=key, conflicts=conflicts)
@@ -252,14 +259,15 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
     with connect(catalog) as connection:
         isbn_groups = isbn_plan(connection,incoming)
         doi_groups = doi_plan(connection) if any(source.metadata.DOI for source in incoming) else None
+        kept_by_source = decisions_plan(connection,origin or locator)
     entries = []
     for block in blocks:
         if block['kind'] != 'entry':
             continue
         with connect(catalog, write=not dry_run) as connection:
-            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings, import_id=run_id,isbn_groups=isbn_groups,doi_groups=doi_groups,origin=origin or locator)
+            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings, import_id=run_id,isbn_groups=isbn_groups,doi_groups=doi_groups,kept_by_source=kept_by_source,origin=origin or locator)
             outcome = result['outcome']
-            if doi_groups is not None and outcome in ('applied','unchanged') and result.get('source_id') and result.get('incoming'):
+            if doi_groups is not None and (outcome in ('applied','unchanged') or result.get('binding',{}).get('bound')) and result.get('source_id') and result.get('incoming'):
                 doi = result['incoming']['metadata'].get('DOI')
                 if doi:
                     doi_groups.setdefault(sources.doi_identity(doi),set()).add(result['source_id'])
