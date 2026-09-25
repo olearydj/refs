@@ -67,6 +67,7 @@ def test_foreign_destination_after_publication_cannot_be_adopted(initialized, tm
         assert tuple(connection.execute("SELECT state,last_state FROM file_operations").fetchone()) == ("failed", "published")
 
 
+@pytest.mark.slow
 def test_two_process_file_lock_times_out_after_five_seconds(initialized, tmp_path):
     catalog = tmp_path / "cat"
     holder_code = """import sys,time

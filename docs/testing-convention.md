@@ -10,4 +10,6 @@ A generator needs an invariant that can fail on a wrong result and a small, save
 
 ## Coverage run
 
+The full suite runs in parallel with `uv run --locked pytest`. Use `uv run --locked pytest -m "not slow"` for the inner loop; `slow` names the installed smoke test, the five-second lock wait, and tests that invoke external rendering tools. Use `uv run --locked pytest -n 0` when a serial run is needed.
+
 The ordinary test run does not start subprocess coverage. From the repository root, run `COVERAGE_PROCESS_START="$PWD/.coveragerc" PYTHONPATH="$PWD/tests/coverage_bootstrap${PYTHONPATH:+:$PYTHONPATH}" uv run --locked coverage run -m pytest`, then `uv run --locked coverage combine` and `uv run --locked coverage report`. This measures the Python CLI subprocesses as well as the test process. Coverage is a data point, not a gate.

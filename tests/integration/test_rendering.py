@@ -66,6 +66,7 @@ def render_with_consumer(consumer, bib, tmp_path, record_property, pytestconfig)
     return text
 
 
+@pytest.mark.slow
 @pytest.mark.parametrize('consumer', ['pandoc', 'biber', 'bibtex'])
 def test_actual_rendering(consumer, tmp_path, record_property, pytestconfig):
     records = json.loads((ROOT/'tests/fixtures/rendering/sources.json').read_text())
@@ -73,6 +74,7 @@ def test_actual_rendering(consumer, tmp_path, record_property, pytestconfig):
     expected_facts(render_with_consumer(consumer, bib, tmp_path, record_property, pytestconfig))
 
 
+@pytest.mark.slow
 @pytest.mark.parametrize('howpublished', ['arXiv:2407.01502', 'Python software, version 1.106', None])
 def test_misc_render_keeps_supplied_howpublished(initialized, tmp_path, howpublished, pytestconfig):
     from refs import bibliography, importing, projects
@@ -124,6 +126,7 @@ def test_added_protection_and_publisher_grouping_are_reported(initialized, tmp_p
     assert [item['code'] for item in result['info']].count('literal_publisher') == 1
 
 
+@pytest.mark.slow
 def test_online_documentation_reports_portable_quotation_change(initialized, tmp_path, pytestconfig):
     from refs import bibliography, importing, projects
     raw = b'@online{docs,author={{Example, Inc.}},title={Service API Documentation},year={2026},url={https://example.org/docs}}'
@@ -143,6 +146,7 @@ def test_online_documentation_reports_portable_quotation_change(initialized, tmp
     assert 'Web page' not in texts[1]
 
 
+@pytest.mark.slow
 @pytest.mark.parametrize('consumer', ['pandoc', 'biber', 'bibtex'])
 @pytest.mark.parametrize('route', ['bib', 'csl'])
 @pytest.mark.parametrize('particle', ['dropping-particle', 'non-dropping-particle'])
@@ -166,6 +170,7 @@ def test_particle_names_export_and_render(consumer, route, particle, tmp_path, r
     record_property('rendered_particle_line', line)
 
 
+@pytest.mark.slow
 @pytest.mark.parametrize('consumer', ['pandoc','biber','bibtex'])
 def test_arxiv_identifier_extension_render(consumer,tmp_path,record_property,pytestconfig):
     record={'schema_version':'1.0','citation_key':'arxiv','metadata':{'type':'document','title':'Synthetic Preprint','author':[{'family':'Smith','given':'Alex'}],'issued':{'date-parts':[[2024]]}},'extensions':{'identifiers':{'arxiv':'2407.01502','oclc':'456'}}}
@@ -178,6 +183,7 @@ def test_arxiv_identifier_extension_render(consumer,tmp_path,record_property,pyt
     assert 'Smith' in text and '2024' in text
 
 
+@pytest.mark.slow
 @pytest.mark.parametrize('consumer', ['pandoc','biber','bibtex'])
 def test_language_aliases_and_valid_mislabel_render(consumer,tmp_path,record_property,pytestconfig):
     from refs.models import SourceCreate
@@ -193,6 +199,7 @@ def test_language_aliases_and_valid_mislabel_render(consumer,tmp_path,record_pro
     assert 'Smith' in text
 
 
+@pytest.mark.slow
 @pytest.mark.parametrize('consumer',['pandoc','biber','bibtex'])
 @pytest.mark.parametrize(('raw','iso','parts'),[
     ('19-23 March 2011','2011-03-19/2011-03-23',[[2011,3,19],[2011,3,23]]),
