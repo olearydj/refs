@@ -22,7 +22,7 @@ from refs import (
 )
 from refs import catalog as storage
 from refs import logging as action_log
-from refs.config import absolute, select
+from refs.config import absolute, export_options, select
 from refs.results import RefError, emit, upgrade_notices
 
 failed_command: ContextVar[str] = ContextVar('refs_failed_command',default='invocation')
@@ -79,6 +79,10 @@ def read_payload(argument: str | Path) -> tuple[bytes,str]:
         raise RefError('invalid_input',str(exc),2,path=str(path)) from exc
 
 
+def requested(execute: bool, dry_run: bool) -> bool:
+    return execute and not dry_run
+
+
 @app.command()
 def paths(ctx: typer.Context):
     report(ctx, "paths", settings(ctx).describe())
@@ -106,8 +110,7 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         move: Annotated[bool, typer.Option()] = False,
         keep_name: Annotated[bool, typer.Option()] = False,
         dry_run: Annotated[bool, typer.Option()] = False):
-    if sum((link,copy,move))>1 or (link or copy or move or keep_name) and file is None or link and keep_name:
-        raise RefError('invalid_invocation', 'Choose one of --link, --copy or --move with --file; --keep-name requires copy or move', 2)
+    mode = resources.intake_mode(path=file, link=link, copy=copy, move=move, keep_name=keep_name, default='move')
     if format not in ("refs", "csljson", "bib"):
         raise RefError("unsupported_format", "Choose --format refs, csljson or bib", 2)
     from refs.models import normalize_loc
@@ -117,18 +120,13 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         raise RefError("invalid_loc", str(exc), 2) from exc
     raw,locator = read_payload(input)
     if format == 'bib':
-        data = importing.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run, settings=settings(ctx))
+        data = importing.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run, settings=settings(ctx), loc=loc)
     else:
-        data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run,policy=settings(ctx).values)
-    if loc is not None and not data.get("loc"):
-        if dry_run:
-            data["loc"] = loc
-        else:
-            data = data | sources.update(settings(ctx).catalog_path(), data["id"], {"schema_version":"1.0", "set":{"loc":loc}}, data["revision"], policy=settings(ctx).values)
+        data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run,policy=settings(ctx).values,loc=loc)
     file_action = None
     if file is not None:
-        data, file_action = resources.capture_file(settings(ctx),data,file,linked=link,moving=not link and not copy,keep_name=keep_name,dry_run=dry_run)
-    report(ctx, 'add', data, file_action=file_action)
+        data, file_action = resources.capture_file(settings(ctx),data,file,mode=mode,keep_name=keep_name,dry_run=dry_run)
+    report(ctx, 'add', data | ({'file_action': file_action} if file_action else {}))
 
 
 import_app = typer.Typer(invoke_without_command=True)
@@ -185,7 +183,7 @@ def project_cite(ctx: typer.Context, project: str, reference: Annotated[str | No
         return
     assert reference is not None
     data = projects.cite(catalog, project, reference, dry_run=dry_run)
-    report(ctx, "project cite", data, citation_key=sources.show(catalog, data['source_id'])['citation_key'], project_name=projects.show(catalog, data['project_id'])['name'])
+    report(ctx, "project cite", data)
 
 
 @app.command("export")
@@ -197,18 +195,8 @@ def export_bibliography(ctx: typer.Context, project: Annotated[str | None, typer
                        adopt: Annotated[bool, typer.Option()] = False,
                        dry_run: Annotated[bool, typer.Option()] = False):
     selected = settings(ctx)
-    project = project if project is not None else selected.values.get('project')
-    configured_output = selected.values.get('export',{}).get('output')
-    output = output if output is not None else Path(configured_output) if configured_output else None
-    profile = profile if profile is not None else selected.values['export']['profile']
-    if not project or output is None:
-        raise RefError('invalid_invocation','Supply export project and output options or configured defaults',2)
-    try:
-        data = bibliography.export(settings(ctx).catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite, adopt=adopt)
-    except RefError as exc:
-        if exc.issue['code'] == 'export_blocked' and not ctx.obj['json_output']:
-            exc.issue['path'] = str(absolute(str(output)))
-        raise
+    project, output, profile = export_options(selected, project, output, profile)
+    data = bibliography.export(selected.catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite, adopt=adopt)
     report(ctx, 'export', data)
 
 
@@ -250,22 +238,21 @@ def set_key(ctx: typer.Context, reference: str, key: Annotated[str, typer.Option
             if_revision: Annotated[int, typer.Option(min=1)],
             execute: Annotated[bool, typer.Option()] = False,
             dry_run: Annotated[bool, typer.Option()] = False):
-    previous_key = sources.show(settings(ctx).catalog_path(), reference)["citation_key"]
-    report(ctx, "key set", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, new_key=key, execute=execute and not dry_run), previous_key=previous_key)
+    report(ctx, "key set", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, new_key=key, execute=requested(execute, dry_run)))
 
 
 @app.command()
 def remove(ctx: typer.Context, reference: str, if_revision: Annotated[int, typer.Option(min=1)],
            execute: Annotated[bool, typer.Option()] = False,
            dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, "remove", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="removed", execute=execute and not dry_run))
+    report(ctx, "remove", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="removed", execute=requested(execute, dry_run)))
 
 
 @app.command()
 def reactivate(ctx: typer.Context, reference: str, if_revision: Annotated[int | None, typer.Option(min=1)] = None,
                execute: Annotated[bool, typer.Option()] = False,
                dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, "reactivate", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="active", execute=execute and not dry_run))
+    report(ctx, "reactivate", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="active", execute=requested(execute, dry_run)))
 
 
 @app.command("search")
@@ -299,7 +286,7 @@ def project_uncite(ctx: typer.Context, project: str, reference: str,
                    dry_run: Annotated[bool, typer.Option()] = False):
     catalog = settings(ctx).catalog_path()
     data = projects.uncite(catalog, project, reference, dry_run=dry_run)
-    report(ctx, "project uncite", data, citation_key=sources.show(catalog, data['source_id'])['citation_key'], project_name=projects.show(catalog, data['project_id'])['name'])
+    report(ctx, "project uncite", data)
 
 
 resource_app = typer.Typer(no_args_is_help=True)
@@ -324,13 +311,12 @@ def resource_add(ctx: typer.Context, reference: str,
                  keep_name: Annotated[bool, typer.Option()] = False,
                  dry_run: Annotated[bool, typer.Option()] = False):
     selected = settings(ctx)
-    if sum((link,copy,move))>1 or keep_name and not (copy or move):
-        raise RefError('invalid_invocation','Choose one intake mode; use --keep-name only with --copy or --move',2)
-    if copy or move:
+    mode = resources.intake_mode(path=path if path is not None else Path(relative) if root and relative else None, link=link, copy=copy, move=move, keep_name=keep_name)
+    if mode in ('copy', 'move'):
         resources.locate(selected,path=path,root=root,relative=relative)
         original = path if path is not None else selected.roots[root]/relative
         from refs.moves import intake
-        action = intake if move else resources.copy
+        action = intake if mode == 'move' else resources.copy
         data = action(selected,reference,original,keep_name=keep_name,dry_run=dry_run,label=label,media_type=media_type)
     else:
         data = resources.link(selected,reference,path=path,root=root,relative=relative,label=label,media_type=media_type,dry_run=dry_run)
@@ -341,7 +327,7 @@ def resource_add(ctx: typer.Context, reference: str,
 def resource_unlink(ctx: typer.Context, resource: str,
                     execute: Annotated[bool, typer.Option()] = False,
                     dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, 'resource unlink', resources.unlink(settings(ctx),resource,execute=execute and not dry_run))
+    report(ctx, 'resource unlink', resources.unlink(settings(ctx),resource,execute=requested(execute, dry_run)))
 
 
 @app.command()

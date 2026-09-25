@@ -44,7 +44,8 @@ def cite(catalog: Path, project_ref: str, source_ref: str, *, dry_run: bool = Fa
     with connect(catalog, write=not dry_run) as connection:
         project = resolve(connection, project_ref)
         source_id = sources.resolve(connection, source_ref)
-        if connection.execute("SELECT state FROM sources WHERE id=?", (source_id,)).fetchone()[0] != "active":
+        source = connection.execute("SELECT state,citation_key FROM sources WHERE id=?", (source_id,)).fetchone()
+        if source['state'] != "active":
             raise RefError("source_removed", "Removed sources cannot be cited")
         existing = connection.execute("SELECT 1 FROM project_sources WHERE project_id=? AND source_id=?", (project["id"], source_id)).fetchone()
         if not existing and not dry_run:
@@ -53,7 +54,7 @@ def cite(catalog: Path, project_ref: str, source_ref: str, *, dry_run: bool = Fa
             connection.execute("INSERT INTO project_sources VALUES (?, ?, 1)", (project["id"], source_id))
             connection.execute("UPDATE projects SET revision=revision+1 WHERE id=?", (project["id"],))
             changed(connection)
-        return dict(project_id=project["id"], source_id=source_id, cited=True,
+        return dict(project_id=project["id"], project_name=project['name'], source_id=source_id, citation_key=source['citation_key'], cited=True,
                     unchanged=bool(existing), dry_run=dry_run)
 
 
@@ -105,6 +106,7 @@ def uncite(catalog: Path, project_ref: str, source_ref: str, *, dry_run: bool = 
     with connect(catalog, write=not dry_run) as connection:
         project = resolve(connection, project_ref)
         source_id = sources.resolve(connection, source_ref)
+        citation_key = connection.execute('SELECT citation_key FROM sources WHERE id=?', (source_id,)).fetchone()[0]
         exists = bool(connection.execute('SELECT 1 FROM project_sources WHERE project_id=? AND source_id=?', (project['id'], source_id)).fetchone())
         if exists and not dry_run:
             action_log.log_mutation('project.uncite', {'id':project['id'],'name':project['name'],'source_id':source_id},
@@ -112,4 +114,4 @@ def uncite(catalog: Path, project_ref: str, source_ref: str, *, dry_run: bool = 
             connection.execute('DELETE FROM project_sources WHERE project_id=? AND source_id=?', (project['id'], source_id))
             connection.execute('UPDATE projects SET revision=revision+1 WHERE id=?', (project['id'],))
             changed(connection)
-        return dict(project_id=project['id'], source_id=source_id, unchanged=not exists, dry_run=dry_run)
+        return dict(project_id=project['id'], project_name=project['name'], source_id=source_id, citation_key=citation_key, unchanged=not exists, dry_run=dry_run)

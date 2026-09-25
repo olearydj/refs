@@ -90,7 +90,7 @@ def add(catalog: Path, raw: bytes, locator: str, **options) -> dict:
     return result
 
 
-def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_run: bool = False, policy: dict | None = None) -> dict:
+def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_run: bool = False, policy: dict | None = None, loc: str | None = None) -> dict:
     from refs.adapters import csl
     source = csl.parse(raw) if format == "csljson" else parse(raw)
     normalized, warnings = naming.normalize(source.canonical(),policy)
@@ -113,6 +113,7 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
                     original = preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key})
                     save_add_conflict(connection,raw,locator,dict(status='conflict',source_id=existing,citation_key=current['citation_key'],binding=binding,conflicts=[item['path'] for item in binding['conflicts']],incoming=source.canonical(),original_ref=original))
                 return current | dict(outcome='needs_attention', binding=binding, warnings=warnings, dry_run=dry_run)
+            current = set_loc(connection, current, loc, dry_run=dry_run)
             return current | dict(unchanged=not binding['filled'], dry_run=dry_run, outcome='already_present', warnings=warnings, binding=binding)
         likely = [dict(row) for row in connection.execute(
             "SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json, '$.title'))=lower(?)",
@@ -128,9 +129,22 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
             source.citation_key = SourceCreate.valid_key(base + naming.suffix(index))
             key_provenance = naming.provenance(policy)
         if dry_run:
+            if loc is not None and source.loc is None:
+                source.loc = loc
             return dict(dry_run=True, outcome="created", id=None, citation_key=source.citation_key,
                         record=source.canonical(), key_provenance=key_provenance, warnings=warnings)
+        if loc is not None and source.loc is None:
+            source.loc = loc
         return insert_source(connection, source, raw, locator, format=format, warnings=warnings, key_provenance=key_provenance)
+
+
+def set_loc(connection, current: dict, loc: str | None, *, dry_run: bool = False) -> dict:
+    if loc is None or current.get('loc'):
+        return current
+    if dry_run:
+        return current | {'loc': loc}
+    canonical = editable(current) | {'loc': loc}
+    return store_record(connection, current, revalidate(canonical), current['corrected_fields'])
 
 
 def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *, format: str, warnings: list, key_provenance: dict) -> dict:
@@ -269,6 +283,8 @@ def change_identity(catalog: Path, reference: str, revision: int | None, *, new_
         if revision is None and (state != 'active' or new_key is not None):
             raise RefError('revision_required', 'Supply the current revision', 2)
         current = record(connection, resolve(connection, reference)) if revision is None else checked_record(connection, reference, revision)
+        if new_key is not None:
+            current['previous_key'] = current['citation_key']
         warnings = []
         if new_key is not None:
             try:
@@ -306,4 +322,4 @@ def change_identity(catalog: Path, reference: str, revision: int | None, *, new_
             connection.execute('UPDATE sources SET key_provenance_json=? WHERE id=?', (json.dumps({'origin': 'explicit_rekey'}), current['id']))
         refresh(connection, record(connection, current['id']))
         changed(connection)
-        return record(connection, current['id']) | {'warnings': warnings}
+        return record(connection, current['id']) | {'warnings': warnings} | ({'previous_key': current['previous_key']} if new_key is not None else {})

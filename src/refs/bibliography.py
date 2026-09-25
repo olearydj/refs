@@ -425,7 +425,12 @@ def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROF
         for record in selected:
             record.update(preserved_bib_fields(connection, record))
         revision = connection.execute("SELECT revision FROM catalog_meta").fetchone()[0]
-    data, warnings = serialize(selected, allow_unknown=allow_unknown)
+    try:
+        data, warnings = serialize(selected, allow_unknown=allow_unknown)
+    except RefError as exc:
+        if exc.issue['code'] == 'export_blocked':
+            exc.issue['path'] = str(target)
+        raise
     info = [notice for notice in warnings if notice['details'].get('class') == 'info']
     warnings = [notice for notice in warnings if notice['details'].get('class') != 'info']
     if not selected:

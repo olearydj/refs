@@ -173,7 +173,7 @@ def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False
     return source_id, dict(bound=compatible, incoming_key=source.citation_key, catalog_key=current['citation_key'], filled=fills, conflicts=conflicts)
 
 
-def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None, doi_groups=None, kept_by_source=None, origin=None) -> dict:
+def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None, doi_groups=None, kept_by_source=None, origin=None, loc=None) -> dict:
     raw = block['raw']
     parsed = None
     incoming = None
@@ -197,12 +197,16 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         if conflicts:
             outcome = dict(outcome='conflict', code='value_conflict', source_id=source_id, citation_key=key, conflicts=conflicts)
         elif source_id:
+            if loc is not None and not binding.get('conflicts'):
+                sources.set_loc(connection, sources.core_record(connection, source_id), loc, dry_run=dry_run)
             outcome = dict(outcome='applied' if binding.get('filled') else 'unchanged', source_id=source_id, citation_key=key)
         else:
             likely = connection.execute("SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json,'$.title'))=lower(?)", (source.metadata.title,)).fetchall()
             if likely:
                 warnings.append(dict(code='likely_match', message='Similar title found; imported separately because title alone is not identity', path=None, details={'candidates':[dict(row) for row in likely]}, retryable=False))
             if not dry_run:
+                if loc is not None and source.loc is None:
+                    source.loc = loc
                 created = sources.insert_source(connection, source, raw, evidence_locator, format='bib', warnings=warnings, key_provenance={'origin':'supplied', 'policy':None, 'table_version':None, 'unicode_version':None})
                 source_id = created['id']
             outcome = dict(outcome='applied', source_id=source_id, citation_key=key)
@@ -294,18 +298,20 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
     return dict(import_id=None if dry_run else run_id, input=locator, file_digest=fingerprint, counts=counts, entries=entries, dry_run=dry_run, warnings=[])
 
 
-def add(catalog: Path, raw: bytes, locator: str, *, dry_run=False, settings=None) -> dict:
+def add(catalog: Path, raw: bytes, locator: str, *, dry_run=False, settings=None, loc=None) -> dict:
     blocks = [block for block in bibtex.partition(raw) if block['kind'] == 'entry']
     if len(blocks) != 1:
         raise RefError('invalid_bib_input', 'Use add for one entry, or import for a bibliography', 2)
     with connect(catalog, write=not dry_run) as connection:
-        entry = apply_entry(connection, blocks[0], locator, hashlib.sha256(raw).hexdigest(), dry_run=dry_run, settings=settings, origin='add')
+        entry = apply_entry(connection, blocks[0], locator, hashlib.sha256(raw).hexdigest(), dry_run=dry_run, settings=settings, origin='add', loc=loc)
         if not dry_run:
             save_add_conflict(connection, raw, locator, entry)
     if entry['outcome'] in ('conflict', 'invalid'):
         raise RefError(entry.get('code', 'import_conflict'), entry.get('message', 'Inspect conflicting fields and use update'), 2 if entry['outcome'] == 'invalid' else 3, details=entry,
                        data={'outcome':'needs_attention', 'citation_key':entry.get('citation_key')})
     record = sources.show(catalog, entry['source_id']) if entry['source_id'] else bibtex.parse(blocks[0]['raw'])['source'].canonical()
+    if dry_run and loc is not None and not record.get('loc'):
+        record['loc'] = loc
     return record | dict(outcome='created' if entry['outcome'] == 'applied' else 'already_present', warnings=entry.get('warnings', []), dry_run=dry_run, limitations=entry['limitations'])
 
 
