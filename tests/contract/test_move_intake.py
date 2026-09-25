@@ -101,6 +101,31 @@ def test_intake_resumes_with_one_resource(initialized, tmp_path, reference_path,
     assert moves.intake(settings,source['id'],path)['id']==result['id']
 
 
+def test_completed_intake_retry_keeps_later_reorg_placement(initialized,tmp_path,reference_path):
+    from refs import moves, sources
+    from refs.catalog import connect
+    from refs.config import select
+
+    settings=select(config=str(tmp_path/'config.toml'),catalog=str(tmp_path/'cat'),no_project_config=True)
+    source=initialized('add','--format','refs','--input',reference_path)['data']
+    original=tmp_path/'download.pdf'
+    original.write_bytes(b'synthetic')
+    first=moves.intake(settings,source['id'],original,keep_name=True)
+    current=sources.show(settings.catalog_path(),source['id'])
+    sources.update(settings.catalog_path(),source['id'],{'schema_version':'1.0','set':{'loc':'Later'}},current['revision'])
+    moved=moves.reorg(settings,execute=True)['moves']
+    assert len(moved)==1 and moved[0]['state']=='removed'
+    with connect(settings.catalog_path()) as c:
+        count=c.execute('SELECT count(*) FROM file_operations').fetchone()[0]
+    again=moves.intake(settings,source['id'],original,keep_name=True)
+    with connect(settings.catalog_path()) as c:
+        assert c.execute('SELECT count(*) FROM file_operations').fetchone()[0]==count
+    assert again['id']==first['id'] and again['moves']==[]
+    assert again['destination']==moved[0]['new_path']
+    assert (tmp_path/'lib/Later/download.pdf').read_bytes()==b'synthetic'
+    assert not (tmp_path/'lib/unfiled/download.pdf').exists()
+
+
 def test_move_refuses_another_sources_file(initialized, tmp_path, reference_path):
     import json
     source = initialized('add','--format','refs','--input',reference_path)['data']

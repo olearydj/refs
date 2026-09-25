@@ -1,8 +1,11 @@
 import json
+import sqlite3
+import sys
 
 import pytest
 
-from refs import moves, resources
+from refs import cli, moves, resources
+from refs.catalog import connect
 from refs.config import select
 from refs.results import RefError, emit
 
@@ -59,6 +62,78 @@ def test_partial_and_resumed_report(initialized,tmp_path,reference_path,monkeypa
     monkeypatch.setattr(moves,'checkpoint',lambda *args:None)
     result=moves.reorg(settings,execute=True)
     assert result['moves'][0]['operation_id']==entry['operation_id'] and not path.exists()
+
+
+@pytest.mark.parametrize('failure',[OSError,sqlite3.OperationalError,KeyboardInterrupt])
+def test_reorg_reports_completed_pairs_when_third_move_fails(initialized,tmp_path,reference_path,monkeypatch,capsys,failure):
+    settings,path,extra=prepare(initialized,tmp_path,reference_path)
+    with connect(settings.catalog_path()) as c:
+        source_id=c.execute('SELECT id FROM sources').fetchone()[0]
+    for index in range(4):
+        original=path.parent/f'file-{index}.pdf'
+        original.write_bytes(f'synthetic {index}'.encode())
+        resources.link(settings,source_id,path=original)
+    create=moves.create
+    calls=0
+    def fail_third(*args):
+        nonlocal calls
+        calls+=1
+        if calls==3:
+            raise failure('synthetic third move failure')
+        return create(*args)
+    monkeypatch.setattr(moves,'create',fail_third)
+    with pytest.raises(KeyboardInterrupt if failure is KeyboardInterrupt else RefError) as caught:
+        moves.reorg(settings,execute=True)
+    error=caught.value
+    if failure is not KeyboardInterrupt:
+        assert error.exit_code==4
+    assert len(error.data['moves'])==3
+    assert [row['state'] for row in error.data['moves']]==['removed','removed','failed']
+    assert all(row['old_path'] and row['new_path'] for row in error.data['moves'])
+    assert 'synthetic third move failure' in error.data['moves'][2]['error']
+    if failure is not KeyboardInterrupt:
+        emit('reorg',error=error,json_output=True)
+        envelope=json.loads(capsys.readouterr().out)
+        assert envelope['status']=='partial'
+        assert envelope['data']['moves']==error.data['moves']
+    with connect(settings.catalog_path()) as c:
+        assert c.execute('SELECT count(*) FROM file_operations').fetchone()[0]==2
+    assert sum(not (path.parent/name).exists() for name in ['file.pdf',*[f'file-{i}.pdf' for i in range(4)]])==2
+
+
+def test_interrupted_reorg_cli_emits_partial_report_and_exits_130(initialized,tmp_path,reference_path,monkeypatch,capsys):
+    settings,path,extra=prepare(initialized,tmp_path,reference_path)
+    with connect(settings.catalog_path()) as c:
+        source_id=c.execute('SELECT id FROM sources').fetchone()[0]
+    for index in range(4):
+        original=path.parent/f'file-{index}.pdf'
+        original.write_bytes(f'synthetic {index}'.encode())
+        resources.link(settings,source_id,path=original)
+    create=moves.create
+    calls=0
+    def interrupt_third(*args):
+        nonlocal calls
+        calls+=1
+        if calls==3:
+            raise KeyboardInterrupt('synthetic third move interruption')
+        return create(*args)
+    monkeypatch.setattr(moves,'create',interrupt_third)
+    monkeypatch.setattr(sys,'argv',['refs','--json','--no-project-config','--config',str(settings.config),
+                                   '--catalog',str(settings.catalog_path()),'reorg','--execute'])
+    with pytest.raises(SystemExit) as caught:
+        cli.main()
+    assert caught.value.code==130
+    envelope=json.loads(capsys.readouterr().out)
+    assert envelope['command']=='reorg' and envelope['status']=='partial'
+    assert [row['state'] for row in envelope['data']['moves']]==['removed','removed','failed']
+    assert all(row['old_path'] and row['new_path'] for row in envelope['data']['moves'])
+    assert 'synthetic third move interruption' in envelope['data']['moves'][2]['error']
+    assert envelope['data']['unlinked_paths']==[str(extra)]
+    assert moves.interrupted_report.get() is None
+    moves.interrupted_report.set({'moves':[{'error':'stale report'}]})
+    monkeypatch.setattr(cli,'app',lambda **kwargs:130)
+    cli.main()
+    assert capsys.readouterr().out=='' and moves.interrupted_report.get() is None
 
 
 def test_intake_preview_and_result_use_move_shape(initialized,tmp_path,reference_path):

@@ -101,3 +101,29 @@ def test_reorg_collision_suffixes_and_casefold_placement(initialized,tmp_path,re
     assert moves.reorg(settings)['moves']==[]
     with connect(settings.catalog_path()) as c:
         assert c.execute('SELECT count(*) FROM file_operations').fetchone()[0]==3
+
+
+@pytest.mark.parametrize('hardlink',[False,True])
+def test_reorg_reports_shared_original_without_moving_it(initialized,tmp_path,reference_path,hardlink):
+    settings,first=setup(initialized,tmp_path,reference_path)
+    original=tmp_path/'shared.pdf'
+    original.write_bytes(b'synthetic shared file')
+    first_resource=resources.link(settings,first['id'],path=original)
+    second_record=tmp_path/'second.json'
+    second_record.write_text(json.dumps({'schema_version':'1.0','citation_key':'second','loc':'Papers/Other','metadata':{'title':'Second'}}))
+    second=initialized('add','--format','refs','--input',second_record)['data']
+    alias=tmp_path/'alias.pdf'
+    if hardlink:
+        alias.hardlink_to(original)
+    second_resource=resources.link(settings,second['id'],path=alias if hardlink else original)
+    ids={first_resource['id'],second_resource['id']}
+    preview=moves.reorg(settings)['moves']
+    assert {row['resource_id'] for row in preview}==ids
+    assert all(row['state']=='shared' and all(id in row['error'] for id in ids) for row in preview)
+    executed=moves.reorg(settings,execute=True)['moves']
+    assert {row['resource_id'] for row in executed}==ids
+    assert all(row['state']=='shared' for row in executed)
+    with connect(settings.catalog_path()) as c:
+        assert c.execute('SELECT count(*) FROM file_operations').fetchone()[0]==0
+    assert original.read_bytes()==b'synthetic shared file'
+    assert all(resources.resolve_path(settings,sources.show(settings.catalog_path(),source_id)['resources'][0]).exists() for source_id in (first['id'],second['id']))

@@ -3,7 +3,9 @@
 import json
 import os
 import shutil
+import sqlite3
 import unicodedata
+from contextvars import ContextVar
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -12,6 +14,8 @@ from refs import files, naming, resources, sources
 from refs import logging as action_log
 from refs.catalog import connect
 from refs.results import RefError
+
+interrupted_report: ContextVar[dict | None] = ContextVar('interrupted_move_report',default=None)
 
 
 def checkpoint(point, operation):
@@ -129,12 +133,54 @@ def record_destination(settings,row):
     row['state']='recorded'
 
 
+def replan_stale(settings, row):
+    """Restart a pre-recorded move after catalog edits, retaining its operation ID."""
+    if (row['last_state'] if row['state']=='failed' else row['state']) not in ('staged','published'):
+        return
+    with connect(settings.catalog_path()) as c:
+        item=next((item for item in resources.inventory(c) if item['id']==row['resource_id']),None)
+        if item is None:
+            return
+        source=sources.record(c,item['source_id'])
+    if (item['revision'],source['revision'],source.get('loc')) == (row['resource_revision'],row['source_revision'],row['loc']):
+        return
+    if source['state']!='active' or not source.get('loc'):
+        raise RefError('stale_revision','Source is not active and placed; inspect the move')
+    original=resources.resolve_path(settings,item)
+    if not original.is_file() or original.is_symlink():
+        raise RefError('unsafe_move_source','Current resource is not a regular file')
+    stage,target=Path(row['staging_path']),Path(row['new_path'])
+    saved=json.loads(row['staging_identity'])
+    for path in (target,stage):
+        if path.exists() or path.is_symlink():
+            if not path.is_file() or path.is_symlink() or identity(path)[:2]!=saved[:2]:
+                raise RefError('move_conflict','Move copy changed; inspect the unfinished operation')
+    # Unlink the destination first: it may share the staging inode.
+    if target.exists():
+        target.unlink()
+    if stage.exists():
+        stage.unlink()
+    new_target=settings.library/source['loc']/row['new_name']
+    safe_path(new_target,settings.library)
+    if new_target.exists() or new_target.is_symlink():
+        raise RefError('destination_exists','Inspect the occupied destination; moves never overwrite')
+    new_stage=stage.with_name('move-'+str(uuid4()))
+    new_stage.touch(exist_ok=False)
+    save(settings,row,state='staged',last_state=None,error=None,old_path=str(original),
+         new_path=str(new_target),old_name=original.name,staging_path=str(new_stage),
+         original_identity=json.dumps(identity(original)),staging_identity=json.dumps(identity(new_stage)),
+         destination_identity=None,digest=None,source_revision=source['revision'],
+         resource_revision=item['revision'],loc=source['loc'])
+
+
 def resume(settings,row):
     original,target,stage=(Path(row[key]) for key in ('old_path','new_path','staging_path'))
-    if row['state']=='failed':
-        save(settings,row,state=row['last_state'],error=None)
     publication_verified = False
     try:
+        replan_stale(settings,row)
+        if row['state']=='failed':
+            save(settings,row,state=row['last_state'],error=None)
+        original,target,stage=(Path(row[key]) for key in ('old_path','new_path','staging_path'))
         if row['state']=='staged':
             if target.exists() or target.is_symlink():
                 if not row['digest'] or not verified(target,row['staging_identity'],row['digest']):
@@ -192,7 +238,7 @@ def resume(settings,row):
             save(settings,row,state='removed',error=None)
             checkpoint('removed',row)
         return row
-    except (OSError,RefError) as exc:
+    except (OSError,sqlite3.Error,RefError) as exc:
         if isinstance(exc,RefError) and exc.issue['code'] == 'log_unwritable':
             raise
         save(settings,row,last_state='recorded' if row['state']=='unlinked' else row['state'],state='failed',error=str(exc))
@@ -232,7 +278,13 @@ def intake(settings, reference, path: Path, *, keep_name=False, dry_run=False, l
     path=path.expanduser().absolute()
     with connect(settings.catalog_path()) as c:
         old=c.execute('SELECT o.* FROM file_operations o JOIN resources r ON r.id=o.resource_id WHERE r.source_id=? AND o.old_path=? ORDER BY o.created_at DESC LIMIT 1',(source['id'],str(path))).fetchone()
-    if old and (old['state']!='removed' or not path.exists()):
+    if old and old['state']=='removed' and not path.exists():
+        current=sources.show(settings.catalog_path(),source['id'])
+        item=next(item for item in current['resources'] if item['id']==old['resource_id'])
+        destination=resources.resolve_path(settings,item)
+        return item | dict(citation_key=current['citation_key'],moved=True,destination=str(destination),
+                           moves=[],unlinked_paths=[],warnings=[],**({'dry_run':True} if dry_run else {}))
+    if old and old['state']!='removed':
         resource_id,target=old['resource_id'],Path(old['new_path'])
         plan=dict(path=str(path),destination=str(target),copied_from={'path':str(path)},warnings=[])
     else:
@@ -273,18 +325,35 @@ def selection(settings, reference=None, loc=None):
     pending=[row for row in unfinished if selected(records.get(by_resource.get(row['resource_id'],{}).get('source_id'),{}),row['loc'])]
     reserved={row['new_path'].casefold() for row in unfinished}
     busy={row['resource_id'] for row in unfinished}
+    paths={item['id']:resources.resolve_path(settings,item) for item in items}
+    by_path={}
+    by_file={}
+    for resource_id,path in paths.items():
+        by_path.setdefault(str(path.resolve()),set()).add(resource_id)
+        try:
+            stat=path.stat()
+        except FileNotFoundError:
+            continue
+        by_file.setdefault((stat.st_dev,stat.st_ino),set()).add(resource_id)
     planned=[]
     for item in sorted(items,key=lambda item:(item['root']!='library',item['id'])):
         source=records[item['source_id']]
         if item['id'] in busy or source['state']!='active' or not source['loc'] or not selected(source):
             continue
-        path=resources.resolve_path(settings,item)
+        path=paths[item['id']]
         if item['root']=='library' and unicodedata.normalize('NFC',str(path.parent.relative_to(settings.library))).casefold()==source['loc'].casefold():
             continue
         if settings.library is None or not settings.library.is_dir():
             raise RefError('library_unavailable','Restore the library before reorganizing')
         target=preserved_target(settings.library/source['loc'],path.name,reserved)
-        planned.append(preview_move(item['id'],path,target))
+        entry=preview_move(item['id'],path,target)
+        shared=set(by_path[str(path.resolve())])
+        if path.exists():
+            stat=path.stat()
+            shared.update(by_file[(stat.st_dev,stat.st_ino)])
+        if len(shared)>1:
+            entry.update(state='shared',error='Shared by resources '+', '.join(sorted(shared)))
+        planned.append(entry)
     return pending,planned
 
 
@@ -296,19 +365,33 @@ def reorg(settings, *, reference=None, loc=None, execute=False):
         return result
     result['moves']=[]
     current=None
+    failure=None
     try:
         for row in pending:
             current=report(row)
             with files.file_lock(settings.catalog_path()):
                 result['moves'].append(report(resume(settings,row)))
+            current=None
         # Finishing a recorded move can expose a later loc edit as a new mismatch.
         _,planned=selection(settings,reference,loc)
         for item in planned:
             current=item
-            result['moves'].append(move(settings,item['resource_id'],Path(item['new_path'])))
-    except RefError as exc:
-        result['moves'].extend((exc.data or {}).get('moves',[]) or ([current | dict(state='failed',error=str(exc))] if current else []))
-        raise RefError(exc.issue['code'],str(exc),exc.exit_code,data=result,details=exc.issue['details']) from exc
+            result['moves'].append(item if item['state']=='shared' else move(settings,item['resource_id'],Path(item['new_path'])))
+            current=None
+    except (RefError,OSError,sqlite3.Error,KeyboardInterrupt) as exc:
+        failure=exc
+    finally:
+        if failure is not None:
+            partial=(failure.data or {}).get('moves',[]) if isinstance(failure,RefError) else []
+            result['moves'].extend(partial or ([current | dict(state='failed',error=str(failure))] if current else []))
+    if isinstance(failure,RefError):
+        raise RefError(failure.issue['code'],str(failure),failure.exit_code,data=result,details=failure.issue['details']) from failure
+    if isinstance(failure,KeyboardInterrupt):
+        setattr(failure,'data',result)
+        interrupted_report.set(result)
+        raise failure
+    if failure is not None:
+        raise RefError('move_incomplete',str(failure),4,data=result,details={'cause':str(failure)}) from failure
     return result
 
 

@@ -1,5 +1,6 @@
 """Synthetic disposable files exercise each persisted move state and crash window."""
 
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -131,6 +132,57 @@ def test_stale_before_record_retains_original(initialized,tmp_path,reference_pat
     assert error.value.issue['code'] == 'move_incomplete'
     assert original.exists() and target.exists()
     assert resources.resolve_path(settings,sources.show(settings.catalog_path(),source['id'])['resources'][0])==original
+
+
+def test_stale_pre_record_retry_replans_one_operation(initialized,tmp_path,reference_path,monkeypatch):
+    settings, source, resource, original, target=prepare(initialized,tmp_path,reference_path)
+    def fail(at,row):
+        if at=='published':
+            raise OSError('synthetic stop before record')
+    monkeypatch.setattr(moves,'checkpoint',fail)
+    with pytest.raises(RefError):
+        moves.move(settings,resource['id'],target)
+    with connect(settings.catalog_path()) as c:
+        before=dict(c.execute('SELECT * FROM file_operations').fetchone())
+    current=sources.show(settings.catalog_path(),source['id'])
+    sources.update(settings.catalog_path(),source['id'],{'schema_version':'1.0','set':{'metadata.publisher':'Changed'}},current['revision'])
+    monkeypatch.setattr(moves,'checkpoint',lambda *args:None)
+    result=moves.move(settings,resource['id'],target)
+    with connect(settings.catalog_path()) as c:
+        rows=[dict(row) for row in c.execute('SELECT * FROM file_operations')]
+    assert result['state']=='removed' and len(rows)==1 and rows[0]['id']==before['id']
+    assert rows[0]['source_revision']>before['source_revision']
+    assert not original.exists() and target.read_bytes()==b'synthetic completed download'
+
+
+def test_sqlite_failure_marks_move_failed_for_resume(initialized,tmp_path,reference_path,monkeypatch):
+    settings, source, resource, original, target=prepare(initialized,tmp_path,reference_path)
+    record=moves.record_destination
+    monkeypatch.setattr(moves,'record_destination',lambda *args: (_ for _ in ()).throw(sqlite3.OperationalError('synthetic database failure')))
+    with pytest.raises(RefError) as caught:
+        moves.move(settings,resource['id'],target)
+    assert caught.value.issue['code']=='move_incomplete' and caught.value.exit_code==4
+    with connect(settings.catalog_path()) as c:
+        row=c.execute('SELECT state,last_state FROM file_operations').fetchone()
+        assert tuple(row)==('failed','published')
+    assert original.exists()
+    monkeypatch.setattr(moves,'record_destination',record)
+    assert moves.move(settings,resource['id'],target)['state']=='removed'
+    assert not original.exists()
+
+
+def test_unlink_refuses_resource_with_unfinished_move(initialized,tmp_path,reference_path,monkeypatch):
+    settings, source, resource, original, target=prepare(initialized,tmp_path,reference_path)
+    monkeypatch.setattr(moves,'checkpoint',lambda at,row: (_ for _ in ()).throw(KeyboardInterrupt) if at=='staged' else None)
+    with pytest.raises(KeyboardInterrupt):
+        moves.move(settings,resource['id'],target)
+    with connect(settings.catalog_path()) as c:
+        operation=c.execute('SELECT id FROM file_operations').fetchone()[0]
+    with pytest.raises(RefError) as caught:
+        resources.unlink(settings,resource['id'],execute=True)
+    assert caught.value.issue['details']['operation_id']==operation
+    assert operation in str(caught.value) and original.exists()
+    assert sources.show(settings.catalog_path(),source['id'])['resources'][0]['id']==resource['id']
 
 
 @pytest.mark.parametrize('kind',['directory','symlink','escape'])

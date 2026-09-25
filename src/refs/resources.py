@@ -168,6 +168,9 @@ def unlink(settings: Settings, resource_id: str, *, execute=False) -> dict:
             return dict(id=resource_id, unchanged=True, dry_run=not execute)
         source = connection.execute('SELECT citation_key,revision FROM sources WHERE id=?',(item['source_id'],)).fetchone()
         key = source['citation_key']
+        operation = connection.execute("SELECT id FROM file_operations WHERE resource_id=? AND state!='removed' ORDER BY created_at LIMIT 1",(resource_id,)).fetchone()
+        if operation:
+            raise RefError('move_incomplete',f"Finish move operation {operation['id']} before unlinking this resource",4,details={'operation_id':operation['id']})
         if execute:
             action_log.log_mutation('resource.unlink', {'id':resource_id,'source_id':item['source_id'],'citation_key':key},
                                     item, None, source_revision_before=source['revision'], source_revision_after=source['revision']+1)
