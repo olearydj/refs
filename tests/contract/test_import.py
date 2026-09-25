@@ -30,6 +30,17 @@ def test_empty_key_fixture_names_entry_position_and_preserves_bytes(initialized,
         assert raw in [bytes(row[0]) for row in connection.execute('SELECT raw_bytes FROM originals')]
 
 
+def test_malformed_entry_diagnostic_stays_in_json_envelope(initialized, tmp_path, cli):
+    fixture = Path(__file__).parents[1] / 'fixtures/real-trial/minimized/missing-key-comma.bib'
+    result = cli('import', '--format', 'bib', '--input', fixture, '--origin', 'synthetic', expected=4)
+    assert result['data']['counts'] == dict(applied=0, unchanged=0, conflict=0, invalid=1)
+    assert result['data']['entries'][0]['code'] == 'invalid_bib_entry'
+    assert result['data']['entries'][0]['preserved'] is True
+    assert result['errors'][0]['code'] == 'import_partial'
+    with connect(tmp_path / 'cat') as connection:
+        assert connection.execute('SELECT count(*) FROM sources').fetchone()[0] == 0
+
+
 @pytest.mark.parametrize('raw', [
     b'@article{x,title={First},title={Second}}',
     b'@article{x,title={First},TITLE={Second}}',

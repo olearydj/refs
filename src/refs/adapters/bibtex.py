@@ -1,5 +1,6 @@
 """Guarded library parsing with independent byte framing and scoped mappings."""
 
+import logging
 import re
 from urllib.parse import urlparse
 
@@ -10,6 +11,11 @@ from pylatexenc.latex2text import LatexNodes2Text
 
 from refs.models import REGISTRY, SourceCreate
 from refs.results import RefError
+
+# The parser reports malformed blocks through logging before returning failed_blocks.
+# Refs turns those blocks into its own per-entry result instead of leaking a warning
+# outside the JSON envelope through logging's last-resort stderr handler.
+logging.getLogger('bibtexparser.splitter').addHandler(logging.NullHandler())
 
 MONTHS = dict(zip('jan feb mar apr may jun jul aug sep oct nov dec'.split(), range(1, 13), strict=True))
 FULL_MONTHS = dict(zip('january february march april may june july august september october november december'.split(), range(1, 13), strict=True))
