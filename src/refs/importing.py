@@ -344,6 +344,8 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
         conflicts = [item['path'] for item in binding.get('conflicts', [])]
         if source_id:
             result = dict(status='conflict' if conflicts else 'applied' if binding.get('filled') else 'unchanged', source_id=source_id, conflicts=conflicts)
+            if conflicts:
+                result['code'] = 'value_conflict'
         else:
             provenance = sources.allocate_key(connection, source, settings.values if settings else None)
             if not dry_run:
