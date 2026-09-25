@@ -388,6 +388,26 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
 
 
 
+def container_case_notices(entry: dict, record: dict, decode) -> list[dict]:
+    notices = []
+    for name, raw in entry['containers']:
+        canonical = {'journal':'container-title', 'journaltitle':'container-title', 'booktitle':'container-title'}.get(name)
+        if canonical:
+            try:
+                before = decode(raw)
+            except ValueError:
+                continue
+            if before != record['metadata'].get(canonical) and before.casefold() == record['metadata'].get(canonical, '').casefold():
+                notices.append(dict(code='container_title_case', path='metadata.'+canonical, message='Container title follows the catalog Title Case convention; verify proper-name capitalization'))
+    return notices
+
+
+def title_protection_notices(entry: dict, record: dict) -> list[dict]:
+    terms = record.get('title_protection', {}).get('title', {}).get('protected_terms', [])
+    return [dict(code='title_protection_added', path='metadata.title', message='The programming-language name R is protected from citation-style lowercasing')
+            for raw in entry['titles'] if 'R' in terms and '{R}' not in raw]
+
+
 def preserved_bib_fields(connection, record: dict) -> dict:
     """Only unmodeled howpublished comes from original bytes, never modeled facts."""
     from refs.adapters.bibtex import decode, original_facts
@@ -400,19 +420,8 @@ def preserved_bib_fields(connection, record: dict) -> dict:
             for item in entry['tex_notices']:
                 if item not in notices:
                     notices.append(item)
-            for name, raw in entry['containers']:
-                canonical = {'journal':'container-title', 'journaltitle':'container-title', 'booktitle':'container-title'}.get(name)
-                if canonical:
-                    try:
-                        before = decode(raw)
-                    except ValueError:
-                        continue
-                    if before != record['metadata'].get(canonical) and before.casefold() == record['metadata'].get(canonical, '').casefold():
-                        notices.append(dict(code='container_title_case', path='metadata.'+canonical, message='Container title follows the catalog Title Case convention; verify proper-name capitalization'))
-            terms = record.get('title_protection', {}).get('title', {}).get('protected_terms', [])
-            for raw in entry['titles']:
-                if 'R' in terms and '{R}' not in raw:
-                    notices.append(dict(code='title_protection_added', path='metadata.title', message='The programming-language name R is protected from citation-style lowercasing'))
+            notices.extend(container_case_notices(entry, record, decode))
+            notices.extend(title_protection_notices(entry, record))
     if len(values) > 1:
         raise RefError('export_blocked', 'Original howpublished values disagree; inspect the preserved entries', details={'entries':[dict(citation_key=record['citation_key'], code='work_identity_changed', message='Conflicting original howpublished values', **{'class':'blocking'})]})
     return {'_projection_notices': list({(notice['code'], notice['path']): notice for notice in notices}.values())} | ({'_howpublished': next(iter(values))} if values else {})
