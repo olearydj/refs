@@ -48,8 +48,10 @@ def test_uppercase_fields_and_accents_do_not_create_protection():
 def test_date_aliases_compare_overlapping_precision():
     source = parse(b'@book{x,title={Test},year={2024},month=jan,date={2024}}')['source']
     assert source.metadata.issued.date_parts == [[2024,1]]
-    with pytest.raises(RefError):
+    with pytest.raises(RefError) as error:
         parse(b'@book{x,title={Test},month=feb,date={2024-01}}')
+    assert error.value.issue['code'] == 'invalid_bib_entry'
+    assert error.value.issue['message'] == 'Date and month disagree'
 
 
 def test_full_english_month_fixture_and_equivalent_spellings():
