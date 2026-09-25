@@ -1,7 +1,7 @@
 """Admission and mapping of the published Zotero JSON directory."""
 
-import json
 import html
+import json
 import re
 from pathlib import Path
 

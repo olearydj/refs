@@ -290,6 +290,8 @@ def intake(settings, reference, path: Path, *, keep_name=False, dry_run=False, l
     else:
         admit(settings,path)
         plan=resources.plan_copy(settings,source,path,keep_name=keep_name,label=label)
+        if plan.get('duplicate_resource_id'):
+            return plan | dict(dry_run=dry_run,moved=False,moves=[],unlinked_paths=[])
         target=Path(plan['destination'])
         resource_id=None
     if dry_run:

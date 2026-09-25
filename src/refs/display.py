@@ -2,6 +2,7 @@
 
 from refs.models import person_name
 
+
 def authors(record: dict) -> list[str]:
     return [name.get('literal') or person_name(name, strip=True)
             for name in record['metadata'].get('author', [])]

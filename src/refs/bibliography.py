@@ -11,7 +11,14 @@ from pydantic import ValidationError
 
 from refs import files, languages, models, projects, sources
 from refs.catalog import changed, connect
-from refs.models import IDENTIFIER_FIELDS, MONTHS, doi_arxiv, normalize_arxiv, normalize_doi, person_name
+from refs.models import (
+    IDENTIFIER_FIELDS,
+    MONTHS,
+    doi_arxiv,
+    normalize_arxiv,
+    normalize_doi,
+    person_name,
+)
 from refs.results import RefError, notice
 
 PROFILE = "portable-bibtex-v1"
@@ -92,8 +99,8 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             if kind in ('webpage', 'post-weblog'):
                 message += '; Pandoc may change title quotation marks and emphasis for this portable type'
             assess('type_fallback', 'documented_fallback', message, 'metadata.type')
-        for notice in record.get('_projection_notices', []):
-            assess(notice['code'], 'info' if notice['code'] == 'title_protection_added' else 'documented_fallback', notice['message'], notice['path'])
+        for item in record.get('_projection_notices', []):
+            assess(item['code'], 'info' if item['code'] == 'title_protection_added' else 'documented_fallback', item['message'], item['path'])
         for limitation in record.get('limitations', []):
             if limitation['field']=='language' or limitation['reason'].startswith('Preserved from import:'):
                 continue
@@ -345,9 +352,9 @@ def preserved_bib_fields(connection, record: dict) -> dict:
             if entry['type'] != record.get('native_type', {}).get('value'):
                 continue
             values.update(entry['howpublished'])
-            for notice in entry['tex_notices']:
-                if notice not in notices:
-                    notices.append(notice)
+            for item in entry['tex_notices']:
+                if item not in notices:
+                    notices.append(item)
             for name, raw in entry['containers']:
                 canonical = {'journal':'container-title', 'journaltitle':'container-title', 'booktitle':'container-title'}.get(name)
                 if canonical:

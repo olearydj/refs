@@ -16,7 +16,7 @@ Use pathlib for ordinary paths and narrowly scoped filesystem calls for exclusiv
 
 The catalog and library folders on Casa share a volume; Downloads is on another volume. Create temporary copies under cat/staging, outside any synced folder. If staging and the library no longer share a volume, report staging_volume_mismatch. A catalog lock coordinates file effects, export and backup, with a five-second wait limit. SQLite writes use short BEGIN IMMEDIATE transactions.
 
-Before copying, validate the source record, destination, filename and permissions. Then:
+Before copying, validate the source record, destination, filename and permissions. Check for bytes already attached to the source before refusing an occupied destination: identical content is a duplicate no-op naming its existing resource, and different content is a collision. Then:
 
 1. Copy the source to an exclusively created temporary file under cat/staging.
 2. Compare independently computed source and temporary-file hashes. Check source identity, size and modification time around the copy and hash reads; if it changed or the hashes differ, fail without publishing.
@@ -25,7 +25,7 @@ Before copying, validate the source record, destination, filename and permission
 
 Publication is atomic, but the whole sequence is not. A crash before publication can leave a temporary file. A crash after publication but before registration can leave a finished copy without a catalog link. Report its path when possible and never delete that published copy automatically. After inspection, resource add can register the existing destination. Retrying the copy encounters a collision instead of silently adopting the file. A repeated link to the same registered source and path is a no-op.
 
-Adding a reference with a file first saves metadata and an original-path link. Once verified, register the managed destination on that resource, preserving its ID and exposing the old locator as `copied_from`. Open then uses the managed copy. On failure, retain the original locator and return a partial result; retry resource add --copy. A stale source revision leaves the published destination unregistered and reported. Clean up only this invocation's identified temporary file; never delete the original.
+Adding a reference with a file first saves metadata and an original-path link. Once verified, register the managed destination on that resource, preserving its ID and exposing the old locator as `copied_from`. Open then uses the managed copy. On failure, retain the original locator and return a partial result; retry resource add --copy, which excludes that original-path resource from duplicate detection. An attachment whose bytes already belong to another resource of the same source is reported as a duplicate on every copy or move intake route; it is not copied or moved. A stale source revision leaves the published destination unregistered and reported. Clean up only this invocation's identified temporary file; never delete the original.
 
 Copies retain originals and promise content verification, not native metadata preservation or power-loss durability. SQLite transaction durability remains configured. Transfers require a completed source with no concurrent external writer.
 

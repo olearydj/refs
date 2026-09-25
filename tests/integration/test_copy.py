@@ -102,18 +102,21 @@ def test_link_flag_keep_name_and_failed_add(initialized,tmp_path,reference_path)
     assert linked['resources'][0]['path'] == str(path)
     assert not (tmp_path/'lib'/'unfiled').exists()
     copied=initialized('resource','add',linked['id'],'--path',path,'--copy','--keep-name')['data']
-    assert copied['copied'] is False
-    assert copied['duplicate_resource_id'] == linked['resources'][0]['id']
+    assert copied['copied'] is True
+    assert copied['id'] == linked['resources'][0]['id']
     assert len(initialized('show',linked['id'])['data']['resources']) == 1
     other=tmp_path/'other.pdf'
     other.write_bytes(b'other')
     failed=initialized('add','--format','refs','--input',reference_path,'--file',other,'--copy','--keep-name')['data']
     assert len(failed['resources']) == 2
     assert path.exists() and other.exists()
+    duplicate=initialized('add','--format','refs','--input',reference_path,'--file',other,'--copy','--keep-name')
+    assert duplicate['data']['file_action']['duplicate_resource_id']==next(item['id'] for item in failed['resources'] if item.get('copied_from',{}).get('path')==str(other))
+    other.write_bytes(b'other revised')
     result=initialized('add','--format','refs','--input',reference_path,'--file',other,'--copy','--keep-name',expected=4)
     assert result['data']['id'] == linked['id']
     assert result['errors'][0]['code'] == 'file_action_incomplete'
-    assert other.read_bytes() == b'other'
+    assert other.read_bytes() == b'other revised'
 
 
 def test_preview_does_not_capture_or_stage(initialized,tmp_path,reference_path):

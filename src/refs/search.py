@@ -3,7 +3,8 @@
 from pathlib import Path
 
 from refs import collections, projects, sources
-from refs.adapters.search_sqlite import identifier as identifier, page
+from refs.adapters.search_sqlite import identifier as identifier
+from refs.adapters.search_sqlite import page
 from refs.catalog import connect
 from refs.models import normalize_loc
 from refs.results import RefError
