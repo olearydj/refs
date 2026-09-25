@@ -85,10 +85,13 @@ def backup(settings: Settings, output: Path, *, dry_run=False) -> dict:
     target=output.expanduser().absolute()
     if target.exists() or target.is_symlink():
         raise RefError('backup_exists','Choose a new, unused snapshot directory',path=str(target))
-    with connect(settings.catalog_path()):
-        pass
+    with connect(settings.catalog_path()) as connection:
+        catalog_meta = dict(connection.execute('SELECT catalog_id,revision FROM catalog_meta').fetchone())
     if dry_run:
         return dict(output=str(target),dry_run=True,external_contents_included=False)
+    from refs import logging as action_log
+    action_log.log_mutation('backup.write', {'path':str(target),'catalog_id':catalog_meta['catalog_id']}, None,
+                            {'catalog_revision':catalog_meta['revision']})
     with files.file_lock(settings.catalog_path()):
         configuration=settings.config.read_bytes()
         target.parent.mkdir(parents=True, exist_ok=True)

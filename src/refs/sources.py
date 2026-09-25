@@ -9,6 +9,7 @@ from uuid import uuid4
 from pydantic import ValidationError
 
 from refs import languages, naming
+from refs import logging as action_log
 from refs.adapters.search_sqlite import refresh
 from refs.catalog import changed, connect
 from refs.models import REGISTRY, SourceCreate, normalize_doi, parse
@@ -97,6 +98,8 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
             from refs.importing import bind_and_fill, preserve, save_add_conflict
             existing, binding = bind_and_fill(connection, source, raw, dry_run=dry_run, origin="add")
         except RefError as exc:
+            if exc.issue['code'] == 'log_unwritable':
+                raise
             exc.data = dict(outcome="needs_attention", id=None, citation_key=source.citation_key)
             raise
         if existing:
@@ -136,6 +139,9 @@ def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *,
     metadata = details.pop("metadata")
     details.pop("citation_key")
     loc = details.pop("loc", None)
+    action_log.log_mutation('source.create', {'id':source_id,'citation_key':source.citation_key}, None,
+                            {'revision':1}, changes={'record':{'old':None,'new':source.canonical()}},
+                            original={'sha256':fingerprint,'byte_length':len(raw),'format':format,'locator':locator})
     connection.execute(
         "INSERT INTO sources (id, citation_key, created_at, updated_at, metadata_json, details_json, key_provenance_json, loc) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         (source_id, source.citation_key, now, now, json.dumps(metadata), json.dumps(details),
@@ -162,6 +168,9 @@ def store_record(connection, current: dict, canonical: dict, corrections: list[s
     metadata = details.pop('metadata')
     details.pop('citation_key', None)
     loc = details.pop('loc', None)
+    old = {name:current[name] for name in SourceCreate.model_fields if name in current}
+    action_log.log_mutation('source.update', {'id':current['id'],'citation_key':current['citation_key']},
+                            {'revision':current['revision']}, {'revision':current['revision']+1}, changes=action_log.changes(old,canonical))
     connection.execute('UPDATE sources SET metadata_json=?, details_json=?, loc=?, corrected_fields_json=?, updated_at=?, revision=revision+1 WHERE id=? AND revision=?',
                        (json.dumps(metadata), json.dumps(details), loc, json.dumps(corrections), datetime.now(UTC).isoformat(), current['id'], current['revision']))
     refresh(connection, record(connection, current['id']))
@@ -275,6 +284,10 @@ def change_identity(catalog: Path, reference: str, revision: int | None, *, new_
             return current | dict(unchanged=True, warnings=warnings)
         if not execute:
             return current | {field: value, 'dry_run': True, 'warnings': warnings}
+        action_log.log_mutation('source.key_set' if new_key is not None else 'source.remove' if state == 'removed' else 'source.reactivate',
+                                {'id':current['id'],'citation_key':current['citation_key']},
+                                {'revision':current['revision']}, {'revision':current['revision']+1},
+                                changes={field:{'old':current[field],'new':value}})
         # Column names are internal constants, never user paths.
         connection.execute(f'UPDATE sources SET {field}=?, revision=revision+1, updated_at=? WHERE id=?', (value, datetime.now(UTC).isoformat(), current['id']))
         if new_key is not None:

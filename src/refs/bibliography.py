@@ -413,6 +413,7 @@ def finish_export(catalog: Path, target: Path, digest: str) -> None:
 
 
 def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROFILE, dry_run: bool = False, allow_unknown: bool = False, overwrite: bool = False, adopt: bool = False) -> dict:
+    from refs import logging as action_log
     if profile != PROFILE:
         raise RefError("unsupported_profile", "This milestone supports portable-bibtex-v1", 2)
     target = files.destination(output)
@@ -455,6 +456,8 @@ def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROF
                     checked, _, _ = target_state(connection, target, project['id'], overwrite=overwrite, adopt=adopt, candidate_digest=candidate_digest)
                     if checked != current:
                         raise RefError('outside_edit', 'File changed during adoption; import it again')
+                    action_log.log_mutation('export.adopt', {'path':str(target),'project_id':project['id']}, None,
+                                            {'baseline_digest':current,'catalog_revision':revision}, count=len(selected))
                     connection.execute('INSERT INTO export_targets VALUES (?,?,?,?,NULL) ON CONFLICT(destination) DO UPDATE SET project_id=excluded.project_id, profile_fingerprint=excluded.profile_fingerprint, baseline_digest=excluded.baseline_digest, pending_digest=NULL', (str(target), project['id'], PROFILE_FINGERPRINT, current))
                     changed(connection)
             return result | dict(unchanged=True, recovered=recoverable)
@@ -463,6 +466,8 @@ def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROF
                 checked, _, _ = target_state(connection, target, project["id"], overwrite=overwrite, adopt=adopt, candidate_digest=candidate_digest)
                 if checked != current:
                     raise RefError("outside_edit", "Destination changed while preparing export")
+                action_log.log_mutation('export.write', {'path':str(target),'project_id':project['id']},
+                                        {'digest':current}, {'digest':candidate_digest,'catalog_revision':revision}, count=len(selected))
                 if known and overwrite:
                     previous = connection.execute("SELECT baseline_digest, pending_digest FROM export_targets WHERE destination=?", (str(target),)).fetchone()
                     if current not in (previous['baseline_digest'], previous['pending_digest']):

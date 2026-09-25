@@ -18,9 +18,16 @@ from refs.results import RefError
 
 def preserve(connection, raw: bytes, locator: str, file_digest: str, *, source_id=None, format='bib', origin='import', definitions=None):
     fingerprint = hashlib.sha256(raw).hexdigest()
+    existing = connection.execute('SELECT id FROM originals WHERE sha256=? AND origin=? AND locator=?',(fingerprint,origin,locator)).fetchone()
+    if existing:
+        return existing[0]
+    original_id = str(uuid4())
+    from refs import logging as action_log
+    action_log.log_mutation('source.original', {'id':original_id,'source_id':source_id}, None,
+                            {'sha256':fingerprint,'byte_length':len(raw),'format':format,'origin':origin,'locator':locator})
     connection.execute('INSERT OR IGNORE INTO originals (id,source_id,raw_bytes,sha256,byte_length,format,origin,file_digest,locator,definitions_json) VALUES (?,?,?,?,?,?,?,?,?,?)',
-                       (str(uuid4()), source_id, raw, fingerprint, len(raw), format, origin, file_digest, locator, json.dumps(definitions or {})))
-    return connection.execute('SELECT id FROM originals WHERE sha256=? AND origin=? AND locator=?',(fingerprint,origin,locator)).fetchone()[0]
+                       (original_id, source_id, raw, fingerprint, len(raw), format, origin, file_digest, locator, json.dumps(definitions or {})))
+    return original_id
 
 
 def differences(incoming: dict, current: dict, prefix='') -> list[str]:
@@ -210,6 +217,8 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
             outcome['warnings'].extend(resource_warnings)
             outcome['resource_proposals'] = []
     except (RefError, ValidationError) as exc:
+        if isinstance(exc,RefError) and exc.issue['code'] == 'log_unwritable':
+            raise
         if isinstance(exc, ValidationError):
             message = f'Entry at byte {block["start"]}: citation key is empty' if re.match(rb'@\w+\s*[{(]\s*,', raw) else 'Entry cannot satisfy the record profile; inspect its preserved original'
             exc = RefError('invalid_bib_entry', message, 2)
@@ -226,6 +235,9 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
 
 
 def start_batch(connection, batch: str, origin: str, fingerprint: str) -> None:
+    from refs import logging as action_log
+    action_log.log_mutation('import.batch_open', {'batch_id':batch}, None,
+                            {'origin':origin,'file_digest':fingerprint,'counts':{'applied':0,'unchanged':0,'conflict':0,'invalid':0}})
     connection.execute('INSERT INTO imports (id,origin,file_digest,started_at) VALUES (?,?,?,?)', (batch, origin, fingerprint, datetime.now(UTC).isoformat()))
 
 
@@ -279,6 +291,9 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
             entries.append(result)
     if not dry_run:
         with connect(catalog, write=True) as connection:
+            from refs import logging as action_log
+            action_log.log_mutation('import.batch_close', {'batch_id':run_id},
+                                    {'finished':False}, {'finished':True,'counts':counts})
             connection.execute('UPDATE imports SET finished_at=? WHERE id=?', (datetime.now(UTC).isoformat(), run_id))
     return dict(import_id=None if dry_run else run_id, input=locator, file_digest=fingerprint, counts=counts, entries=entries, dry_run=dry_run, warnings=[])
 
@@ -301,6 +316,11 @@ def add(catalog: Path, raw: bytes, locator: str, *, dry_run=False, settings=None
 def save_entry(connection, batch: str, locator: str, result: dict) -> None:
     source_id = result.get('source_id')
     revision = connection.execute('SELECT revision FROM sources WHERE id=?',(source_id,)).fetchone()[0] if source_id else None
+    if result['status'] == 'applied':
+        from refs import logging as action_log
+        action_log.log_mutation('import.entry', {'batch_id':batch,'source_id':source_id,'citation_key':result.get('citation_key')},
+                                {'revision':revision-1} if revision and revision > 1 else None,
+                                {'revision':revision,'status':'applied','locator':locator})
     candidates = result.get('details', {}).get('source_ids', [source_id] if source_id else [])
     connection.execute('INSERT INTO import_entries (id,import_id,locator,status,candidates_json,conflicts_json,source_id,source_revision,payload_json) VALUES (?,?,?,?,?,?,?,?,?)',
                        (str(uuid4()), batch, locator, result['status'], json.dumps(candidates), json.dumps(result.get('conflicts', [])), source_id, revision, json.dumps(result)))
@@ -335,6 +355,8 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
             result = dict(status='applied', source_id=source_id)
         result.update(binding=binding, citation_key=source.citation_key, warnings=warnings, limitations=parsed['limitations'])
     except (RefError,ValueError,TypeError,KeyError,AttributeError) as exc:
+        if isinstance(exc,RefError) and exc.issue['code'] == 'log_unwritable':
+            raise
         if not isinstance(exc,RefError):
             exc = RefError('invalid_zotero_item','Malformed item fields; inspect the preserved original JSON',2)
         result = dict(status='conflict' if exc.issue['code'] in ('identity_conflict', 'source_removed', 'alias_conflict') else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'])
@@ -390,6 +412,9 @@ def run_zotero(catalog: Path, directory: Path, *, dry_run=False, origin=None, se
             entries.append(result)
     if not dry_run:
         with connect(catalog, write=True) as connection:
+            from refs import logging as action_log
+            action_log.log_mutation('import.batch_close', {'batch_id':batch},
+                                    {'finished':False}, {'finished':True,'counts':counts})
             connection.execute('UPDATE imports SET finished_at=? WHERE id=?', (datetime.now(UTC).isoformat(), batch))
             for relation in connection.execute('SELECT source_id,target_uri FROM source_relations WHERE target_id IS NULL').fetchall():
                 uri, _, key = relation['target_uri'].rpartition('/items/')
@@ -464,6 +489,8 @@ def associate(connection, bundle: dict, entry: dict, source_id: str, collections
             if resource['status'] == 'missing':
                 warnings.append(dict(code='attachment_missing',message='Original attachment file is missing; restore it at the recorded path',path=child['locator'],details=resource,retryable=False))
         except RefError as exc:
+            if exc.issue['code'] == 'log_unwritable':
+                raise
             warnings.append(exc.issue)
     return resources, warnings
 
@@ -564,6 +591,11 @@ def reconcile(catalog: Path, batch: str, selectors: list[str], *, keep_current=N
             remaining = [item for item in entry.get('binding',{}).get('conflicts',[]) if item['path'] not in selected[entry['entry_id']] and value_at(canonical,item['path']) != item['incoming']]
             proposals.append(dict(citation_key=entry['citation_key'],source_id=current['id'],source_revision=current['revision'],decisions=decisions,remaining_conflicts=remaining))
             if execute and (decisions or entry['status']=='conflict' and not remaining):
+                from refs import logging as action_log
+                action_log.log_mutation('import.reconcile', {'batch_id':batch,'entry_id':entry['entry_id'],'source_id':current['id'],'citation_key':current['citation_key']},
+                                        {'revision':current['revision'],'status':entry['status']},
+                                        {'revision':current['revision']+bool(any(item['action']=='take_incoming' for item in decisions)),'status':'conflict' if remaining else 'applied'},
+                                        changes={item['path']:{'old':item['current'],'new':item['incoming'] if item['action']=='take_incoming' else item['current']} for item in decisions})
                 taken = [item['path'] for item in decisions if item['action']=='take_incoming']
                 if taken:
                     sources.store_record(connection,current,canonical,list(dict.fromkeys(current['corrected_fields']+taken)))

@@ -19,6 +19,7 @@ from refs import (
     sources,
 )
 from refs import catalog as storage
+from refs import logging as action_log
 from refs.config import absolute, select
 from refs.results import RefError, emit, upgrade_notices
 
@@ -33,9 +34,10 @@ def configure(ctx: typer.Context,
               catalog: Annotated[str | None, typer.Option()] = None,
               project_file: Annotated[str | None, typer.Option()] = None,
               no_project_config: Annotated[bool, typer.Option()] = False,
+              verbose: Annotated[bool, typer.Option()] = False,
               json_output: Annotated[bool, typer.Option("--json")] = False):
     upgrade_notices.set([])
-    ctx.obj = dict(config=config, catalog=catalog, json_output=json_output, project_file=project_file, no_project_config=no_project_config)
+    ctx.obj = dict(config=config, catalog=catalog, json_output=json_output, project_file=project_file, no_project_config=no_project_config, verbose=verbose)
 
 
 def report(ctx: typer.Context, command: str, data: dict, **text_context) -> None:
@@ -45,6 +47,8 @@ def report(ctx: typer.Context, command: str, data: dict, **text_context) -> None
 def settings(ctx: typer.Context):
     if "selected" not in ctx.obj:
         ctx.obj["selected"] = select(ctx.obj["config"], ctx.obj["catalog"],project_file=ctx.obj["project_file"],no_project_config=ctx.obj["no_project_config"])
+        if ctx.obj["selected"].catalog is not None and ctx.obj["selected"].catalog.is_dir():
+            action_log.setup(ctx.obj["selected"].catalog, verbose=ctx.obj["verbose"])
     return ctx.obj["selected"]
 
 
@@ -337,13 +341,34 @@ def config_show(ctx: typer.Context):
 
 def main() -> None:
     args = sys.argv[1:]
+    action_log.bind(" ".join(args))
+    def option(name):
+        return next((args[index + 1] for index, value in enumerate(args[:-1]) if value == name),
+                    next((value.split("=", 1)[1] for value in args if value.startswith(name + "=")), None))
+    catalog = None
+    try:
+        selected = select(option("--config"), option("--catalog"), project_file=option("--project-file"), no_project_config="--no-project-config" in args)
+        catalog = selected.catalog
+        if catalog is not None and catalog.is_dir():
+            action_log.setup(catalog, verbose="--verbose" in args)
+            action_log.event("command.open", argv=args)
+        elif catalog is not None:
+            def opening():
+                action_log.setup(catalog, verbose="--verbose" in args)
+                action_log.event("command.open", argv=args)
+            action_log.defer_open(opening)
+    except (RefError, OSError):
+        pass  # Let Typer report selection errors through the usual envelope.
+    exit_code = 0
     try:
         app(args=args, standalone_mode=False)
     except typer.TyperException as exc:
+        exit_code = 2
         emit("invocation", error=RefError("invalid_invocation", exc.format_message(), 2),
              json_output="--json" in args)
         raise SystemExit(2) from None
     except RefError as exc:
+        exit_code = exc.exit_code
         emit("invocation", error=exc, json_output="--json" in args)
         raise SystemExit(exc.exit_code) from None
     except (OSError, sqlite3.Error) as exc:
@@ -351,10 +376,16 @@ def main() -> None:
         denied = isinstance(exc, PermissionError)
         error = RefError("home_not_writable" if denied else "lock_timeout" if locked else "storage_error", "Allow access to the selected path and retry" if denied else str(exc),
                          6 if locked else 5, retryable=locked, path=str(exc.filename) if denied and exc.filename else None)
+        exit_code = error.exit_code
         emit("invocation", error=error, json_output="--json" in args)
         raise SystemExit(error.exit_code) from None
     except KeyboardInterrupt:
+        exit_code = 130
         raise SystemExit(130) from None
+    finally:
+        if catalog is not None and catalog.is_dir():
+            action_log.setup(catalog, verbose="--verbose" in args)
+            action_log.event("command.close", exit_code=exit_code, outcome="ok" if exit_code == 0 else "error")
 
 
 @import_app.command('list')
