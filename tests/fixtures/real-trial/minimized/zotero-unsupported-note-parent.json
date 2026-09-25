@@ -1,0 +1,7 @@
+{
+  "items": [
+    {"key": "PARENT01", "data": {"key": "PARENT01", "itemType": "artwork", "title": "Artwork with note"}},
+    {"key": "CHILD001", "data": {"key": "CHILD001", "itemType": "note", "parentItem": "PARENT01", "note": "<p>23.</p>"}},
+    {"key": "VALID001", "data": {"key": "VALID001", "itemType": "book", "title": "Independent book", "creators": [{"creatorType": "author", "firstName": "Ada", "lastName": "Example"}]}}
+  ]
+}

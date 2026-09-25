@@ -99,7 +99,7 @@ def read(directory: Path) -> dict:
         for item in items:
             data = item['data']
             parent = data.get('parentItem')
-            if parent and (parent not in by_key or by_key[parent]['data']['itemType'] not in ({'attachment'} if data['itemType'] == 'annotation' else set(row['zotero'] for row in REGISTRY['type_mappings']))):
+            if parent and (parent not in by_key or data['itemType'] == 'annotation' and by_key[parent]['data']['itemType'] != 'attachment'):
                 raise ValueError(f"Unresolved parent for {item['key']}")
             if any(key not in collection_map for key in data.get('collections', [])):
                 raise ValueError(f"Unresolved collection for {item['key']}")
