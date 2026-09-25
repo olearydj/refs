@@ -144,8 +144,8 @@ def import_bibliography(ctx: typer.Context, input: Annotated[Path | None, typer.
     if input is None:
         raise RefError('invalid_invocation', 'Supply --input PATH or an import subcommand', 2)
     path = absolute(str(input))
-    if format not in ('bib', 'zotero'):
-        raise RefError('unsupported_format', 'Choose --format bib or zotero for import', 2)
+    if format not in ('bib', 'csljson', 'zotero'):
+        raise RefError('unsupported_format', 'Choose --format bib, csljson or zotero for import', 2)
     selected = settings(ctx)
     if format == 'zotero':
         if str(input)=='-' or not path.is_dir():
@@ -153,7 +153,8 @@ def import_bibliography(ctx: typer.Context, input: Annotated[Path | None, typer.
         data = importing.run_zotero(selected.catalog_path(), path, dry_run=dry_run, origin=origin, settings=selected)
     else:
         raw,locator=read_payload(input)
-        data = importing.run(selected.catalog_path(), raw, locator, dry_run=dry_run, origin=origin, settings=selected)
+        runner = importing.run_csl if format == 'csljson' else importing.run
+        data = runner(selected.catalog_path(), raw, locator, dry_run=dry_run, origin=origin, settings=selected)
     if data['counts']['conflict'] or data['counts']['invalid']:
         raise RefError('import_partial', 'Inspect reported entries and use update to settle conflicts', 4, data=data)
     report(ctx, 'import', data)

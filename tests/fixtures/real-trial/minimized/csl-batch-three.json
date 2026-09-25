@@ -1,0 +1,5 @@
+[
+  {"id":"batch-1","type":"article-journal","title":"Batch Ω","author":[{"family":"Mora","given":"Ana"}],"issued":{"date-parts":[[2024]]}},
+  {"id":"batch-1","type":"article-journal","title":"Batch Ω","author":[{"family":"Mora","given":"Ana"}],"issued":{"date-parts":[[2024]]}},
+  {"id":"batch-invalid","type":"article-journal","title":""}
+]

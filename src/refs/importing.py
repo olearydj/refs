@@ -10,7 +10,7 @@ from uuid import uuid4
 from pydantic import ValidationError
 
 from refs import naming, sources
-from refs.adapters import bibtex, zotero
+from refs.adapters import bibtex, csl, zotero
 from refs.catalog import changed, connect
 from refs.models import SourceCreate, editable, normalize_doi, revalidate
 from refs.results import RefError, notice
@@ -294,6 +294,135 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
             from refs import logging as action_log
             action_log.log_mutation('import.batch_close', {'batch_id':run_id},
                                     {'finished':False}, {'finished':True,'counts':counts})
+            connection.execute('UPDATE imports SET finished_at=? WHERE id=?', (datetime.now(UTC).isoformat(), run_id))
+    return dict(import_id=None if dry_run else run_id, input=locator, file_digest=fingerprint, counts=counts, entries=entries, dry_run=dry_run, warnings=[])
+
+
+def csl_blocks(raw: bytes) -> list[dict]:
+    """Split a CSL object or array without rewriting any element's evidence bytes."""
+    try:
+        text = raw.decode('utf-8')
+        decoder = json.JSONDecoder()
+        position = 0
+        byte_position = 0
+        blocks = []
+
+        def byte_at(index: int) -> int:
+            nonlocal position, byte_position
+            byte_position += len(text[position:index].encode('utf-8'))
+            position = index
+            return byte_position
+
+        def space(index: int) -> int:
+            while index < len(text) and text[index] in ' \t\r\n':
+                index += 1
+            return index
+
+        index = space(0)
+        array = index < len(text) and text[index] == '['
+        if array:
+            index += 1
+        while True:
+            index = space(index)
+            if array and index < len(text) and text[index] == ']':
+                index += 1
+                break
+            start = index
+            value, end = decoder.raw_decode(text, index)
+            if not array and not isinstance(value, dict):
+                raise ValueError('Expected one CSL object or an array of CSL objects')
+            first, last = byte_at(start), byte_at(end)
+            blocks.append(dict(raw=raw[first:last], start=first, end=last))
+            index = space(end)
+            if not array:
+                break
+            if index >= len(text) or text[index] not in ',]':
+                raise ValueError('Expected a comma or closing bracket in CSL array')
+            if text[index] == ']':
+                index += 1
+                break
+            index += 1
+            if space(index) < len(text) and text[space(index)] == ']':
+                raise ValueError('Trailing comma in CSL array')
+        if space(index) != len(text):
+            raise ValueError('Expected one CSL object or an array of CSL objects')
+        return blocks
+    except (UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
+        raise RefError('invalid_record', 'Input is not a CSL JSON object or array', 2) from exc
+
+
+def apply_csl_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None, doi_groups=None, kept_by_source=None, origin=None) -> dict:
+    raw = block['raw']
+    evidence_locator = f"{locator}#bytes={block['start']}:{block['end']}"
+    source_id, incoming = None, None
+    result: dict = {}
+    try:
+        source, limitations = csl.parse(raw, with_limitations=True)
+        canonical, warnings = naming.normalize(source.canonical(), settings.values if settings else None)
+        source = SourceCreate.model_validate(canonical)
+        incoming = source.canonical()
+        source_id, binding = bind_and_fill(connection, source, raw, dry_run=dry_run, isbn_groups=isbn_groups, doi_groups=doi_groups, kept_by_source=kept_by_source, origin=origin or locator)
+        conflicts = [item['path'] for item in binding.get('conflicts', [])]
+        if conflicts:
+            result = dict(status='conflict', code='value_conflict', source_id=source_id, conflicts=conflicts)
+        elif source_id:
+            result = dict(status='applied' if binding.get('filled') else 'unchanged', source_id=source_id)
+        else:
+            provenance = sources.allocate_key(connection, source, settings.values if settings else None)
+            if not dry_run:
+                source_id = sources.insert_source(connection, source, raw, evidence_locator, format='csljson', warnings=warnings, key_provenance=provenance, limitations=limitations)['id']
+            result = dict(status='applied', source_id=source_id)
+        result.update(binding=binding, citation_key=binding.get('catalog_key') or source.citation_key, warnings=warnings, limitations=limitations)
+    except (RefError, ValidationError) as exc:
+        if isinstance(exc, RefError) and exc.issue['code'] == 'log_unwritable':
+            raise
+        if isinstance(exc, ValidationError):
+            exc = RefError('invalid_record', 'Input does not match the supported record profile', 2)
+        result = dict(status='conflict' if exc.issue['code'] in ('identity_conflict', 'source_removed', 'alias_conflict') else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'], limitations=exc.issue['details'].get('limitations', []))
+    result.update(outcome=result['status'], incoming=incoming, start=block['start'], end=block['end'], preserved=True, editable=result['status'] in ('applied', 'unchanged'), searchable=result['status'] in ('applied', 'unchanged'), exportable='requires export assessment')
+    if not dry_run:
+        result['original_ref'] = preserve(connection, raw, evidence_locator, file_digest, source_id=source_id if result['status'] in ('applied', 'unchanged') else None, format='csljson', origin='import-'+result['status'], definitions=dict(start=block['start'], end=block['end'], limitations=result.get('limitations', []), import_id=import_id))
+    return result
+
+
+def run_csl(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str | None = None, settings=None) -> dict:
+    blocks = csl_blocks(raw)
+    fingerprint, run_id = hashlib.sha256(raw).hexdigest(), str(uuid4())
+    counts = dict(applied=0, unchanged=0, conflict=0, invalid=0)
+    incoming = []
+    for block in blocks:
+        try:
+            incoming.append(csl.parse(block['raw']))
+        except RefError:
+            pass
+    with connect(catalog) as connection:
+        isbn_groups = isbn_plan(connection, incoming)
+        doi_groups = doi_plan(connection) if any(source.metadata.DOI for source in incoming) else None
+        kept_by_source = decisions_plan(connection, origin or locator)
+    if not dry_run:
+        with connect(catalog, write=True) as connection:
+            start_batch(connection, run_id, origin or locator, fingerprint)
+            preserve(connection, raw, locator, fingerprint, format='csljson-file', origin='import-file')
+            changed(connection)
+    entries = []
+    for block in blocks:
+        with connect(catalog, write=not dry_run) as connection:
+            result = apply_csl_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings, import_id=run_id, isbn_groups=isbn_groups, doi_groups=doi_groups, kept_by_source=kept_by_source, origin=origin or locator)
+            status = result['status']
+            if doi_groups is not None and result.get('source_id') and result.get('incoming') and status in ('applied', 'unchanged'):
+                doi = result['incoming']['metadata'].get('DOI')
+                if doi:
+                    doi_groups.setdefault(normalize_doi(doi), set()).add(result['source_id'])
+            counts[status] += 1
+            if not dry_run:
+                save_entry(connection, run_id, f"{locator}#bytes={block['start']}:{block['end']}", result)
+                connection.execute(f'UPDATE imports SET {status}={status}+1, revision=revision+1 WHERE id=?', (run_id,))
+                changed(connection)
+            entries.append(result)
+    if not dry_run:
+        with connect(catalog, write=True) as connection:
+            from refs import logging as action_log
+            action_log.log_mutation('import.batch_close', {'batch_id':run_id}, {'finished':False}, {'finished':True,'counts':counts})
             connection.execute('UPDATE imports SET finished_at=? WHERE id=?', (datetime.now(UTC).isoformat(), run_id))
     return dict(import_id=None if dry_run else run_id, input=locator, file_digest=fingerprint, counts=counts, entries=entries, dry_run=dry_run, warnings=[])
 
