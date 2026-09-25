@@ -110,6 +110,16 @@ def test_reimport_reads_kept_decisions_once_per_batch(initialized, tmp_path, mon
     assert not any('SELECT e.decisions_json FROM import_entries' in statement for statement in statements)
 
 
+def test_reimport_does_not_build_full_show_records_for_each_entry(initialized, tmp_path, monkeypatch):
+    fixture = Path(__file__).parents[1] / 'fixtures/real-trial/minimized/no-doi-scan.bib'
+    raw = fixture.read_bytes()
+    importing.run(tmp_path/'cat',raw,str(fixture))
+    def full_record_is_not_needed(*_):
+        raise AssertionError('Import loaded attachments and originals for a core comparison')
+    monkeypatch.setattr(sources,'record',full_record_is_not_needed)
+    assert importing.run(tmp_path/'cat',raw,str(fixture))['counts'] == dict(applied=0, unchanged=3, conflict=0, invalid=0)
+
+
 @pytest.mark.parametrize('raw', [
     b'@article{x,title={First},title={Second}}',
     b'@article{x,title={First},TITLE={Second}}',

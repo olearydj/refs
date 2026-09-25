@@ -281,9 +281,9 @@ def sandboxed(command):
     return command
 
 
-def phase6_cli(settings, *args):
+def phase6_cli(settings, *args, timeout=None):
     command = sandboxed([sys.executable, '-m', 'refs', '--json', '--no-project-config', '--config', str(settings.config), '--catalog', str(settings.catalog_path()), *args])
-    result = subprocess.run(command, capture_output=True, text=True, cwd=settings.catalog_path().parent)
+    result = subprocess.run(command, capture_output=True, text=True, cwd=settings.catalog_path().parent, timeout=timeout)
     try:
         envelope = json.loads(result.stdout)
     except json.JSONDecodeError as exc:
@@ -348,7 +348,7 @@ def phase6_daily(sample, work):
         shutil.rmtree(home)
 
 
-def phase6_restore(settings, snapshot, restored):
+def phase6_restore(settings, snapshot, restored, *, timeout=None):
     """Use the documented second-home shape and verify catalog rows, not only manifest bytes."""
     from refs.recovery import validate_snapshot
     manifest = validate_snapshot(snapshot)
@@ -369,7 +369,7 @@ def phase6_restore(settings, snapshot, restored):
         for table in tables:
             if before.execute(f'SELECT * FROM "{table}"').fetchall() != after.execute(f'SELECT * FROM "{table}"').fetchall():
                 raise AssertionError(f'Restored {table} rows differ')
-    code, response = phase6_cli(second, 'resource', 'check', '--verify')
+    code, response = phase6_cli(second, 'resource', 'check', '--verify', timeout=timeout)
     if code or response['status'] != 'ok':
         raise AssertionError('Restored catalog failed resource check')
     return dict(catalog_id=manifest['catalog_id'], tables_compared=len(tables), rows_match=True, resource_check_items=len(response['data']['items']))
@@ -403,6 +403,13 @@ def phase6_corpus(sample, work, manifest_path):
     peak_disk = 0
     home = work/'corpus'
     settings = clone_owner_copy(sample, home)
+    def remaining():
+        seconds = limits['seconds']-(time.monotonic()-started)
+        if seconds <= 0:
+            raise ValueError('Corpus time ceiling exceeded')
+        return seconds
+    def bounded_cli(*args):
+        return phase6_cli(settings,*args,timeout=remaining())
     results = []
     try:
         linked_before = 0
@@ -414,7 +421,7 @@ def phase6_corpus(sample, work, manifest_path):
                 results.append(row)
                 continue
             origin = f'phase6-{index}'
-            code, imported = phase6_cli(settings, 'import', '--format', 'bib', '--input', row['path'], '--origin', origin)
+            code, imported = bounded_cli('import', '--format', 'bib', '--input', row['path'], '--origin', origin)
             data = imported.get('data') or {}
             outcomes = Counter(item['status'] for item in data.get('entries', []))
             entry_codes = Counter(item.get('code') or 'none' for item in data.get('entries', []) if item['status'] in ('invalid', 'conflict'))
@@ -434,18 +441,18 @@ def phase6_corpus(sample, work, manifest_path):
                 raise AssertionError(f'Unaccounted entries in {row["path"]}: {outcomes}')
             if code not in (0, 4):
                 raise AssertionError(f'Unexpected import exit {code}: {imported["errors"][:2]}')
-            again_code, again = phase6_cli(settings, 'import', '--format', 'bib', '--input', row['path'], '--origin', origin)
+            again_code, again = bounded_cli('import', '--format', 'bib', '--input', row['path'], '--origin', origin)
             again_counts = (again.get('data') or {}).get('counts', {})
             if again_code not in (0, 4) or again_counts.get('applied') != 0:
                 raise AssertionError(f'Re-import applied records for {row["path"]}: {again_counts}')
             project = origin
-            phase6_cli(settings, 'project', 'create', project)
-            cited_code, cited = phase6_cli(settings, 'project', 'cite', project, '--from-import', origin)
+            bounded_cli('project', 'create', project)
+            cited_code, cited = bounded_cli('project', 'cite', project, '--from-import', origin)
             if cited_code:
                 results.append(row | dict(import_exit=code, outcomes=dict(outcomes), entry_codes=dict(entry_codes), invalid_reasons=dict(invalid_reasons), conflict_paths=dict(conflict_paths), examples=examples, linked_resources_added=linked_added, reimport=again_counts, project_cite_code=cited['errors'][0]['code'], export=dict(skipped='project citation refused')))
                 continue
             target = home/f'export-{index}.bib'
-            export_code, export = phase6_cli(settings, 'export', '--project', project, '--output', str(target))
+            export_code, export = bounded_cli('export', '--project', project, '--output', str(target))
             export_codes = sorted({error['code'] for error in export.get('errors', [])})
             blocking = [item for error in export.get('errors', []) for item in error.get('details', {}).get('entries', []) if item.get('class') in ('blocking', 'structural', 'unknown')]
             export_findings = Counter(item.get('code') or 'unspecified' for item in blocking)
@@ -453,7 +460,7 @@ def phase6_corpus(sample, work, manifest_path):
             if export_code == 0 and target.is_file() and (export.get('data') or {}).get('count', 0) == 0:
                 render = dict(skipped='empty selection')
             elif export_code == 0 and target.is_file() and shutil.which('pandoc'):
-                rendered = subprocess.run(sandboxed(['pandoc', '--citeproc', '--bibliography', str(target), '-t', 'plain']), input='---\nnocite: "@*"\n---\n', text=True, capture_output=True)
+                rendered = subprocess.run(sandboxed(['pandoc', '--citeproc', '--bibliography', str(target), '-t', 'plain']), input='---\nnocite: "@*"\n---\n', text=True, capture_output=True, timeout=remaining())
                 render = dict(exit=rendered.returncode, bytes=len(rendered.stdout.encode()), warnings=len(rendered.stderr.splitlines()))
             elif export_code == 0:
                 render = dict(skipped='pandoc unavailable')
@@ -463,14 +470,14 @@ def phase6_corpus(sample, work, manifest_path):
             peak_disk = max(peak_disk, baseline_free-shutil.disk_usage(work).free)
             if time.monotonic()-started > limits['seconds'] or peak_disk > limits['temporary_bytes']:
                 raise ValueError('Corpus time or disk ceiling exceeded')
-        check_code, check = phase6_cli(settings, 'resource', 'check', '--verify')
+        check_code, check = bounded_cli('resource', 'check', '--verify')
         if check_code or check['status'] != 'ok':
             raise AssertionError('Post-corpus resource check failed')
         statuses = Counter((item.get('kind') or 'recorded', item['status']) for item in check['data']['items'])
-        backup_code, backup = phase6_cli(settings, 'backup', '--output', str(home/'snapshot'))
+        backup_code, backup = bounded_cli('backup', '--output', str(home/'snapshot'))
         if backup_code or backup['status'] != 'ok':
             raise AssertionError(f'Post-corpus backup failed: {backup["errors"][:2]}')
-        restored = phase6_restore(settings, home/'snapshot', home/'restored')
+        restored = phase6_restore(settings, home/'snapshot', home/'restored', timeout=remaining())
         elapsed = time.monotonic()-started
         peak_disk = max(peak_disk, baseline_free-shutil.disk_usage(work).free)
         if elapsed > limits['seconds'] or peak_disk > limits['temporary_bytes']:

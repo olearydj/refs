@@ -16,7 +16,7 @@ from refs.models import REGISTRY, SourceCreate, normalize_doi, parse
 from refs.results import RefError
 
 
-def record(connection, source_id: str) -> dict:
+def core_record(connection, source_id: str) -> dict:
     row = connection.execute("SELECT * FROM sources WHERE id=?", (source_id,)).fetchone()
     if row is None:
         raise RefError("source_missing", "Source was not found")
@@ -27,6 +27,11 @@ def record(connection, source_id: str) -> dict:
     result["metadata"] = json.loads(result.pop("metadata_json"))
     result["corrected_fields"] = json.loads(result.pop("corrected_fields_json"))
     result["key_provenance"] = json.loads(result.pop("key_provenance_json"))
+    return result
+
+
+def record(connection, source_id: str) -> dict:
+    result = core_record(connection, source_id)
     result["originals"] = [dict(r) for r in connection.execute(
         "SELECT id, sha256, byte_length, format, origin, locator FROM originals WHERE source_id=? ORDER BY id",
         (source_id,))]

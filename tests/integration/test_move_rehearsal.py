@@ -1,6 +1,7 @@
 import json
 import runpy
 import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -10,6 +11,15 @@ from refs.catalog import init
 from refs.config import select
 
 harness=runpy.run_path('tests/fixtures/real-trial/move_rehearsal.py')
+
+
+def test_corpus_cli_passes_the_remaining_deadline_to_its_process(tmp_path,monkeypatch):
+    settings=select(str(tmp_path/'config.toml'),str(tmp_path/'cat'),no_project_config=True)
+    def completed(command,**options):
+        assert options['timeout']==0.25
+        return subprocess.CompletedProcess(command,0,'{"status":"ok"}','')
+    monkeypatch.setattr(subprocess,'run',completed)
+    assert harness['phase6_cli'](settings,'paths',timeout=0.25)==(0,{'status':'ok'})
 
 
 def sample(tmp_path):
