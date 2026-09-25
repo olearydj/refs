@@ -85,6 +85,31 @@ def test_failure_before_publication_preserves_baseline(cited, monkeypatch):
     assert b'volume = {13}' not in before
 
 
+def test_post_publication_digest_failure_reports_recoverable_output(cited, monkeypatch):
+    catalog, output = cited
+    published = False
+    publish = files.publish
+    current_digest = files.current_digest
+
+    def mark_publication(*args):
+        nonlocal published
+        publish(*args)
+        published = True
+
+    def changed_digest(path):
+        return '0' * 64 if published and path == output else current_digest(path)
+
+    monkeypatch.setattr(files, 'publish', mark_publication)
+    monkeypatch.setattr(files, 'current_digest', changed_digest)
+    with pytest.raises(RefError) as error:
+        bibliography.export(catalog, 'demo', output)
+    assert error.value.issue['code'] == 'export_published_unrecorded'
+    assert error.value.exit_code == 4
+    assert output.is_file() and current_digest(output) != '0' * 64
+    with closing(sqlite3.connect(catalog / 'catalog.sqlite')) as connection:
+        assert connection.execute('SELECT pending_digest FROM export_targets').fetchone()[0] == current_digest(output)
+
+
 def test_unknown_stored_field_blocks_before_staging(cited):
     catalog, output = cited
     with closing(sqlite3.connect(catalog / "catalog.sqlite")) as connection, connection:

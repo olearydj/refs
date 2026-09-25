@@ -222,7 +222,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         if isinstance(exc, ValidationError):
             message = f'Entry at byte {block["start"]}: citation key is empty' if re.match(rb'@\w+\s*[{(]\s*,', raw) else 'Entry cannot satisfy the record profile; inspect its preserved original'
             exc = RefError('invalid_bib_entry', message, 2)
-        conflict = exc.issue['code'] in ('identity_conflict', 'source_removed', 'likely_match', 'alias_conflict')
+        conflict = exc.issue['code'] in ('identity_conflict', 'source_removed', 'alias_conflict')
         outcome = dict(outcome='conflict' if conflict else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'], limitations=exc.issue['details'].get('limitations', []))
     outcome['incoming'] = incoming
     outcome['citation_key'] = key
@@ -307,7 +307,7 @@ def add(catalog: Path, raw: bytes, locator: str, *, dry_run=False, settings=None
         if not dry_run:
             save_add_conflict(connection, raw, locator, entry)
     if entry['outcome'] in ('conflict', 'invalid'):
-        raise RefError(entry.get('code', 'import_conflict'), entry.get('message', 'Inspect conflicting fields and use update'), 2 if entry['outcome'] == 'invalid' else 3, details=entry,
+        raise RefError(entry['code'], entry.get('message', 'Inspect conflicting fields and use update'), 2 if entry['outcome'] == 'invalid' else 3, details=entry,
                        data={'outcome':'needs_attention', 'citation_key':entry.get('citation_key')})
     record = sources.show(catalog, entry['source_id']) if entry['source_id'] else bibtex.parse(blocks[0]['raw'])['source'].canonical()
     if dry_run and loc is not None and not record.get('loc'):

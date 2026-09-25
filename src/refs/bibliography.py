@@ -28,7 +28,7 @@ TEX_ESCAPES = {"\\": r"\textbackslash{}", "{": r"\{", "}": r"\}", "&": r"\&", "%
 
 def tex(value: str) -> str:
     if any(ord(char) < 32 and char not in "\n\t" for char in value):
-        raise RefError("invalid_export_value", "Control characters cannot be exported")
+        raise ValueError("Control characters cannot be exported")
     return "".join(TEX_ESCAPES.get(char, char) for char in value)
 
 
@@ -336,7 +336,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             for name, text in fields.items():
                 entry += f'  {name} = {text},\n' if name == 'month' else f'  {name} = {{{text}}},\n'
             entries.append(entry + '}\n')
-        except RefError as exc:
+        except ValueError as exc:
             assess('invalid_export_value', 'structural', str(exc))
     enforce_losses(losses, allow_unknown=allow_unknown)
     return '\n'.join(entries).encode('utf-8'), warnings
@@ -487,7 +487,7 @@ def export(catalog: Path, project_ref: str, output: Path, *, dry_run: bool = Fal
             files.publish(temporary, target, current)
             try:
                 if files.current_digest(target) != candidate_digest:
-                    raise RefError("integrity_error", "Published output changed", 5)
+                    raise OSError("Published output changed")
                 finish_export(catalog, target, candidate_digest)
             except (OSError, sqlite3.Error, RefError) as exc:
                 raise RefError("export_published_unrecorded", "Output was published; retry export to reconcile recorded intent", 4,
