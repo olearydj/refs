@@ -5,6 +5,7 @@ import os
 import shutil
 import sqlite3
 import unicodedata
+from contextvars import ContextVar
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -13,6 +14,8 @@ from refs import files, naming, resources, sources
 from refs import logging as action_log
 from refs.catalog import connect
 from refs.results import RefError
+
+interrupted_report: ContextVar[dict | None] = ContextVar('interrupted_move_report',default=None)
 
 
 def checkpoint(point, operation):
@@ -362,19 +365,33 @@ def reorg(settings, *, reference=None, loc=None, execute=False):
         return result
     result['moves']=[]
     current=None
+    failure=None
     try:
         for row in pending:
             current=report(row)
             with files.file_lock(settings.catalog_path()):
                 result['moves'].append(report(resume(settings,row)))
+            current=None
         # Finishing a recorded move can expose a later loc edit as a new mismatch.
         _,planned=selection(settings,reference,loc)
         for item in planned:
             current=item
             result['moves'].append(item if item['state']=='shared' else move(settings,item['resource_id'],Path(item['new_path'])))
-    except RefError as exc:
-        result['moves'].extend((exc.data or {}).get('moves',[]) or ([current | dict(state='failed',error=str(exc))] if current else []))
-        raise RefError(exc.issue['code'],str(exc),exc.exit_code,data=result,details=exc.issue['details']) from exc
+            current=None
+    except (RefError,OSError,sqlite3.Error,KeyboardInterrupt) as exc:
+        failure=exc
+    finally:
+        if failure is not None:
+            partial=(failure.data or {}).get('moves',[]) if isinstance(failure,RefError) else []
+            result['moves'].extend(partial or ([current | dict(state='failed',error=str(failure))] if current else []))
+    if isinstance(failure,RefError):
+        raise RefError(failure.issue['code'],str(failure),failure.exit_code,data=result,details=failure.issue['details']) from failure
+    if isinstance(failure,KeyboardInterrupt):
+        setattr(failure,'data',result)
+        interrupted_report.set(result)
+        raise failure
+    if failure is not None:
+        raise RefError('move_incomplete',str(failure),4,data=result,details={'cause':str(failure)}) from failure
     return result
 
 

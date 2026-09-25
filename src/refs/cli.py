@@ -340,6 +340,9 @@ def config_show(ctx: typer.Context):
 
 
 def main() -> None:
+    from refs import moves
+
+    moves.interrupted_report.set(None)
     args = sys.argv[1:]
     action_log.bind(" ".join(args))
     def option(name):
@@ -361,7 +364,11 @@ def main() -> None:
         pass  # Let Typer report selection errors through the usual envelope.
     exit_code = 0
     try:
-        app(args=args, standalone_mode=False)
+        returned = app(args=args, standalone_mode=False)
+        if returned == 130 and (data := moves.interrupted_report.get()) is not None:
+            interrupt = KeyboardInterrupt('Move interrupted')
+            setattr(interrupt,'data',data)
+            raise interrupt
     except typer.TyperException as exc:
         exit_code = 2
         emit("invocation", error=RefError("invalid_invocation", exc.format_message(), 2),
@@ -379,10 +386,14 @@ def main() -> None:
         exit_code = error.exit_code
         emit("invocation", error=error, json_output="--json" in args)
         raise SystemExit(error.exit_code) from None
-    except KeyboardInterrupt:
+    except KeyboardInterrupt as exc:
         exit_code = 130
+        if data := getattr(exc, 'data', None):
+            emit('reorg', error=RefError('move_interrupted',str(exc) or 'Move interrupted',4,data=data),
+                 json_output='--json' in args)
         raise SystemExit(130) from None
     finally:
+        moves.interrupted_report.set(None)
         if catalog is not None and catalog.is_dir():
             action_log.setup(catalog, verbose="--verbose" in args)
             action_log.event("command.close", exit_code=exit_code, outcome="ok" if exit_code == 0 else "error")
