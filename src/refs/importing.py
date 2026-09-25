@@ -107,7 +107,7 @@ def match(connection, source: SourceCreate, fingerprint: str, *, isbn_groups=Non
     if not ids:
         return None, []
     source_id = next(iter(ids))
-    current = sources.record(connection, source_id)
+    current = sources.core_record(connection, source_id)
     if current['state'] != 'active':
         raise RefError('source_removed', 'Matched source is removed; inspect it before reactivating', details={'source_id': source_id})
     return source_id, differences(source.canonical(), current)
@@ -118,7 +118,7 @@ def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False
     if not source_id:
         return None, {}
     from refs.search import identifier
-    current = sources.record(connection, source_id)
+    current = sources.core_record(connection, source_id)
     incoming = source.canonical()
     compatible = True
     for field in ('type','edition','DOI','ISBN'):
@@ -300,7 +300,7 @@ def add(catalog: Path, raw: bytes, locator: str, *, dry_run=False, settings=None
 
 def save_entry(connection, batch: str, locator: str, result: dict) -> None:
     source_id = result.get('source_id')
-    revision = sources.record(connection, source_id)['revision'] if source_id else None
+    revision = connection.execute('SELECT revision FROM sources WHERE id=?',(source_id,)).fetchone()[0] if source_id else None
     candidates = result.get('details', {}).get('source_ids', [source_id] if source_id else [])
     connection.execute('INSERT INTO import_entries (id,import_id,locator,status,candidates_json,conflicts_json,source_id,source_revision,payload_json) VALUES (?,?,?,?,?,?,?,?,?)',
                        (str(uuid4()), batch, locator, result['status'], json.dumps(candidates), json.dumps(result.get('conflicts', [])), source_id, revision, json.dumps(result)))
