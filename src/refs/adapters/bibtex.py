@@ -24,6 +24,8 @@ MARKER = re.compile(rb'@([A-Za-z]+)\s*([{(])')
 
 def month_number(value: str) -> int:
     text = value.strip().casefold()
+    if text.endswith('.') and text[:-1] in MONTHS:
+        text = text[:-1]
     month = int(text) if text.isdecimal() else MONTHS.get(text) or FULL_MONTHS.get(text)
     if month is None or not 1 <= month <= 12:
         raise ValueError(f'Invalid month: {value}')

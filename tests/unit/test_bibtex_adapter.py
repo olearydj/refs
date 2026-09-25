@@ -67,6 +67,21 @@ def test_full_english_month_fixture_and_equivalent_spellings():
         assert 'Invalid month' in error.value.issue['message']
 
 
+def test_period_after_month_abbreviation_fixture():
+    fixture = Path(__file__).parents[1] / 'fixtures/real-trial/minimized/month-period.bib'
+    issued = parse(partition(fixture.read_bytes())[0]['raw'])['source'].metadata.issued
+    assert issued.date_parts == [[1977, 6]]
+    for spelling in ('Jun', 'jun.', 'JUN.'):
+        raw = f'@book{{x,title={{A Study}},year={{1977}},month={{{spelling}}}}}'.encode()
+        assert parse(raw)['source'].metadata.issued.date_parts == [[1977, 6]]
+    for spelling in ('June.', 'Spring', 'jun # jul'):
+        raw = f'@book{{x,title={{A Study}},year={{1977}},month={{{spelling}}}}}'.encode()
+        with pytest.raises(RefError) as error:
+            parse(raw)
+        assert error.value.issue['code'] == 'invalid_bib_entry'
+        assert 'Invalid month' in error.value.issue['message']
+
+
 @pytest.mark.parametrize('flag, particle', [('true','non-dropping-particle'), ('false','dropping-particle')])
 def test_extended_biblatex_names(flag, particle):
     raw = ('@book{x,title={Study},author={family=Lopik, given=Katherine, prefix=van, suffix=Jr, useprefix='+flag+' and Smith, Alex}}').encode()
