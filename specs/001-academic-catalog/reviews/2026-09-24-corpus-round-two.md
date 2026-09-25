@@ -31,3 +31,10 @@ The post-import `resource check --verify` found all 556 recorded managed files a
 | Month punctuation and natural-language dates need owner judgment. | One entry has `month = {Jun.}` and one applied entry has a natural-language access date; other month refusals include seasons and concatenated expressions. | These are counted proposals to widen parsing or projection, not changes to this round's input contract. |
 
 The month-versus-date overlap test now pins `invalid_bib_entry` and its reason (`7acb88a`). All final gates ran with synthetic or copied bibliography bytes; no command read or wrote the owner's live catalog, Zotero database, Box tree, library or vault. The three completed runs consumed 33 minutes 11.84 seconds in aggregate, while each remained below its 30-minute ceiling. The peak additional physical disk in any run was about 1.02 GB against 4 GB; APFS clone logical size is not counted as new physical bytes.
+
+## Owner decisions on the two proposals, 2026-09-24
+
+`month = {Jun.}`: owner "a". The month rule gains an optional trailing period on the three-letter abbreviation, the same kind of value with a printing artefact; seasons and concatenated expressions stay refused. Goes into the next fix batch with the entry as its fixture.
+
+Natural-language access date: owner "B it is". The block stands as a stated limit: an access date must be a date, prose is refused at export with the entry named, and the fix is editing the record. No parser and no library; the reasoning is that every fuzzy date parser guesses, and the records contract forbids invented date parts. Revisit if a later round brings several unambiguous prose forms, in which case a thirty-line rule for those forms, not a dependency, is the answer.
+
