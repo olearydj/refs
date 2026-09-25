@@ -38,6 +38,23 @@ def test_automatic_migration_preserves_identity(tmp_path):
         )
 
 
+def test_legacy_fixed_version_check_is_relaxed_once(tmp_path):
+    path = tmp_path / 'strict'
+    path.mkdir()
+    (path / 'ready').touch()
+    (path / 'files.lock').touch()
+    initial = files('refs').joinpath('migrations/001_initial.sql').read_text().replace('CHECK (schema_version >= 1)', 'CHECK (schema_version = 1)')
+    with closing(sqlite3.connect(path / 'catalog.sqlite')) as c, c:
+        c.executescript(initial)
+        c.execute("INSERT INTO catalog_meta VALUES (1,'stable',1,7)")
+    migrate(path)
+    with closing(sqlite3.connect(path / 'catalog.sqlite')) as c, c:
+        assert c.execute('SELECT schema_version,revision FROM catalog_meta').fetchone() == (SCHEMA_VERSION, 7)
+        schema = c.execute("SELECT sql FROM sqlite_master WHERE name='catalog_meta'").fetchone()[0]
+        assert 'schema_version>=1' in schema and 'catalog_meta_legacy' not in schema
+        assert not c.execute("SELECT 1 FROM sqlite_master WHERE name='catalog_meta_legacy'").fetchone()
+
+
 def test_migration_rolls_back_failed_statement(tmp_path):
     path = tmp_path / "old"
     old_catalog(path)

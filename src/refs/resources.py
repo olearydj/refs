@@ -4,7 +4,6 @@ import json
 import re
 import sqlite3
 import subprocess
-import unicodedata
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -122,6 +121,11 @@ PLACEMENT_KINDS = {
 }
 
 
+def misplaced(settings: Settings, item: dict, loc: str | None) -> bool:
+    return bool(item['root'] == 'library' and loc and settings.library and
+                files.path_key(settings.library / Path(item['relative']).parent) != files.path_key(settings.library / loc))
+
+
 def check(settings: Settings, reference=None, *, verify=False, kind=None) -> dict:
     if kind is not None and kind not in PLACEMENT_KINDS:
         raise RefError('invalid_kind','Choose '+', '.join(PLACEMENT_KINDS),2)
@@ -135,19 +139,19 @@ def check(settings: Settings, reference=None, *, verify=False, kind=None) -> dic
     for item in all_items:
         checked = check_item(settings,item,verify)
         if checked.get('resolved_path'):
-            known.add(unicodedata.normalize('NFC',checked['resolved_path']).casefold())
+            known.add(files.path_key(checked['resolved_path']))
         if source_id and item['source_id']!=source_id or item['id'] in busy:
             continue
         loc = locs[item['source_id']]
         placement = None
         if item['root']!='library':
             placement = 'linked_pending' if loc else 'linked_unplaced'
-        elif loc and unicodedata.normalize('NFC',str(Path(item['relative']).parent)).casefold()!=loc.casefold():
+        elif misplaced(settings,item,loc):
             placement = 'managed_mismatch'
         result.append(checked | dict(kind=placement))
     for row in operations:
         item = next((item for item in all_items if item['id']==row['resource_id']),None)
-        known.add(unicodedata.normalize('NFC',row['new_path']).casefold())
+        known.add(files.path_key(row['new_path']))
         if source_id and (item is None or item['source_id']!=source_id):
             continue
         result.append(dict(kind='unfinished',id=row['resource_id'],operation_id=row['id'],resolved_path=row['old_path'],old_path=row['old_path'],new_path=row['new_path'],state=row['state'],error=row['error'],status='unfinished'))
@@ -155,7 +159,7 @@ def check(settings: Settings, reference=None, *, verify=False, kind=None) -> dic
         for path in sorted(settings.library.rglob('*')):
             if path.name in ('.DS_Store','Thumbs.db','desktop.ini') or path.name.startswith('._'):
                 continue
-            if not path.is_symlink() and path.is_file() and unicodedata.normalize('NFC',str(path)).casefold() not in known:
+            if not path.is_symlink() and path.is_file() and files.path_key(path) not in known:
                 result.append(dict(kind='unrecorded',resolved_path=str(path),status='available',hint='Use resource add SOURCE --path on this file to record it'))
     return {'items':[item for item in result if kind is None or item['kind']==kind]}
 
@@ -299,9 +303,9 @@ def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, 
     origin = locate(settings,path=source_path)
     if settings.catalog_path().stat().st_dev != library.stat().st_dev:
         raise RefError('staging_volume_mismatch','Keep catalog staging and the library on the same volume')
-    name = source_path.name if keep_name else naming.filename(source,source_path.name,label)
+    name, fell_back = (source_path.name, False) if keep_name else naming.filename(source,source_path.name,label,report_fallback=True)
     warnings = []
-    if not keep_name and (naming.issued_year(source)=='ND' or not re.search(r'[^\W_]+',naming.short_title(source))):
+    if fell_back:
         warnings.append(dict(code='filename_unavailable',message='Conventional filename unavailable; keeping the original name',path=str(source_path),details={},retryable=False))
     folder = library/(source.get('loc') or UNFILED)
     if any(parent.is_symlink() for parent in [folder,*folder.parents]) or not folder.resolve().is_relative_to(library) or folder.exists() and not folder.is_dir():

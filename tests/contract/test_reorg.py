@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from refs import moves, resources, sources
+from refs import files, moves, resources, sources
 from refs.catalog import connect
 from refs.config import select
 
@@ -13,6 +13,27 @@ def setup(initialized,tmp_path,reference_path):
     source=initialized('add','--format','refs','--input',reference_path,'--loc','Papers/Topic')['data']
     settings=select(str(tmp_path/'config.toml'),str(tmp_path/'cat'),no_project_config=True)
     return settings,source
+
+
+def test_path_key_and_misplacement_agree_for_check_and_reorg(initialized,tmp_path,reference_path):
+    settings, source = setup(initialized,tmp_path,reference_path)
+    folder = tmp_path / 'lib/Papers/Topic'
+    folder.mkdir(parents=True)
+    placed = folder / 'cafe\u0301.pdf'
+    placed.write_bytes(b'placed')
+    linked = resources.link(settings,source['id'],path=placed)
+    assert files.path_key(placed) == files.path_key(folder / 'caf\u00e9.pdf')
+    assert initialized('resource','check','--kind','managed_mismatch')['data']['items'] == []
+    assert initialized('reorg','--source',source['id'])['data']['moves'] == []
+    wrong = tmp_path / 'lib/Wrong/other.pdf'
+    wrong.parent.mkdir()
+    wrong.write_bytes(b'wrong')
+    misplaced = resources.link(settings,source['id'],path=wrong)
+    checked = initialized('resource','check','--kind','managed_mismatch')['data']['items']
+    planned = initialized('reorg','--source',source['id'])['data']['moves']
+    assert [item['id'] for item in checked] == [misplaced['id']]
+    assert [item['resource_id'] for item in planned] == [misplaced['id']]
+    assert linked['id'] != misplaced['id']
 
 
 def test_preview_execute_noop_and_filters(initialized,tmp_path,reference_path):

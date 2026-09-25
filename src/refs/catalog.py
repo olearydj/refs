@@ -16,6 +16,10 @@ from refs import logging as action_log
 from refs.config import Settings, absolute, toml_text
 from refs.results import RefError, upgrade_notices
 
+MIGRATIONS = ('001_initial.sql', '002_zotero_ingest.sql', '003_source_loc.sql',
+              '004_file_operations.sql', '005_lowercase_unfiled.sql')
+SCHEMA_VERSION = len(MIGRATIONS)
+
 
 @contextmanager
 def connect(catalog: Path, *, write: bool = False):
@@ -41,7 +45,7 @@ def connect(catalog: Path, *, write: bool = False):
             if not write and "readonly" in str(exc):
                 raise RefError("recovery_required", "SQLite needs writable rollback recovery", 5) from exc
             raise
-        if not meta or meta["schema_version"] != 5:
+        if not meta or meta["schema_version"] != SCHEMA_VERSION:
             raise RefError("unsupported_schema", "Catalog schema is not supported", 5)
         if write:
             connection.execute("PRAGMA synchronous=FULL")
@@ -101,13 +105,13 @@ def init(settings: Settings, library: Path | None, dry_run: bool = False, *, reu
         library.mkdir(mode=0o700, parents=True, exist_ok=True)
     db = catalog / "catalog.sqlite"
     db.touch(mode=0o600, exist_ok=False)
-    action_log.log_mutation('catalog.init', str(catalog), None, {'schema_version': 5, 'library': str(library) if library else None})
+    action_log.log_mutation('catalog.init', str(catalog), None, {'schema_version': SCHEMA_VERSION, 'library': str(library) if library else None})
     catalog_id = str(uuid4())
     with closing(sqlite3.connect(db)) as connection, connection:
         connection.execute("PRAGMA foreign_keys=ON")
         connection.execute("PRAGMA journal_mode=DELETE")
         connection.execute("PRAGMA synchronous=FULL")
-        connection.executescript(files("refs").joinpath("migrations/001_initial.sql").read_text())
+        connection.executescript(files("refs").joinpath("migrations/" + MIGRATIONS[0]).read_text())
         connection.execute("INSERT INTO catalog_meta VALUES (1, ?, 1, 0)", (catalog_id,))
         connection.commit()
         upgrade_connection(connection)
@@ -127,16 +131,18 @@ def init(settings: Settings, library: Path | None, dry_run: bool = False, *, reu
 
 def upgrade_connection(connection: sqlite3.Connection) -> None:
     version = connection.execute('SELECT schema_version FROM catalog_meta').fetchone()
-    if version is None or version[0] not in (1, 2, 3, 4, 5):
-        raise RefError('unsupported_schema', 'Expected catalog schema 1 through 5', 5)
-    migrations = {2: '002_zotero_ingest.sql', 3: '003_source_loc.sql', 4: '004_file_operations.sql', 5: '005_lowercase_unfiled.sql'}
-    for target, filename in migrations.items():
-        if version[0] < target:
-            try:
-                connection.executescript('BEGIN IMMEDIATE;\n' + files('refs').joinpath('migrations/' + filename).read_text() + '\nCOMMIT;')
-            except BaseException:
-                connection.rollback()
-                raise
+    if version is None or version[0] not in range(1, SCHEMA_VERSION + 1):
+        raise RefError('unsupported_schema', f'Expected catalog schema 1 through {SCHEMA_VERSION}', 5)
+    for filename in MIGRATIONS[version[0]:]:
+        legacy = connection.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name='catalog_meta'").fetchone()[0]
+        normalize = ("ALTER TABLE catalog_meta RENAME TO catalog_meta_legacy;\n"
+                     "CREATE TABLE catalog_meta (singleton INTEGER PRIMARY KEY CHECK (singleton=1), catalog_id TEXT NOT NULL UNIQUE, schema_version INTEGER NOT NULL CHECK (schema_version>=1), revision INTEGER NOT NULL DEFAULT 0 CHECK (revision>=0));\n"
+                     "INSERT INTO catalog_meta SELECT * FROM catalog_meta_legacy;\nDROP TABLE catalog_meta_legacy;\n") if 'CHECK (schema_version =' in legacy else ''
+        try:
+            connection.executescript('BEGIN IMMEDIATE;\n' + normalize + files('refs').joinpath('migrations/' + filename).read_text() + '\nCOMMIT;')
+        except BaseException:
+            connection.rollback()
+            raise
 
 
 def migrate(catalog: Path) -> None:
@@ -146,9 +152,9 @@ def migrate(catalog: Path) -> None:
     with closing(sqlite3.connect((catalog/'catalog.sqlite').resolve().as_uri()+'?mode=rw', uri=True)) as connection, connection:
         connection.execute('PRAGMA foreign_keys=ON')
         before = connection.execute('SELECT schema_version FROM catalog_meta').fetchone()[0]
-        if before != 5:
+        if before != SCHEMA_VERSION:
             action_log.setup(catalog, mutation=True)
-            action_log.log_mutation('schema.upgrade', str(catalog), {'schema_version':before}, {'schema_version':5})
+            action_log.log_mutation('schema.upgrade', str(catalog), {'schema_version':before}, {'schema_version':SCHEMA_VERSION})
         upgrade_connection(connection)
 
 
@@ -159,22 +165,22 @@ def ensure_schema(catalog: Path, connection: sqlite3.Connection) -> None:
     def version():
         return connection.execute('SELECT schema_version FROM catalog_meta').fetchone()[0]
     current = version()
-    if current == 5:
+    if current == SCHEMA_VERSION:
         return
-    if current not in (1, 2, 3, 4):
+    if current not in range(1, SCHEMA_VERSION):
         raise RefError('unsupported_schema', 'Catalog schema is newer or unsupported; use a compatible refs version', 5)
     with file_lock(catalog):
         current = version()
-        if current == 5:
+        if current == SCHEMA_VERSION:
             return
-        if current not in (1, 2, 3, 4):
+        if current not in range(1, SCHEMA_VERSION):
             raise RefError('unsupported_schema', 'Catalog schema is newer or unsupported; use a compatible refs version', 5)
-        safety = catalog / f'before-schema-5-{date.today().isoformat()}.sqlite'
+        safety = catalog / f'before-schema-{SCHEMA_VERSION}-{date.today().isoformat()}.sqlite'
         with closing(sqlite3.connect(db.as_uri()+'?mode=rw', uri=True)) as c, c:
             c.execute('BEGIN IMMEDIATE')
             try:
                 action_log.setup(catalog, mutation=True)
-                action_log.log_mutation('schema.upgrade', str(catalog), {'schema_version': current}, {'schema_version': 5}, safety_copy=str(safety))
+                action_log.log_mutation('schema.upgrade', str(catalog), {'schema_version': current}, {'schema_version': SCHEMA_VERSION}, safety_copy=str(safety))
                 with safety.open('xb'):
                     safety.chmod(0o600)
                 with closing(sqlite3.connect(db.as_uri()+'?mode=ro', uri=True)) as source, source, closing(sqlite3.connect(safety)) as target, target:
@@ -187,4 +193,4 @@ def ensure_schema(catalog: Path, connection: sqlite3.Connection) -> None:
                 c.rollback()
             c.execute('PRAGMA foreign_keys=ON')
             upgrade_connection(c)
-        upgrade_notices.set([*upgrade_notices.get(), dict(code='schema_upgraded', message=f'Upgraded catalog schema {current} to 5; safety copy: {safety}', path=str(safety), details={}, retryable=False)])
+        upgrade_notices.set([*upgrade_notices.get(), dict(code='schema_upgraded', message=f'Upgraded catalog schema {current} to {SCHEMA_VERSION}; safety copy: {safety}', path=str(safety), details={}, retryable=False)])

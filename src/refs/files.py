@@ -6,11 +6,16 @@ import os
 import stat
 import tempfile
 import time
+import unicodedata
 from contextlib import contextmanager
 from contextvars import ContextVar
 from pathlib import Path
 
 from refs.results import RefError
+
+
+def path_key(path: Path | str) -> str:
+    return unicodedata.normalize('NFC', str(Path(path).resolve())).casefold()
 
 
 def digest(data: bytes) -> str:
