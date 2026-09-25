@@ -205,6 +205,40 @@ The result envelope. The move protocol's ordering: the log line precedes the eff
 
 The light loop. This queues behind the human-output pass, which restructures `results.emit`; it is small, about 200 source lines, and it goes to the authoring session in its own worktree after that pass merges. Governing text stays net-flat.
 
+## Code review fix pass brief: hold the code as well as it holds the files
+
+Owner direction, 2026-09-23: "code review with special emphasis on tests"; the tests half became the tests pass, and on 2026-09-24 the owner set the code half aside until the suite could be trusted: "we can come back to code review." The [investigation](reviews/2026-09-24-code-review-investigation.md) and its [appendix](reviews/2026-09-24-code-review-appendix.md) record what three readers found. Decisions were walked one at a time on 2026-09-24 and 2026-09-25.
+
+### Outcome
+
+The move protocol cannot wedge itself and always leaves its report. The domain no longer leans on SQLite's write lock for correctness, and no new SQLite-only syntax enters it. The command layer parses, dispatches and reports, and nothing else. Every format's quirks live in its adapter. Dead code and unreachable error codes are gone. The docs stop promising an export authority the code does not have, and the exporter's rewrite against a structured registry becomes its own later pass with the corpus as its acceptance.
+
+### Decisions
+
+D1 The four liveness findings. Owner: "a", all four now, each as a rule: a retry of an operation that has not reached the recorded state re-plans from fresh revisions and loc instead of repeating a check that can no longer pass; resume applies only to an unfinished operation, and a finished one whose original is gone returns the current resource; the already-recorded admission is a property of every move, so reorg refuses or reports a file that two resources share before planning; the old-and-new path report is emitted on any exit from reorg, refs errors, OS errors, database errors and Ctrl-C alike. About sixty lines and four tests from the traces in the appendix.
+
+D2 Storage: the narrower moves, not a layer. Owner: "2 - B", after asking whether refs should use a wrapper; the answer recorded there is raw `sqlite3` until the server is real, when the question is SQLAlchemy Core against a hand-written second adapter behind a storage layer. Now: every revision-guarded update checks its row count and raises the stale-revision error from it; unique-constraint errors are translated at the site into the application's key-conflict and project-conflict codes; the search boundary takes the loc, project and collection filters and the page instead of loading every record; one `editable(record)` and one `revalidate(canonical)` helper replace the five copies of each; and a rule, checked by a test that greps the domain modules, that no new SQLite-only syntax appears outside `catalog.py` and the adapters. The existing occurrences are listed in the appendix and left as they are.
+
+D3 The registry as export authority. Owner: "c". Now: the two unread registry columns are marked as documentation in the registry's header, the right-sizing rule is narrowed to say the importers read the registry and the exporter does not yet, and the 282-line serializer is split into functions by concern without changing what it does. Later, as its own pass with its own brief and review: `portable_projection` becomes a structured value and the exporter walks the registry rows the way the importers do, with the corpus rounds as acceptance.
+
+D4 Dead code and unreachable codes. Owner: "a with carve-out as described". Remove, one commit per kind with the reason in each: the functions nothing calls, the tests-only migrate entry that bypasses the lock and the safety copy, the duplicate version check, the vestigial loops, the parameters always passed one value, and every error code the tests pass's disposition table marks unreachable. Keep the never-read revision columns on projects and collections, a seam that costs two migrations to remove and restore. Keep the schema models and add one test that validates real `show` output against them, so they guard instead of decorate.
+
+### Fixes without a decision, from the readers
+
+The command layer: input-file errors reported as invalid input with exit 2, through one payload reader that also takes `-`; every failure envelope named with its command; a last-resort handler that reports an internal error with exit 5 instead of a traceback; `add` setting loc inside the create transaction and resolving the intake mode in one function shared with `resource add`; the export defaults resolved in config; `integrity_error` at one exit code everywhere. The adapters: the Zotero attachment, note and relation handling moved from resources and importing into the Zotero adapter; the BibTeX original-facts reading exposed once from the BibTeX adapter for show and export; an alias conflict classified one way on all three routes; one portable-URL predicate. Duplicated rules collapsed to one each: path identity, the misplacement test, the filename fallback, the schema version and migration list, the month tables, person-name joining. The duplicate-attachment rule applied to every copy or move route and excluding the resource being converted, so the contract's retry remedy works again. `resource check --source` filtering before it hashes. The seven functions the readers judged unearned in length split by concern.
+
+### What must never break
+
+The move protocol's contract and its tests; the result envelope; every existing test's assertion, since the tests pass just made them trustworthy; the never-cut list in `AGENTS.md`. No new runtime dependency. No behaviour change visible to a user beyond the corrected exit codes and the liveness fixes.
+
+### Acceptance
+
+Every finding in the investigation is fixed, deferred to the export pass, or kept with its reason, in a disposition table in the acceptance record. The suite stays green throughout, and the demo and real-trial harness pass at the end. The SQLite-syntax test and the schema-model test exist. Application lines are fewer than before the pass.
+
+### Process
+
+The light loop, in four batches, each its own kickoff and report: the liveness fixes; the storage moves and the command layer; the adapters and the collapsed rules; dead code and the docs honesty. A corpus round after the last batch confirms nothing regressed at scale. Governing text stays net-flat: the rule narrowed in right-sizing and the registry header note are the only doc changes beyond the acceptance record.
+
 ## Deferred work
 
 This is a boundary ledger, not a later-slice specification.
