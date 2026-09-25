@@ -412,10 +412,8 @@ def finish_export(catalog: Path, target: Path, digest: str) -> None:
         changed(connection)
 
 
-def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROFILE, dry_run: bool = False, allow_unknown: bool = False, overwrite: bool = False, adopt: bool = False) -> dict:
+def export(catalog: Path, project_ref: str, output: Path, *, dry_run: bool = False, allow_unknown: bool = False, overwrite: bool = False, adopt: bool = False) -> dict:
     from refs import logging as action_log
-    if profile != PROFILE:
-        raise RefError("unsupported_profile", "This milestone supports portable-bibtex-v1", 2)
     target = files.destination(output)
     with connect(catalog) as connection:
         project = projects.resolve(connection, project_ref)
@@ -436,7 +434,7 @@ def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROF
     if not selected:
         warnings.append(warning('(selection)', 'empty_selection', f'Wrote {target} (0 entries)'))
     candidate_digest = files.digest(data)
-    result = dict(output=str(target), profile=profile, count=len(selected),
+    result = dict(output=str(target), profile=PROFILE, count=len(selected),
                   keys=[record["citation_key"] for record in selected], sha256=candidate_digest,
                   catalog_revision=revision, warnings=warnings, info=info)
     # Preview never acquires the file lock, stages bytes or reconciles intent.

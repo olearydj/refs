@@ -35,9 +35,7 @@ def test_hierarchy_counts_filters_and_no_writes(initialized, zotero_fixture, tmp
     assert initialized("list", "--collection", "Empty")["data"]["total"] == 0
     assert (tmp_path / "cat/catalog.sqlite").read_bytes() == before
     record = sources.show(tmp_path / "cat", "extra2")
-    sources.change_identity(
-        tmp_path / "cat", "extra2", record["revision"], state="removed", execute=True
-    )
+    sources.set_state(tmp_path / "cat", "extra2", record["revision"], "removed", execute=True)
     assert initialized("list", "--collection", "Résearch/Methods")["data"]["total"] == 1
     assert (
         next(

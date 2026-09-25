@@ -59,6 +59,6 @@ def test_dry_run_and_removed_never_bind(initialized,tmp_path):
     before=(catalog/'catalog.sqlite').read_bytes()
     importing.run(catalog,b'@book{new,title={A Study},doi={10.5555/study},publisher={Press}}','incoming.bib',dry_run=True)
     assert (catalog/'catalog.sqlite').read_bytes()==before
-    sources.change_identity(catalog,record['id'],record['revision'],state='removed',execute=True)
+    sources.set_state(catalog,record['id'],record['revision'],'removed',execute=True)
     with pytest.raises(RefError,match='removed'):
         create(catalog)
