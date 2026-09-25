@@ -12,12 +12,14 @@ from importlib.resources import files
 from pathlib import Path
 from uuid import uuid4
 
+from refs import logging as action_log
 from refs.config import Settings, absolute, toml_text
 from refs.results import RefError, upgrade_notices
 
 
 @contextmanager
 def connect(catalog: Path, *, write: bool = False):
+    action_log.bind(action_log.command(), catalog)
     db = catalog / "catalog.sqlite"
     if not db.is_file():
         raise RefError("catalog_missing", "Selected catalog is missing", path=str(catalog))
@@ -25,6 +27,8 @@ def connect(catalog: Path, *, write: bool = False):
         raise RefError("recovery_required", "Catalog initialization is incomplete", 5, path=str(catalog))
     if write and (not os.access(catalog,os.W_OK) or not os.access(db,os.W_OK)):
         raise RefError('home_not_writable','Allow write access to the selected catalog and its staging directory, then retry',5,path=str(catalog))
+    if write:
+        action_log.setup(catalog, mutation=True)
     connection = sqlite3.connect(db.as_uri() + ("?mode=rw" if write else "?mode=ro"), uri=True, timeout=5)
     connection.row_factory = sqlite3.Row
     try:
@@ -91,11 +95,13 @@ def init(settings: Settings, library: Path | None, dry_run: bool = False, *, reu
         return dict(dry_run=True, paths=settings.describe(), library=str(library) if library else None)
     catalog.mkdir(mode=0o700, parents=True, exist_ok=True)
     catalog.chmod(0o700)
+    action_log.setup(catalog, mutation=True)
     config.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
     if library:
         library.mkdir(mode=0o700, parents=True, exist_ok=True)
     db = catalog / "catalog.sqlite"
     db.touch(mode=0o600, exist_ok=False)
+    action_log.log_mutation('catalog.init', str(catalog), None, {'schema_version': 5, 'library': str(library) if library else None})
     catalog_id = str(uuid4())
     with closing(sqlite3.connect(db)) as connection, connection:
         connection.execute("PRAGMA foreign_keys=ON")
@@ -139,6 +145,10 @@ def migrate(catalog: Path) -> None:
         raise RefError('recovery_required', 'Inspect the incomplete catalog before migrating', 5)
     with closing(sqlite3.connect((catalog/'catalog.sqlite').resolve().as_uri()+'?mode=rw', uri=True)) as connection, connection:
         connection.execute('PRAGMA foreign_keys=ON')
+        before = connection.execute('SELECT schema_version FROM catalog_meta').fetchone()[0]
+        if before != 5:
+            action_log.setup(catalog, mutation=True)
+            action_log.log_mutation('schema.upgrade', str(catalog), {'schema_version':before}, {'schema_version':5})
         upgrade_connection(connection)
 
 
@@ -163,6 +173,8 @@ def ensure_schema(catalog: Path, connection: sqlite3.Connection) -> None:
         with closing(sqlite3.connect(db.as_uri()+'?mode=rw', uri=True)) as c, c:
             c.execute('BEGIN IMMEDIATE')
             try:
+                action_log.setup(catalog, mutation=True)
+                action_log.log_mutation('schema.upgrade', str(catalog), {'schema_version': current}, {'schema_version': 5}, safety_copy=str(safety))
                 with safety.open('xb'):
                     safety.chmod(0o600)
                 with closing(sqlite3.connect(db.as_uri()+'?mode=ro', uri=True)) as source, source, closing(sqlite3.connect(safety)) as target, target:

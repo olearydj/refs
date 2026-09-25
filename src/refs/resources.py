@@ -10,6 +10,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from refs import files, sources
+from refs import logging as action_log
 from refs.catalog import changed, connect
 from refs.config import Settings
 from refs.results import RefError
@@ -71,7 +72,7 @@ def touch_source(connection, source_id):
 
 def link_in(connection, settings: Settings, reference: str, *, path=None, root=None, relative=None, label=None, media_type=None, dry_run=False) -> dict:
     source_id = sources.resolve(connection, reference)
-    source = connection.execute('SELECT citation_key,state FROM sources WHERE id=?',(source_id,)).fetchone()
+    source = connection.execute('SELECT citation_key,state,revision FROM sources WHERE id=?',(source_id,)).fetchone()
     if source['state'] != 'active':
         raise RefError('source_removed', 'Reactivate the source before adding resources')
     locator = locate(settings,path=path,root=root,relative=relative)
@@ -81,6 +82,8 @@ def link_in(connection, settings: Settings, reference: str, *, path=None, root=N
         return next(item for item in inventory(connection,source_id) if item['id']==existing[0]) | dict(unchanged=True,citation_key=source['citation_key'])
     item = dict(id=str(uuid4()),source_id=source_id,revision=1,**locator,label=label,media_type=media_type,digest=None)
     if not dry_run:
+        action_log.log_mutation('resource.link', {'id':item['id'],'source_id':source_id,'citation_key':source['citation_key']},
+                                None, item, source_revision_before=source['revision'], source_revision_after=source['revision']+1)
         connection.execute('INSERT INTO resources (id,source_id,locator,path,root,relative,label,media_type) VALUES (?,?,?,?,?,?,?,?)', (item['id'],source_id,encoded,locator['path'],locator['root'],locator['relative'],label,media_type))
         touch_source(connection,source_id)
     return item | dict(dry_run=dry_run,citation_key=source['citation_key'],resolved_path=str(resolve_path(settings,item)))
@@ -163,8 +166,11 @@ def unlink(settings: Settings, resource_id: str, *, execute=False) -> dict:
         item = next((item for item in inventory(connection) if item['id']==resource_id),None)
         if item is None:
             return dict(id=resource_id, unchanged=True, dry_run=not execute)
-        key = connection.execute('SELECT citation_key FROM sources WHERE id=?',(item['source_id'],)).fetchone()[0]
+        source = connection.execute('SELECT citation_key,revision FROM sources WHERE id=?',(item['source_id'],)).fetchone()
+        key = source['citation_key']
         if execute:
+            action_log.log_mutation('resource.unlink', {'id':resource_id,'source_id':item['source_id'],'citation_key':key},
+                                    item, None, source_revision_before=source['revision'], source_revision_after=source['revision']+1)
             connection.execute('DELETE FROM resources WHERE id=?',(resource_id,))
             touch_source(connection,item['source_id'])
     return item | dict(dry_run=not execute,citation_key=key)
@@ -206,11 +212,13 @@ def import_links(connection, settings: Settings, source_id: str, proposals: list
                     target = Path(origin).parent/target
                 items.append(link_in(connection,settings,source_id,path=target,dry_run=dry_run))
             except RefError as exc:
+                if exc.issue['code'] == 'log_unwritable':
+                    raise
                 warnings.append(exc.issue)
     return items,warnings
 
 
-def register_copy(settings: Settings, source: dict, target: Path, digest: str, origin: dict, existing: dict | None, *, label=None, media_type=None) -> dict:
+def register_copy(settings: Settings, source: dict, target: Path, digest: str, origin: dict, existing: dict | None, *, label=None, media_type=None, new_resource_id=None) -> dict:
     locator = locate(settings,path=target)
     encoded = json.dumps(locator,sort_keys=True)
     with connect(settings.catalog_path(),write=True) as connection:
@@ -224,7 +232,7 @@ def register_copy(settings: Settings, source: dict, target: Path, digest: str, o
                 raise RefError('stale_revision','Resource changed during copying; inspect the finished copy')
             resource_id = existing['id']
         else:
-            resource_id = str(uuid4())
+            resource_id = new_resource_id or str(uuid4())
             connection.execute('INSERT INTO resources (id,source_id,locator,path,root,relative,label,media_type,digest,copied_from_json) VALUES (?,?,?,?,?,?,?,?,?,?)',
                                (resource_id,source['id'],encoded,locator['path'],locator['root'],locator['relative'],label,media_type,digest,json.dumps(origin)))
         touch_source(connection,source['id'])
@@ -250,12 +258,22 @@ def copy(settings: Settings, reference: str, path: Path, *, resource_id=None, ke
     published = False
     try:
         with files.file_lock(settings.catalog_path()):
+            resource_id = existing['id'] if existing else str(uuid4())
+            intended_digest = files.hash_file(source_path)
+            action_log.log_mutation('resource.copy', {'id':resource_id,'source_id':source['id'],'citation_key':source['citation_key']},
+                                    existing,
+                                    (existing or {'id':resource_id,'source_id':source['id'],'label':label,'media_type':media_type}) |
+                                    {'revision':existing['revision']+1 if existing else 1,**locate(settings,path=target),'digest':intended_digest,'copied_from':origin},
+                                    old_path=str(source_path), new_path=str(target), digest=intended_digest,
+                                    source_revision_before=source['revision'], source_revision_after=source['revision']+1)
             folder.mkdir(parents=True,exist_ok=True)
             with files.verified_copy(settings.catalog_path(),source_path,target) as digest:
                 published = True
-                registered = register_copy(settings,source,target,digest,origin,existing,label=label,media_type=media_type)
+                registered = register_copy(settings,source,target,digest,origin,existing,label=label,media_type=media_type,new_resource_id=resource_id)
         return registered | dict(citation_key=source['citation_key'],resolved_path=str(target),destination=str(target),copied=True,warnings=warnings)
     except (OSError,sqlite3.Error,RefError) as exc:
+        if isinstance(exc,RefError) and exc.issue['code'] == 'log_unwritable':
+            raise
         if published:
             raise RefError('copy_published_unregistered','Finished copy remains unregistered; inspect it and link it explicitly',4,path=str(target),details={'cause':str(exc)},data=dict(source_id=source['id'],resource_id=existing['id'] if existing else None,original=str(source_path),destination=str(target))) from exc
         if isinstance(exc,RefError):
@@ -328,6 +346,8 @@ def capture_file(settings: Settings, data: dict, path: Path, *, linked=False, mo
         current = inspect_source(settings,data['id'])
         return current | dict(outcome=data['outcome'],warnings=data.get('warnings',[])+resource.get('warnings',[])) | {key:resource[key] for key in ('moves','unlinked_paths') if key in resource}, resource
     except (RefError,OSError) as exc:
+        if isinstance(exc,RefError) and exc.issue['code'] == 'log_unwritable':
+            raise
         current = inspect_source(settings,data['id'])
         details = dict(cause=str(exc),original=str(path))
         if isinstance(exc,RefError) and exc.data:

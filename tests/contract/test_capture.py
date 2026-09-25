@@ -23,10 +23,11 @@ def test_capture_original_and_show(initialized, tmp_path, reference_path):
 
 def test_preview_does_not_change_catalog(initialized, tmp_path, reference_path):
     catalog = tmp_path / "cat"
-    before = {p.name: p.read_bytes() for p in catalog.iterdir()}
+    before = {p.name: p.read_bytes() for p in catalog.iterdir() if p.name != 'refs.log'}
     result = initialized("add", "--format", "refs", "--input", reference_path, "--dry-run")
     assert result["data"]["dry_run"]
-    assert {p.name: p.read_bytes() for p in catalog.iterdir()} == before
+    assert {p.name: p.read_bytes() for p in catalog.iterdir() if p.name != 'refs.log'} == before
+    assert [json.loads(line)['event'] for line in (catalog/'refs.log').read_text().splitlines()[-2:]] == ['command.open','command.close']
 
 
 def test_repeat_is_noop_and_conflict_never_overwrites(initialized, tmp_path, reference_path):

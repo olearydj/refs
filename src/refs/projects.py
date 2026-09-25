@@ -3,6 +3,7 @@
 from pathlib import Path
 from uuid import uuid4
 
+from refs import logging as action_log
 from refs import sources
 from refs.catalog import changed, connect
 from refs.results import RefError
@@ -27,6 +28,7 @@ def create(catalog: Path, name: str, description: str, *, dry_run: bool = False)
         if dry_run:
             return dict(dry_run=True, name=name, description=description)
         project = dict(id=str(uuid4()), name=name, description=description, revision=1)
+        action_log.log_mutation('project.create', {'id':project['id'],'name':name}, None, project)
         connection.execute("INSERT INTO projects VALUES (:id, :name, :description, :revision)", project)
         changed(connection)
         return project
@@ -40,6 +42,8 @@ def cite(catalog: Path, project_ref: str, source_ref: str, *, dry_run: bool = Fa
             raise RefError("source_removed", "Removed sources cannot be cited")
         existing = connection.execute("SELECT 1 FROM project_sources WHERE project_id=? AND source_id=?", (project["id"], source_id)).fetchone()
         if not existing and not dry_run:
+            action_log.log_mutation('project.cite', {'id':project['id'],'name':project['name'],'source_id':source_id},
+                                    {'revision':project['revision'],'cited':False}, {'revision':project['revision']+1,'cited':True})
             connection.execute("INSERT INTO project_sources VALUES (?, ?, 1)", (project["id"], source_id))
             connection.execute("UPDATE projects SET revision=revision+1 WHERE id=?", (project["id"],))
             changed(connection)
@@ -82,6 +86,9 @@ def cite_import(catalog: Path, project_ref: str, origin: str, *, dry_run=False) 
         existing = {row[0] for row in connection.execute('SELECT source_id FROM project_sources WHERE project_id=? AND cited=1', (project['id'],))}
         new = [source_id for source_id in selected if source_id not in existing]
         if new and not dry_run:
+            action_log.log_mutation('project.cite', {'id':project['id'],'name':project['name']},
+                                    {'revision':project['revision']}, {'revision':project['revision']+1},
+                                    changes={'source_ids':{'old':[],'new':new}}, origin=origin)
             connection.executemany('INSERT INTO project_sources VALUES (?, ?, 1) ON CONFLICT(project_id,source_id) DO UPDATE SET cited=1', [(project['id'], source_id) for source_id in new])
             connection.execute('UPDATE projects SET revision=revision+1 WHERE id=?', (project['id'],))
             changed(connection)
@@ -94,6 +101,8 @@ def uncite(catalog: Path, project_ref: str, source_ref: str, *, dry_run: bool = 
         source_id = sources.resolve(connection, source_ref)
         exists = bool(connection.execute('SELECT 1 FROM project_sources WHERE project_id=? AND source_id=?', (project['id'], source_id)).fetchone())
         if exists and not dry_run:
+            action_log.log_mutation('project.uncite', {'id':project['id'],'name':project['name'],'source_id':source_id},
+                                    {'revision':project['revision'],'cited':True}, {'revision':project['revision']+1,'cited':False})
             connection.execute('DELETE FROM project_sources WHERE project_id=? AND source_id=?', (project['id'], source_id))
             connection.execute('UPDATE projects SET revision=revision+1 WHERE id=?', (project['id'],))
             changed(connection)

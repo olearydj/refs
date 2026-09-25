@@ -9,6 +9,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from refs import files, naming, resources, sources
+from refs import logging as action_log
 from refs.catalog import connect
 from refs.results import RefError
 
@@ -46,8 +47,20 @@ def flush(path, directory=False):
         os.close(descriptor)
 
 
+def log_state(row, state):
+    action_log.log_mutation('resource.move', {'operation_id':row['id'],'resource_id':row['resource_id']},
+                            {'state':row.get('state')}, {'state':state}, old_path=row['old_path'],
+                            new_path=row['new_path'], digest=row.get('digest'),
+                            resource_revision_before=row['resource_revision'],
+                            resource_revision_after=row['resource_revision']+int(state in ('recorded','unlinked','removed')),
+                            source_revision_before=row['source_revision'],
+                            source_revision_after=row['source_revision']+int(state in ('recorded','unlinked','removed')))
+
+
 def save(settings, row, **values):
     values['updated_at'] = datetime.now(UTC).isoformat()
+    if 'state' in values and values['state'] != row['state'] and values['state'] != 'published':
+        log_state(row, values['state'])
     with connect(settings.catalog_path(),write=True) as c:
         c.execute('UPDATE file_operations SET '+','.join(key+'=?' for key in values)+' WHERE id=?',(*values.values(),row['id']))
     row.update(values)
@@ -80,13 +93,18 @@ def create(settings, resource_id, target):
         raise RefError('destination_exists','Inspect the occupied destination; moves never overwrite')
     staging=settings.catalog_path()/'staging'
     safe_path(staging)
+    operation_id = str(uuid4())
+    action_log.log_mutation('resource.move', {'operation_id':operation_id,'resource_id':resource_id},
+                            None, {'state':'staged'}, old_path=str(original), new_path=str(target), digest=None,
+                            resource_revision_before=item['revision'], resource_revision_after=item['revision'],
+                            source_revision_before=source['revision'], source_revision_after=source['revision'])
     staging.mkdir(exist_ok=True)
     if staging.stat().st_dev != settings.library.stat().st_dev:
         raise RefError('staging_volume_mismatch','Keep staging and library on the same volume')
     stage=staging/('move-'+str(uuid4()))
     stage.touch(exist_ok=False)
     now=datetime.now(UTC).isoformat()
-    row=dict(id=str(uuid4()),resource_id=resource_id,old_path=str(original),new_path=str(target),old_name=original.name,new_name=target.name,staging_path=str(stage),original_identity=json.dumps(identity(original)),staging_identity=json.dumps(identity(stage)),destination_identity=None,digest=None,source_revision=source['revision'],resource_revision=item['revision'],loc=source.get('loc'),state='staged',last_state=None,error=None,created_at=now,updated_at=now)
+    row=dict(id=operation_id,resource_id=resource_id,old_path=str(original),new_path=str(target),old_name=original.name,new_name=target.name,staging_path=str(stage),original_identity=json.dumps(identity(original)),staging_identity=json.dumps(identity(stage)),destination_identity=None,digest=None,source_revision=source['revision'],resource_revision=item['revision'],loc=source.get('loc'),state='staged',last_state=None,error=None,created_at=now,updated_at=now)
     with connect(settings.catalog_path(),write=True) as c:
         c.execute('INSERT INTO file_operations ('+','.join(row)+') VALUES ('+','.join('?' for _ in row)+')',tuple(row.values()))
     return row
@@ -103,6 +121,7 @@ def record_destination(settings,row):
         if item['revision'] != row['resource_revision'] or source.get('loc') != row['loc'] or source['state'] != 'active':
             raise RefError('stale_revision','Source placement or resource changed; inspect the move')
         origin={key:item[key] for key in ('path','root','relative')}
+        log_state(row, 'recorded')
         c.execute('UPDATE resources SET locator=?,path=?,root=?,relative=?,digest=?,copied_from_json=?,revision=revision+1 WHERE id=?',
                   (json.dumps(locator,sort_keys=True),locator['path'],locator['root'],locator['relative'],row['digest'],json.dumps(origin),item['id']))
         resources.touch_source(c,source['id'])
@@ -142,6 +161,7 @@ def resume(settings,row):
                 save(settings,row,staging_identity=json.dumps(identity(stage)),digest=digest)
                 checkpoint('staged',row)
                 safe_path(target,settings.library)
+                log_state(row, 'published')
                 target.parent.mkdir(parents=True,exist_ok=True)
                 os.link(stage,target)
                 if files.hash_file(target)!=digest:
@@ -165,13 +185,17 @@ def resume(settings,row):
                     raise RefError('source_changed','Original changed; it was not deleted')
                 flush(target)
                 flush(target.parent,directory=True)
+                log_state(row, 'unlinked')
                 original.unlink()
                 checkpoint('unlinked',row)
+                row['state'] = 'unlinked'
             save(settings,row,state='removed',error=None)
             checkpoint('removed',row)
         return row
     except (OSError,RefError) as exc:
-        save(settings,row,last_state=row['state'],state='failed',error=str(exc))
+        if isinstance(exc,RefError) and exc.issue['code'] == 'log_unwritable':
+            raise
+        save(settings,row,last_state='recorded' if row['state']=='unlinked' else row['state'],state='failed',error=str(exc))
         raise RefError('move_incomplete','Move incomplete; inspect the report and rerun the command',4,data=dict(moves=[report(row)],unlinked_paths=[]),details={'cause':str(exc)}) from exc
 
 

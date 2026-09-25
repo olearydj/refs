@@ -135,6 +135,7 @@ def test_read_upgrades_with_notice_and_copy(tmp_path, json_output):
         assert result.stdout.count('Upgraded catalog schema 1 to 5; safety copy:') == 1
     again = subprocess.run(command + ['list'], capture_output=True, text=True)
     assert again.returncode == 0 and 'Upgraded' not in again.stdout
+    assert [json.loads(line)['event'] for line in (path/'refs.log').read_text().splitlines()].count('schema.upgrade') == 1
 
 
 def test_safety_copy_failure_refuses_before_migration(tmp_path, monkeypatch):
