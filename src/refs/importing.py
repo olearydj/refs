@@ -452,18 +452,12 @@ def import_collections(connection, bundle: dict) -> dict:
 
 
 def child_context(bundle: dict, parent: str) -> list[dict]:
-    import html
     result = []
     for entry in bundle['items']:
         data = entry['data']
         if data.get('parentItem') != parent:
             continue
-        text = None
-        if data['itemType'] == 'note':
-            text = html.unescape(re.sub(r'<[^>]*>', ' ', data.get('note','')))
-            text = ' '.join(text.split())
-        elif data['itemType'] == 'attachment' and data.get('linkMode') == 'linked_url':
-            text = data.get('url')
+        text = zotero.context(entry['item'])
         if text:
             result.append(dict(text=text, origin='import', original_ref=bundle['manifest']['library_uri']+'/items/'+entry['key']))
     return result
@@ -475,9 +469,7 @@ def associate(connection, bundle: dict, entry: dict, source_id: str, collections
     if not dry_run:
         for key in entry['data'].get('collections', []):
             connection.execute('INSERT OR IGNORE INTO source_collections VALUES (?,?)', (source_id,collections[key]['id']))
-        relations = entry['data'].get('relations', {}).get('dc:relation', [])
-        for target in [relations] if isinstance(relations,str) else relations:
-            endpoint = target.removeprefix('http://zotero.org/').removeprefix('https://zotero.org/')
+        for endpoint in zotero.relations(entry['item']):
             uri, _, key = endpoint.rpartition('/items/')
             bound = connection.execute("SELECT source_id FROM origin_identities WHERE namespace='zotero' AND library_uri=? AND item_key=?", (uri,key)).fetchone()
             connection.execute('INSERT OR IGNORE INTO source_relations VALUES (?,?,?,?)', (source_id,endpoint,bound[0] if bound else None,bundle['manifest']['library_uri']))

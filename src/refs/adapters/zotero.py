@@ -1,6 +1,7 @@
 """Admission and mapping of the published Zotero JSON directory."""
 
 import json
+import html
 import re
 from pathlib import Path
 from urllib.parse import urlparse
@@ -14,6 +15,44 @@ CHILDREN = {'attachment', 'note', 'annotation'}
 KEY = re.compile(r'[A-Z0-9]{8}')
 SCHEMES = {'arxiv': 'extensions.identifiers.arxiv', 'oclc': 'extensions.identifiers.oclc',
            'doi': 'metadata.DOI', 'pmid': 'metadata.PMID', 'pmcid': 'metadata.PMCID', 'issn': 'metadata.ISSN'}
+
+
+def attachment_path(item: dict, manifest: dict) -> Path:
+    data = item['data']
+    mode = data.get('linkMode')
+    expression = data.get('path', '')
+    if mode in ('imported_file', 'imported_url'):
+        suffix = Path(data.get('filename') or '')
+        if not suffix.name or suffix.is_absolute() or '..' in suffix.parts:
+            raise RefError('invalid_attachment_path', 'Inspect the stored attachment filename')
+        return Path(manifest['data_directory']) / 'storage' / item['key'] / suffix
+    if mode == 'linked_file':
+        if expression.startswith('attachments:'):
+            if not manifest.get('base_path'):
+                raise RefError('attachment_base_missing', 'Supply the original linked-attachment base path')
+            suffix = Path(expression.removeprefix('attachments:'))
+            if suffix.is_absolute() or '..' in suffix.parts:
+                raise RefError('invalid_attachment_path', 'Inspect the base-relative attachment path')
+            return Path(manifest['base_path']) / suffix
+        path = Path(expression)
+        if path.is_absolute():
+            return path
+        raise RefError('invalid_attachment_path', 'Supply an absolute or base-relative attachment path')
+    raise RefError('unsupported_attachment', 'Inspect the attachment link mode')
+
+
+def context(item: dict) -> str | None:
+    data = item['data']
+    if data['itemType'] == 'note':
+        return ' '.join(html.unescape(re.sub(r'<[^>]*>', ' ', data.get('note', ''))).split()) or None
+    if data['itemType'] == 'attachment' and data.get('linkMode') == 'linked_url':
+        return data.get('url')
+    return None
+
+
+def relations(item: dict) -> list[str]:
+    values = item['data'].get('relations', {}).get('dc:relation', [])
+    return [target.removeprefix('http://zotero.org/').removeprefix('https://zotero.org/') for target in ([values] if isinstance(values, str) else values)]
 
 
 def read(directory: Path) -> dict:

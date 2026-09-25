@@ -367,29 +367,10 @@ def capture_file(settings: Settings, data: dict, path: Path, *, mode: str, keep_
 
 def zotero_attachment(connection, settings, source_id: str, item: dict, manifest: dict, *, dry_run=False) -> dict:
     """Resolve original Zotero locators; never use the extraction directory."""
+    from refs.adapters.zotero import attachment_path
+
     data = item['data']
-    mode = data.get('linkMode')
-    expression = data.get('path', '')
-    if mode in ('imported_file', 'imported_url'):
-        base = Path(manifest['data_directory'])/'storage'/item['key']
-        suffix = Path(data.get('filename') or '')
-        if not suffix.name or suffix.is_absolute() or '..' in suffix.parts:
-            raise RefError('invalid_attachment_path', 'Inspect the stored attachment filename')
-        path = base/suffix
-    elif mode == 'linked_file':
-        if expression.startswith('attachments:'):
-            if not manifest.get('base_path'):
-                raise RefError('attachment_base_missing', 'Supply the original linked-attachment base path')
-            suffix = Path(expression.removeprefix('attachments:'))
-            if suffix.is_absolute() or '..' in suffix.parts:
-                raise RefError('invalid_attachment_path', 'Inspect the base-relative attachment path')
-            path = Path(manifest['base_path'])/suffix
-        else:
-            path = Path(expression)
-            if not path.is_absolute():
-                raise RefError('invalid_attachment_path', 'Supply an absolute or base-relative attachment path')
-    else:
-        raise RefError('unsupported_attachment', 'Inspect the attachment link mode')
+    path = attachment_path(item, manifest)
     locator = locate(settings, path=path) if settings else dict(path=str(path), root=None, relative=None)
     identity = json.dumps(locator, sort_keys=True)
     old = connection.execute('SELECT id FROM resources WHERE source_id=? AND locator=?', (source_id, identity)).fetchone()
