@@ -14,7 +14,7 @@ All results contain schema_version="1.0", command, status, data, warnings and er
 
 Project cite and uncite results include citation_key and project_name; add with a file includes file_action, key set includes previous_key, and an `export_blocked` error names the destination in its path member in both output modes.
 
-Failure envelopes name the command that failed; unexpected failures use `internal_error` with exit 5 and no traceback, and a bare command group writes help to stderr with one `invalid_invocation` envelope on stdout in JSON mode.
+Failure envelopes name the command that failed; unexpected failures use `internal_error` with exit 5 and no traceback, invalid argument combinations use `invalid_invocation` with exit 2, and a bare command group writes help to stderr with one `invalid_invocation` envelope on stdout in JSON mode.
 
 | Exit | Meaning |
 | --- | --- |

@@ -51,7 +51,7 @@ def configure(ctx: typer.Context,
 
 
 def record_group(ctx: typer.Context):
-    failed_command.set(ctx.command.name + (' ' + ctx.invoked_subcommand if ctx.invoked_subcommand else ''))
+    failed_command.set((ctx.command.name or '') + (' ' + ctx.invoked_subcommand if ctx.invoked_subcommand else ''))
 
 
 def report(ctx: typer.Context, command: str, data: dict, **text_context) -> None:
@@ -177,7 +177,7 @@ def project_cite(ctx: typer.Context, project: str, reference: Annotated[str | No
                  dry_run: Annotated[bool, typer.Option()] = False):
     catalog = settings(ctx).catalog_path()
     if (reference is None) == (from_import is None):
-        raise RefError('invalid_arguments', 'Supply one source or --from-import ORIGIN', 2)
+        raise RefError('invalid_invocation', 'Supply one source or --from-import ORIGIN', 2)
     if from_import is not None:
         report(ctx, 'project cite', projects.cite_import(catalog, project, from_import, dry_run=dry_run))
         return

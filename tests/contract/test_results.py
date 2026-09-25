@@ -48,6 +48,23 @@ def test_unexpected_service_error_has_envelope_without_traceback(initialized,tmp
     assert 'synthetic fault' not in json.dumps(result)
 
 
+def test_integrity_error_exits_five_with_command(initialized,tmp_path,monkeypatch,capsys):
+    import sys
+
+    from refs import cli
+
+    def fail(*args):
+        raise RefError('integrity_error', 'Published bytes differ')
+    monkeypatch.setattr(cli.resources, 'inspect_source', fail)
+    monkeypatch.setattr(sys, 'argv', ['refs', '--json', '--no-project-config', '--config', str(tmp_path/'config.toml'),
+                                     '--catalog', str(tmp_path/'cat'), 'show', 'source'])
+    with pytest.raises(SystemExit) as caught:
+        cli.main()
+    result = json.loads(capsys.readouterr().out)
+    assert caught.value.code == 5
+    assert result['command'] == 'show' and result['errors'][0]['code'] == 'integrity_error'
+
+
 @pytest.mark.parametrize("exit_code", [2, 3, 4, 5, 6])
 def test_error_envelope(exit_code, capsys):
     error = RefError("example", "An explanation", exit_code, path="/temporary", retryable=exit_code == 6)

@@ -167,7 +167,7 @@ def style_key(value: str, key: str, terminal: bool, width: int) -> str:
     return output.getvalue().rstrip('\n')
 
 
-def record_list(command: str, data: dict, terminal: bool, width: int) -> str:
+def record_list(command: str, data: dict, terminal: bool, width: int, warnings: list[dict] | None = None) -> str:
     items = data['items'] if 'items' in data else data['sources']
     if not items:
         return '(no sources)'
@@ -211,7 +211,7 @@ def record_list(command: str, data: dict, terminal: bool, width: int) -> str:
     return rendered + '\n' + styled_line(f"{len(items)} {'source' if len(items) == 1 else 'sources'}", 'dim', terminal, width)
 
 
-def one_record(command: str, data: dict, terminal: bool, width: int) -> str:
+def one_record(command: str, data: dict, terminal: bool, width: int, warnings: list[dict] | None = None) -> str:
     metadata = data['metadata']
     rows = [
         ['Key', data['citation_key']], ['Type', metadata['type']],
@@ -232,7 +232,7 @@ def one_record(command: str, data: dict, terminal: bool, width: int) -> str:
     return table_rows(rows, wrap=1, styles={0: 'dim'}, limits={1: max(20, width - 22)} if terminal else None, fixed={1}, key_cells={(0, 1)}, path_cells={(index, 1) for index, row in enumerate(rows) if row[0] == 'Files' and row[1] != '(none)'}, terminal=terminal, width=width)
 
 
-def short_rows(command: str, data: dict, terminal: bool, width: int) -> str:
+def short_rows(command: str, data: dict, terminal: bool, width: int, warnings: list[dict] | None = None) -> str:
     rows = []
     if command == 'import list':
         for item in data['items']:
@@ -290,18 +290,18 @@ def short_rows(command: str, data: dict, terminal: bool, width: int) -> str:
     return body
 
 
-def report_text(command: str, data: dict, terminal: bool, width: int, warnings: list[dict]) -> str:
+def report_text(command: str, data: dict, terminal: bool, width: int, warnings: list[dict] | None = None) -> str:
     if command == 'reorg':
         return short_rows(command, data, terminal, width)
     if command == 'export':
         count = data['count']
-        return f"Wrote {data['output']} ({count} entries, {len(warnings)} warnings)" if count else f"Wrote {data['output']} (0 entries)"
+        return f"Wrote {data['output']} ({count} entries, {len(warnings or [])} warnings)" if count else f"Wrote {data['output']} (0 entries)"
     if command.startswith('import'):
         return import_text(command, data, terminal, width)
     raise KeyError(command)
 
 
-def confirmation(command: str, data: dict, terminal: bool, width: int) -> str:
+def confirmation(command: str, data: dict, terminal: bool, width: int, warnings: list[dict] | None = None) -> str:
     key, revision = data.get('citation_key', ''), data.get('revision', '')
     if command == 'paths':
         return table_rows([[label, data[name]['path'] or '(not configured)'] for name, label in [('config', 'Configuration'), ('catalog', 'Catalog'), ('library', 'Library')]], wrap=1, limits={1: max(20, width - 20)} if terminal else None, fixed={1}, path_cells={(0, 1), (1, 1), (2, 1)}, terminal=terminal, width=width)
@@ -360,7 +360,7 @@ def render_text(command: str, data: dict, warnings: list[dict], *, terminal: boo
     if command == 'project show' and 'items' in data or command == 'open' and 'choices' not in data:
         kind = 'confirmation'
     renderer = CLASS_RENDERERS[kind]
-    text = renderer(command, data, terminal, width, warnings) if kind == 'report' else renderer(command, data, terminal, width)
+    text = renderer(command, data, terminal, width, warnings)
     if kind == 'confirmation':
         text = style_key(text, data.get('citation_key', ''), terminal, width)
     if command == 'project show' and 'sources' in data:
