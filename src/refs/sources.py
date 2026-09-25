@@ -45,9 +45,9 @@ def record(connection, source_id: str) -> dict:
                 continue
             if limitation not in result['limitations']:
                 result['limitations'].append(limitation)
-    from refs.adapters.bibtex import preserved_fields
-    raw_entries = connection.execute("SELECT DISTINCT raw_bytes FROM originals WHERE source_id=? AND format='bib' AND instr(lower(CAST(raw_bytes AS TEXT)), 'howpublished')>0", (source_id,))
-    preserved = {field for raw, in raw_entries for field in preserved_fields(raw)}
+    from refs.adapters.bibtex import original_facts
+    raw_entries = connection.execute("SELECT DISTINCT raw_bytes FROM originals WHERE source_id=? AND format='bib'", (source_id,))
+    preserved = {'howpublished' for raw, in raw_entries for entry in original_facts(raw) if entry['howpublished']}
     for field in sorted(preserved):
         if not any(item['field'] == field for item in result['limitations']):
             result['limitations'].append(dict(field=field, reason=f'Preserved from import: {field}'))

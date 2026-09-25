@@ -15,7 +15,6 @@ ALLOWED=[
     ('importing.py','INSERT OR IGNORE INTO source_relations VALUES (?,?,?,?)'),
     ('importing.py','INSERT OR IGNORE INTO origin_identities VALUES (?,?,?,?,?)'),
     ('importing.py',"SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json,'$.title'))=lower(?)"),
-    ('sources.py',"SELECT DISTINCT raw_bytes FROM originals WHERE source_id=? AND format='bib' AND instr(lower(CAST(raw_bytes AS TEXT)), 'howpublished')>0"),
     ('sources.py',"SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json, '$.title'))=lower(?)"),
     ('bibliography.py','INSERT INTO export_targets VALUES (?,?,?,?,NULL) ON CONFLICT(destination) DO UPDATE SET project_id=excluded.project_id, profile_fingerprint=excluded.profile_fingerprint, baseline_digest=excluded.baseline_digest, pending_digest=NULL'),
     ('bibliography.py','INSERT INTO export_targets VALUES (?, ?, ?, NULL, ?) ON CONFLICT(destination) DO UPDATE SET project_id=excluded.project_id, profile_fingerprint=excluded.profile_fingerprint, baseline_digest=NULL, pending_digest=excluded.pending_digest'),

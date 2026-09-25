@@ -83,8 +83,16 @@ def partition(raw: bytes) -> list[dict]:
 
 
 
-def preserved_fields(raw: bytes) -> set[str]:
-    return {field.key.lower() for entry in bibtexparser.parse_string(raw.decode('utf-8')).entries for field in entry.fields if field.key.lower() == 'howpublished'}
+def original_facts(raw: bytes) -> list[dict]:
+    """Read format-specific evidence once; callers decide how it affects a record."""
+    facts = []
+    for entry in bibtexparser.parse_string(raw.decode('utf-8')).entries:
+        fields = [(field.key.lower(), field.value) for field in entry.fields]
+        facts.append(dict(type=entry.entry_type.lower(), howpublished=[value for name, value in fields if name == 'howpublished'],
+                          tex_notices=[dict(code='tex_decoded', path=name, message=f'TeX relax or a dotless-i accent in {name} was decoded to Unicode; Pandoc may render the original spelling differently') for name, value in fields if name in ('author', 'editor', 'publisher', 'institution', 'school') and re.search(r'\\relax|\\[uvH]\s*\{?\s*\\i', value)],
+                          containers=[(name, value) for name, value in fields if name in ('journal', 'journaltitle', 'booktitle')],
+                          titles=[value for name, value in fields if name == 'title']))
+    return facts
 
 def decode(value: str) -> str:
     # Unknown macros must not disappear through the text decoder.
