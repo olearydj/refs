@@ -51,6 +51,10 @@ def materialize_zotero(path: Path, directory: Path) -> int:
             raise ValueError(f'Duplicate synthetic item key at {index}')
         used.add(key)
         data['key'] = key
+        if isinstance(data.get('extra'), list):
+            if not all(isinstance(line, str) for line in data['extra']):
+                raise ValueError(f'Extra lines are not text at {index}')
+            data['extra'] = '\n'.join(data['extra'])
         if parent:
             data['parentItem'] = parent
         if isinstance(data.get('relations'), list):
@@ -182,9 +186,11 @@ def run(sample: Path, work: Path, manifest_path: Path) -> dict:
                 if again_code not in (0, 4) or again_counts.get('applied') != 0:
                     raise AssertionError(f'Zotero re-import applied records: {row["path"]}: {again_counts}')
                 entry_codes = Counter(item.get('code') or 'none' for item in data.get('entries', []) if item['status'] in ('invalid','conflict'))
-                examples = {issue:next((dict(key=item.get('citation_key'), reason=item.get('message')) for item in data.get('entries', []) if item.get('code') == issue), None) for issue in entry_codes}
+                conflict_paths = Counter(path for item in data.get('entries', []) if item['status'] == 'conflict' for path in item.get('conflicts', []))
+                examples = {issue:next((dict(key=item.get('citation_key'), reason=item.get('message') or ', '.join(item.get('conflicts', [])),
+                                              paths=item.get('conflicts', [])) for item in data.get('entries', []) if item.get('code') == issue), None) for issue in entry_codes}
                 result = row | dict(import_exit=code, outcomes=data['counts'], entry_codes=dict(entry_codes), examples=examples, reimport=again_counts,
-                                    preservation=data.get('preservation', {}))
+                                    conflict_paths=dict(conflict_paths), preservation=data.get('preservation', {}))
                 phase6_cli(settings, 'project', 'create', project, timeout=remaining())
                 cite_code, cited = phase6_cli(settings, 'project', 'cite', project, '--from-import', origin, timeout=remaining())
                 if cite_code:

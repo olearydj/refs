@@ -16,6 +16,7 @@ def test_bbt_native_wrapper_keeps_items_and_children_inside_disposable_directory
     corpus = harness(monkeypatch)
     fixture = tmp_path/'source.json'
     fixture.write_text(json.dumps({'items':[{'itemType':'book', 'title':'Fixture book', 'itemID':17,
+        'extra':['First line: one','Second line: two'],
         'attachments':[{'itemType':'attachment', 'path':'/external/not-read.pdf', 'linkMode':'linked_file'}],
         'notes':['<p>Fixture note</p>']}],
         'collections':{'coll:1':{'name':'Fixture collection'}}}))
@@ -29,6 +30,7 @@ def test_bbt_native_wrapper_keeps_items_and_children_inside_disposable_directory
     attachment = next(item for item in bundle['items'] if item['data']['itemType'] == 'attachment')
     note = next(item for item in bundle['items'] if item['data']['itemType'] == 'note')
     assert parent['data']['title'] == 'Fixture book'
+    assert parent['data']['extra'] == 'First line: one\nSecond line: two'
     assert attachment['data']['parentItem'] == parent['key']
     assert Path(attachment['data']['path']).is_relative_to(directory)
     assert zotero.context(note['item']) == 'Fixture note'
