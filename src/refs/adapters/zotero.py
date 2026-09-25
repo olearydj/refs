@@ -7,7 +7,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from refs.models import REGISTRY, Date, SourceCreate, assign_path, portable_url
+from refs.models import MONTHS, REGISTRY, Date, SourceCreate, assign_path, portable_url
 from refs.results import RefError
 
 CHILDREN = {'attachment', 'note', 'annotation'}
@@ -116,8 +116,7 @@ def date_range(value: str) -> dict | None:
     elif match := re.fullmatch(r'(\d{4}(?:-\d{1,2}){0,2})\s*(?:/|–|—| to | - )\s*(\d{4}(?:-\d{1,2}){0,2})', value):
         parts = [[int(n) for n in endpoint.split('-')] for endpoint in match.groups()]
     elif match := re.fullmatch(r'(\d{1,2})\s*[-–—]\s*(\d{1,2})\s+([A-Za-z]+)\.?\s+(\d{4})', value):
-        names = 'january february march april may june july august september october november december'.split()
-        months = {alias:number for number,name in enumerate(names,1) for alias in (name,name[:3])}
+        months = {alias:number for number,pair in enumerate(MONTHS,1) for alias in pair}
         month = months.get(match[3].lower())
         if month:
             parts = [[int(match[4]), month, int(match[index])] for index in (1,2)]

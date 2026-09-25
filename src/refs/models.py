@@ -24,6 +24,12 @@ from refs import languages
 from refs.results import RefError
 
 Text = Annotated[str, StringConstraints(min_length=1, pattern=r"\S")]
+MONTHS = tuple((calendar.month_abbr[number].lower(), calendar.month_name[number].lower()) for number in range(1, 13))
+IDENTIFIER_FIELDS = ('DOI', 'URL', 'ISBN', 'ISSN', 'PMID', 'PMCID')
+
+
+def person_name(name: dict, parts: tuple[str, ...] = ('given', 'dropping-particle', 'non-dropping-particle', 'family', 'suffix'), *, strip: bool = False) -> str:
+    return ' '.join(name[part].strip() if strip else name[part] for part in parts if name.get(part))
 
 
 def normalize_doi(value: str) -> str:

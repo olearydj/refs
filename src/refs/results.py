@@ -8,6 +8,10 @@ from typing import Any
 upgrade_notices: ContextVar[list[dict]] = ContextVar("upgrade_notices", default=[])
 
 
+def notice(code: str, message: str, *, path: str | None = None, details: dict | None = None, retryable: bool = False) -> dict:
+    return dict(code=code, message=message, path=path, details=details or {}, retryable=retryable)
+
+
 class RefError(Exception):
     def __init__(self, code: str, message: str, exit_code: int = 3, *,
                  path: str | None = None, details: dict | None = None,
@@ -19,8 +23,7 @@ class RefError(Exception):
             raise ValueError("Invalid application exit code")
         self.data = data
         self.exit_code = exit_code
-        self.issue: dict[str, Any] = dict(code=code, message=message, path=path,
-                          details=details or {}, retryable=retryable)
+        self.issue: dict[str, Any] = notice(code, message, path=path, details=details, retryable=retryable)
 
 
 def emit(command: str, data: dict[str, Any] | None = None, *,

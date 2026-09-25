@@ -14,7 +14,7 @@ from uuid import uuid4
 
 from refs import logging as action_log
 from refs.config import Settings, absolute, toml_text
-from refs.results import RefError, upgrade_notices
+from refs.results import RefError, notice, upgrade_notices
 
 MIGRATIONS = ('001_initial.sql', '002_zotero_ingest.sql', '003_source_loc.sql',
               '004_file_operations.sql', '005_lowercase_unfiled.sql')
@@ -193,4 +193,4 @@ def ensure_schema(catalog: Path, connection: sqlite3.Connection) -> None:
                 c.rollback()
             c.execute('PRAGMA foreign_keys=ON')
             upgrade_connection(c)
-        upgrade_notices.set([*upgrade_notices.get(), dict(code='schema_upgraded', message=f'Upgraded catalog schema {current} to {SCHEMA_VERSION}; safety copy: {safety}', path=str(safety), details={}, retryable=False)])
+        upgrade_notices.set([*upgrade_notices.get(), notice('schema_upgraded', f'Upgraded catalog schema {current} to {SCHEMA_VERSION}; safety copy: {safety}', path=str(safety))])

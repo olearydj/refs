@@ -12,7 +12,7 @@ from refs import files, sources
 from refs import logging as action_log
 from refs.catalog import changed, connect
 from refs.config import Settings
-from refs.results import RefError
+from refs.results import RefError, notice
 
 UNFILED = "unfiled"
 
@@ -306,7 +306,7 @@ def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, 
     name, fell_back = (source_path.name, False) if keep_name else naming.filename(source,source_path.name,label,report_fallback=True)
     warnings = []
     if fell_back:
-        warnings.append(dict(code='filename_unavailable',message='Conventional filename unavailable; keeping the original name',path=str(source_path),details={},retryable=False))
+        warnings.append(notice('filename_unavailable', 'Conventional filename unavailable; keeping the original name', path=str(source_path)))
     folder = library/(source.get('loc') or UNFILED)
     if any(parent.is_symlink() for parent in [folder,*folder.parents]) or not folder.resolve().is_relative_to(library) or folder.exists() and not folder.is_dir():
         raise RefError('unsafe_path','Inspect the library unfiled path before copying')
@@ -322,8 +322,8 @@ def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, 
             except (OSError,RefError):
                 continue
             if same:
-                notice = dict(code='duplicate_attachment',message=f"Same file content already attached as resource {item['id']} ({existing_path}); no copy made",path=str(source_path),details={'resource_id':item['id'],'path':str(existing_path)},retryable=False)
-                return dict(citation_key=source['citation_key'],path=str(source_path),duplicate_resource_id=item['id'],warnings=[notice])
+                warning = notice('duplicate_attachment', f"Same file content already attached as resource {item['id']} ({existing_path}); no copy made", path=str(source_path), details={'resource_id':item['id'],'path':str(existing_path)})
+                return dict(citation_key=source['citation_key'],path=str(source_path),duplicate_resource_id=item['id'],warnings=[warning])
     if target.exists() or target.is_symlink():
         raise RefError('destination_exists','Inspect the existing destination; copy never overwrites or adopts it',path=str(target))
     preview = dict(dry_run=True,citation_key=source['citation_key'],path=str(source_path),destination=str(target),copied_from=origin,warnings=warnings)

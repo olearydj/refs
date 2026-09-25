@@ -13,7 +13,7 @@ from refs import naming, sources
 from refs.adapters import bibtex, zotero
 from refs.catalog import changed, connect
 from refs.models import SourceCreate, editable, revalidate
-from refs.results import RefError
+from refs.results import RefError, notice
 
 
 def preserve(connection, raw: bytes, locator: str, file_digest: str, *, source_id=None, format='bib', origin='import', definitions=None):
@@ -203,7 +203,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         else:
             likely = connection.execute("SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json,'$.title'))=lower(?)", (source.metadata.title,)).fetchall()
             if likely:
-                warnings.append(dict(code='likely_match', message='Similar title found; imported separately because title alone is not identity', path=None, details={'candidates':[dict(row) for row in likely]}, retryable=False))
+                warnings.append(notice('likely_match', 'Similar title found; imported separately because title alone is not identity', details={'candidates':[dict(row) for row in likely]}))
             if not dry_run:
                 if loc is not None and source.loc is None:
                     source.loc = loc
@@ -345,13 +345,7 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
         if source_id:
             result = dict(status='conflict' if conflicts else 'applied' if binding.get('filled') else 'unchanged', source_id=source_id, conflicts=conflicts)
         else:
-            provenance = dict(origin='supplied', policy=None, table_version=None, unicode_version=None)
-            if source.citation_key is None:
-                base, index = naming.key(incoming, settings.values if settings else None), 0
-                while connection.execute('SELECT 1 FROM sources WHERE citation_key=?', (base+naming.suffix(index),)).fetchone():
-                    index += 1
-                source.citation_key = base+naming.suffix(index)
-                provenance = naming.provenance(settings.values if settings else None)
+            provenance = sources.allocate_key(connection, source, settings.values if settings else None)
             if not dry_run:
                 source_id = sources.insert_source(connection, source, entry['raw'], entry['locator'], format='zotero-json', warnings=warnings, key_provenance=provenance)['id']
             result = dict(status='applied', source_id=source_id)
@@ -481,7 +475,7 @@ def associate(connection, bundle: dict, entry: dict, source_id: str, collections
             resource = zotero_attachment(connection,settings,source_id,child['item'],bundle['manifest'],dry_run=dry_run)
             resources.append(resource)
             if resource['status'] == 'missing':
-                warnings.append(dict(code='attachment_missing',message='Original attachment file is missing; restore it at the recorded path',path=child['locator'],details=resource,retryable=False))
+                warnings.append(notice('attachment_missing', 'Original attachment file is missing; restore it at the recorded path', path=child['locator'], details=resource))
         except RefError as exc:
             if exc.issue['code'] == 'log_unwritable':
                 raise

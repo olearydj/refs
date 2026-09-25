@@ -8,7 +8,7 @@ from bibtexparser.model import Entry
 from pydantic import ValidationError
 from pylatexenc.latex2text import LatexNodes2Text
 
-from refs.models import REGISTRY, SourceCreate, assign_path, portable_url
+from refs.models import MONTHS, REGISTRY, SourceCreate, assign_path, portable_url
 from refs.results import RefError
 
 # The parser reports malformed blocks through logging before returning failed_blocks.
@@ -16,16 +16,15 @@ from refs.results import RefError
 # outside the JSON envelope through logging's last-resort stderr handler.
 logging.getLogger('bibtexparser.splitter').addHandler(logging.NullHandler())
 
-MONTHS = dict(zip('jan feb mar apr may jun jul aug sep oct nov dec'.split(), range(1, 13), strict=True))
-FULL_MONTHS = dict(zip('january february march april may june july august september october november december'.split(), range(1, 13), strict=True))
+MONTH_NUMBERS = {alias: number for number, pair in enumerate(MONTHS, 1) for alias in pair}
 MARKER = re.compile(rb'@([A-Za-z]+)\s*([{(])')
 
 
 def month_number(value: str) -> int:
     text = value.strip().casefold()
-    if text.endswith('.') and text[:-1] in MONTHS:
+    if text.endswith('.') and any(text[:-1] == short for short, _ in MONTHS):
         text = text[:-1]
-    month = int(text) if text.isdecimal() else MONTHS.get(text) or FULL_MONTHS.get(text)
+    month = int(text) if text.isdecimal() else MONTH_NUMBERS.get(text)
     if month is None or not 1 <= month <= 12:
         raise ValueError(f'Invalid month: {value}')
     return month

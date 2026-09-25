@@ -15,7 +15,7 @@ from refs import logging as action_log
 from refs.adapters.search_sqlite import refresh
 from refs.catalog import changed, connect
 from refs.models import REGISTRY, SourceCreate, editable, normalize_doi, parse, revalidate
-from refs.results import RefError
+from refs.results import RefError, notice
 
 
 def core_record(connection, source_id: str) -> dict:
@@ -83,6 +83,16 @@ def bindings(source: SourceCreate) -> list[tuple[str, str, str]]:
     ))
 
 
+def allocate_key(connection, source: SourceCreate, policy: dict | None = None) -> dict:
+    if source.citation_key is not None:
+        return dict(origin='supplied', policy=None, table_version=None, unicode_version=None)
+    base, index = naming.key(source.canonical(), policy), 0
+    while connection.execute('SELECT 1 FROM sources WHERE citation_key=?', (base + naming.suffix(index),)).fetchone():
+        index += 1
+    source.citation_key = SourceCreate.valid_key(base + naming.suffix(index))
+    return naming.provenance(policy)
+
+
 def add(catalog: Path, raw: bytes, locator: str, **options) -> dict:
     result = _add(catalog,raw,locator,**options)
     if result['outcome'] == 'needs_attention':
@@ -119,15 +129,8 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
             "SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json, '$.title'))=lower(?)",
             (source.metadata.title,))]
         if likely:
-            warnings.append(dict(code="likely_match", message="Similar title found; created separately because title alone is not identity", path=None, details={"candidates": likely}, retryable=False))
-        key_provenance = {"origin": "supplied", "policy": None, "table_version": None, "unicode_version": None}
-        if source.citation_key is None:
-            base = naming.key(source.canonical(),policy)
-            index = 0
-            while connection.execute("SELECT 1 FROM sources WHERE citation_key=?", (base + naming.suffix(index),)).fetchone():
-                index += 1
-            source.citation_key = SourceCreate.valid_key(base + naming.suffix(index))
-            key_provenance = naming.provenance(policy)
+            warnings.append(notice('likely_match', 'Similar title found; created separately because title alone is not identity', details={'candidates': likely}))
+        key_provenance = allocate_key(connection, source, policy)
         if dry_run:
             if loc is not None and source.loc is None:
                 source.loc = loc
@@ -265,7 +268,7 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
             canonical, warnings = naming.normalize(canonical,policy,title_fields)
             if dropped_terms:
                 names = ', '.join(f'{field}: {term}' for field, term in dropped_terms)
-                warnings.append(dict(code='protected_terms_dropped', message=f'Protected terms no longer in the edited title were dropped: {names}', path='title_protection', details={'terms':[{'field':field,'term':term} for field,term in dropped_terms]}, retryable=False))
+                warnings.append(notice('protected_terms_dropped', f'Protected terms no longer in the edited title were dropped: {names}', path='title_protection', details={'terms':[{'field':field,'term':term} for field,term in dropped_terms]}))
             canonical = revalidate(canonical)
         except ValidationError as exc:
             raise RefError('invalid_patch', 'Patch does not match the supported record profile', 2, details={'issues':exc.errors(include_url=False,include_context=False,include_input=False)}) from exc
@@ -297,7 +300,7 @@ def change_identity(catalog: Path, reference: str, revision: int | None, *, new_
             if occupied:
                 raise RefError('key_conflict', 'Citation key is already reserved')
             field, value = 'citation_key', new_key
-            warnings = [{'code': 'external_citations_unchanged', 'message': 'External citations are not rewritten', 'path': None, 'details': {}, 'retryable': False}]
+            warnings = [notice('external_citations_unchanged', 'External citations are not rewritten')]
         else:
             field, value = 'state', state
         if current[field] == value:
