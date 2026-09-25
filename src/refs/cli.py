@@ -39,7 +39,7 @@ def configure(ctx: typer.Context,
 
 
 def report(ctx: typer.Context, command: str, data: dict, **text_context) -> None:
-    emit(command, data, json_output=ctx.obj["json_output"], warnings=data.get("warnings", []), text_context=text_context)
+    emit(command, {key: value for key, value in data.items() if key != 'warnings'}, json_output=ctx.obj["json_output"], warnings=data.get("warnings", []), text_context=text_context)
 
 
 def settings(ctx: typer.Context):

@@ -81,10 +81,10 @@ def test_unparsed_creator_is_invalid(name):
 
 
 def test_show_surfaces_import_limitations():
-    from refs.display import readable
+    from refs.render import render_text
     value = parse(b'@book{x,title={Study},organization={Institute}}')
     record = value['source'].canonical() | {'limitations':value['limitations']}
-    assert 'Limitations:\n  organization:' in readable('show', record)
+    assert 'Limitations\torganization:' in render_text('show', record, [])
 
 
 def test_relax_in_accented_creator_is_not_a_lost_name():

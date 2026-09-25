@@ -1,15 +1,24 @@
-"""Plain command confirmations; structured output remains the result envelope."""
+"""Human output shapes; structured output remains the result envelope."""
 
 import json
+import shutil
+import sys
 from datetime import datetime
+from io import StringIO
+from pathlib import Path
 
-from refs.display import readable
+from rich.console import Console
+from rich.table import Table
+from rich.text import Text
+
+from refs.display import authors, metadata_text, resource_path
+from refs.naming import issued_year
 
 
 def project_text(data: dict) -> str:
     if 'items' in data:
         return '\n'.join(item['name'] for item in data['items']) or '(no projects)'
-    return f"Project: {data['name']}\n" + readable('list', {'items': data['sources']})
+    return f"Project: {data['name']}\n" + record_list('list', {'items': data['sources']}, False, 80)
 
 
 
@@ -59,102 +68,344 @@ def warning_lines(command: str, warnings: list[dict]) -> list[str]:
         lines.append(f"Warning: {len(keys)} {noun} {description} ({examples})")
     return lines
 
-def import_text(command: str, data: dict) -> str:
+def import_text(command: str, data: dict, terminal: bool, width: int) -> str:
     if command == 'import':
         counts = data['counts']
-        lines = [f"Imported {counts['applied']}, unchanged {counts['unchanged']}, conflicts {counts['conflict']}, invalid {counts['invalid']} from {data['input']}"]
+        summary = f"Imported {counts['applied']}, unchanged {counts['unchanged']}, conflicts {counts['conflict']}, invalid {counts['invalid']} from {data['input']}"
     else:
         verb = 'Import' if command == 'import show' else 'Reconciled import'
-        lines = [f"{verb} {data['import_id']} (batch revision {data['batch_revision']})"]
+        summary = f"{verb} {data['import_id'][:8]} (batch revision {data['batch_revision']})"
+    rows = []
     for entry in data['entries']:
         key = entry.get('citation_key') or entry.get('item_key') or '(unreadable key)'
         binding = entry.get('binding', {})
-        if command != 'import' or entry.get('status') in ('conflict','invalid'):
-            lines.append(f"{key}: {entry.get('status','selected')}" + (f" (source revision {entry['source_revision']})" if entry.get('source_revision') else ''))
-            if entry.get('message'):
-                lines.append('  '+entry['message'])
-            candidates = entry.get('candidates',entry.get('details',{}).get('source_ids',[]))
+        if command != 'import' or entry.get('status') in ('conflict', 'invalid'):
+            status = entry.get('status', 'selected')
+            if entry.get('source_revision'):
+                status += f" (source revision {entry['source_revision']})"
+            rows.append([key, status, entry.get('message') or ''])
+            candidates = entry.get('candidates', entry.get('details', {}).get('source_ids', []))
             if candidates:
-                lines.append('  Candidates: '+', '.join(candidates))
-            for change in binding.get('conflicts',[]) if command != 'import reconcile' else entry.get('remaining_conflicts',[]):
-                lines.append(f"  {change['path']}: current {json.dumps(change['current'],ensure_ascii=False)}; incoming {json.dumps(change['incoming'],ensure_ascii=False)}")
+                rows.append(['', 'Candidates', ', '.join(candidates)])
+            for change in binding.get('conflicts', []) if command != 'import reconcile' else entry.get('remaining_conflicts', []):
+                rows.append(['', change['path'], f"current {json.dumps(change['current'], ensure_ascii=False)}; incoming {json.dumps(change['incoming'], ensure_ascii=False)}"])
         if binding.get('bound') and (binding.get('incoming_key') != binding.get('catalog_key') or binding.get('filled')):
-            lines.append(f"  Bound {key} to {binding['catalog_key']}" + ('; filled '+', '.join(binding['filled']) if binding.get('filled') else ''))
-        for decision in entry.get('decisions',[]):
-            keeping = decision['action']=='keep_current'
-            label, value = ('Keep current',decision['current']) if keeping else ('Take incoming',decision['incoming'])
-            lines.append(f"  {label} {decision['path']}: {json.dumps(value,ensure_ascii=False)}")
-        for limitation in entry.get('limitations',[]):
-            lines.append(f"  {key}: {limitation['field']}: {limitation['reason']}")
-        for warning in entry.get('warnings',[]):
-            lines.append(f"  Warning: {key}: {warning['message']}")
-    for kind, count in data.get('preservation',{}).items():
+            detail = f"Bound {key} to {binding['catalog_key']}"
+            if binding.get('filled'):
+                detail += '; filled ' + ', '.join(binding['filled'])
+            rows.append(['', 'Binding', detail])
+        for decision in entry.get('decisions', []):
+            label, value = ('Keep current', decision['current']) if decision['action'] == 'keep_current' else ('Take incoming', decision['incoming'])
+            rows.append(['', label + ' ' + decision['path'], json.dumps(value, ensure_ascii=False)])
+        for limitation in entry.get('limitations', []):
+            rows.append(['', limitation['field'], limitation['reason']])
+        for warning in entry.get('warnings', []):
+            rows.append(['', 'Warning', f"{key}: {warning['message']}"])
+    for kind, count in data.get('preservation', {}).items():
         if count:
-            lines.append(f"Preservation: {count} {kind.replace('_',' ')} skipped as catalog content; retain the original Zotero archive")
-    if not data['entries']:
-        lines.append('(no entries)')
-    return '\n'.join(lines)
+            rows.append(['', 'Preservation', f"{count} {kind.replace('_', ' ')} skipped as catalog content; retain the original Zotero archive"])
+    return summary + '\n' + (table_rows(rows, wrap=2, styles={0: 'bold', 1: 'dim'}, terminal=terminal, width=width) if rows else '(no entries)')
 
 
-def render_text(command: str, data: dict, warnings: list[dict]) -> str:
-    key = data.get('citation_key', '')
-    revision = data.get('revision', '')
-    renderers = {
-        'collection list': lambda: '\n'.join(f"{item['path']} ({item['count']} active sources) [{item['library_uri']}]" for item in data['items']) or '(no collections)',
-        'reorg': lambda: move_text(data),
-        'paths': lambda: '\n'.join(f"{label}: {data[name]['path'] or '(not configured)'}" for name, label in [('config', 'Configuration'), ('catalog', 'Catalog'), ('library', 'Library')]),
-        'config show': lambda: f"Configuration: {data['config']}" + ''.join(f"\n{name} = {value} ({data['origins'].get(name, 'default')})" for name,value in data['values'].items()),
+def home_paths(value: str) -> str:
+    home = str(Path.home()) + '/'
+    return value.replace(home, '~/')
+
+
+def path_lines(value: str, width: int) -> str:
+    """Give Rich explicit breaks at separators, leaving each path segment intact."""
+    parts = value.replace('/', '/\u200b').split('\u200b')
+    lines, current = [], ''
+    for part in parts:
+        if current and len(current.replace('\u200b', '')) + len(part) > width:
+            lines.append(current)
+            current = part + ('\u200b' if part.endswith('/') else '')
+        else:
+            current += part + ('\u200b' if part.endswith('/') else '')
+    return '\n'.join([*lines, current])
+
+
+def table_rows(rows: list[list[str]], *, wrap: int | None = None, styles: dict[int, str] | None = None, limits: dict[int, int] | None = None, fixed: set[int] | None = None, expand: bool = False, key_cells: set[tuple[int, int]] | None = None, path_cells: set[tuple[int, int]] | None = None, terminal: bool = False, width: int = 80) -> str:
+    """One boxless, headerless table; pipe output is one TSV row per record."""
+    if not rows:
+        return ''
+    if not terminal:
+        return '\n'.join('\t'.join(home_paths(str(cell)).replace('\n', ' ') if (row_index, index) in (path_cells or set()) else str(cell).replace('\n', ' ') for index, cell in enumerate(row)) for row_index, row in enumerate(rows))
+    output = StringIO()
+    console = Console(file=output, force_terminal=True, color_system='standard', no_color=False, width=width, highlight=False, legacy_windows=False, _environ={})
+    table = Table(show_header=False, show_edge=False, box=None, padding=(0, 1), expand=expand)
+    for index in range(len(rows[0])):
+        table.add_column(no_wrap=index != wrap, overflow='fold' if index == wrap else 'ellipsis', style=(styles or {}).get(index), max_width=(limits or {}).get(index), min_width=12 if index == wrap else (limits or {}).get(index, 0) if index in (fixed or set()) else 0, ratio=1 if index == wrap else None)
+    for row_index, row in enumerate(rows):
+        cells = []
+        for index, cell in enumerate(row):
+            is_path = (row_index, index) in (path_cells or set())
+            value = home_paths(str(cell)) if is_path else str(cell).replace('\n', ' ')
+            if is_path:
+                value = path_lines(value, (limits or {}).get(index, width))
+            style = 'bold' if (row_index, index) in (key_cells or set()) else 'yellow' if value == 'renamed' or 'Warning' in row else 'red' if value.startswith('Error:') else ''
+            cells.append(Text(value, style=style))
+        table.add_row(*cells)
+    console.print(table)
+    return output.getvalue().replace('\u200b', '').rstrip('\n')
+
+
+def styled_line(value: str, style: str, terminal: bool, width: int) -> str:
+    if not terminal:
+        return value
+    output = StringIO()
+    Console(file=output, force_terminal=True, color_system='standard', no_color=False, width=width, highlight=False, _environ={}).print(Text(value, style=style))
+    return output.getvalue().rstrip('\n')
+
+
+def style_key(value: str, key: str, terminal: bool, width: int) -> str:
+    if not terminal or not key or key not in value:
+        return value
+    before, after = value.split(key, 1)
+    output = StringIO()
+    Console(file=output, force_terminal=True, color_system='standard', no_color=False, width=width, highlight=False, _environ={}).print(Text.assemble(before, (key, 'bold'), after))
+    return output.getvalue().rstrip('\n')
+
+
+def record_list(command: str, data: dict, terminal: bool, width: int) -> str:
+    items = data['items'] if 'items' in data else data['sources']
+    if not items:
+        return '(no sources)'
+    matches = command == 'search' and any(item.get('matches') for item in items)
+    # Keep the title useful first; comparison extras disappear at narrower widths.
+    extras = width >= 100 if terminal else True
+    count = width >= 120 if terminal else True
+    rows = []
+    for item in items:
+        first = next(iter(item['metadata'].get('author', [])), {})
+        creator = first.get('family') or first.get('literal') or next(iter(authors(item)), '(no author)')
+        row = [item['citation_key'], issued_year(item), creator]
+        if extras:
+            row.append(item['metadata'].get('type', ''))
+        if count:
+            row.append(str(len(item.get('resources', []))))
+        title_index = len(row)
+        row.append(item['metadata'].get('title', '(no title)'))
+        if matches:
+            row.append(', '.join(dict.fromkeys(match['field'] for match in item.get('matches', []))))
+        rows.append(row)
+    styles = {0: 'bold'}
+    for index in range(3, len(rows[0])):
+        if index == title_index:
+            continue
+        styles[index] = 'dim'
+    limits = {0: max(len(row[0]) for row in rows), 1: 4, 2: 13}
+    fixed = {0}
+    if extras:
+        limits[3] = max(len(row[3]) for row in rows)
+        fixed.add(3)
+    if count:
+        limits[title_index - 1] = 4
+        fixed.add(title_index - 1)
+    if matches:
+        limits[len(rows[0]) - 1] = max(len(row[-1]) for row in rows)
+    if terminal:
+        occupied = sum(min(max(len(str(row[index])) for row in rows), limits.get(index, width)) for index in range(len(rows[0])) if index != title_index)
+        limits[title_index] = max(12, width - occupied - 2 * len(rows[0]) - 2)
+    rendered = table_rows(rows, wrap=title_index, styles=styles, limits=limits, fixed=fixed, terminal=terminal, width=width)
+    return rendered + '\n' + styled_line(f"{len(items)} {'source' if len(items) == 1 else 'sources'}", 'dim', terminal, width)
+
+
+def one_record(command: str, data: dict, terminal: bool, width: int) -> str:
+    metadata = data['metadata']
+    rows = [
+        ['Key', data['citation_key']], ['Type', metadata['type']],
+        ['Authors', '; '.join(authors(data)) or '(not supplied)'],
+        ['Year', issued_year(data)], ['Title', metadata.get('title', '(not supplied)')],
+    ]
+    rows.extend([field, metadata_text(metadata[field])] for field in sorted(set(metadata) - {'type', 'author', 'title'}) if metadata[field] not in (None, '', [], {}))
+    if data.get('loc'):
+        rows.append(['loc', data['loc']])
+    for limitation in data.get('limitations', []):
+        rows.append(['Limitations', limitation['reason'] if limitation['reason'].startswith('Preserved from import:') else f"{limitation['field']}: {limitation['reason']}"])
+    for resource in data.get('resources', []):
+        rows.append(['Files', resource_path(resource) + (f"  {resource['label']}" if resource.get('label') else '')])
+    if not data.get('resources'):
+        rows.append(['Files', '(none)'])
+    rows.append(['Projects', ', '.join(item['name'] for item in data.get('projects', [])) or '(none)'])
+    rows.append(['Revision', str(data.get('revision', ''))])
+    return table_rows(rows, wrap=1, styles={0: 'dim'}, limits={1: max(20, width - 22)} if terminal else None, fixed={1}, key_cells={(0, 1)}, path_cells={(index, 1) for index, row in enumerate(rows) if row[0] == 'Files' and row[1] != '(none)'}, terminal=terminal, width=width)
+
+
+def short_rows(command: str, data: dict, terminal: bool, width: int) -> str:
+    rows = []
+    if command == 'import list':
+        for item in data['items']:
+            counts = ', '.join(f'{name} {count}' for name, count in item['counts'].items() if count) or '0 entries'
+            created = datetime.fromisoformat(item['created']).strftime('%Y-%m-%d %H:%M:%S')
+            rows.append([item['import_id'][:8], item['origin'], created, counts])
+    elif command == 'collection list':
+        rows = [[item['path'], str(item['count']) + ' active sources', item['library_uri']] for item in data['items']]
+    elif command == 'resource check':
+        from refs.resources import PLACEMENT_KINDS
+        for item in data['items']:
+            label = PLACEMENT_KINDS.get(item.get('kind'), item['status'])
+            if item.get('kind') and item['status'] not in ('available', 'unfinished'):
+                label += f" ({item['status']})"
+            path = resource_path(item)
+            rows.append([label, path, item.get('hint', '')])
+            if item.get('kind') == 'unfinished':
+                rows.append(['', item['new_path'], item['state']])
+    elif command == 'open':
+        rows = [[item['id'], resource_path(item)] for item in data['choices']]
+    elif command == 'reorg':
+        for item in data['moves']:
+            rows.append([(item.get('resource_id') or '')[:8], item['old_path'], item.get('state', '')])
+            rows.append(['', item['new_path'], 'renamed' if item.get('old_name') != item.get('new_name') else item.get('error') or ''])
+        rows.extend([['', path, 'unlinked'] for path in data.get('unlinked_paths', [])])
+    else:
+        raise KeyError(command)
+    empty = {'import list': '(no imports)', 'collection list': '(no collections)', 'resource check': '(no resources)', 'open': '(no resources)', 'reorg': '(no moves)'}[command]
+    if not rows:
+        return empty
+    styles = {0: 'dim'} if command == 'resource check' else {}
+    wrap = 1 if command in ('reorg', 'resource check', 'import list') else None
+    limits = None
+    if terminal and wrap is not None:
+        limits = {wrap: max(16, width - 30)}
+        if command == 'import list':
+            count_width = max(len(row[3]) for row in rows)
+            limits = {0: 8, 1: max(12, width - 8 - 19 - count_width - 10), 2: 19, 3: count_width}
+        elif command == 'reorg':
+            limits[0] = 8
+            limits[2] = 12
+        else:
+            limits[0] = 28
+            limits[2] = 24
+    paths = command in ('import list', 'resource check', 'open', 'reorg')
+    fixed = ({0, 2, 3} if command == 'import list' else set()) | ({1} if paths and terminal and wrap == 1 else set())
+    body = table_rows(rows, wrap=wrap, styles=styles, limits=limits, fixed=fixed, expand=command == 'import list', path_cells={(index, 1) for index in range(len(rows))} if paths else None, terminal=terminal, width=width)
+    if command == 'open':
+        return 'Choose a resource with --resource:\n' + body
+    if command == 'reorg':
+        renamed = sum(item.get('old_name') != item.get('new_name') for item in data['moves'])
+        verb = 'would move' if data.get('dry_run') else 'moved'
+        number = len(data['moves'])
+        return f"{number} {'file' if number == 1 else 'files'} {verb}, {renamed} renamed on collision.\n" + body
+    return body
+
+
+def report_text(command: str, data: dict, terminal: bool, width: int, warnings: list[dict]) -> str:
+    if command == 'reorg':
+        return short_rows(command, data, terminal, width)
+    if command == 'export':
+        count = data['count']
+        return f"Wrote {data['output']} ({count} entries, {len(warnings)} warnings)" if count else f"Wrote {data['output']} (0 entries)"
+    if command.startswith('import'):
+        return import_text(command, data, terminal, width)
+    raise KeyError(command)
+
+
+def confirmation(command: str, data: dict, terminal: bool, width: int) -> str:
+    key, revision = data.get('citation_key', ''), data.get('revision', '')
+    if command == 'paths':
+        return table_rows([[label, data[name]['path'] or '(not configured)'] for name, label in [('config', 'Configuration'), ('catalog', 'Catalog'), ('library', 'Library')]], wrap=1, limits={1: max(20, width - 20)} if terminal else None, fixed={1}, path_cells={(0, 1), (1, 1), (2, 1)}, terminal=terminal, width=width)
+    if command == 'config show':
+        return 'Configuration: ' + str(data['config']) + ''.join(f"\n{name} = {value} ({data['origins'].get(name, 'default')})" for name, value in data['values'].items())
+    if command == 'schema':
+        return '\n'.join(data['schemas']) if 'schemas' in data else json.dumps(data, ensure_ascii=False, indent=2)
+    if command == 'project show' and 'items' in data:
+        return project_text(data)
+    if command == 'project create':
+        return f"Created project {data['name']}"
+    if command == 'project cite':
+        return f"Cited {data['cited']} in {data['project_name']} ({data['already_cited']} already cited)" if 'already_cited' in data else f"Cited {key} in {data['project_name']}"
+    if command == 'project uncite':
+        return f"Uncited {key} from {data['project_name']}"
+    if command == 'add':
+        return f"Already present: {key} (revision {revision})" if data.get('outcome') == 'already_present' else f"Created {key}"
+    if command == 'resource add':
+        if data.get('duplicate_resource_id'):
+            return f"Not copied: {data['path']} is already attached to {key}"
+        if 'destination' in data:
+            return f"{'Moved' if data.get('moved') else 'Copied'} {resource_path(data['copied_from'])} to {data['destination']} for {key}"
+        return f"Linked {resource_path(data)} to {key}"
+    if command == 'resource unlink':
+        return f"Resource {data['id']} is already unlinked" if data.get('unchanged') else f"Unlinked {resource_path(data)} from {key}"
+    if command == 'open':
+        return f"Opened {data['path']} for {key}"
+    templates = {
         'backup': lambda: f"Wrote snapshot {data['output']} (external file bytes excluded)",
         'init': lambda: f"Initialized catalog at {data['catalog_path']} (library: {data.get('library') or 'none'})",
-        'add': lambda: f"Already present: {key} (revision {revision})" if data.get('outcome') == 'already_present' else f"Created {key}",
         'update': lambda: f"Updated {key} (revision {revision})",
         'key set': lambda: f"Renamed {data['previous_key']} to {key}",
         'remove': lambda: f"Removed {key}",
         'reactivate': lambda: f"Reactivated {key}",
-        'project create': lambda: f"Created project {data['name']}",
-        'project cite': lambda: f"Cited {data['cited']} in {data['project_name']} ({data['already_cited']} already cited)" if 'already_cited' in data else f"Cited {key} in {data['project_name']}",
-        'project uncite': lambda: f"Uncited {key} from {data['project_name']}",
-        'project show': lambda: project_text(data),
-        'resource add': lambda: f"Not copied: {data['path']} is already attached to {key}" if data.get('duplicate_resource_id') else f"{'Moved' if data.get('moved') else 'Copied'} {data['copied_from'].get('path') or data['copied_from'].get('relative')} to {data['destination']} for {key}" if 'destination' in data else f"Linked {data.get('resolved_path') or data.get('path') or data.get('relative')} to {key}",
-        'resource unlink': lambda: f"Resource {data['id']} is already unlinked" if data.get('unchanged') else f"Unlinked {data.get('resolved_path') or data.get('path') or data.get('relative')} from {key}",
-        'resource check': lambda: placement_text(data),
-        'open': lambda: 'Choose a resource with --resource:\n' + '\n'.join(f"{item['id']}: {item.get('resolved_path') or item.get('relative')}" for item in data['choices']) if 'choices' in data else f"Opened {data['path']} for {key}",
-        'import list': lambda: '\n'.join(f"{item['import_id']} {item['origin']} {datetime.fromisoformat(item['created']).isoformat(timespec='seconds')} " + ', '.join(f'{name} {count}' for name,count in item['counts'].items()) for item in data['items']) or '(no imports)',
-        'import show': lambda: import_text(command,data),
-        'import reconcile': lambda: import_text(command,data),
-        'import': lambda: import_text(command,data),
-        'export': lambda: f"Wrote {data['output']} (0 entries)" if not data['count'] else f"Wrote {data['output']} ({data['count']} entries, {len(warnings)} warnings)",
-        'show': lambda: readable(command, data),
-        'search': lambda: readable(command, data),
-        'list': lambda: readable(command, data),
     }
-    text = renderers[command]()
+    return templates[command]()
+
+
+COMMAND_CLASS = {
+    'search': 'record_list', 'list': 'record_list', 'project show': 'record_list',
+    'show': 'one_record',
+    'import list': 'short_rows', 'resource check': 'short_rows', 'collection list': 'short_rows',
+    'reorg': 'report', 'import': 'report', 'import show': 'report', 'import reconcile': 'report', 'export': 'report',
+    'open': 'short_rows',
+}
+CLASS_RENDERERS = {
+    'record_list': record_list, 'one_record': one_record, 'short_rows': short_rows,
+    'report': report_text, 'confirmation': confirmation,
+}
+
+
+def render_text(command: str, data: dict, warnings: list[dict], *, terminal: bool | None = None, width: int | None = None) -> str:
+    terminal = sys.stdout.isatty() if terminal is None else terminal
+    width = shutil.get_terminal_size((80, 24)).columns if width is None else width
+    kind = COMMAND_CLASS.get(command, 'confirmation')
+    if command == 'project show' and 'items' in data or command == 'open' and 'choices' not in data:
+        kind = 'confirmation'
+    renderer = CLASS_RENDERERS[kind]
+    text = renderer(command, data, terminal, width, warnings) if kind == 'report' else renderer(command, data, terminal, width)
+    if kind == 'confirmation':
+        text = style_key(text, data.get('citation_key', ''), terminal, width)
+    if command == 'project show' and 'sources' in data:
+        text = f"Project: {data['name']}\n" + record_list('list', {'items': data['sources']}, terminal, width)
     if command == 'add' and data.get('file_action'):
-        action = data['file_action'] | {'citation_key': key}
-        action.pop('dry_run', None)
-        text += '\n' + render_text('resource add', action, [])
-    if data.get('dry_run'):
+        text += '\n' + confirmation('resource add', data['file_action'] | {'citation_key': data['citation_key']}, terminal, width)
+    if data.get('dry_run') and command != 'reorg':
         text = 'Preview: ' + text
     elif data.get('unchanged') and command != 'add':
         text = 'Unchanged: ' + text
     for entry in data.get('import_conflicts', []):
         text += '\nConflict: ' + str(entry.get('citation_key') or entry.get('message') or entry.get('code'))
-    return '\n'.join([text, *warning_lines(command, warnings)])
+    return home_paths('\n'.join([text, *(styled_line(line, 'yellow', terminal, width) for line in warning_lines(command, warnings))]))
 
 
-def placement_text(data):
-    from refs.resources import PLACEMENT_KINDS
-    lines=[]
-    for item in data['items']:
-        label=PLACEMENT_KINDS.get(item.get('kind'),item['status'])
-        if item.get('kind') and item['status'] not in ('available','unfinished'):
-            label += f" ({item['status']})"
-        path=item.get('resolved_path') or item.get('relative') or item.get('id')
-        lines.append(f"{label}: {path}"+(f" -> {item['new_path']} ({item['state']})" if item.get('kind')=='unfinished' else '')+(f"; {item['hint']}" if item.get('hint') else ''))
-    return '\n'.join(lines) or '(no resources)'
+def render_error(command: str, issue: dict, data: dict | None = None, *, terminal: bool = False, width: int = 80) -> tuple[str, str]:
+    """Return stdout for a partial import and stderr for the failure."""
+    output = ''
+    lines = []
+    if data and data.get('moves'):
+        lines.append(short_rows('reorg', data, terminal, width))
+    if issue['code'] == 'import_partial' and data:
+        output = render_text('import', data, [], terminal=terminal, width=width)
+    if issue['code'] == 'export_blocked':
+        lines.append(f"Not written: {issue['path'] or '(destination)'}")
+        lines.extend(f"{entry.get('citation_key') or entry.get('details', {}).get('citation_key', '(source)')}: {entry['message']}" for entry in issue['details'].get('entries', []))
+    if data and data.get('outcome') == 'needs_attention':
+        lines.append(f"Needs attention: {data.get('citation_key') or '(input)'}")
+    issues = issue['details'].get('issues', [])
+    message = issue['message']
+    if issues:
+        first = issues[0]
+        path = '.'.join(str(part) for part in first['loc']) or '(record)'
+        message = f"{path}: {first['msg']}; correct the input and retry"
+    lines.append(styled_line(' '.join(message.splitlines()), 'red', terminal, width))
+    return home_paths(output), home_paths('\n'.join(lines))
 
 
-def move_text(data):
-    lines=[f"{item['old_path']} -> {item['new_path']} ({item['state']})"+(f": {item['error']}" if item.get('error') else '') for item in data['moves']]
-    lines.extend(f"Left untouched (not linked): {path}" for path in data.get('unlinked_paths',[]))
-    return '\n'.join(lines) or '(no moves)'
+def render_notice(notice: dict, *, terminal: bool = False, width: int = 80) -> str:
+    return styled_line(home_paths(notice['message']), 'yellow', terminal, width)
+
+
+def move_text(data: dict) -> str:
+    return short_rows('reorg', data, False, 80)
+
+
+def placement_text(data: dict) -> str:
+    return short_rows('resource check', data, False, 80)

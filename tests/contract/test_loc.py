@@ -4,7 +4,7 @@ import unicodedata
 import pytest
 
 from refs.catalog import connect
-from refs.display import readable
+from refs.render import render_text
 
 
 def test_loc_capture_edit_clear_and_filter(initialized, tmp_path, reference_path):
@@ -12,7 +12,7 @@ def test_loc_capture_edit_clear_and_filter(initialized, tmp_path, reference_path
     loc = unicodedata.normalize('NFD', 'Papers/Café')
     item = cli('add', '--format', 'refs', '--input', reference_path, '--loc', loc)['data']
     assert item['loc'] == 'Papers/Café'
-    assert 'loc: Papers/Café' in readable('show', item)
+    assert 'loc\tPapers/Café' in render_text('show', item, [])
     assert cli('list', '--loc', 'papers/café')['data']['total'] == 1
     assert cli('search', item['citation_key'], '--loc', 'PAPERS/CAFÉ')['data']['total'] == 1
     assert cli('list', '--loc', 'papers')['data']['total'] == 0

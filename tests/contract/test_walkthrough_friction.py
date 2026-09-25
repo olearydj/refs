@@ -16,10 +16,10 @@ def test_show_exposes_all_populated_metadata(human, initialized, reference_path)
     initialized('update','smith-2024-learningPython','--if-revision',1,'--set','metadata.publisher="Example Press"','--set','metadata.edition=2','--set','metadata.genre="Tutorial"','--set','metadata.event-title="Annual Meeting"')
     text = human('show','smith-2024-learningPython')
     lines = text.splitlines()
-    assert lines[:5] == ['Key: smith-2024-learningPython','Type: article-journal','Authors: Alex Smith','Year: 2024','Title: Learning Python']
+    assert lines[:5] == ['Key\tsmith-2024-learningPython','Type\tarticle-journal','Authors\tAlex Smith','Year\t2024','Title\tLearning Python']
     for field,value in [('publisher','Example Press'),('edition','2'),('genre','Tutorial'),('event-title','Annual Meeting'),('language','en'),('issued','2024')]:
-        assert f'{field}: {value}' in lines
-    labels=[line.split(':')[0] for line in lines[5:lines.index('Files: (none)')]]
+        assert f'{field}\t{value}' in lines
+    labels=[line.split('\t')[0] for line in lines[5:lines.index('Files\t(none)')]]
     assert labels == sorted(labels)
 
 
@@ -29,7 +29,7 @@ def test_show_reports_preserved_howpublished(human, initialized, tmp_path):
     path.write_text('@misc{example,title={Study},howpublished={arXiv:2407.01502},year={2024},author={Smith, Alex}}')
     initialized('import','--input',path)
     text=human('show','example')
-    assert 'Limitations:\n  Preserved from import: howpublished' in text
+    assert 'Limitations\tPreserved from import: howpublished' in text
     initialized('project','create','paper')
     initialized('project','cite','paper','example')
     report=initialized('export','--project','paper','--output',tmp_path/'out.bib')
@@ -47,7 +47,7 @@ def test_project_show_uses_key_sorted_list_rows(human, initialized, tmp_path, re
     for key in ('smith-2024-learningPython','alpha'):
         initialized('project','cite','paper',key)
     assert human('project','show','paper').splitlines()[1:] == human('list','--sort','key').splitlines()
-    assert human('project','show','paper').splitlines()[1].startswith('alpha | Alex Jones | 2025 | Zebra Study')
+    assert human('project','show','paper').splitlines()[1] == 'alpha\t2025\tJones\tbook\t0\tZebra Study'
 
 
 
@@ -62,6 +62,7 @@ def test_export_warning_keys_groups_and_info(human, initialized, tmp_path):
     assert text.splitlines()[1:] == ['Warning: 4 entries use the portable @misc fallback (four, one, three, two)']
     data=initialized('export','--project','paper','--output',tmp_path/'out.bib')
     assert len(data['warnings']) == 4
+    assert 'warnings' not in data['data']
     assert len(data['data']['info']) == 4
     assert all(item['details']['class']=='info' for item in data['data']['info'])
     initialized('project','create','single')
@@ -70,7 +71,7 @@ def test_export_warning_keys_groups_and_info(human, initialized, tmp_path):
 
 
 def test_paths_and_config_keep_their_distinct_formats(human, tmp_path):
-    assert human('paths').splitlines() == [f'Configuration: {tmp_path/"config.toml"}', f'Catalog: {tmp_path/"cat"}', f'Library: {tmp_path/"lib"}']
+    assert human('paths').splitlines() == [f'Configuration\t{tmp_path/"config.toml"}', f'Catalog\t{tmp_path/"cat"}', f'Library\t{tmp_path/"lib"}']
     text = human('config', 'show')
     assert text.startswith(f'Configuration: {tmp_path/"config.toml"}\n')
     assert f'catalog.path = {tmp_path/"cat"} (REFS_CATALOG)' in text
@@ -153,7 +154,7 @@ def test_key_prefix_search_keeps_exact_matches_first(human, initialized, tmp_pat
     assert [item['citation_key'] for item in items]==['koster','koster2012']
     assert [item['exact_match'] for item in items]==[True,False]
     assert items[1]['matches'][0]['field']=='citation_key'
-    assert 'matched: citation_key' in human('search','koster').splitlines()[1]
+    assert human('search','koster').splitlines()[1].endswith('\tcitation_key')
     assert initialized('search','kost er')['data']['items']==[]
 
 

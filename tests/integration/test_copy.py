@@ -148,9 +148,11 @@ def test_filename_fallback_is_explicit(initialized,tmp_path):
     path.write_bytes(b'synthetic')
     record=tmp_path/'undated.json'
     record.write_text(json.dumps({'schema_version':'1.0','citation_key':'undated','metadata':{'title':'Undated Work'}}))
-    data=initialized('add','--format','refs','--input',record,'--file',path,'--copy')['data']
+    result=initialized('add','--format','refs','--input',record,'--file',path,'--copy')
+    data=result['data']
     assert data['resources'][0]['relative'] == 'unfiled/undated.pdf'
-    assert any(item['code']=='filename_unavailable' for item in data['warnings'])
+    assert any(item['code']=='filename_unavailable' for item in result['warnings'])
+    assert 'warnings' not in data
 
 
 def test_staging_volume_mismatch_refuses_before_copy(initialized,tmp_path,reference_path,monkeypatch):
