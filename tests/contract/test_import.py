@@ -60,6 +60,24 @@ def test_no_doi_proposal_never_reads_every_stored_metadata_row(initialized, tmp_
     assert importing.run(tmp_path / 'cat', fixture.read_bytes(), str(fixture))['counts']['applied'] == 0
 
 
+def test_batch_doi_index_matches_later_entry_without_row_scan(initialized, tmp_path, monkeypatch):
+    fixture = Path(__file__).parents[1] / 'fixtures/real-trial/minimized/doi-batch-lookup.bib'
+    blocks = [block for block in bibtex.partition(fixture.read_bytes()) if block['kind'] == 'entry']
+    first = importing.run(tmp_path/'cat', blocks[0]['raw'], str(fixture))
+    assert first['counts'] == dict(applied=1, unchanged=0, conflict=0, invalid=0)
+    proposal = bibtex.parse(blocks[1]['raw'])['source']
+    with connect(tmp_path/'cat') as connection:
+        index = importing.doi_plan(connection)
+        queries = []
+        connection.set_trace_callback(queries.append)
+        assert importing.match(connection,proposal,hashlib.sha256(blocks[1]['raw']).hexdigest(),doi_groups=index)[0] == first['entries'][0]['source_id']
+        assert not any('SELECT id,metadata_json FROM sources' in query for query in queries)
+    monkeypatch.setattr(importing, 'doi_plan', lambda connection: {})
+    full = importing.run(tmp_path/'cat', fixture.read_bytes(), str(fixture))
+    assert full['counts'] == dict(applied=0, unchanged=2, conflict=0, invalid=0)
+    assert importing.run(tmp_path/'cat', fixture.read_bytes(), str(fixture))['counts']['applied'] == 0
+
+
 @pytest.mark.parametrize('raw', [
     b'@article{x,title={First},title={Second}}',
     b'@article{x,title={First},TITLE={Second}}',

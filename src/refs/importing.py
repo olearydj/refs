@@ -61,14 +61,27 @@ def isbn_plan(connection, incoming: list[SourceCreate]) -> dict:
     return dict(incoming=counts, existing=existing)
 
 
-def match(connection, source: SourceCreate, fingerprint: str, *, isbn_groups=None) -> tuple[str | None, list[str]]:
+def doi_plan(connection) -> dict[str, set[str]]:
+    existing: dict[str, set[str]] = {}
+    for row in connection.execute('SELECT id,metadata_json FROM sources'):
+        doi = json.loads(row['metadata_json']).get('DOI')
+        if doi:
+            existing.setdefault(sources.doi_identity(doi), set()).add(row['id'])
+    return existing
+
+
+def match(connection, source: SourceCreate, fingerprint: str, *, isbn_groups=None, doi_groups=None) -> tuple[str | None, list[str]]:
     ids = {row[0] for row in connection.execute('SELECT id FROM sources WHERE citation_key=?', (source.citation_key,))}
     ids.update(row[0] for row in connection.execute('SELECT source_id FROM originals WHERE sha256=? AND source_id IS NOT NULL', (fingerprint,)))
     if source.metadata.DOI:
-        for row in connection.execute('SELECT id,metadata_json FROM sources'):
-            metadata = json.loads(row['metadata_json'])
-            if metadata.get('DOI') and sources.doi_identity(source.metadata.DOI)==sources.doi_identity(metadata['DOI']):
-                ids.add(row['id'])
+        doi = sources.doi_identity(source.metadata.DOI)
+        if doi_groups is not None:
+            ids.update(doi_groups.get(doi, ()))
+        else:
+            for row in connection.execute('SELECT id,metadata_json FROM sources'):
+                metadata = json.loads(row['metadata_json'])
+                if metadata.get('DOI') and doi==sources.doi_identity(metadata['DOI']):
+                    ids.add(row['id'])
     for binding in sources.bindings(source):
         row = connection.execute('SELECT source_id FROM origin_identities WHERE namespace=? AND library_uri=? AND item_key=?', binding).fetchone()
         if row:
@@ -93,8 +106,8 @@ def match(connection, source: SourceCreate, fingerprint: str, *, isbn_groups=Non
     return source_id, differences(source.canonical(), current)
 
 
-def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False, isbn_groups=None, origin=None) -> tuple[str | None, dict]:
-    source_id, paths = match(connection, source, hashlib.sha256(raw).hexdigest(),isbn_groups=isbn_groups)
+def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False, isbn_groups=None, doi_groups=None, origin=None) -> tuple[str | None, dict]:
+    source_id, paths = match(connection, source, hashlib.sha256(raw).hexdigest(),isbn_groups=isbn_groups,doi_groups=doi_groups)
     if not source_id:
         return None, {}
     from refs.search import identifier
@@ -150,7 +163,7 @@ def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False
     return source_id, dict(bound=compatible, incoming_key=source.citation_key, catalog_key=current['citation_key'], filled=fills, conflicts=conflicts)
 
 
-def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None, origin=None) -> dict:
+def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None, doi_groups=None, origin=None) -> dict:
     raw = block['raw']
     parsed = None
     incoming = None
@@ -169,7 +182,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         source = SourceCreate.model_validate(canonical)
         source.citation_key = key
         incoming = source.canonical()
-        source_id, binding = bind_and_fill(connection, source, raw, dry_run=dry_run,isbn_groups=isbn_groups,origin=origin or locator)
+        source_id, binding = bind_and_fill(connection, source, raw, dry_run=dry_run,isbn_groups=isbn_groups,doi_groups=doi_groups,origin=origin or locator)
         conflicts = [item['path'] for item in binding.get('conflicts', [])]
         if conflicts:
             outcome = dict(outcome='conflict', code='value_conflict', source_id=source_id, citation_key=key, conflicts=conflicts)
@@ -238,13 +251,18 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
                 pass
     with connect(catalog) as connection:
         isbn_groups = isbn_plan(connection,incoming)
+        doi_groups = doi_plan(connection) if any(source.metadata.DOI for source in incoming) else None
     entries = []
     for block in blocks:
         if block['kind'] != 'entry':
             continue
         with connect(catalog, write=not dry_run) as connection:
-            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings, import_id=run_id,isbn_groups=isbn_groups,origin=origin or locator)
+            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings, import_id=run_id,isbn_groups=isbn_groups,doi_groups=doi_groups,origin=origin or locator)
             outcome = result['outcome']
+            if doi_groups is not None and outcome in ('applied','unchanged') and result.get('source_id') and result.get('incoming'):
+                doi = result['incoming']['metadata'].get('DOI')
+                if doi:
+                    doi_groups.setdefault(sources.doi_identity(doi),set()).add(result['source_id'])
             counts[outcome] += 1
             if not dry_run:
                 save_entry(connection, run_id, f"{locator}#bytes={block['start']}:{block['end']}", result)
