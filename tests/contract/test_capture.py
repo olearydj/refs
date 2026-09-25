@@ -23,10 +23,11 @@ def test_capture_original_and_show(initialized, tmp_path, reference_path):
 
 def test_preview_does_not_change_catalog(initialized, tmp_path, reference_path):
     catalog = tmp_path / "cat"
-    before = {p.name: p.read_bytes() for p in catalog.iterdir() if p.name != 'refs.log'}
+    before = {p.name: p.read_bytes() for p in catalog.iterdir() if p.is_file() and p.name != 'refs.log'}
     result = initialized("add", "--format", "refs", "--input", reference_path, "--dry-run")
     assert result["data"]["dry_run"]
-    assert {p.name: p.read_bytes() for p in catalog.iterdir() if p.name != 'refs.log'} == before
+    assert {p.name: p.read_bytes() for p in catalog.iterdir() if p.is_file() and p.name != 'refs.log'} == before
+    assert list((catalog / 'staging').iterdir()) == []
     assert [json.loads(line)['event'] for line in (catalog/'refs.log').read_text().splitlines()[-2:]] == ['command.open','command.close']
 
 

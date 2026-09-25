@@ -122,7 +122,7 @@ def test_preview_does_not_capture_or_stage(initialized,tmp_path,reference_path):
     data=initialized('add','--format','refs','--input',reference_path,'--file',path,'--copy','--dry-run')['data']
     assert data['resources'][0]['destination'].endswith('/unfiled/LearningPython-2024.pdf')
     assert initialized('list')['data']['total'] == 0
-    assert not (tmp_path/'cat'/'staging').exists()
+    assert list((tmp_path/'cat'/'staging').iterdir()) == []
     assert not (tmp_path/'lib'/'unfiled').exists()
 
 

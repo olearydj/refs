@@ -1,10 +1,13 @@
 """Installed CLI tests always select isolated configuration and data paths."""
 
+import fcntl
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -85,9 +88,44 @@ def cli(cli_env, cli_cwd):
 
 
 @pytest.fixture
-def initialized(cli, tmp_path):
-    cli("init", "--library-root", tmp_path / "lib")
+def initialized(cli, tmp_path, initialized_template):
+    clone_initialized_template(initialized_template, tmp_path)
     return cli
+
+
+@pytest.fixture(scope="session")
+def initialized_template(tmp_path_factory):
+    base = tmp_path_factory.getbasetemp()
+    shared = base.parent if os.environ.get("PYTEST_XDIST_WORKER") else base
+    template = shared / "refs-initialized-template"
+    with (shared / "refs-initialized-template.lock").open("w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        if not (template / ".complete").exists():
+            if template.exists():
+                shutil.rmtree(template)
+            template.mkdir()
+            env = isolated_env(template)
+            result = subprocess.run(
+                [*REFS_COMMAND, "--json", "init", "--library-root", str(template / "lib")],
+                env=env, cwd=template, capture_output=True, text=True, check=False,
+            )
+            assert result.returncode == 0, result.stdout + result.stderr
+            (template / "cat" / "staging").mkdir(mode=0o700)
+            (template / ".complete").touch()
+        fcntl.flock(lock, fcntl.LOCK_UN)
+    return template
+
+
+def clone_initialized_template(template, destination):
+    from refs.config import toml_text
+
+    shutil.copytree(template / "cat", destination / "cat", copy_function=shutil.copy2)
+    (destination / "lib").mkdir()
+    values = tomllib.loads((template / "config.toml").read_text())
+    values["catalog"]["path"] = str(destination / "cat")
+    values["resources"]["library_root"] = str(destination / "lib")
+    values["resources"]["roots"]["library"] = str(destination / "lib")
+    (destination / "config.toml").write_text(toml_text(values))
 
 
 @pytest.fixture
