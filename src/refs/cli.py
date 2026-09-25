@@ -3,6 +3,8 @@
 import json
 import sqlite3
 import sys
+from contextlib import redirect_stdout
+from contextvars import ContextVar
 from pathlib import Path
 from typing import Annotated
 
@@ -23,9 +25,16 @@ from refs import logging as action_log
 from refs.config import absolute, select
 from refs.results import RefError, emit, upgrade_notices
 
+failed_command: ContextVar[str] = ContextVar('refs_failed_command',default='invocation')
+
 app = typer.Typer(no_args_is_help=True, pretty_exceptions_enable=False)
 project_app = typer.Typer(no_args_is_help=True)
 app.add_typer(project_app, name="project")
+
+
+@project_app.callback()
+def project_group(ctx: typer.Context):
+    record_group(ctx)
 
 
 @app.callback()
@@ -37,7 +46,12 @@ def configure(ctx: typer.Context,
               verbose: Annotated[bool, typer.Option()] = False,
               json_output: Annotated[bool, typer.Option("--json")] = False):
     upgrade_notices.set([])
+    failed_command.set(ctx.invoked_subcommand or 'invocation')
     ctx.obj = dict(config=config, catalog=catalog, json_output=json_output, project_file=project_file, no_project_config=no_project_config, verbose=verbose)
+
+
+def record_group(ctx: typer.Context):
+    failed_command.set(ctx.command.name + (' ' + ctx.invoked_subcommand if ctx.invoked_subcommand else ''))
 
 
 def report(ctx: typer.Context, command: str, data: dict, **text_context) -> None:
@@ -126,6 +140,7 @@ def import_bibliography(ctx: typer.Context, input: Annotated[Path | None, typer.
                         format: Annotated[str, typer.Option()] = "bib",
                         origin: Annotated[str | None, typer.Option()] = None,
                         dry_run: Annotated[bool, typer.Option()] = False):
+    record_group(ctx)
     if ctx.invoked_subcommand is not None:
         return
     if input is None:
@@ -199,6 +214,11 @@ def export_bibliography(ctx: typer.Context, project: Annotated[str | None, typer
 
 key_app = typer.Typer(no_args_is_help=True)
 app.add_typer(key_app, name="key")
+
+
+@key_app.callback()
+def key_group(ctx: typer.Context):
+    record_group(ctx)
 
 
 @app.command("update")
@@ -286,6 +306,11 @@ resource_app = typer.Typer(no_args_is_help=True)
 app.add_typer(resource_app, name='resource')
 
 
+@resource_app.callback()
+def resource_group(ctx: typer.Context):
+    record_group(ctx)
+
+
 @resource_app.command('add')
 def resource_add(ctx: typer.Context, reference: str,
                  path: Annotated[Path | None, typer.Option()] = None,
@@ -352,6 +377,11 @@ config_app = typer.Typer(no_args_is_help=True)
 app.add_typer(config_app,name='config')
 
 
+@config_app.callback()
+def config_group(ctx: typer.Context):
+    record_group(ctx)
+
+
 @config_app.command('show')
 def config_show(ctx: typer.Context):
     report(ctx,'config show',settings(ctx).inspect())
@@ -361,6 +391,7 @@ def main() -> None:
     from refs import moves
 
     moves.interrupted_report.set(None)
+    failed_command.set('invocation')
     args = sys.argv[1:]
     action_log.bind(" ".join(args))
     def option(name):
@@ -382,6 +413,15 @@ def main() -> None:
         pass  # Let Typer report selection errors through the usual envelope.
     exit_code = 0
     try:
+        index=0
+        while index<len(args) and args[index].startswith('--'):
+            index+=2 if args[index] in ('--config','--catalog','--project-file') else 1
+        bare_group=index==len(args) or index==len(args)-1 and args[index] in {'project','key','resource','config','collection'}
+        if bare_group:
+            failed_command.set(args[index] if index<len(args) else 'invocation')
+            with redirect_stdout(sys.stderr):
+                app(args=[*args,'--help'],standalone_mode=False)
+            raise RefError('invalid_invocation','Choose a command',2)
         returned = app(args=args, standalone_mode=False)
         if returned == 130 and (data := moves.interrupted_report.get()) is not None:
             interrupt = KeyboardInterrupt('Move interrupted')
@@ -389,12 +429,12 @@ def main() -> None:
             raise interrupt
     except typer.TyperException as exc:
         exit_code = 2
-        emit("invocation", error=RefError("invalid_invocation", exc.format_message(), 2),
+        emit(failed_command.get(), error=RefError("invalid_invocation", exc.format_message(), 2),
              json_output="--json" in args)
         raise SystemExit(2) from None
     except RefError as exc:
         exit_code = exc.exit_code
-        emit("invocation", error=exc, json_output="--json" in args)
+        emit(failed_command.get(), error=exc, json_output="--json" in args)
         raise SystemExit(exc.exit_code) from None
     except (OSError, sqlite3.Error) as exc:
         locked = isinstance(exc, sqlite3.OperationalError) and getattr(exc,'sqlite_errorcode',None) in (sqlite3.SQLITE_BUSY,sqlite3.SQLITE_LOCKED)
@@ -402,8 +442,12 @@ def main() -> None:
         error = RefError("home_not_writable" if denied else "lock_timeout" if locked else "storage_error", "Allow access to the selected path and retry" if denied else str(exc),
                          6 if locked else 5, retryable=locked, path=str(exc.filename) if denied and exc.filename else None)
         exit_code = error.exit_code
-        emit("invocation", error=error, json_output="--json" in args)
+        emit(failed_command.get(), error=error, json_output="--json" in args)
         raise SystemExit(error.exit_code) from None
+    except Exception:
+        exit_code = 5
+        emit(failed_command.get(),error=RefError('internal_error','Unexpected internal error',5),json_output='--json' in args)
+        raise SystemExit(5) from None
     except KeyboardInterrupt as exc:
         exit_code = 130
         if data := getattr(exc, 'data', None):
@@ -438,6 +482,11 @@ def import_reconcile(ctx: typer.Context, batch: str,
 
 collection_app = typer.Typer(no_args_is_help=True)
 app.add_typer(collection_app,name='collection')
+
+
+@collection_app.callback()
+def collection_group(ctx: typer.Context):
+    record_group(ctx)
 
 
 @collection_app.command('list')

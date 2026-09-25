@@ -12,6 +12,8 @@ Mutations support --dry-run: validate and report intended effects without operat
 
 All results contain schema_version="1.0", command, status, data, warnings and errors. status is ok, partial or error; data is object or null. Warnings/errors contain code, message, nullable path, details and retryable. Return source/resource/import IDs where applicable; move results also identify file_operations rows. Never claim complete success after partial application. JSON exceptions are handled by refs' wrapper, not delegated to Typer help formatting.
 
+Failure envelopes name the command that failed; unexpected failures use `internal_error` with exit 5 and no traceback, and a bare command group writes help to stderr with one `invalid_invocation` envelope on stdout in JSON mode.
+
 | Exit | Meaning |
 | --- | --- |
 | 0 | Complete/no-op, possibly warnings. |
