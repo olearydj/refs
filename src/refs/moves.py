@@ -275,7 +275,13 @@ def intake(settings, reference, path: Path, *, keep_name=False, dry_run=False, l
     path=path.expanduser().absolute()
     with connect(settings.catalog_path()) as c:
         old=c.execute('SELECT o.* FROM file_operations o JOIN resources r ON r.id=o.resource_id WHERE r.source_id=? AND o.old_path=? ORDER BY o.created_at DESC LIMIT 1',(source['id'],str(path))).fetchone()
-    if old and (old['state']!='removed' or not path.exists()):
+    if old and old['state']=='removed' and not path.exists():
+        current=sources.show(settings.catalog_path(),source['id'])
+        item=next(item for item in current['resources'] if item['id']==old['resource_id'])
+        destination=resources.resolve_path(settings,item)
+        return item | dict(citation_key=current['citation_key'],moved=True,destination=str(destination),
+                           moves=[],unlinked_paths=[],warnings=[],**({'dry_run':True} if dry_run else {}))
+    if old and old['state']!='removed':
         resource_id,target=old['resource_id'],Path(old['new_path'])
         plan=dict(path=str(path),destination=str(target),copied_from={'path':str(path)},warnings=[])
     else:

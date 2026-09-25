@@ -55,6 +55,8 @@ Both the original and the destination are hashed twice on purpose: once when the
 
 A retry is the same command run again. It first looks for unfinished operations among the sources it would act on, even when their locators now agree with the loc or the loc has since been emptied, and finishes those before it looks for new mismatches. A mismatch is a managed file whose folder is not its source's loc, or a linked file whose source has a loc. A retry identifies an operation by its resource and the paths saved in the row, not by a request identifier. What it does depends on the state it finds.
 
+A repeated intake whose original is gone and whose move is complete returns the resource at its current path without starting another operation.
+
 - Interrupted while staged. The staging file may be partial. The retry removes it and copies again from the original, which is unchanged. If the requested destination differs from the one saved in the row, the retry stops and reports a conflict.
 - Interrupted after publication but before the state was committed. The destination exists but the row still says staged. The retry compares the destination's identity with the saved staging identity. If they match, publication is proven, and the retry commits `published` and continues. If they differ, something else occupies that path, and the retry stops and reports it.
 - Interrupted after recorded. The catalog points at the new file and the original still exists. The retry runs the three pre-delete checks, flushes, unlinks, and commits `removed`.
