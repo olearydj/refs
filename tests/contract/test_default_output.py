@@ -36,12 +36,12 @@ def test_command_confirmations(initialized, tmp_path, reference_path):
 
 @pytest.mark.parametrize(('args', 'first'), [
     (['init'], 'Initialized catalog at '),
-    (['paths'], 'Configuration: '),
+    (['paths'], 'Configuration\t'),
     (['schema', 'source-create'], '{'),
     (['add', '--format', 'refs'], 'Already present: '),
-    (['show', 'smith-2024-learningPython'], 'Key: smith-2024-learningPython'),
-    (['search', 'Python'], 'smith-2024-learningPython | Alex Smith | 2024 | '),
-    (['list'], 'smith-2024-learningPython | Alex Smith | 2024 | '),
+    (['show', 'smith-2024-learningPython'], 'Key\tsmith-2024-learningPython'),
+    (['search', 'Python'], 'smith-2024-learningPython\t2024\tSmith\t'),
+    (['list'], 'smith-2024-learningPython\t2024\tSmith\t'),
     (['project', 'create', 'other'], 'Created project other'),
     (['project', 'show'], 'paper'),
     (['project', 'cite', 'paper', 'smith-2024-learningPython'], 'Cited smith-2024-learningPython in paper'),
@@ -81,7 +81,7 @@ def test_file_commands_first_line(initialized,tmp_path,reference_path,command):
         'import':(['import','--input',str(bib)],f'Imported 1, unchanged 0, conflicts 0, invalid 0 from {bib}'),
         'resource add':(['resource','add',source['id'],'--path',str(paths[1])],f"Linked {paths[1]} to {source['citation_key']}"),
         'resource unlink':(['resource','unlink',first['id'],'--execute'],f"Unlinked {paths[0]} from {source['citation_key']}"),
-        'resource check':(['resource','check'],f'linked with no loc (untouched): {paths[0]}'),
+        'resource check':(['resource','check'],f'linked with no loc (untouched)\t{paths[0]}\t'),
         'open':(['open',source['id']],'Choose a resource with --resource:'),
     }
     if command=='open':
@@ -96,7 +96,7 @@ def test_file_commands_first_line(initialized,tmp_path,reference_path,command):
 def test_paths_has_three_readable_lines_before_init(tmp_path):
     result = subprocess.run([*REFS_COMMAND, 'paths'], env=isolated_env(tmp_path), capture_output=True, text=True)
     assert result.returncode == 0
-    assert result.stdout.splitlines() == [f"Configuration: {tmp_path/'config.toml'}", f"Catalog: {tmp_path/'cat'}", 'Library: (not configured)']
+    assert result.stdout.splitlines() == [f"Configuration\t{tmp_path/'config.toml'}", f"Catalog\t{tmp_path/'cat'}", 'Library\t(not configured)']
     assert not (tmp_path/'cat').exists()
 
 

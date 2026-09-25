@@ -31,8 +31,8 @@ def test_preview_success_and_extras(initialized,human,tmp_path,reference_path):
     assert entry['operation_id'] is None and entry['new_name']=='file-b.pdf'
     assert preview['unlinked_paths']==[str(extra)]
     text=human('reorg')
-    assert f'{path} -> {occupied.with_name("file-b.pdf")}' in text
-    assert f'Left untouched (not linked): {extra}' in text
+    assert f'\t{path}\t' in text and f'\t{occupied.with_name("file-b.pdf")}\trenamed' in text
+    assert f'\t{extra}\tunlinked' in text
     result=moves.reorg(settings,execute=True)
     assert result['moves'][0]['operation_id'] and result['moves'][0]['state']=='removed'
     assert result['unlinked_paths']==[str(extra)] and extra.read_bytes()==b'untouched'
@@ -52,7 +52,8 @@ def test_partial_and_resumed_report(initialized,tmp_path,reference_path,monkeypa
     assert entry['state']=='failed' and entry['error']=='synthetic interruption'
     assert error.data['unlinked_paths']==[str(extra)] and path.exists()
     emit('reorg',error=error)
-    assert f"{path} -> {entry['new_path']}" in capsys.readouterr().err
+    problem=capsys.readouterr().err
+    assert f'\t{path}\t' in problem and f"\t{entry['new_path']}\t" in problem
     emit('reorg',error=error,json_output=True)
     assert json.loads(capsys.readouterr().out)['data']['moves'][0]['operation_id']==entry['operation_id']
     monkeypatch.setattr(moves,'checkpoint',lambda *args:None)

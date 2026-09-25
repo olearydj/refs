@@ -28,7 +28,7 @@ def test_saved_batches_list_newest_first_with_review_tokens(initialized,tmp_path
     env=isolated_env(tmp_path)
     result=subprocess.run([*REFS_COMMAND,'import','list'],env=env,capture_output=True,text=True)
     assert result.returncode==0 and len(result.stdout.splitlines())==2
-    assert result.stdout.startswith(items[0]['import_id']+' add ')
+    assert result.stdout.startswith(items[0]['import_id'][:8]+'\tadd\t')
     assert 'conflict 1' in result.stdout and 'batch revision' not in result.stdout
     assert not re.search(r'\b\d{19}\b',result.stdout)
     assert not re.search(r'\d{2}:\d{2}:\d{2}\.\d',result.stdout)

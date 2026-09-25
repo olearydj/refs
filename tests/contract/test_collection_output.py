@@ -10,9 +10,9 @@ def test_plain_hierarchy_and_filtered_sources(initialized,zotero_fixture,tmp_pat
     env=isolated_env(tmp_path)
     result=subprocess.run([*REFS_COMMAND,'collection','list'],env=env,text=True,capture_output=True)
     assert result.returncode==0
-    assert result.stdout.splitlines()[0]=='Empty (0 active sources) [users/123]'
-    assert 'Research/Methods (2 active sources)' in result.stdout
+    assert result.stdout.splitlines()[0]=='Empty\t0 active sources\tusers/123'
+    assert 'Research/Methods\t2 active sources' in result.stdout
     result=subprocess.run([*REFS_COMMAND,'list','--collection','Research/Methods','--sort','key'],env=env,text=True,capture_output=True)
-    assert result.returncode==0 and len(result.stdout.splitlines())==2
+    assert result.returncode==0 and len(result.stdout.splitlines())==3
     assert result.stdout.splitlines()[0].startswith('extra2')
     assert initialized('collection','list')['schema_version']=='1.0'

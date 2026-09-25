@@ -23,7 +23,7 @@ def test_keep_current_persists_without_changing_source_and_is_scoped(initialized
     assert all(d['action']=='keep_current' for d in preview['entries'][0]['decisions'])
     assert preview['entries'][0]['remaining_conflicts']==[]
     from refs.render import render_text
-    assert 'Keep current metadata.title: "Current Title"' in render_text('import reconcile',preview,[])
+    assert 'Keep current metadata.title\t"Current Title"' in render_text('import reconcile',preview,[])
     result=initialized('import','reconcile',batch,'--keep-current','book','--execute','--if-batch-revision',preview['batch_revision'])['data']
     assert result['batch_revision']!=preview['batch_revision']
     current=sources.show(catalog,'book')
