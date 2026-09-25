@@ -7,6 +7,17 @@ if [[ "${1:-}" == --corpus ]]; then
   shift
   exec "$REPO/.venv/bin/python" "$T/move_rehearsal.py" "$@"
 fi
+missing=()
+for paper in pipyer-paper 2026-jose-danvas 2026-insight-dema-llm manufacturing-training-media-tradeoffs dissertation; do
+  [[ -f "$T/papers/$paper/references.bib" ]] || missing+=("papers/$paper/references.bib")
+done
+for input in attention.json zotero-bbt-export.bib; do
+  [[ -f "$T/inputs/$input" ]] || missing+=("inputs/$input")
+done
+if ((${#missing[@]})); then
+  printf 'Missing real-trial inputs: %s; these are the owner\x27s files kept out of the repository.\n' "${missing[*]}" >&2
+  exit 2
+fi
 if [[ "${REFS_TRIAL_ISOLATED:-}" != 1 ]]; then
   exec "$REPO/.venv/bin/python" "$T/isolated_trial.py"
 fi

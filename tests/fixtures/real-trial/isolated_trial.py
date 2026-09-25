@@ -4,11 +4,20 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
-root = Path(tempfile.mkdtemp(prefix='refs-trial-', dir='/private/tmp'))
 source = Path(__file__).resolve().parent
+required = [source/'papers'/paper/'references.bib' for paper in (
+    'pipyer-paper', '2026-jose-danvas', '2026-insight-dema-llm',
+    'manufacturing-training-media-tradeoffs', 'dissertation',
+)] + [source/'inputs'/name for name in ('attention.json', 'zotero-bbt-export.bib')]
+missing = [str(path.relative_to(source)) for path in required if not path.is_file()]
+if missing:
+    print("Missing real-trial inputs: " + " ".join(missing) + "; these are the owner's files kept out of the repository.", file=sys.stderr)
+    raise SystemExit(2)
+root = Path(tempfile.mkdtemp(prefix='refs-trial-', dir='/private/tmp'))
 if any(path.is_symlink() for path in source.rglob('*')):
     raise ValueError('Trial inputs must be copies, not symlinks')
 shutil.copytree(source, root/'trial', ignore=shutil.ignore_patterns('out','__pycache__'))

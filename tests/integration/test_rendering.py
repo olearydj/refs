@@ -1,6 +1,7 @@
 """Real consumer checks; absent tools are reported explicitly."""
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -26,9 +27,14 @@ def tool(name, pytestconfig):
 
 
 def run(args, cwd):
-    result = subprocess.run(args, cwd=cwd, capture_output=True, text=True, timeout=90)
+    env = os.environ.copy()
+    if Path(args[0]).name == 'biber':
+        cache = cwd / 'biber-cache'
+        cache.mkdir(exist_ok=True)
+        env['PAR_GLOBAL_TMPDIR'] = str(cache)
+    result = subprocess.run(args, cwd=cwd, env=env, capture_output=True, text=True, timeout=90)
     if result.returncode and Path(args[0]).name == 'biber':
-        result = subprocess.run(args, cwd=cwd, capture_output=True, text=True, timeout=90)
+        result = subprocess.run(args, cwd=cwd, env=env, capture_output=True, text=True, timeout=90)
     assert result.returncode == 0, result.stdout[-6000:] + result.stderr[-2000:]
     return result.stdout
 
