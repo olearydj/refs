@@ -133,6 +133,41 @@ def test_stale_before_record_retains_original(initialized,tmp_path,reference_pat
     assert resources.resolve_path(settings,sources.show(settings.catalog_path(),source['id'])['resources'][0])==original
 
 
+def test_stale_pre_record_retry_replans_one_operation(initialized,tmp_path,reference_path,monkeypatch):
+    settings, source, resource, original, target=prepare(initialized,tmp_path,reference_path)
+    def fail(at,row):
+        if at=='published':
+            raise OSError('synthetic stop before record')
+    monkeypatch.setattr(moves,'checkpoint',fail)
+    with pytest.raises(RefError):
+        moves.move(settings,resource['id'],target)
+    with connect(settings.catalog_path()) as c:
+        before=dict(c.execute('SELECT * FROM file_operations').fetchone())
+    current=sources.show(settings.catalog_path(),source['id'])
+    sources.update(settings.catalog_path(),source['id'],{'schema_version':'1.0','set':{'metadata.publisher':'Changed'}},current['revision'])
+    monkeypatch.setattr(moves,'checkpoint',lambda *args:None)
+    result=moves.move(settings,resource['id'],target)
+    with connect(settings.catalog_path()) as c:
+        rows=[dict(row) for row in c.execute('SELECT * FROM file_operations')]
+    assert result['state']=='removed' and len(rows)==1 and rows[0]['id']==before['id']
+    assert rows[0]['source_revision']>before['source_revision']
+    assert not original.exists() and target.read_bytes()==b'synthetic completed download'
+
+
+def test_unlink_refuses_resource_with_unfinished_move(initialized,tmp_path,reference_path,monkeypatch):
+    settings, source, resource, original, target=prepare(initialized,tmp_path,reference_path)
+    monkeypatch.setattr(moves,'checkpoint',lambda at,row: (_ for _ in ()).throw(KeyboardInterrupt) if at=='staged' else None)
+    with pytest.raises(KeyboardInterrupt):
+        moves.move(settings,resource['id'],target)
+    with connect(settings.catalog_path()) as c:
+        operation=c.execute('SELECT id FROM file_operations').fetchone()[0]
+    with pytest.raises(RefError) as caught:
+        resources.unlink(settings,resource['id'],execute=True)
+    assert caught.value.issue['details']['operation_id']==operation
+    assert operation in str(caught.value) and original.exists()
+    assert sources.show(settings.catalog_path(),source['id'])['resources'][0]['id']==resource['id']
+
+
 @pytest.mark.parametrize('kind',['directory','symlink','escape'])
 def test_unsafe_paths(initialized,tmp_path,reference_path,kind):
     settings, source, resource, original, target=prepare(initialized,tmp_path,reference_path)

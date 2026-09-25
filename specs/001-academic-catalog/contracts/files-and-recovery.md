@@ -47,6 +47,8 @@ The row moves through the states in the table. Each state records what has been 
 | removed | The original has been deleted. The operation is complete. |
 | failed | A check failed. The row holds the error and the last state that completed. No file has been deleted or overwritten. A retry repeats that state's checks. |
 
+If a pre-recorded retry finds changed revisions or loc, it proves and discards its own staged or published copy, refreshes the operation from the current resource and source, and restarts at staged; resource unlink refuses while that resource has an unfinished operation and names it.
+
 Deletion is guarded by file facts only. Before removing the original, refs checks three things: the destination still has the identity and digest saved in the row, the original still has the identity and digest saved in the row, and the resource row still points at the destination. Then refs flushes the destination file and its directory to disk and unlinks the original. If a flush fails, deletion does not happen. These flushes fix the order of events; they are not a promise about power loss on macOS. After the unlink, the row is set to `removed`. Revisions and loc are not rechecked here. They were checked when the resource was re-recorded, and once the catalog points at the new file, a later edit to the source must not be able to leave the original undeleted. If the owner changes the loc after this point, that is a new mismatch for the next reorg, never a reason to keep the original.
 
 Both the original and the destination are hashed twice on purpose: once when the copy is made or published, and once more before the original is deleted.

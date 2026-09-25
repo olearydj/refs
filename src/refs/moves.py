@@ -3,6 +3,7 @@
 import json
 import os
 import shutil
+import sqlite3
 import unicodedata
 from datetime import UTC, datetime
 from pathlib import Path
@@ -129,12 +130,54 @@ def record_destination(settings,row):
     row['state']='recorded'
 
 
+def replan_stale(settings, row):
+    """Restart a pre-recorded move after catalog edits, retaining its operation ID."""
+    if (row['last_state'] if row['state']=='failed' else row['state']) not in ('staged','published'):
+        return
+    with connect(settings.catalog_path()) as c:
+        item=next((item for item in resources.inventory(c) if item['id']==row['resource_id']),None)
+        if item is None:
+            return
+        source=sources.record(c,item['source_id'])
+    if (item['revision'],source['revision'],source.get('loc')) == (row['resource_revision'],row['source_revision'],row['loc']):
+        return
+    if source['state']!='active' or not source.get('loc'):
+        raise RefError('stale_revision','Source is not active and placed; inspect the move')
+    original=resources.resolve_path(settings,item)
+    if not original.is_file() or original.is_symlink():
+        raise RefError('unsafe_move_source','Current resource is not a regular file')
+    stage,target=Path(row['staging_path']),Path(row['new_path'])
+    saved=json.loads(row['staging_identity'])
+    for path in (target,stage):
+        if path.exists() or path.is_symlink():
+            if not path.is_file() or path.is_symlink() or identity(path)[:2]!=saved[:2]:
+                raise RefError('move_conflict','Move copy changed; inspect the unfinished operation')
+    # Unlink the destination first: it may share the staging inode.
+    if target.exists():
+        target.unlink()
+    if stage.exists():
+        stage.unlink()
+    new_target=settings.library/source['loc']/row['new_name']
+    safe_path(new_target,settings.library)
+    if new_target.exists() or new_target.is_symlink():
+        raise RefError('destination_exists','Inspect the occupied destination; moves never overwrite')
+    new_stage=stage.with_name('move-'+str(uuid4()))
+    new_stage.touch(exist_ok=False)
+    save(settings,row,state='staged',last_state=None,error=None,old_path=str(original),
+         new_path=str(new_target),old_name=original.name,staging_path=str(new_stage),
+         original_identity=json.dumps(identity(original)),staging_identity=json.dumps(identity(new_stage)),
+         destination_identity=None,digest=None,source_revision=source['revision'],
+         resource_revision=item['revision'],loc=source['loc'])
+
+
 def resume(settings,row):
     original,target,stage=(Path(row[key]) for key in ('old_path','new_path','staging_path'))
-    if row['state']=='failed':
-        save(settings,row,state=row['last_state'],error=None)
     publication_verified = False
     try:
+        replan_stale(settings,row)
+        if row['state']=='failed':
+            save(settings,row,state=row['last_state'],error=None)
+        original,target,stage=(Path(row[key]) for key in ('old_path','new_path','staging_path'))
         if row['state']=='staged':
             if target.exists() or target.is_symlink():
                 if not row['digest'] or not verified(target,row['staging_identity'],row['digest']):
@@ -192,7 +235,7 @@ def resume(settings,row):
             save(settings,row,state='removed',error=None)
             checkpoint('removed',row)
         return row
-    except (OSError,RefError) as exc:
+    except (OSError,sqlite3.Error,RefError) as exc:
         if isinstance(exc,RefError) and exc.issue['code'] == 'log_unwritable':
             raise
         save(settings,row,last_state='recorded' if row['state']=='unlinked' else row['state'],state='failed',error=str(exc))
