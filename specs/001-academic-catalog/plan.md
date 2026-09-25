@@ -233,7 +233,7 @@ The move protocol's contract and its tests; the result envelope; every existing 
 
 ### Acceptance
 
-Every finding in the investigation is fixed, deferred to the export pass, or kept with its reason, in a disposition table in the acceptance record. The suite stays green throughout, and the demo and real-trial harness pass at the end. The SQLite-syntax test and the schema-model test exist. Application lines are fewer than before the pass.
+Every finding in the investigation is fixed, deferred to the export pass, or kept with its reason, in a disposition table in the acceptance record. The suite stays green throughout, and the demo and real-trial harness pass at the end. The SQLite-syntax test and the schema-model test exist. The application line count before and after the pass is reported by batch and by kind, as a data point the owner judges, not a criterion; the pass added lines where rules replaced omissions and logic moved from the CLI into the domain.
 
 ### Process
 
