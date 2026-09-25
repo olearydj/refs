@@ -47,7 +47,7 @@ The four batches implement the [accepted brief](../plan.md#code-review-fix-pass-
 | Other reader-noted no-op branches and always-one-value settings | Kept | The extra `_add`, search guard, preservation pre-check, impossible collection value, and `apply_entry` setting are small local paths; removal was not among D4's named targets and has no demonstrated user effect. |
 | Server backend requires SQL dialect, transaction, and catalog-layout work | Kept | D2 deliberately kept SQLite and prohibited new domain SQLite syntax; the inventory below is the explicit boundary. |
 | Human-output lambda renderer and error rendering split | Kept | The planned plain-table human-output pass owns the replacement. |
-| Upgrade notices on stdout and duplicated JSON warnings | Kept | Moving/removing them would change command output, a batch-4 stop condition. |
+| Upgrade notices on stdout and duplicated JSON warnings | Fixed earlier | Both were fixed by the human output pass (e9f3a3a) before this batch: notices go to stderr and warnings appear once, at the envelope's top level. Corrected by the reviewing session after the merge. |
 | `import --input -` unavailable | Fixed | `109b6b1` accepts standard input through the shared payload reader. |
 | Undocumented `project cite --from-import` | Kept | Help/contract surface work remains with the named help pass. |
 | Generated `--no-` booleans, untyped choice help, and missing command help | Kept | The help pass owns this CLI presentation work. |
