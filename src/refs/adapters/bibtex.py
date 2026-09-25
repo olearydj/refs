@@ -165,6 +165,7 @@ def validate_surface(text: str, entry: Entry, fields: dict):
 
 def map_fields(value: dict, fields: dict, kind: str, traditional: bool, unsupported: set, protection: dict, limitations: list):
     consumed = set()
+    assigned: dict[str, tuple[int | None, str, object]] = {}
     for row in REGISTRY['rows']:
         field = row['source_field']
         if row['input_format'] != 'bib' or kind not in row['type_scope'] or field not in fields:
@@ -199,7 +200,21 @@ def map_fields(value: dict, fields: dict, kind: str, traditional: bool, unsuppor
                 if field in ('language', 'langid'):
                     from refs.languages import normalize
                     incoming = normalize(incoming)
-            assign_path(value, path, incoming)
+            previous = assigned.get(path)
+            rank = row.get('alias_rank')
+            if previous and previous[2] != incoming and rank is not None and previous[0] is not None and rank != previous[0]:
+                winner, loser = (field, previous[1]) if rank < previous[0] else (previous[1], field)
+                limitations.append(dict(field=loser, reason=f'Documented fallback: {winner} takes precedence over {loser} for {path}; original retained'))
+                if rank < previous[0]:
+                    target = value
+                    for part in path.split('.')[:-1]:
+                        target = target[part]
+                    del target[path.split('.')[-1]]
+                    assign_path(value, path, incoming)
+                    assigned[path] = (rank, field, incoming)
+            else:
+                assign_path(value, path, incoming)
+                assigned[path] = (rank, field, incoming)
             if 'title' in path:
                 protection_text = re.sub(r'\\(?:[A-Za-z]+|[^A-Za-z])\s*\{[^{}]*\}', '', contents)
                 terms = [decode(group) for group in re.findall(r'(?<![\\\w])\{([^{}]+)\}', protection_text) if not group.startswith('\\')]

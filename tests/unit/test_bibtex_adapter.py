@@ -8,6 +8,7 @@ from refs.results import RefError
 
 @pytest.mark.parametrize(('entry', 'path', 'expected'), [
     ('@article{x,title={Test},journal={Legacy Journal},number={7}}', 'issue', '7'),
+    ('@article{x,title={Test},number={1},issue={2}}', 'issue', '1'),
     ('@techreport{x,title={Test},institution={Example School},number={R7}}', 'publisher', 'Example School'),
     ('@phdthesis{x,title={Test},school={Example School}}', 'genre', 'PhD thesis'),
     ('@inbook{x,title={Whole Book},chapter={2}}', 'container-title', 'Whole Book'),
@@ -21,7 +22,6 @@ def test_supported_bibtex(entry, path, expected):
 
 
 @pytest.mark.parametrize('entry', [
-    '@article{x,title={A},number={1},issue={2}}',
     '@book{x,title={A},year={2024},date={2023-01}}',
     '@article{x,title={A},TITLE={B}}',
     '@article{x,title={A},broken,year={2024}}',

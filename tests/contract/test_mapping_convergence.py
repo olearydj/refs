@@ -45,7 +45,6 @@ def test_bib_refs_csl_convergence_and_clear(initialized, tmp_path, case):
 
 @pytest.mark.parametrize('fields', [
     'journal={First},journaltitle={Second}',
-    'issue={1},number={2}',
     'language={en},langid={de}',
 ])
 def test_alias_conflicts_are_not_route_priority(fields):
