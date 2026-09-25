@@ -239,16 +239,14 @@ def parse(raw: bytes) -> dict:
                 limitations.append(dict(field=field, reason=str(exc)))
         for field in set(fields) - consumed:
             limitations.append(dict(field=field, reason='Unmapped field preserved verbatim'))
-        notes = [decode(fields[field]) for field in ('note',) if field in fields and field not in unsupported]
-        if notes:
-            metadata['note'] = '\n'.join(notes)
+        if 'note' in fields and 'note' not in unsupported:
+            metadata['note'] = decode(fields['note'])
         parts = None
         if 'year' in fields and 'year' not in unsupported:
             year = fields['year']
             if year.isdecimal():
                 parts = [int(year)]
-                month = fields.get('month', '')
-                if month and 'month' not in unsupported:
+                if parsed_month is not None and 'month' not in unsupported:
                     parts.append(parsed_month)
             else:
                 metadata['issued'] = {'literal': year}
@@ -261,13 +259,12 @@ def parse(raw: bytes) -> dict:
                 if not supplied_parts or supplied_parts[:overlap] != parts[:overlap]:
                     raise ValueError('Date and year/month disagree')
                 supplied = {'date-parts':[parts if len(parts)>len(supplied_parts) else supplied_parts]}
-            if 'month' in fields and 'month' not in unsupported and 'date-parts' in supplied:
-                month = parsed_month
+            if parsed_month is not None and 'month' not in unsupported and 'date-parts' in supplied:
                 supplied_parts = supplied['date-parts'][0]
-                if len(supplied_parts)>1 and supplied_parts[1] != month:
+                if len(supplied_parts)>1 and supplied_parts[1] != parsed_month:
                     raise ValueError('Date and month disagree')
                 if len(supplied_parts)==1:
-                    supplied_parts.append(month)
+                    supplied_parts.append(parsed_month)
             metadata['issued'] = supplied
         elif parts:
             metadata['issued'] = {'date-parts': [parts]}

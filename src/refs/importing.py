@@ -12,7 +12,7 @@ from pydantic import ValidationError
 from refs import naming, sources
 from refs.adapters import bibtex, zotero
 from refs.catalog import changed, connect
-from refs.models import SourceCreate, editable, revalidate
+from refs.models import SourceCreate, editable, normalize_doi, revalidate
 from refs.results import RefError, notice
 
 
@@ -39,7 +39,7 @@ def differences(incoming: dict, current: dict, prefix='') -> list[str]:
         existing = current.get(key)
         if isinstance(value, dict):
             result.extend(differences(value, existing if isinstance(existing, dict) else {}, path))
-        elif key == 'DOI' and isinstance(existing, str) and sources.doi_identity(value) == sources.doi_identity(existing):
+        elif key == 'DOI' and isinstance(existing, str) and normalize_doi(value) == normalize_doi(existing):
             continue
         elif value != existing:
             result.append(path)
@@ -73,7 +73,7 @@ def doi_plan(connection) -> dict[str, set[str]]:
     for row in connection.execute('SELECT id,metadata_json FROM sources'):
         doi = json.loads(row['metadata_json']).get('DOI')
         if doi:
-            existing.setdefault(sources.doi_identity(doi), set()).add(row['id'])
+            existing.setdefault(normalize_doi(doi), set()).add(row['id'])
     return existing
 
 
@@ -88,13 +88,13 @@ def match(connection, source: SourceCreate, fingerprint: str, *, isbn_groups=Non
     ids = {row[0] for row in connection.execute('SELECT id FROM sources WHERE citation_key=?', (source.citation_key,))}
     ids.update(row[0] for row in connection.execute('SELECT source_id FROM originals WHERE sha256=? AND source_id IS NOT NULL', (fingerprint,)))
     if source.metadata.DOI:
-        doi = sources.doi_identity(source.metadata.DOI)
+        doi = normalize_doi(source.metadata.DOI)
         if doi_groups is not None:
             ids.update(doi_groups.get(doi, ()))
         else:
             for row in connection.execute('SELECT id,metadata_json FROM sources'):
                 metadata = json.loads(row['metadata_json'])
-                if metadata.get('DOI') and doi==sources.doi_identity(metadata['DOI']):
+                if metadata.get('DOI') and doi==normalize_doi(metadata['DOI']):
                     ids.add(row['id'])
     for binding in sources.bindings(source):
         row = connection.execute('SELECT source_id FROM origin_identities WHERE namespace=? AND library_uri=? AND item_key=?', binding).fetchone()
@@ -282,7 +282,7 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
             if doi_groups is not None and (outcome in ('applied','unchanged') or result.get('binding',{}).get('bound')) and result.get('source_id') and result.get('incoming'):
                 doi = result['incoming']['metadata'].get('DOI')
                 if doi:
-                    doi_groups.setdefault(sources.doi_identity(doi),set()).add(result['source_id'])
+                    doi_groups.setdefault(normalize_doi(doi),set()).add(result['source_id'])
             counts[outcome] += 1
             if not dry_run:
                 save_entry(connection, run_id, f"{locator}#bytes={block['start']}:{block['end']}", result)

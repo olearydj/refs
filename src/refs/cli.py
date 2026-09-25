@@ -176,14 +176,13 @@ def project_cite(ctx: typer.Context, project: str, reference: Annotated[str | No
                  from_import: Annotated[str | None, typer.Option()] = None,
                  dry_run: Annotated[bool, typer.Option()] = False):
     catalog = settings(ctx).catalog_path()
-    if (reference is None) == (from_import is None):
-        raise RefError('invalid_invocation', 'Supply one source or --from-import ORIGIN', 2)
-    if from_import is not None:
+    if from_import is not None and reference is None:
         report(ctx, 'project cite', projects.cite_import(catalog, project, from_import, dry_run=dry_run))
         return
-    assert reference is not None
-    data = projects.cite(catalog, project, reference, dry_run=dry_run)
-    report(ctx, "project cite", data)
+    if reference is not None and from_import is None:
+        report(ctx, "project cite", projects.cite(catalog, project, reference, dry_run=dry_run))
+        return
+    raise RefError('invalid_invocation', 'Supply one source or --from-import ORIGIN', 2)
 
 
 @app.command("export")

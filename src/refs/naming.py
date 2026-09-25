@@ -145,13 +145,6 @@ def provenance(policy: dict | None = None) -> dict:
     return dict(naming_settings=(policy or {}).get('keys',{}),origin='generated', policy=LATIN['policy'], table_version=LATIN['version'], table_sha256=hashlib.sha256(LATIN_BYTES).hexdigest(), unicode_version=unicodedata.unidata_version)
 
 
-def edition_display(value: int | str) -> str:
-    if isinstance(value, int):
-        ending = 'th' if 10 <= value % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(value % 10, 'th')
-        return f'{value}{ending} ed.'
-    return value
-
-
 def filename(record: dict, original: str, label: str | None = None, *, report_fallback: bool = False):
     year = issued_year(record)
     words = re.findall(r'[^\W_]+', short_title(record))

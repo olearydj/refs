@@ -145,19 +145,6 @@ def upgrade_connection(connection: sqlite3.Connection) -> None:
             raise
 
 
-def migrate(catalog: Path) -> None:
-    """Explicit offline upgrade; caller must stop writers and retain a snapshot."""
-    if not (catalog/'ready').is_file():
-        raise RefError('recovery_required', 'Inspect the incomplete catalog before migrating', 5)
-    with closing(sqlite3.connect((catalog/'catalog.sqlite').resolve().as_uri()+'?mode=rw', uri=True)) as connection, connection:
-        connection.execute('PRAGMA foreign_keys=ON')
-        before = connection.execute('SELECT schema_version FROM catalog_meta').fetchone()[0]
-        if before != SCHEMA_VERSION:
-            action_log.setup(catalog, mutation=True)
-            action_log.log_mutation('schema.upgrade', str(catalog), {'schema_version':before}, {'schema_version':SCHEMA_VERSION})
-        upgrade_connection(connection)
-
-
 def ensure_schema(catalog: Path, connection: sqlite3.Connection) -> None:
     """Upgrade an existing catalog only after saving a consistent safety copy."""
     from refs.files import file_lock

@@ -14,7 +14,7 @@ from refs import languages, naming
 from refs import logging as action_log
 from refs.adapters.search_sqlite import refresh
 from refs.catalog import changed, connect
-from refs.models import REGISTRY, SourceCreate, editable, normalize_doi, parse, revalidate
+from refs.models import REGISTRY, SourceCreate, editable, parse, revalidate
 from refs.results import RefError, notice
 
 
@@ -68,10 +68,6 @@ def resolve(connection, reference: str) -> str:
 def show(catalog: Path, reference: str) -> dict:
     with connect(catalog) as connection:
         return record(connection, resolve(connection, reference))
-
-
-def doi_identity(value: str) -> str:
-    return normalize_doi(value)
 
 
 def bindings(source: SourceCreate) -> list[tuple[str, str, str]]:

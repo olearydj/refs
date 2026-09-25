@@ -6,7 +6,7 @@ from importlib.resources import files
 import pytest
 from conftest import REFS_COMMAND, SCHEMA_VERSION, TABLE_COUNT
 
-from refs.catalog import connect, migrate
+from refs.catalog import connect
 from refs.results import RefError
 
 
@@ -25,8 +25,10 @@ def test_automatic_migration_preserves_identity(tmp_path):
     with connect(path):
         pass
     assert len(list(path.glob(f"before-schema-{SCHEMA_VERSION}-*.sqlite"))) == 1
-    migrate(path)
-    migrate(path)
+    with connect(path):
+        pass
+    with connect(path):
+        pass
     with connect(path) as c:
         assert tuple(c.execute("SELECT * FROM catalog_meta").fetchone()) == (1, "stable", SCHEMA_VERSION, 7)
         assert c.execute("PRAGMA foreign_key_check").fetchall() == []
@@ -47,7 +49,8 @@ def test_legacy_fixed_version_check_is_relaxed_once(tmp_path):
     with closing(sqlite3.connect(path / 'catalog.sqlite')) as c, c:
         c.executescript(initial)
         c.execute("INSERT INTO catalog_meta VALUES (1,'stable',1,7)")
-    migrate(path)
+    with connect(path):
+        pass
     with closing(sqlite3.connect(path / 'catalog.sqlite')) as c, c:
         assert c.execute('SELECT schema_version,revision FROM catalog_meta').fetchone() == (SCHEMA_VERSION, 7)
         schema = c.execute("SELECT sql FROM sqlite_master WHERE name='catalog_meta'").fetchone()[0]
@@ -61,7 +64,8 @@ def test_migration_rolls_back_failed_statement(tmp_path):
     with closing(sqlite3.connect(path / "catalog.sqlite")) as c, c:
         c.execute("CREATE TABLE collections (collision TEXT)")
     with pytest.raises(sqlite3.OperationalError):
-        migrate(path)
+        with connect(path):
+            pass
     with closing(sqlite3.connect(path / "catalog.sqlite")) as c, c:
         assert c.execute("SELECT schema_version FROM catalog_meta").fetchone()[0] == 1
         assert not c.execute("SELECT 1 FROM sqlite_master WHERE name='import_entries'").fetchone()
@@ -101,7 +105,8 @@ def test_failed_move_migration_rolls_back(tmp_path):
         c.executescript(files('refs').joinpath('migrations/003_source_loc.sql').read_text())
         c.execute('CREATE TABLE file_operations (collision TEXT)')
     with pytest.raises(sqlite3.OperationalError):
-        migrate(path)
+        with connect(path):
+            pass
     with closing(sqlite3.connect(path/'catalog.sqlite')) as c, c:
         assert c.execute('SELECT schema_version FROM catalog_meta').fetchone()[0] == 3
 
@@ -120,8 +125,10 @@ def test_lowercase_migration_preserves_locator_identity_and_disk(tmp_path):
             c.executescript(files('refs').joinpath('migrations/'+name).read_text())
         c.execute("INSERT INTO sources (id,citation_key,created_at,updated_at,metadata_json,details_json,key_provenance_json,loc) VALUES ('s','key','now','now','{}','{}','{}','Unfiled')")
         c.execute("INSERT INTO resources (id,source_id,locator,root,relative) VALUES ('r','s',?,'library',?)",(json.dumps(locator,sort_keys=True),relative))
-    migrate(path)
-    migrate(path)
+    with connect(path):
+        pass
+    with connect(path):
+        pass
     with connect(path) as c:
         row=c.execute('SELECT id,relative,locator FROM resources').fetchone()
         assert row['id']=='r' and row['relative']=='unfiled/Café/Unfiled/file.pdf'
