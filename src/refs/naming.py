@@ -4,6 +4,7 @@ import hashlib
 import json
 import re
 import unicodedata
+from copy import deepcopy
 from importlib.resources import files
 from pathlib import Path
 
@@ -63,7 +64,7 @@ def title_case(text: str, protection: dict, boundary: int | None = None, minor_w
 
 def normalize(record: dict, policy: dict | None = None, fields: set[str] | None = None) -> tuple[dict, list[dict]]:
     policy = policy or {}
-    record = json.loads(json.dumps(record))
+    record = deepcopy(record)
     metadata = record['metadata']
     warnings = []
     protections = record.setdefault('title_protection', {})

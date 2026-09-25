@@ -5,6 +5,7 @@ import hashlib
 import json
 import math
 import re
+from copy import deepcopy
 from importlib.resources import files
 from typing import Annotated, Literal, Self
 from urllib.parse import urlparse
@@ -392,6 +393,14 @@ class SourceCreate(StrictModel):
 
     def canonical(self) -> dict:
         return self.model_dump(by_alias=True, exclude_none=True)
+
+
+def editable(record: dict) -> dict:
+    return deepcopy({name:record[name] for name in SourceCreate.model_fields if name in record and record[name] is not None})
+
+
+def revalidate(canonical: dict) -> dict:
+    return SourceCreate.model_validate(canonical | {'citation_key':None}).canonical() | {'citation_key':canonical['citation_key']}
 
 
 def parse(raw: bytes) -> SourceCreate:

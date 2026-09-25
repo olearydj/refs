@@ -3,6 +3,7 @@
 import hashlib
 import json
 import sqlite3
+from copy import deepcopy
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -13,7 +14,7 @@ from refs import languages, naming
 from refs import logging as action_log
 from refs.adapters.search_sqlite import refresh
 from refs.catalog import changed, connect
-from refs.models import REGISTRY, SourceCreate, normalize_doi, parse
+from refs.models import REGISTRY, SourceCreate, editable, normalize_doi, parse, revalidate
 from refs.results import RefError
 
 
@@ -174,9 +175,8 @@ def store_record(connection, current: dict, canonical: dict, corrections: list[s
     metadata = details.pop('metadata')
     details.pop('citation_key', None)
     loc = details.pop('loc', None)
-    old = {name:current[name] for name in SourceCreate.model_fields if name in current}
     action_log.log_mutation('source.update', {'id':current['id'],'citation_key':current['citation_key']},
-                            {'revision':current['revision']}, {'revision':current['revision']+1}, changes=action_log.changes(old,canonical))
+                            {'revision':current['revision']}, {'revision':current['revision']+1}, changes=action_log.changes(editable(current),canonical))
     updated = connection.execute('UPDATE sources SET metadata_json=?, details_json=?, loc=?, corrected_fields_json=?, updated_at=?, revision=revision+1 WHERE id=? AND revision=?',
                                  (json.dumps(metadata), json.dumps(details), loc, json.dumps(corrections), datetime.now(UTC).isoformat(), current['id'], current['revision']))
     if updated.rowcount != 1:
@@ -208,7 +208,7 @@ def patch_path(value: dict, path: str, replacement, *, clear: bool) -> None:
     if clear:
         if parts[-1] not in node:
             # Validate absent clear paths rather than accepting arbitrary names.
-            probe = json.loads(json.dumps(value))
+            probe = deepcopy(value)
             patch_path(probe, path, '__validate_path__', clear=False)
             try:
                 SourceCreate.model_validate(probe)
@@ -228,19 +228,16 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
         raise RefError('invalid_patch', 'Patch does not match the supported record profile', 2, details={'issues':exc.errors(include_url=False,include_context=False,include_input=False)}) from exc
     with connect(catalog, write=not dry_run) as connection:
         current = checked_record(connection, reference, revision)
-        canonical = json.loads(json.dumps({name: current[name] for name in SourceCreate.model_fields if name in current}))
-        if canonical.get("loc") is None:
-            canonical.pop("loc", None)
-        original = json.loads(json.dumps(canonical))
+        canonical = editable(current)
+        original = deepcopy(canonical)
         for path, value in patch_model.set.items():
             patch_path(canonical, path, value, clear=False)
         for path in patch_model.clear:
             patch_path(canonical, path, None, clear=True)
         if patch_model.provenance:
             canonical.setdefault('provenance', []).extend(item.model_dump(exclude_none=True) for item in patch_model.provenance)
-        preserved_key = canonical.pop("citation_key")
         try:
-            canonical = SourceCreate.model_validate(canonical).canonical()
+            canonical = revalidate(canonical)
             title_fields={field for field in canonical['metadata'] if 'metadata' in patch_model.set or 'metadata.'+field in patch_model.set}
             dropped_terms = []
             for field in list(canonical['title_protection']):
@@ -255,10 +252,9 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
             if dropped_terms:
                 names = ', '.join(f'{field}: {term}' for field, term in dropped_terms)
                 warnings.append(dict(code='protected_terms_dropped', message=f'Protected terms no longer in the edited title were dropped: {names}', path='title_protection', details={'terms':[{'field':field,'term':term} for field,term in dropped_terms]}, retryable=False))
-            canonical = SourceCreate.model_validate(canonical).canonical()
+            canonical = revalidate(canonical)
         except ValidationError as exc:
             raise RefError('invalid_patch', 'Patch does not match the supported record profile', 2, details={'issues':exc.errors(include_url=False,include_context=False,include_input=False)}) from exc
-        canonical['citation_key'] = preserved_key
         if canonical == original:
             return current | {'unchanged': True, 'warnings': warnings}
         corrections = sorted(set(current['corrected_fields']) | (set(patch_model.set) | set(patch_model.clear)) - {'loc'})

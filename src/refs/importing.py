@@ -12,7 +12,7 @@ from pydantic import ValidationError
 from refs import naming, sources
 from refs.adapters import bibtex, zotero
 from refs.catalog import changed, connect
-from refs.models import SourceCreate
+from refs.models import SourceCreate, editable, revalidate
 from refs.results import RefError
 
 
@@ -136,8 +136,7 @@ def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False
             before, after = identifier(field,str(before)), identifier(field,str(after))
         if before != after:
             compatible = False
-    canonical = {key: current[key] for key in SourceCreate.model_fields if key in current}
-    canonical = json.loads(json.dumps(canonical))
+    canonical = editable(current)
     fills, conflicts = [], []
     kept = kept_by_source.get(source_id,[]) if kept_by_source is not None else []
     if kept_by_source is None and origin is not None:
@@ -166,11 +165,8 @@ def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False
             canonical['provenance'].append(dict(origin='import',access='unknown'))
         if not dry_run:
             # Validate the combined record before binding the incoming identity.
-            key = canonical.pop('citation_key')
-            canonical = SourceCreate.model_validate(canonical).canonical()
-            canonical['citation_key'] = key
-            before = {key: current[key] for key in SourceCreate.model_fields if key in current}
-            if canonical != before:
+            canonical = revalidate(canonical)
+            if canonical != editable(current):
                 sources.store_record(connection,current,canonical,current['corrected_fields'])
             for binding in sources.bindings(source):
                 connection.execute('INSERT OR IGNORE INTO origin_identities VALUES (?,?,?,?,?)', (*binding,source_id,hashlib.sha256(raw).hexdigest()))
@@ -572,8 +568,7 @@ def reconcile(catalog: Path, batch: str, selectors: list[str], *, keep_current=N
             if entry['entry_id'] not in selected:
                 continue
             current = sources.record(connection,entry['source_id'])
-            canonical = {key:current[key] for key in SourceCreate.model_fields if key in current}
-            canonical = json.loads(json.dumps(canonical))
+            canonical = editable(current)
             decisions = []
             for path in sorted(selected[entry['entry_id']]):
                 incoming, previous = value_at(entry['incoming'],path), value_at(current,path)
@@ -582,12 +577,10 @@ def reconcile(catalog: Path, batch: str, selectors: list[str], *, keep_current=N
                     if action == 'take_incoming':
                         sources.patch_path(canonical,path,incoming,clear=False)
                     decisions.append(dict(path=path,current=previous,incoming=incoming,action=action))
-            key = canonical.pop('citation_key')
             try:
-                canonical = SourceCreate.model_validate(canonical).canonical()
+                canonical = revalidate(canonical)
             except ValidationError as exc:
                 raise RefError('invalid_selection', 'Selected values do not form a valid source; inspect dependent fields', 2) from exc
-            canonical['citation_key'] = key
             remaining = [item for item in entry.get('binding',{}).get('conflicts',[]) if item['path'] not in selected[entry['entry_id']] and value_at(canonical,item['path']) != item['incoming']]
             proposals.append(dict(citation_key=entry['citation_key'],source_id=current['id'],source_revision=current['revision'],decisions=decisions,remaining_conflicts=remaining))
             if execute and (decisions or entry['status']=='conflict' and not remaining):
