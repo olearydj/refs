@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -142,10 +143,15 @@ def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *,
     action_log.log_mutation('source.create', {'id':source_id,'citation_key':source.citation_key}, None,
                             {'revision':1}, changes={'record':{'old':None,'new':source.canonical()}},
                             original={'sha256':fingerprint,'byte_length':len(raw),'format':format,'locator':locator})
-    connection.execute(
-        "INSERT INTO sources (id, citation_key, created_at, updated_at, metadata_json, details_json, key_provenance_json, loc) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        (source_id, source.citation_key, now, now, json.dumps(metadata), json.dumps(details),
-         json.dumps(key_provenance), loc))
+    try:
+        connection.execute(
+            "INSERT INTO sources (id, citation_key, created_at, updated_at, metadata_json, details_json, key_provenance_json, loc) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (source_id, source.citation_key, now, now, json.dumps(metadata), json.dumps(details),
+             json.dumps(key_provenance), loc))
+    except sqlite3.IntegrityError as exc:
+        if 'sources.citation_key' in str(exc):
+            raise RefError('key_conflict','Citation key is already reserved') from exc
+        raise
     connection.execute(
         "INSERT INTO originals (id, source_id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator) VALUES (?, ?, ?, ?, ?, ?, 'add', ?, ?)",
         (str(uuid4()), source_id, raw, fingerprint, len(raw), format, fingerprint, locator))
@@ -171,8 +177,10 @@ def store_record(connection, current: dict, canonical: dict, corrections: list[s
     old = {name:current[name] for name in SourceCreate.model_fields if name in current}
     action_log.log_mutation('source.update', {'id':current['id'],'citation_key':current['citation_key']},
                             {'revision':current['revision']}, {'revision':current['revision']+1}, changes=action_log.changes(old,canonical))
-    connection.execute('UPDATE sources SET metadata_json=?, details_json=?, loc=?, corrected_fields_json=?, updated_at=?, revision=revision+1 WHERE id=? AND revision=?',
-                       (json.dumps(metadata), json.dumps(details), loc, json.dumps(corrections), datetime.now(UTC).isoformat(), current['id'], current['revision']))
+    updated = connection.execute('UPDATE sources SET metadata_json=?, details_json=?, loc=?, corrected_fields_json=?, updated_at=?, revision=revision+1 WHERE id=? AND revision=?',
+                                 (json.dumps(metadata), json.dumps(details), loc, json.dumps(corrections), datetime.now(UTC).isoformat(), current['id'], current['revision']))
+    if updated.rowcount != 1:
+        raise RefError('stale_revision','Reload the source and use its current revision',details={'expected':current['revision']})
     refresh(connection, record(connection, current['id']))
     changed(connection)
     return record(connection, current['id'])
@@ -289,7 +297,15 @@ def change_identity(catalog: Path, reference: str, revision: int | None, *, new_
                                 {'revision':current['revision']}, {'revision':current['revision']+1},
                                 changes={field:{'old':current[field],'new':value}})
         # Column names are internal constants, never user paths.
-        connection.execute(f'UPDATE sources SET {field}=?, revision=revision+1, updated_at=? WHERE id=?', (value, datetime.now(UTC).isoformat(), current['id']))
+        try:
+            updated = connection.execute(f'UPDATE sources SET {field}=?, revision=revision+1, updated_at=? WHERE id=? AND revision=?',
+                                         (value, datetime.now(UTC).isoformat(), current['id'],current['revision']))
+        except sqlite3.IntegrityError as exc:
+            if new_key is not None and 'sources.citation_key' in str(exc):
+                raise RefError('key_conflict','Citation key is already reserved') from exc
+            raise
+        if updated.rowcount != 1:
+            raise RefError('stale_revision','Reload the source and use its current revision',details={'expected':current['revision']})
         if new_key is not None:
             connection.execute('UPDATE sources SET key_provenance_json=? WHERE id=?', (json.dumps({'origin': 'explicit_rekey'}), current['id']))
         refresh(connection, record(connection, current['id']))

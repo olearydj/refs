@@ -1,5 +1,6 @@
 """Cited-only project membership, without implicit file effects."""
 
+import sqlite3
 from pathlib import Path
 from uuid import uuid4
 
@@ -29,7 +30,12 @@ def create(catalog: Path, name: str, description: str, *, dry_run: bool = False)
             return dict(dry_run=True, name=name, description=description)
         project = dict(id=str(uuid4()), name=name, description=description, revision=1)
         action_log.log_mutation('project.create', {'id':project['id'],'name':name}, None, project)
-        connection.execute("INSERT INTO projects VALUES (:id, :name, :description, :revision)", project)
+        try:
+            connection.execute("INSERT INTO projects VALUES (:id, :name, :description, :revision)", project)
+        except sqlite3.IntegrityError as exc:
+            if 'projects.name' in str(exc):
+                raise RefError('project_conflict','Project name is already reserved') from exc
+            raise
         changed(connection)
         return project
 
