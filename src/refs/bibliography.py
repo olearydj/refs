@@ -57,6 +57,243 @@ def enforce_losses(losses: list[dict], *, allow_unknown: bool = False) -> None:
         raise RefError('export_blocked', 'Export has unapplied losses; correct records or explicitly allow unknown mappings', details={'entries': losses})
 
 
+def _project_names(metadata, entry_type, fields, used, put, assess):
+    def render_names(role, names):
+        output_names = []
+        if any(name.get('dropping-particle') or name.get('non-dropping-particle') for name in names):
+            assess('name_particle_fallback', 'documented_fallback', 'Portable names retain the particle before the family name; consumers determine dropping behavior', 'metadata.' + role)
+        for name in names:
+            if 'literal' in name:
+                output_names.append('{' + tex(name['literal']) + '}')
+                continue
+            if any(name.get(flag) for flag in ('static-ordering', 'comma-suffix', 'parse-names')):
+                assess('name_projection_unassessed', 'unknown', 'Consumer handling of this name flag is unassessed', 'metadata.' + role)
+            family = person_name(name, ('dropping-particle', 'non-dropping-particle', 'family'))
+            if not family:
+                assess('given_only_name', 'unknown', 'Given-only personal names have unassessed citation behavior', 'metadata.' + role)
+                family = name.get('given', '')
+                output_names.append('{' + tex(family) + '}')
+                continue
+            grouped_family = not name.get('dropping-particle') and not name.get('non-dropping-particle') and (len(family.split()) > 1 or family[:1].islower())
+            if grouped_family or ' and ' in family or ',' in family:
+                family = '{' + tex(family) + '}'
+            else:
+                family = tex(family)
+            suffix = tex(name.get('suffix', ''))
+            given = tex(name.get('given', ''))
+            output_names.append(family + (', ' + suffix + ', ' + given if suffix else ', ' + given if given else ''))
+        return ' and '.join(output_names)
+
+    for role in ('author', 'editor'):
+        used.add(role)
+        names = list(metadata.get(role, []))
+        if role == 'editor' and entry_type in ('book', 'collection'):
+            for name in metadata.get('collection-editor', []):
+                if name not in names:
+                    names.append(name)
+        if names:
+            put(role, render_names(role, names), literal=True)
+    used.update(('collection-editor', 'container-author', 'contributor'))
+    if metadata.get('contributor'):
+        assess('contributor_omission', 'documented_fallback', 'Contributors remain in the catalog; portable output omits this non-cited role', 'metadata.contributor')
+    if metadata.get('collection-editor'):
+        assess('collection_editor_fallback', 'documented_fallback', 'Collection editors are emitted as editors on books; their distinct role remains in the catalog', 'metadata.collection-editor')
+    if metadata.get('container-author'):
+        if entry_type in ('incollection', 'inbook'):
+            put('bookauthor', render_names('container-author', metadata['container-author']), literal=True)
+        assess('container_author_omission', 'documented_fallback', 'Container authors are retained in bookauthor on book parts; classic styles may omit this field', 'metadata.container-author')
+    if not metadata.get('author') and not fields.get('editor'):
+        assess('missing_author', 'faithful_incomplete', 'No author or editor was supplied')
+
+
+
+def _project_titles(metadata, kind, entry_type, used, notes, copy, assess):
+    copy('title', 'title')
+    copy('title-short', 'shorttitle')
+    if kind in ('article-journal', 'article-magazine', 'article-newspaper'):
+        copy('container-title', 'journal')
+        if not metadata.get('container-title'):
+            assess('missing_journal', 'faithful_incomplete', 'No journal was supplied')
+    elif kind in ('chapter', 'paper-conference'):
+        copy('container-title', 'title' if entry_type == 'inbook' else 'booktitle')
+    elif 'container-title' in metadata:
+        notes.append('Website: ' + str(metadata['container-title']))
+        used.add('container-title')
+        assess('container_in_note', 'info', 'Website name is retained in note', 'metadata.container-title')
+
+
+
+def _project_dates(metadata, used, notes, put, assess):
+    used.add('issued')
+    issued = metadata.get('issued')
+    if not issued:
+        assess('missing_issued', 'faithful_incomplete', 'No issued date was supplied')
+    elif issued.get('literal') and not issued.get('date-parts') and not any(issued.get(name) for name in ('circa', 'season')):
+        put('year', issued['literal'])
+        assess('literal_issued_year', 'documented_fallback', 'Literal issued date written unchanged in year; verify the rendered date', 'metadata.issued')
+    elif len(issued.get('date-parts', [])) == 2 and not any(issued.get(name) for name in ('literal', 'circa', 'season')):
+        start, end = issued['date-parts']
+        put('year', start[0])
+        if len(start)>1 and len(end)>1 and start[1]==end[1]:
+            put('month', MONTHS[start[1]-1][0], literal=True)
+        interval = '/'.join('-'.join([str(part[0]), *[f'{n:02d}' for n in part[1:]]]) for part in (start,end))
+        assess('date_range_projected', 'documented_fallback', f'Issued range {interval} projects to its start year and shared month; full precision remains in the catalog', 'metadata.issued')
+    elif not issued.get('date-parts') or len(issued['date-parts']) != 1 or any(issued.get(name) for name in ('literal', 'circa', 'season')):
+        assess('issued_date_lost_or_changed', 'blocking', 'Portable year/month cannot preserve this issued precision', 'metadata.issued')
+    else:
+        parts = issued['date-parts'][0]
+        put('year', parts[0])
+        if len(parts) > 1:
+            put('month', MONTHS[parts[1]-1][0], literal=True)
+        if len(parts) > 2:
+            iso = '-'.join([str(parts[0]), *[f'{number:02d}' for number in parts[1:]]])
+            put('date', iso)
+            notes.append('Issued: ' + iso)
+            assess('issued_day_in_note', 'info', 'Supplementary date and note retain the day for portable consumers', 'metadata.issued')
+
+
+
+def _project_language(metadata, used, put, assess):
+    used.add('language')
+    language = metadata.get('language', '')
+    langid = languages.portable(language)
+    if langid:
+        put('langid', langid)
+        if not language.casefold().startswith('en') and all(char.isascii() for char in metadata.get('title','')):
+            assess('title_language_review', 'faithful_incomplete', f'Non-English language tag {language} accompanies an ASCII title; verify the language', 'metadata.language')
+    else:
+        if language:
+            assess('language_unrecognized', 'documented_fallback', 'Unrecognized language retained literally in catalog; no langid emitted', 'metadata.language')
+        if any(char.isalpha() and not char.isascii() for char in metadata.get('title', '')):
+            assess('language_unspecified', 'faithful_incomplete', 'Title language is unknown; supply it when known', 'metadata.language')
+
+
+
+def _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess):
+    for source, target in [('volume', 'volume'), ('issue', 'number'), ('publisher-place', 'address'), ('edition', 'edition'), ('collection-title', 'series'), ('collection-number', 'number'), ('container-title-short', 'shortjournal'), ('chapter-number', 'chapter')]:
+        copy(source, target)
+    used.add('page')
+    if 'page' in metadata:
+        put('pages', re.sub(r'(?<=\d)[-–](?=\d)', '--', str(metadata['page'])))
+    used.add('publisher')
+    if 'publisher' in metadata:
+        publisher = tex(str(metadata['publisher']))
+        if ' and ' in str(metadata['publisher']):
+            assess('literal_publisher', 'info', 'Publisher is one institution; BibLaTeX consumers will not split it on and', 'metadata.publisher')
+            publisher = '{' + publisher + '}'
+        if entry_type in ('phdthesis', 'mastersthesis'):
+            put('school', publisher, literal=True)
+        elif entry_type == 'techreport':
+            put('institution', publisher, literal=True)
+        elif entry_type == 'misc':
+            notes.append(str(metadata['publisher']))
+        else:
+            put('publisher', publisher, literal=True)
+    used.update(('number', 'archive', 'genre'))
+    if kind in ('article', 'manuscript'):
+        copy('archive', 'archiveprefix')
+        copy('number', 'eprint')
+        if (metadata.get('archive') or metadata.get('number')) and not (str(metadata.get('archive','')).casefold()=='arxiv' and value.get('extensions',{}).get('identifiers',{}).get('arxiv')):
+            notes.append(' '.join(str(metadata.get(field, '')) for field in ('archive', 'number')).strip())
+        if metadata.get('genre'):
+            notes.append(str(metadata['genre']))
+    elif kind in ('patent', 'standard'):
+        copy('number', 'number')
+        copy('genre', 'type')
+        notes.extend(str(metadata[field]) for field in ('genre', 'number') if metadata.get(field))
+    else:
+        copy('number', 'number')
+        if entry_type in ('techreport', 'phdthesis', 'mastersthesis'):
+            copy('genre', 'type')
+        elif metadata.get('genre'):
+            notes.append(str(metadata['genre']))
+    for field, label in [('authority', ''), ('jurisdiction', ''), ('version', 'Version')]:
+        used.add(field)
+        if metadata.get(field):
+            notes.append((label + ' ' + str(metadata[field])).strip())
+    for field, label in [('event-title', 'Event'), ('event-place', 'Event location'), ('section', 'Section'), ('part-title', 'Part'), ('medium', 'Medium'), ('archive-place', 'Archive location'), ('status', 'Status')]:
+        used.add(field)
+        if field in metadata:
+            notes.append(label + ': ' + str(metadata[field]))
+            assess('field_in_note', 'info', f'{field} is retained in note', 'metadata.' + field)
+
+
+
+def _project_identifiers(metadata, used, put, assess):
+    for source in IDENTIFIER_FIELDS:
+        target = source.lower()
+        used.add(source)
+        if source not in metadata:
+            continue
+        text = str(metadata[source])
+        if re.search(r'[{}\\\x00-\x1f\x7f]', text):
+            assess('invalid_identifier', 'structural', 'Identifier contains unsafe characters', 'metadata.' + source)
+        else:
+            put(target, text, literal=True)
+    used.add('accessed')
+    if 'accessed' in metadata:
+        date = metadata['accessed']
+        if date.get('date-parts') and len(date['date-parts']) == 1 and not any(date.get(field) for field in ('literal', 'circa', 'season')):
+            parts = date['date-parts'][0]
+            put('urldate', '-'.join([str(parts[0]), *[f'{number:02d}' for number in parts[1:]]]))
+        else:
+            assess('accessed_unassessed', 'unknown', 'Access-date projection is unassessed', 'metadata.accessed')
+
+
+
+def _project_note_fields(metadata, used, notes, assess):
+    for field in ('abstract', 'number-of-pages', 'number-of-volumes'):
+        used.add(field)
+        if field != 'abstract' and field in metadata:
+            assess('noncitation_omission', 'info', f'{field} is retained in the catalog', 'metadata.' + field)
+    used.add('note')
+    if metadata.get('note'):
+        notes.insert(0, str(metadata['note']))
+    for field in sorted(set(metadata) - used):
+        if metadata[field]:
+            assess('unassessed_mapping', 'unknown', f'No assessed portable projection for {field}', 'metadata.' + field)
+
+
+
+def _project_extensions(metadata, value, record, entry_type, notes, put, assess):
+    for field, extension in value.get('extensions', {}).items():
+        if field == 'identifiers':
+            if extension.get('arxiv'):
+                arxiv = extension['arxiv']
+                put('eprint', arxiv)
+                if (derived := doi_arxiv(str(metadata.get('DOI','')))):
+                    put('eprint',derived)
+                put('eprinttype', 'arxiv')
+                if entry_type in ('misc', 'unpublished') and arxiv not in record.get('_howpublished', ''):
+                    notes.append('arXiv:' + arxiv)
+                assess('arxiv_fallback', 'documented_fallback', 'arXiv identifier retained in eprint fields and a classic-consumer note where needed', 'extensions.identifiers.arxiv')
+            if extension.get('oclc'):
+                assess('oclc_omission', 'documented_fallback', 'OCLC identifier retained in catalog', 'extensions.identifiers.oclc')
+        elif field == 'journal_series':
+            put('series', extension)
+            assess('journal_series_fallback', 'documented_fallback', 'Journal series is retained in series; consumer support varies', 'extensions.journal_series')
+        elif field == 'patent':
+            for member in extension:
+                if member == 'assignees':
+                    names = extension[member]
+                    labels = [name.get('literal') or person_name(name) for name in names]
+                    notes.append('Assignee: ' + '; '.join(labels))
+                    assess('assignee_in_note', 'info', 'Patent assignees are retained in note, separately from inventors', 'extensions.patent.assignees')
+                    continue
+                assess('unassessed_extension', 'unknown', f'No registered projection for patent.{member}', 'extensions.patent.' + member)
+        else:
+            assess('unassessed_extension', 'unknown', f'No registered projection for {field}', 'extensions.' + field)
+
+
+
+def _finish_notes(metadata, kind, record, notes, put):
+    if record.get('_howpublished'):
+        put('howpublished', record['_howpublished'], literal=True)
+    if notes:
+        put('note', title('; '.join(notes), {'protected_terms': [str(metadata['number'])] if kind in ('patent', 'standard') and metadata.get('number') else []}), literal=True)
+
+
+
 def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[bytes, list[dict]]:
     from refs.models import REGISTRY
     entries, warnings, losses = [], [], []
@@ -130,208 +367,16 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             else:
                 put(target, metadata[source])
 
-        def render_names(role, names):
-            output_names = []
-            if any(name.get('dropping-particle') or name.get('non-dropping-particle') for name in names):
-                assess('name_particle_fallback', 'documented_fallback', 'Portable names retain the particle before the family name; consumers determine dropping behavior', 'metadata.' + role)
-            for name in names:
-                if 'literal' in name:
-                    output_names.append('{' + tex(name['literal']) + '}')
-                    continue
-                if any(name.get(flag) for flag in ('static-ordering', 'comma-suffix', 'parse-names')):
-                    assess('name_projection_unassessed', 'unknown', 'Consumer handling of this name flag is unassessed', 'metadata.' + role)
-                family = person_name(name, ('dropping-particle', 'non-dropping-particle', 'family'))
-                if not family:
-                    assess('given_only_name', 'unknown', 'Given-only personal names have unassessed citation behavior', 'metadata.' + role)
-                    family = name.get('given', '')
-                    output_names.append('{' + tex(family) + '}')
-                    continue
-                grouped_family = not name.get('dropping-particle') and not name.get('non-dropping-particle') and (len(family.split()) > 1 or family[:1].islower())
-                if grouped_family or ' and ' in family or ',' in family:
-                    family = '{' + tex(family) + '}'
-                else:
-                    family = tex(family)
-                suffix = tex(name.get('suffix', ''))
-                given = tex(name.get('given', ''))
-                output_names.append(family + (', ' + suffix + ', ' + given if suffix else ', ' + given if given else ''))
-            return ' and '.join(output_names)
-
         try:
-            for role in ('author', 'editor'):
-                used.add(role)
-                names = list(metadata.get(role, []))
-                if role == 'editor' and entry_type in ('book', 'collection'):
-                    for name in metadata.get('collection-editor', []):
-                        if name not in names:
-                            names.append(name)
-                if names:
-                    put(role, render_names(role, names), literal=True)
-            used.update(('collection-editor', 'container-author', 'contributor'))
-            if metadata.get('contributor'):
-                assess('contributor_omission', 'documented_fallback', 'Contributors remain in the catalog; portable output omits this non-cited role', 'metadata.contributor')
-            if metadata.get('collection-editor'):
-                assess('collection_editor_fallback', 'documented_fallback', 'Collection editors are emitted as editors on books; their distinct role remains in the catalog', 'metadata.collection-editor')
-            if metadata.get('container-author'):
-                if entry_type in ('incollection', 'inbook'):
-                    put('bookauthor', render_names('container-author', metadata['container-author']), literal=True)
-                assess('container_author_omission', 'documented_fallback', 'Container authors are retained in bookauthor on book parts; classic styles may omit this field', 'metadata.container-author')
-            if not metadata.get('author') and not fields.get('editor'):
-                assess('missing_author', 'faithful_incomplete', 'No author or editor was supplied')
-            copy('title', 'title')
-            copy('title-short', 'shorttitle')
-            if kind in ('article-journal', 'article-magazine', 'article-newspaper'):
-                copy('container-title', 'journal')
-                if not metadata.get('container-title'):
-                    assess('missing_journal', 'faithful_incomplete', 'No journal was supplied')
-            elif kind in ('chapter', 'paper-conference'):
-                copy('container-title', 'title' if entry_type == 'inbook' else 'booktitle')
-            elif 'container-title' in metadata:
-                notes.append('Website: ' + str(metadata['container-title']))
-                used.add('container-title')
-                assess('container_in_note', 'info', 'Website name is retained in note', 'metadata.container-title')
-            used.add('issued')
-            issued = metadata.get('issued')
-            if not issued:
-                assess('missing_issued', 'faithful_incomplete', 'No issued date was supplied')
-            elif issued.get('literal') and not issued.get('date-parts') and not any(issued.get(name) for name in ('circa', 'season')):
-                put('year', issued['literal'])
-                assess('literal_issued_year', 'documented_fallback', 'Literal issued date written unchanged in year; verify the rendered date', 'metadata.issued')
-            elif len(issued.get('date-parts', [])) == 2 and not any(issued.get(name) for name in ('literal', 'circa', 'season')):
-                start, end = issued['date-parts']
-                put('year', start[0])
-                if len(start)>1 and len(end)>1 and start[1]==end[1]:
-                    put('month', MONTHS[start[1]-1][0], literal=True)
-                interval = '/'.join('-'.join([str(part[0]), *[f'{n:02d}' for n in part[1:]]]) for part in (start,end))
-                assess('date_range_projected', 'documented_fallback', f'Issued range {interval} projects to its start year and shared month; full precision remains in the catalog', 'metadata.issued')
-            elif not issued.get('date-parts') or len(issued['date-parts']) != 1 or any(issued.get(name) for name in ('literal', 'circa', 'season')):
-                assess('issued_date_lost_or_changed', 'blocking', 'Portable year/month cannot preserve this issued precision', 'metadata.issued')
-            else:
-                parts = issued['date-parts'][0]
-                put('year', parts[0])
-                if len(parts) > 1:
-                    put('month', MONTHS[parts[1]-1][0], literal=True)
-                if len(parts) > 2:
-                    iso = '-'.join([str(parts[0]), *[f'{number:02d}' for number in parts[1:]]])
-                    put('date', iso)
-                    notes.append('Issued: ' + iso)
-                    assess('issued_day_in_note', 'info', 'Supplementary date and note retain the day for portable consumers', 'metadata.issued')
-            used.add('language')
-            language = metadata.get('language', '')
-            langid = languages.portable(language)
-            if langid:
-                put('langid', langid)
-                if not language.casefold().startswith('en') and all(char.isascii() for char in metadata.get('title','')):
-                    assess('title_language_review', 'faithful_incomplete', f'Non-English language tag {language} accompanies an ASCII title; verify the language', 'metadata.language')
-            else:
-                if language:
-                    assess('language_unrecognized', 'documented_fallback', 'Unrecognized language retained literally in catalog; no langid emitted', 'metadata.language')
-                if any(char.isalpha() and not char.isascii() for char in metadata.get('title', '')):
-                    assess('language_unspecified', 'faithful_incomplete', 'Title language is unknown; supply it when known', 'metadata.language')
-            for source, target in [('volume', 'volume'), ('issue', 'number'), ('publisher-place', 'address'), ('edition', 'edition'), ('collection-title', 'series'), ('collection-number', 'number'), ('container-title-short', 'shortjournal'), ('chapter-number', 'chapter')]:
-                copy(source, target)
-            used.add('page')
-            if 'page' in metadata:
-                put('pages', re.sub(r'(?<=\d)[-–](?=\d)', '--', str(metadata['page'])))
-            used.add('publisher')
-            if 'publisher' in metadata:
-                publisher = tex(str(metadata['publisher']))
-                if ' and ' in str(metadata['publisher']):
-                    assess('literal_publisher', 'info', 'Publisher is one institution; BibLaTeX consumers will not split it on and', 'metadata.publisher')
-                    publisher = '{' + publisher + '}'
-                if entry_type in ('phdthesis', 'mastersthesis'):
-                    put('school', publisher, literal=True)
-                elif entry_type == 'techreport':
-                    put('institution', publisher, literal=True)
-                elif entry_type == 'misc':
-                    notes.append(str(metadata['publisher']))
-                else:
-                    put('publisher', publisher, literal=True)
-            used.update(('number', 'archive', 'genre'))
-            if kind in ('article', 'manuscript'):
-                copy('archive', 'archiveprefix')
-                copy('number', 'eprint')
-                if (metadata.get('archive') or metadata.get('number')) and not (str(metadata.get('archive','')).casefold()=='arxiv' and value.get('extensions',{}).get('identifiers',{}).get('arxiv')):
-                    notes.append(' '.join(str(metadata.get(field, '')) for field in ('archive', 'number')).strip())
-                if metadata.get('genre'):
-                    notes.append(str(metadata['genre']))
-            elif kind in ('patent', 'standard'):
-                copy('number', 'number')
-                copy('genre', 'type')
-                notes.extend(str(metadata[field]) for field in ('genre', 'number') if metadata.get(field))
-            else:
-                copy('number', 'number')
-                if entry_type in ('techreport', 'phdthesis', 'mastersthesis'):
-                    copy('genre', 'type')
-                elif metadata.get('genre'):
-                    notes.append(str(metadata['genre']))
-            for field, label in [('authority', ''), ('jurisdiction', ''), ('version', 'Version')]:
-                used.add(field)
-                if metadata.get(field):
-                    notes.append((label + ' ' + str(metadata[field])).strip())
-            for field, label in [('event-title', 'Event'), ('event-place', 'Event location'), ('section', 'Section'), ('part-title', 'Part'), ('medium', 'Medium'), ('archive-place', 'Archive location'), ('status', 'Status')]:
-                used.add(field)
-                if field in metadata:
-                    notes.append(label + ': ' + str(metadata[field]))
-                    assess('field_in_note', 'info', f'{field} is retained in note', 'metadata.' + field)
-            for source in IDENTIFIER_FIELDS:
-                target = source.lower()
-                used.add(source)
-                if source not in metadata:
-                    continue
-                text = str(metadata[source])
-                if re.search(r'[{}\\\x00-\x1f\x7f]', text):
-                    assess('invalid_identifier', 'structural', 'Identifier contains unsafe characters', 'metadata.' + source)
-                else:
-                    put(target, text, literal=True)
-            used.add('accessed')
-            if 'accessed' in metadata:
-                date = metadata['accessed']
-                if date.get('date-parts') and len(date['date-parts']) == 1 and not any(date.get(field) for field in ('literal', 'circa', 'season')):
-                    parts = date['date-parts'][0]
-                    put('urldate', '-'.join([str(parts[0]), *[f'{number:02d}' for number in parts[1:]]]))
-                else:
-                    assess('accessed_unassessed', 'unknown', 'Access-date projection is unassessed', 'metadata.accessed')
-            for field in ('abstract', 'number-of-pages', 'number-of-volumes'):
-                used.add(field)
-                if field != 'abstract' and field in metadata:
-                    assess('noncitation_omission', 'info', f'{field} is retained in the catalog', 'metadata.' + field)
-            used.add('note')
-            if metadata.get('note'):
-                notes.insert(0, str(metadata['note']))
-            for field in sorted(set(metadata) - used):
-                if metadata[field]:
-                    assess('unassessed_mapping', 'unknown', f'No assessed portable projection for {field}', 'metadata.' + field)
-            for field, extension in value.get('extensions', {}).items():
-                if field == 'identifiers':
-                    if extension.get('arxiv'):
-                        arxiv = extension['arxiv']
-                        put('eprint', arxiv)
-                        if (derived := doi_arxiv(str(metadata.get('DOI','')))):
-                            put('eprint',derived)
-                        put('eprinttype', 'arxiv')
-                        if entry_type in ('misc', 'unpublished') and arxiv not in record.get('_howpublished', ''):
-                            notes.append('arXiv:' + arxiv)
-                        assess('arxiv_fallback', 'documented_fallback', 'arXiv identifier retained in eprint fields and a classic-consumer note where needed', 'extensions.identifiers.arxiv')
-                    if extension.get('oclc'):
-                        assess('oclc_omission', 'documented_fallback', 'OCLC identifier retained in catalog', 'extensions.identifiers.oclc')
-                elif field == 'journal_series':
-                    put('series', extension)
-                    assess('journal_series_fallback', 'documented_fallback', 'Journal series is retained in series; consumer support varies', 'extensions.journal_series')
-                elif field == 'patent':
-                    for member in extension:
-                        if member == 'assignees':
-                            names = extension[member]
-                            labels = [name.get('literal') or person_name(name) for name in names]
-                            notes.append('Assignee: ' + '; '.join(labels))
-                            assess('assignee_in_note', 'info', 'Patent assignees are retained in note, separately from inventors', 'extensions.patent.assignees')
-                            continue
-                        assess('unassessed_extension', 'unknown', f'No registered projection for patent.{member}', 'extensions.patent.' + member)
-                else:
-                    assess('unassessed_extension', 'unknown', f'No registered projection for {field}', 'extensions.' + field)
-            if record.get('_howpublished'):
-                put('howpublished', record['_howpublished'], literal=True)
-            if notes:
-                put('note', title('; '.join(notes), {'protected_terms': [str(metadata['number'])] if kind in ('patent', 'standard') and metadata.get('number') else []}), literal=True)
+            _project_names(metadata, entry_type, fields, used, put, assess)
+            _project_titles(metadata, kind, entry_type, used, notes, copy, assess)
+            _project_dates(metadata, used, notes, put, assess)
+            _project_language(metadata, used, put, assess)
+            _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess)
+            _project_identifiers(metadata, used, put, assess)
+            _project_note_fields(metadata, used, notes, assess)
+            _project_extensions(metadata, value, record, entry_type, notes, put, assess)
+            _finish_notes(metadata, kind, record, notes, put)
             entry = '@' + entry_type + '{' + key + ',\n'
             for name, text in fields.items():
                 entry += f'  {name} = {text},\n' if name == 'month' else f'  {name} = {{{text}}},\n'

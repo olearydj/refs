@@ -3,6 +3,8 @@ import subprocess
 
 from conftest import REFS_COMMAND, isolated_env
 
+from refs.models import Result, SourceRecord
+
 
 def test_csl_input_and_four_schemas(initialized, tmp_path):
     raw = {'id': 'external-1', 'type': 'book', 'title': 'learning Python', 'language': 'en', 'author': [{'family': 'Smith'}], 'issued': {'date-parts': [[2024]]}}
@@ -17,6 +19,15 @@ def test_csl_input_and_four_schemas(initialized, tmp_path):
         assert schema['type'] == 'object'
         assert schema['additionalProperties'] is False
     initialized('schema', 'no-such-schema', expected=2)
+
+
+def test_real_show_and_envelope_validate_against_published_models(initialized, reference_path):
+    source = initialized('add', '--format', 'refs', '--input', reference_path)['data']
+    envelope = initialized('show', source['id'])
+    validated = SourceRecord.model_validate(envelope['data'])
+    assert validated.id == source['id'] and validated.citation_key == source['citation_key']
+    result = Result.model_validate(envelope)
+    assert result.command == 'show' and result.status == 'ok'
 
 
 def test_readable_output_and_json_others(initialized, tmp_path, reference_path):

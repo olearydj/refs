@@ -1,6 +1,6 @@
 {
   "profile": "refs-bibliography-v1",
-  "status": "Revised design mapping obligations; not importer certification",
+  "status": "Revised design mapping obligations; portable_projection and export_class document intent but the exporter does not read them",
   "sources": [
     {
       "name": "zotero",
