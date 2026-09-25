@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -39,6 +40,24 @@ def test_malformed_entry_diagnostic_stays_in_json_envelope(initialized, tmp_path
     assert result['errors'][0]['code'] == 'import_partial'
     with connect(tmp_path / 'cat') as connection:
         assert connection.execute('SELECT count(*) FROM sources').fetchone()[0] == 0
+
+
+def test_no_doi_proposal_never_reads_every_stored_metadata_row(initialized, tmp_path):
+    fixture = Path(__file__).parents[1] / 'fixtures/real-trial/minimized/no-doi-scan.bib'
+    blocks = [block for block in bibtex.partition(fixture.read_bytes()) if block['kind'] == 'entry']
+    report = importing.run(tmp_path / 'cat', b'\n'.join(block['raw'] for block in blocks[:2]), str(fixture))
+    assert report['counts']['applied'] == 2
+    proposed = bibtex.parse(blocks[2]['raw'])['source']
+    with connect(tmp_path / 'cat') as connection:
+        def forbid_full_metadata_read(action, table, column, *_):
+            if action == sqlite3.SQLITE_READ and table == 'sources' and column == 'metadata_json':
+                return sqlite3.SQLITE_DENY
+            return sqlite3.SQLITE_OK
+        connection.set_authorizer(forbid_full_metadata_read)
+        assert importing.match(connection, proposed, hashlib.sha256(blocks[2]['raw']).hexdigest()) == (None, [])
+    full = importing.run(tmp_path / 'cat', fixture.read_bytes(), str(fixture))
+    assert full['counts'] == dict(applied=1, unchanged=2, conflict=0, invalid=0)
+    assert importing.run(tmp_path / 'cat', fixture.read_bytes(), str(fixture))['counts']['applied'] == 0
 
 
 @pytest.mark.parametrize('raw', [

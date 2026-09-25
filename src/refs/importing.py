@@ -64,10 +64,11 @@ def isbn_plan(connection, incoming: list[SourceCreate]) -> dict:
 def match(connection, source: SourceCreate, fingerprint: str, *, isbn_groups=None) -> tuple[str | None, list[str]]:
     ids = {row[0] for row in connection.execute('SELECT id FROM sources WHERE citation_key=?', (source.citation_key,))}
     ids.update(row[0] for row in connection.execute('SELECT source_id FROM originals WHERE sha256=? AND source_id IS NOT NULL', (fingerprint,)))
-    for row in connection.execute('SELECT id,metadata_json FROM sources'):
-        metadata = json.loads(row['metadata_json'])
-        if source.metadata.DOI and metadata.get('DOI') and sources.doi_identity(source.metadata.DOI)==sources.doi_identity(metadata['DOI']):
-            ids.add(row['id'])
+    if source.metadata.DOI:
+        for row in connection.execute('SELECT id,metadata_json FROM sources'):
+            metadata = json.loads(row['metadata_json'])
+            if metadata.get('DOI') and sources.doi_identity(source.metadata.DOI)==sources.doi_identity(metadata['DOI']):
+                ids.add(row['id'])
     for binding in sources.bindings(source):
         row = connection.execute('SELECT source_id FROM origin_identities WHERE namespace=? AND library_uri=? AND item_key=?', binding).fetchone()
         if row:
