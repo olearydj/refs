@@ -6,6 +6,8 @@
 
 `refs [--config PATH] [--catalog PATH] [--project-file PATH | --no-project-config] [--json] COMMAND`. Human output is default; JSON is one UTF-8 object plus newline on stdout, including usage failures. Progress goes to stderr. Help/version are textual exceptions. No interactive prompts. File payloads accept `-` for stdin. REF is an exact source UUID or citation key; ambiguity fails. Projects use exact names or IDs.
 
+Unreadable or missing `--input` and `--patch` payloads report `invalid_input` with exit 2 and the selected path; `-` reads stdin through the same payload reader.
+
 Mutations support --dry-run: validate and report intended effects without operation rows, locks, staging or key reservations. Opening an older catalog first performs the automatic schema upgrade and safety copy, even for a preview. Actual execution rechecks revisions/collisions; previewed generated keys are not reserved. Removal, reactivation, unlink and rekey require --execute after their default preview. Add/copy/export are explicit actions and require no extra confirmation. There is no --request-id or stored replay contract.
 
 All results contain schema_version="1.0", command, status, data, warnings and errors. status is ok, partial or error; data is object or null. Warnings/errors contain code, message, nullable path, details and retryable. Return source/resource/import IDs where applicable; move results also identify file_operations rows. Never claim complete success after partial application. JSON exceptions are handled by refs' wrapper, not delegated to Typer help formatting.

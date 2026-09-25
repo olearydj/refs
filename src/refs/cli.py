@@ -52,6 +52,19 @@ def settings(ctx: typer.Context):
     return ctx.obj["selected"]
 
 
+def read_payload(argument: str | Path) -> tuple[bytes,str]:
+    if str(argument)=='-':
+        try:
+            return sys.stdin.buffer.read(),'stdin'
+        except OSError as exc:
+            raise RefError('invalid_input',str(exc),2,path='-') from exc
+    path=absolute(str(argument))
+    try:
+        return path.read_bytes(),str(path)
+    except OSError as exc:
+        raise RefError('invalid_input',str(exc),2,path=str(path)) from exc
+
+
 @app.command()
 def paths(ctx: typer.Context):
     report(ctx, "paths", settings(ctx).describe())
@@ -88,8 +101,7 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         loc = normalize_loc(loc)
     except ValueError as exc:
         raise RefError("invalid_loc", str(exc), 2) from exc
-    raw = sys.stdin.buffer.read() if input == "-" else Path(input).read_bytes()
-    locator = "stdin" if input == "-" else str(absolute(input))
+    raw,locator = read_payload(input)
     if format == 'bib':
         data = importing.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run, settings=settings(ctx))
     else:
@@ -122,7 +134,13 @@ def import_bibliography(ctx: typer.Context, input: Annotated[Path | None, typer.
     if format not in ('bib', 'zotero'):
         raise RefError('unsupported_format', 'Choose --format bib or zotero for import', 2)
     selected = settings(ctx)
-    data = importing.run_zotero(selected.catalog_path(), path, dry_run=dry_run, origin=origin, settings=selected) if format == 'zotero' else importing.run(selected.catalog_path(), path.read_bytes(), str(path), dry_run=dry_run, origin=origin, settings=selected)
+    if format == 'zotero':
+        if str(input)=='-' or not path.is_dir():
+            raise RefError('invalid_input','Zotero input must be a directory',2,path=str(input))
+        data = importing.run_zotero(selected.catalog_path(), path, dry_run=dry_run, origin=origin, settings=selected)
+    else:
+        raw,locator=read_payload(input)
+        data = importing.run(selected.catalog_path(), raw, locator, dry_run=dry_run, origin=origin, settings=selected)
     if data['counts']['conflict'] or data['counts']['invalid']:
         raise RefError('import_partial', 'Inspect reported entries and use update to settle conflicts', 4, data=data)
     report(ctx, 'import', data)
@@ -193,7 +211,7 @@ def update_source(ctx: typer.Context, reference: str,
         raise RefError("invalid_invocation", "Choose --patch or --set", 2)
     try:
         if patch:
-            value = json.loads(sys.stdin.read() if patch == "-" else Path(patch).read_text())
+            value = json.loads(read_payload(patch)[0])
         else:
             values = {}
             for item in set_values or []:
@@ -379,7 +397,7 @@ def main() -> None:
         emit("invocation", error=exc, json_output="--json" in args)
         raise SystemExit(exc.exit_code) from None
     except (OSError, sqlite3.Error) as exc:
-        locked = isinstance(exc, sqlite3.OperationalError) and "locked" in str(exc)
+        locked = isinstance(exc, sqlite3.OperationalError) and getattr(exc,'sqlite_errorcode',None) in (sqlite3.SQLITE_BUSY,sqlite3.SQLITE_LOCKED)
         denied = isinstance(exc, PermissionError)
         error = RefError("home_not_writable" if denied else "lock_timeout" if locked else "storage_error", "Allow access to the selected path and retry" if denied else str(exc),
                          6 if locked else 5, retryable=locked, path=str(exc.filename) if denied and exc.filename else None)
