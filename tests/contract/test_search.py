@@ -33,3 +33,26 @@ def test_creators_diacritics_and_exact_identifiers(initialized, tmp_path):
     for query in ('koster2012','10.5555/synthetic.workflow','https://doi.org/10.5555/SYNTHETIC.WORKFLOW'):
         result = search.retrieve(tmp_path/'cat',query)['items'][0]
         assert result['id'] == source['id'] and result['exact_match']
+
+
+def test_search_resolves_full_records_only_for_page(initialized,tmp_path,monkeypatch):
+    import json
+
+    from refs import search, sources
+
+    expected=[]
+    for index in range(4):
+        raw={'schema_version':'1.0','citation_key':f'common-{index}',
+             'metadata':{'title':f'Common Work {index}'}}
+        expected.append(sources.add(tmp_path/'cat',json.dumps(raw).encode(),f'synthetic-{index}')['id'])
+    record=sources.record
+    resolved=[]
+    def counted(connection,source_id):
+        resolved.append(source_id)
+        return record(connection,source_id)
+    monkeypatch.setattr(sources,'record',counted)
+    result=search.retrieve(tmp_path/'cat','Common',sort='key',limit=1,offset=2)
+    assert result['total']==4 and result['items'][0]['id']==expected[2]
+    assert resolved==[expected[2]]
+    assert result['items'][0]['revision']==1
+    assert any(match['field']=='metadata.title' for match in result['items'][0]['matches'])
