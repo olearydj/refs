@@ -28,7 +28,7 @@ def test_valid_values(metadata):
     {'issued': {'date-parts': [[2023, 2, 29]]}},
     {'issued': {'date-parts': [[2024, 13]]}},
     {'issued': {'date-parts': [[2025], [2024]]}},
-    {'issued': {'date-parts': [['2024']]}},
+    {'issued': {'date-parts': [['20O4']]}},
     {'author': [{'family': 'Smith', 'literal': 'Company'}]},
     {'author': [{'family': 'Smith', 'parse-names': 'yes'}]},
     {'type': 'mystery'},

@@ -104,6 +104,13 @@ class Date(StrictModel):
     season: int | None = None
     circa: bool | None = None
 
+    @field_validator('date_parts', mode='before')
+    @classmethod
+    def digit_string_parts(cls, value):
+        if not isinstance(value, list):
+            return value
+        return [[int(part) if isinstance(part, str) and re.fullmatch(r'[0-9]+', part) else part for part in row] if isinstance(row, list) else row for row in value]
+
     @model_validator(mode="after")
     def valid_date(self) -> Self:
         if self.date_parts is None and self.literal is None:
