@@ -3,6 +3,8 @@
 import json
 import sqlite3
 import sys
+from contextlib import redirect_stdout
+from contextvars import ContextVar
 from pathlib import Path
 from typing import Annotated
 
@@ -20,12 +22,19 @@ from refs import (
 )
 from refs import catalog as storage
 from refs import logging as action_log
-from refs.config import absolute, select
+from refs.config import absolute, export_options, select
 from refs.results import RefError, emit, upgrade_notices
+
+failed_command: ContextVar[str] = ContextVar('refs_failed_command',default='invocation')
 
 app = typer.Typer(no_args_is_help=True, pretty_exceptions_enable=False)
 project_app = typer.Typer(no_args_is_help=True)
 app.add_typer(project_app, name="project")
+
+
+@project_app.callback()
+def project_group(ctx: typer.Context):
+    record_group(ctx)
 
 
 @app.callback()
@@ -37,7 +46,12 @@ def configure(ctx: typer.Context,
               verbose: Annotated[bool, typer.Option()] = False,
               json_output: Annotated[bool, typer.Option("--json")] = False):
     upgrade_notices.set([])
+    failed_command.set(ctx.invoked_subcommand or 'invocation')
     ctx.obj = dict(config=config, catalog=catalog, json_output=json_output, project_file=project_file, no_project_config=no_project_config, verbose=verbose)
+
+
+def record_group(ctx: typer.Context):
+    failed_command.set((ctx.command.name or '') + (' ' + ctx.invoked_subcommand if ctx.invoked_subcommand else ''))
 
 
 def report(ctx: typer.Context, command: str, data: dict, **text_context) -> None:
@@ -50,6 +64,23 @@ def settings(ctx: typer.Context):
         if ctx.obj["selected"].catalog is not None and ctx.obj["selected"].catalog.is_dir():
             action_log.setup(ctx.obj["selected"].catalog, verbose=ctx.obj["verbose"])
     return ctx.obj["selected"]
+
+
+def read_payload(argument: str | Path) -> tuple[bytes,str]:
+    if str(argument)=='-':
+        try:
+            return sys.stdin.buffer.read(),'stdin'
+        except OSError as exc:
+            raise RefError('invalid_input',str(exc),2,path='-') from exc
+    path=absolute(str(argument))
+    try:
+        return path.read_bytes(),str(path)
+    except OSError as exc:
+        raise RefError('invalid_input',str(exc),2,path=str(path)) from exc
+
+
+def requested(execute: bool, dry_run: bool) -> bool:
+    return execute and not dry_run
 
 
 @app.command()
@@ -79,8 +110,7 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         move: Annotated[bool, typer.Option()] = False,
         keep_name: Annotated[bool, typer.Option()] = False,
         dry_run: Annotated[bool, typer.Option()] = False):
-    if sum((link,copy,move))>1 or (link or copy or move or keep_name) and file is None or link and keep_name:
-        raise RefError('invalid_invocation', 'Choose one of --link, --copy or --move with --file; --keep-name requires copy or move', 2)
+    mode = resources.intake_mode(path=file, link=link, copy=copy, move=move, keep_name=keep_name, default='move')
     if format not in ("refs", "csljson", "bib"):
         raise RefError("unsupported_format", "Choose --format refs, csljson or bib", 2)
     from refs.models import normalize_loc
@@ -88,21 +118,15 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         loc = normalize_loc(loc)
     except ValueError as exc:
         raise RefError("invalid_loc", str(exc), 2) from exc
-    raw = sys.stdin.buffer.read() if input == "-" else Path(input).read_bytes()
-    locator = "stdin" if input == "-" else str(absolute(input))
+    raw,locator = read_payload(input)
     if format == 'bib':
-        data = importing.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run, settings=settings(ctx))
+        data = importing.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run, settings=settings(ctx), loc=loc)
     else:
-        data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run,policy=settings(ctx).values)
-    if loc is not None and not data.get("loc"):
-        if dry_run:
-            data["loc"] = loc
-        else:
-            data = data | sources.update(settings(ctx).catalog_path(), data["id"], {"schema_version":"1.0", "set":{"loc":loc}}, data["revision"], policy=settings(ctx).values)
+        data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run,policy=settings(ctx).values,loc=loc)
     file_action = None
     if file is not None:
-        data, file_action = resources.capture_file(settings(ctx),data,file,linked=link,moving=not link and not copy,keep_name=keep_name,dry_run=dry_run)
-    report(ctx, 'add', data, file_action=file_action)
+        data, file_action = resources.capture_file(settings(ctx),data,file,mode=mode,keep_name=keep_name,dry_run=dry_run)
+    report(ctx, 'add', data | ({'file_action': file_action} if file_action else {}))
 
 
 import_app = typer.Typer(invoke_without_command=True)
@@ -114,6 +138,7 @@ def import_bibliography(ctx: typer.Context, input: Annotated[Path | None, typer.
                         format: Annotated[str, typer.Option()] = "bib",
                         origin: Annotated[str | None, typer.Option()] = None,
                         dry_run: Annotated[bool, typer.Option()] = False):
+    record_group(ctx)
     if ctx.invoked_subcommand is not None:
         return
     if input is None:
@@ -122,7 +147,13 @@ def import_bibliography(ctx: typer.Context, input: Annotated[Path | None, typer.
     if format not in ('bib', 'zotero'):
         raise RefError('unsupported_format', 'Choose --format bib or zotero for import', 2)
     selected = settings(ctx)
-    data = importing.run_zotero(selected.catalog_path(), path, dry_run=dry_run, origin=origin, settings=selected) if format == 'zotero' else importing.run(selected.catalog_path(), path.read_bytes(), str(path), dry_run=dry_run, origin=origin, settings=selected)
+    if format == 'zotero':
+        if str(input)=='-' or not path.is_dir():
+            raise RefError('invalid_input','Zotero input must be a directory',2,path=str(input))
+        data = importing.run_zotero(selected.catalog_path(), path, dry_run=dry_run, origin=origin, settings=selected)
+    else:
+        raw,locator=read_payload(input)
+        data = importing.run(selected.catalog_path(), raw, locator, dry_run=dry_run, origin=origin, settings=selected)
     if data['counts']['conflict'] or data['counts']['invalid']:
         raise RefError('import_partial', 'Inspect reported entries and use update to settle conflicts', 4, data=data)
     report(ctx, 'import', data)
@@ -146,13 +177,13 @@ def project_cite(ctx: typer.Context, project: str, reference: Annotated[str | No
                  dry_run: Annotated[bool, typer.Option()] = False):
     catalog = settings(ctx).catalog_path()
     if (reference is None) == (from_import is None):
-        raise RefError('invalid_arguments', 'Supply one source or --from-import ORIGIN', 2)
+        raise RefError('invalid_invocation', 'Supply one source or --from-import ORIGIN', 2)
     if from_import is not None:
         report(ctx, 'project cite', projects.cite_import(catalog, project, from_import, dry_run=dry_run))
         return
     assert reference is not None
     data = projects.cite(catalog, project, reference, dry_run=dry_run)
-    report(ctx, "project cite", data, citation_key=sources.show(catalog, data['source_id'])['citation_key'], project_name=projects.show(catalog, data['project_id'])['name'])
+    report(ctx, "project cite", data)
 
 
 @app.command("export")
@@ -164,23 +195,18 @@ def export_bibliography(ctx: typer.Context, project: Annotated[str | None, typer
                        adopt: Annotated[bool, typer.Option()] = False,
                        dry_run: Annotated[bool, typer.Option()] = False):
     selected = settings(ctx)
-    project = project if project is not None else selected.values.get('project')
-    configured_output = selected.values.get('export',{}).get('output')
-    output = output if output is not None else Path(configured_output) if configured_output else None
-    profile = profile if profile is not None else selected.values['export']['profile']
-    if not project or output is None:
-        raise RefError('invalid_invocation','Supply export project and output options or configured defaults',2)
-    try:
-        data = bibliography.export(settings(ctx).catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite, adopt=adopt)
-    except RefError as exc:
-        if exc.issue['code'] == 'export_blocked' and not ctx.obj['json_output']:
-            exc.issue['path'] = str(absolute(str(output)))
-        raise
+    project, output, profile = export_options(selected, project, output, profile)
+    data = bibliography.export(selected.catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite, adopt=adopt)
     report(ctx, 'export', data)
 
 
 key_app = typer.Typer(no_args_is_help=True)
 app.add_typer(key_app, name="key")
+
+
+@key_app.callback()
+def key_group(ctx: typer.Context):
+    record_group(ctx)
 
 
 @app.command("update")
@@ -193,7 +219,7 @@ def update_source(ctx: typer.Context, reference: str,
         raise RefError("invalid_invocation", "Choose --patch or --set", 2)
     try:
         if patch:
-            value = json.loads(sys.stdin.read() if patch == "-" else Path(patch).read_text())
+            value = json.loads(read_payload(patch)[0])
         else:
             values = {}
             for item in set_values or []:
@@ -212,22 +238,21 @@ def set_key(ctx: typer.Context, reference: str, key: Annotated[str, typer.Option
             if_revision: Annotated[int, typer.Option(min=1)],
             execute: Annotated[bool, typer.Option()] = False,
             dry_run: Annotated[bool, typer.Option()] = False):
-    previous_key = sources.show(settings(ctx).catalog_path(), reference)["citation_key"]
-    report(ctx, "key set", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, new_key=key, execute=execute and not dry_run), previous_key=previous_key)
+    report(ctx, "key set", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, new_key=key, execute=requested(execute, dry_run)))
 
 
 @app.command()
 def remove(ctx: typer.Context, reference: str, if_revision: Annotated[int, typer.Option(min=1)],
            execute: Annotated[bool, typer.Option()] = False,
            dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, "remove", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="removed", execute=execute and not dry_run))
+    report(ctx, "remove", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="removed", execute=requested(execute, dry_run)))
 
 
 @app.command()
 def reactivate(ctx: typer.Context, reference: str, if_revision: Annotated[int | None, typer.Option(min=1)] = None,
                execute: Annotated[bool, typer.Option()] = False,
                dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, "reactivate", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="active", execute=execute and not dry_run))
+    report(ctx, "reactivate", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="active", execute=requested(execute, dry_run)))
 
 
 @app.command("search")
@@ -261,11 +286,16 @@ def project_uncite(ctx: typer.Context, project: str, reference: str,
                    dry_run: Annotated[bool, typer.Option()] = False):
     catalog = settings(ctx).catalog_path()
     data = projects.uncite(catalog, project, reference, dry_run=dry_run)
-    report(ctx, "project uncite", data, citation_key=sources.show(catalog, data['source_id'])['citation_key'], project_name=projects.show(catalog, data['project_id'])['name'])
+    report(ctx, "project uncite", data)
 
 
 resource_app = typer.Typer(no_args_is_help=True)
 app.add_typer(resource_app, name='resource')
+
+
+@resource_app.callback()
+def resource_group(ctx: typer.Context):
+    record_group(ctx)
 
 
 @resource_app.command('add')
@@ -281,13 +311,12 @@ def resource_add(ctx: typer.Context, reference: str,
                  keep_name: Annotated[bool, typer.Option()] = False,
                  dry_run: Annotated[bool, typer.Option()] = False):
     selected = settings(ctx)
-    if sum((link,copy,move))>1 or keep_name and not (copy or move):
-        raise RefError('invalid_invocation','Choose one intake mode; use --keep-name only with --copy or --move',2)
-    if copy or move:
+    mode = resources.intake_mode(path=path if path is not None else Path(relative) if root and relative else None, link=link, copy=copy, move=move, keep_name=keep_name)
+    if mode in ('copy', 'move'):
         resources.locate(selected,path=path,root=root,relative=relative)
         original = path if path is not None else selected.roots[root]/relative
         from refs.moves import intake
-        action = intake if move else resources.copy
+        action = intake if mode == 'move' else resources.copy
         data = action(selected,reference,original,keep_name=keep_name,dry_run=dry_run,label=label,media_type=media_type)
     else:
         data = resources.link(selected,reference,path=path,root=root,relative=relative,label=label,media_type=media_type,dry_run=dry_run)
@@ -298,7 +327,7 @@ def resource_add(ctx: typer.Context, reference: str,
 def resource_unlink(ctx: typer.Context, resource: str,
                     execute: Annotated[bool, typer.Option()] = False,
                     dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, 'resource unlink', resources.unlink(settings(ctx),resource,execute=execute and not dry_run))
+    report(ctx, 'resource unlink', resources.unlink(settings(ctx),resource,execute=requested(execute, dry_run)))
 
 
 @app.command()
@@ -334,6 +363,11 @@ config_app = typer.Typer(no_args_is_help=True)
 app.add_typer(config_app,name='config')
 
 
+@config_app.callback()
+def config_group(ctx: typer.Context):
+    record_group(ctx)
+
+
 @config_app.command('show')
 def config_show(ctx: typer.Context):
     report(ctx,'config show',settings(ctx).inspect())
@@ -343,6 +377,7 @@ def main() -> None:
     from refs import moves
 
     moves.interrupted_report.set(None)
+    failed_command.set('invocation')
     args = sys.argv[1:]
     action_log.bind(" ".join(args))
     def option(name):
@@ -364,6 +399,15 @@ def main() -> None:
         pass  # Let Typer report selection errors through the usual envelope.
     exit_code = 0
     try:
+        index=0
+        while index<len(args) and args[index].startswith('--'):
+            index+=2 if args[index] in ('--config','--catalog','--project-file') else 1
+        bare_group=index==len(args) or index==len(args)-1 and args[index] in {'project','key','resource','config','collection'}
+        if bare_group:
+            failed_command.set(args[index] if index<len(args) else 'invocation')
+            with redirect_stdout(sys.stderr):
+                app(args=[*args,'--help'],standalone_mode=False)
+            raise RefError('invalid_invocation','Choose a command',2)
         returned = app(args=args, standalone_mode=False)
         if returned == 130 and (data := moves.interrupted_report.get()) is not None:
             interrupt = KeyboardInterrupt('Move interrupted')
@@ -371,21 +415,25 @@ def main() -> None:
             raise interrupt
     except typer.TyperException as exc:
         exit_code = 2
-        emit("invocation", error=RefError("invalid_invocation", exc.format_message(), 2),
+        emit(failed_command.get(), error=RefError("invalid_invocation", exc.format_message(), 2),
              json_output="--json" in args)
         raise SystemExit(2) from None
     except RefError as exc:
         exit_code = exc.exit_code
-        emit("invocation", error=exc, json_output="--json" in args)
+        emit(failed_command.get(), error=exc, json_output="--json" in args)
         raise SystemExit(exc.exit_code) from None
     except (OSError, sqlite3.Error) as exc:
-        locked = isinstance(exc, sqlite3.OperationalError) and "locked" in str(exc)
+        locked = isinstance(exc, sqlite3.OperationalError) and getattr(exc,'sqlite_errorcode',None) in (sqlite3.SQLITE_BUSY,sqlite3.SQLITE_LOCKED)
         denied = isinstance(exc, PermissionError)
         error = RefError("home_not_writable" if denied else "lock_timeout" if locked else "storage_error", "Allow access to the selected path and retry" if denied else str(exc),
                          6 if locked else 5, retryable=locked, path=str(exc.filename) if denied and exc.filename else None)
         exit_code = error.exit_code
-        emit("invocation", error=error, json_output="--json" in args)
+        emit(failed_command.get(), error=error, json_output="--json" in args)
         raise SystemExit(error.exit_code) from None
+    except Exception:
+        exit_code = 5
+        emit(failed_command.get(),error=RefError('internal_error','Unexpected internal error',5),json_output='--json' in args)
+        raise SystemExit(5) from None
     except KeyboardInterrupt as exc:
         exit_code = 130
         if data := getattr(exc, 'data', None):
@@ -420,6 +468,11 @@ def import_reconcile(ctx: typer.Context, batch: str,
 
 collection_app = typer.Typer(no_args_is_help=True)
 app.add_typer(collection_app,name='collection')
+
+
+@collection_app.callback()
+def collection_group(ctx: typer.Context):
+    record_group(ctx)
 
 
 @collection_app.command('list')

@@ -13,6 +13,8 @@ class RefError(Exception):
                  path: str | None = None, details: dict | None = None,
                  retryable: bool = False, data: dict | None = None):
         super().__init__(message)
+        if code == 'integrity_error':
+            exit_code = 5
         if exit_code not in {2, 3, 4, 5, 6}:
             raise ValueError("Invalid application exit code")
         self.data = data

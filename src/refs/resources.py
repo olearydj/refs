@@ -326,7 +326,14 @@ def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, 
     return preview
 
 
-def capture_file(settings: Settings, data: dict, path: Path, *, linked=False, moving=False, keep_name=False, dry_run=False) -> tuple[dict, dict]:
+def intake_mode(*, path: Path | None, link: bool = False, copy: bool = False, move: bool = False, keep_name: bool = False, default: str = 'link') -> str:
+    if sum((link, copy, move)) > 1 or (path is None and (link or copy or move or keep_name)) or keep_name and (link or not (copy or move or default == 'move')):
+        raise RefError('invalid_invocation', 'Choose one intake mode with a file; use --keep-name only with --copy or --move', 2)
+    return 'link' if link else 'copy' if copy else 'move' if move else default
+
+
+def capture_file(settings: Settings, data: dict, path: Path, *, mode: str, keep_name=False, dry_run=False) -> tuple[dict, dict]:
+    linked, moving = mode == 'link', mode == 'move'
     if dry_run:
         source = data.get('record',data) | ({'loc':data['loc']} if data.get('loc') else {})
         if moving:

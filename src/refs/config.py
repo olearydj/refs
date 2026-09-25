@@ -65,6 +65,16 @@ class Settings:
         return dict(config=str(self.config),values=values,origins=origins,paths=self.describe(),diagnostics=[])
 
 
+def export_options(settings: Settings, project: str | None, output: Path | None, profile: str | None) -> tuple[str, Path, str]:
+    project = project if project is not None else settings.values.get('project')
+    configured_output = settings.values.get('export', {}).get('output')
+    output = output if output is not None else Path(configured_output) if configured_output else None
+    profile = profile if profile is not None else settings.values['export']['profile']
+    if not project or output is None:
+        raise RefError('invalid_invocation', 'Supply export project and output options or configured defaults', 2)
+    return project, output, profile
+
+
 def select(config: str | None, catalog: str | None, *, project_file: str | None = None, no_project_config: bool = False) -> Settings:
     config_value = config if config is not None else os.environ.get("REFS_CONFIG", "~/.config/refs/config.toml")
     config_path = absolute(config_value)

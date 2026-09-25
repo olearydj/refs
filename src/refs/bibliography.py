@@ -9,9 +9,9 @@ from uuid import uuid4
 
 from pydantic import ValidationError
 
-from refs import files, languages, projects, sources
+from refs import files, languages, models, projects, sources
 from refs.catalog import changed, connect
-from refs.models import SourceCreate, doi_arxiv, normalize_arxiv, normalize_doi
+from refs.models import doi_arxiv, normalize_arxiv, normalize_doi
 from refs.results import RefError
 
 PROFILE = "portable-bibtex-v1"
@@ -69,10 +69,10 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
         if key.casefold() in seen:
             assess('case_colliding_key', 'structural', 'Portable keys differ only by case')
         seen.add(key.casefold())
-        create = {name: record[name] for name in SourceCreate.model_fields if name in record}
         try:
-            value = SourceCreate.model_validate(create).canonical()
-        except ValidationError as exc:
+            models.SourceCreate.valid_key(key)
+            value = models.revalidate(models.editable(record))
+        except (ValidationError,ValueError) as exc:
             assess('unsupported_record', 'structural', str(exc))
             continue
         metadata = value['metadata']
@@ -425,7 +425,12 @@ def export(catalog: Path, project_ref: str, output: Path, *, profile: str = PROF
         for record in selected:
             record.update(preserved_bib_fields(connection, record))
         revision = connection.execute("SELECT revision FROM catalog_meta").fetchone()[0]
-    data, warnings = serialize(selected, allow_unknown=allow_unknown)
+    try:
+        data, warnings = serialize(selected, allow_unknown=allow_unknown)
+    except RefError as exc:
+        if exc.issue['code'] == 'export_blocked':
+            exc.issue['path'] = str(target)
+        raise
     info = [notice for notice in warnings if notice['details'].get('class') == 'info']
     warnings = [notice for notice in warnings if notice['details'].get('class') != 'info']
     if not selected:

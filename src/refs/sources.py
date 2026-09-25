@@ -2,6 +2,8 @@
 
 import hashlib
 import json
+import sqlite3
+from copy import deepcopy
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -12,7 +14,7 @@ from refs import languages, naming
 from refs import logging as action_log
 from refs.adapters.search_sqlite import refresh
 from refs.catalog import changed, connect
-from refs.models import REGISTRY, SourceCreate, normalize_doi, parse
+from refs.models import REGISTRY, SourceCreate, editable, normalize_doi, parse, revalidate
 from refs.results import RefError
 
 
@@ -88,7 +90,7 @@ def add(catalog: Path, raw: bytes, locator: str, **options) -> dict:
     return result
 
 
-def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_run: bool = False, policy: dict | None = None) -> dict:
+def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_run: bool = False, policy: dict | None = None, loc: str | None = None) -> dict:
     from refs.adapters import csl
     source = csl.parse(raw) if format == "csljson" else parse(raw)
     normalized, warnings = naming.normalize(source.canonical(),policy)
@@ -111,6 +113,7 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
                     original = preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key})
                     save_add_conflict(connection,raw,locator,dict(status='conflict',source_id=existing,citation_key=current['citation_key'],binding=binding,conflicts=[item['path'] for item in binding['conflicts']],incoming=source.canonical(),original_ref=original))
                 return current | dict(outcome='needs_attention', binding=binding, warnings=warnings, dry_run=dry_run)
+            current = set_loc(connection, current, loc, dry_run=dry_run)
             return current | dict(unchanged=not binding['filled'], dry_run=dry_run, outcome='already_present', warnings=warnings, binding=binding)
         likely = [dict(row) for row in connection.execute(
             "SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json, '$.title'))=lower(?)",
@@ -126,9 +129,22 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
             source.citation_key = SourceCreate.valid_key(base + naming.suffix(index))
             key_provenance = naming.provenance(policy)
         if dry_run:
+            if loc is not None and source.loc is None:
+                source.loc = loc
             return dict(dry_run=True, outcome="created", id=None, citation_key=source.citation_key,
                         record=source.canonical(), key_provenance=key_provenance, warnings=warnings)
+        if loc is not None and source.loc is None:
+            source.loc = loc
         return insert_source(connection, source, raw, locator, format=format, warnings=warnings, key_provenance=key_provenance)
+
+
+def set_loc(connection, current: dict, loc: str | None, *, dry_run: bool = False) -> dict:
+    if loc is None or current.get('loc'):
+        return current
+    if dry_run:
+        return current | {'loc': loc}
+    canonical = editable(current) | {'loc': loc}
+    return store_record(connection, current, revalidate(canonical), current['corrected_fields'])
 
 
 def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *, format: str, warnings: list, key_provenance: dict) -> dict:
@@ -142,10 +158,15 @@ def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *,
     action_log.log_mutation('source.create', {'id':source_id,'citation_key':source.citation_key}, None,
                             {'revision':1}, changes={'record':{'old':None,'new':source.canonical()}},
                             original={'sha256':fingerprint,'byte_length':len(raw),'format':format,'locator':locator})
-    connection.execute(
-        "INSERT INTO sources (id, citation_key, created_at, updated_at, metadata_json, details_json, key_provenance_json, loc) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        (source_id, source.citation_key, now, now, json.dumps(metadata), json.dumps(details),
-         json.dumps(key_provenance), loc))
+    try:
+        connection.execute(
+            "INSERT INTO sources (id, citation_key, created_at, updated_at, metadata_json, details_json, key_provenance_json, loc) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (source_id, source.citation_key, now, now, json.dumps(metadata), json.dumps(details),
+             json.dumps(key_provenance), loc))
+    except sqlite3.IntegrityError as exc:
+        if 'sources.citation_key' in str(exc):
+            raise RefError('key_conflict','Citation key is already reserved') from exc
+        raise
     connection.execute(
         "INSERT INTO originals (id, source_id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator) VALUES (?, ?, ?, ?, ?, ?, 'add', ?, ?)",
         (str(uuid4()), source_id, raw, fingerprint, len(raw), format, fingerprint, locator))
@@ -168,11 +189,12 @@ def store_record(connection, current: dict, canonical: dict, corrections: list[s
     metadata = details.pop('metadata')
     details.pop('citation_key', None)
     loc = details.pop('loc', None)
-    old = {name:current[name] for name in SourceCreate.model_fields if name in current}
     action_log.log_mutation('source.update', {'id':current['id'],'citation_key':current['citation_key']},
-                            {'revision':current['revision']}, {'revision':current['revision']+1}, changes=action_log.changes(old,canonical))
-    connection.execute('UPDATE sources SET metadata_json=?, details_json=?, loc=?, corrected_fields_json=?, updated_at=?, revision=revision+1 WHERE id=? AND revision=?',
-                       (json.dumps(metadata), json.dumps(details), loc, json.dumps(corrections), datetime.now(UTC).isoformat(), current['id'], current['revision']))
+                            {'revision':current['revision']}, {'revision':current['revision']+1}, changes=action_log.changes(editable(current),canonical))
+    updated = connection.execute('UPDATE sources SET metadata_json=?, details_json=?, loc=?, corrected_fields_json=?, updated_at=?, revision=revision+1 WHERE id=? AND revision=?',
+                                 (json.dumps(metadata), json.dumps(details), loc, json.dumps(corrections), datetime.now(UTC).isoformat(), current['id'], current['revision']))
+    if updated.rowcount != 1:
+        raise RefError('stale_revision','Reload the source and use its current revision',details={'expected':current['revision']})
     refresh(connection, record(connection, current['id']))
     changed(connection)
     return record(connection, current['id'])
@@ -200,7 +222,7 @@ def patch_path(value: dict, path: str, replacement, *, clear: bool) -> None:
     if clear:
         if parts[-1] not in node:
             # Validate absent clear paths rather than accepting arbitrary names.
-            probe = json.loads(json.dumps(value))
+            probe = deepcopy(value)
             patch_path(probe, path, '__validate_path__', clear=False)
             try:
                 SourceCreate.model_validate(probe)
@@ -220,19 +242,16 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
         raise RefError('invalid_patch', 'Patch does not match the supported record profile', 2, details={'issues':exc.errors(include_url=False,include_context=False,include_input=False)}) from exc
     with connect(catalog, write=not dry_run) as connection:
         current = checked_record(connection, reference, revision)
-        canonical = json.loads(json.dumps({name: current[name] for name in SourceCreate.model_fields if name in current}))
-        if canonical.get("loc") is None:
-            canonical.pop("loc", None)
-        original = json.loads(json.dumps(canonical))
+        canonical = editable(current)
+        original = deepcopy(canonical)
         for path, value in patch_model.set.items():
             patch_path(canonical, path, value, clear=False)
         for path in patch_model.clear:
             patch_path(canonical, path, None, clear=True)
         if patch_model.provenance:
             canonical.setdefault('provenance', []).extend(item.model_dump(exclude_none=True) for item in patch_model.provenance)
-        preserved_key = canonical.pop("citation_key")
         try:
-            canonical = SourceCreate.model_validate(canonical).canonical()
+            canonical = revalidate(canonical)
             title_fields={field for field in canonical['metadata'] if 'metadata' in patch_model.set or 'metadata.'+field in patch_model.set}
             dropped_terms = []
             for field in list(canonical['title_protection']):
@@ -247,10 +266,9 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
             if dropped_terms:
                 names = ', '.join(f'{field}: {term}' for field, term in dropped_terms)
                 warnings.append(dict(code='protected_terms_dropped', message=f'Protected terms no longer in the edited title were dropped: {names}', path='title_protection', details={'terms':[{'field':field,'term':term} for field,term in dropped_terms]}, retryable=False))
-            canonical = SourceCreate.model_validate(canonical).canonical()
+            canonical = revalidate(canonical)
         except ValidationError as exc:
             raise RefError('invalid_patch', 'Patch does not match the supported record profile', 2, details={'issues':exc.errors(include_url=False,include_context=False,include_input=False)}) from exc
-        canonical['citation_key'] = preserved_key
         if canonical == original:
             return current | {'unchanged': True, 'warnings': warnings}
         corrections = sorted(set(current['corrected_fields']) | (set(patch_model.set) | set(patch_model.clear)) - {'loc'})
@@ -265,6 +283,8 @@ def change_identity(catalog: Path, reference: str, revision: int | None, *, new_
         if revision is None and (state != 'active' or new_key is not None):
             raise RefError('revision_required', 'Supply the current revision', 2)
         current = record(connection, resolve(connection, reference)) if revision is None else checked_record(connection, reference, revision)
+        if new_key is not None:
+            current['previous_key'] = current['citation_key']
         warnings = []
         if new_key is not None:
             try:
@@ -289,9 +309,17 @@ def change_identity(catalog: Path, reference: str, revision: int | None, *, new_
                                 {'revision':current['revision']}, {'revision':current['revision']+1},
                                 changes={field:{'old':current[field],'new':value}})
         # Column names are internal constants, never user paths.
-        connection.execute(f'UPDATE sources SET {field}=?, revision=revision+1, updated_at=? WHERE id=?', (value, datetime.now(UTC).isoformat(), current['id']))
+        try:
+            updated = connection.execute(f'UPDATE sources SET {field}=?, revision=revision+1, updated_at=? WHERE id=? AND revision=?',
+                                         (value, datetime.now(UTC).isoformat(), current['id'],current['revision']))
+        except sqlite3.IntegrityError as exc:
+            if new_key is not None and 'sources.citation_key' in str(exc):
+                raise RefError('key_conflict','Citation key is already reserved') from exc
+            raise
+        if updated.rowcount != 1:
+            raise RefError('stale_revision','Reload the source and use its current revision',details={'expected':current['revision']})
         if new_key is not None:
             connection.execute('UPDATE sources SET key_provenance_json=? WHERE id=?', (json.dumps({'origin': 'explicit_rekey'}), current['id']))
         refresh(connection, record(connection, current['id']))
         changed(connection)
-        return record(connection, current['id']) | {'warnings': warnings}
+        return record(connection, current['id']) | {'warnings': warnings} | ({'previous_key': current['previous_key']} if new_key is not None else {})
