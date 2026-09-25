@@ -1,12 +1,4 @@
-ALTER TABLE catalog_meta RENAME TO catalog_meta_v1;
-CREATE TABLE catalog_meta (
-    singleton INTEGER PRIMARY KEY CHECK (singleton = 1),
-    catalog_id TEXT NOT NULL UNIQUE,
-    schema_version INTEGER NOT NULL CHECK (schema_version = 2),
-    revision INTEGER NOT NULL DEFAULT 0 CHECK (revision >= 0)
-);
-INSERT INTO catalog_meta SELECT singleton, catalog_id, 2, revision FROM catalog_meta_v1;
-DROP TABLE catalog_meta_v1;
+UPDATE catalog_meta SET schema_version = 2;
 ALTER TABLE imports ADD COLUMN revision INTEGER NOT NULL DEFAULT 1;
 CREATE TABLE import_entries (
     id TEXT PRIMARY KEY,

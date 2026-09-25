@@ -1,10 +1,8 @@
 """Resource associations and explicit local file opening."""
 
 import json
-import re
 import sqlite3
 import subprocess
-import unicodedata
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -13,7 +11,7 @@ from refs import files, sources
 from refs import logging as action_log
 from refs.catalog import changed, connect
 from refs.config import Settings
-from refs.results import RefError
+from refs.results import RefError, notice
 
 UNFILED = "unfiled"
 
@@ -122,6 +120,11 @@ PLACEMENT_KINDS = {
 }
 
 
+def misplaced(settings: Settings, item: dict, loc: str | None) -> bool:
+    return bool(item['root'] == 'library' and loc and settings.library and
+                files.path_key(settings.library / Path(item['relative']).parent) != files.path_key(settings.library / loc))
+
+
 def check(settings: Settings, reference=None, *, verify=False, kind=None) -> dict:
     if kind is not None and kind not in PLACEMENT_KINDS:
         raise RefError('invalid_kind','Choose '+', '.join(PLACEMENT_KINDS),2)
@@ -133,31 +136,36 @@ def check(settings: Settings, reference=None, *, verify=False, kind=None) -> dic
     busy = {row['resource_id'] for row in operations}
     result, known = [], set()
     for item in all_items:
-        checked = check_item(settings,item,verify)
-        if checked.get('resolved_path'):
-            known.add(unicodedata.normalize('NFC',checked['resolved_path']).casefold())
+        if source_id is None and kind in (None, 'unrecorded'):
+            try:
+                known.add(files.path_key(resolve_path(settings,item)))
+            except (RefError,OSError):
+                pass
         if source_id and item['source_id']!=source_id or item['id'] in busy:
             continue
         loc = locs[item['source_id']]
         placement = None
         if item['root']!='library':
             placement = 'linked_pending' if loc else 'linked_unplaced'
-        elif loc and unicodedata.normalize('NFC',str(Path(item['relative']).parent)).casefold()!=loc.casefold():
+        elif misplaced(settings,item,loc):
             placement = 'managed_mismatch'
-        result.append(checked | dict(kind=placement))
+        if kind is None or kind == placement:
+            result.append(check_item(settings,item,verify) | dict(kind=placement))
     for row in operations:
+        if kind not in (None, 'unfinished'):
+            continue
         item = next((item for item in all_items if item['id']==row['resource_id']),None)
-        known.add(unicodedata.normalize('NFC',row['new_path']).casefold())
         if source_id and (item is None or item['source_id']!=source_id):
             continue
         result.append(dict(kind='unfinished',id=row['resource_id'],operation_id=row['id'],resolved_path=row['old_path'],old_path=row['old_path'],new_path=row['new_path'],state=row['state'],error=row['error'],status='unfinished'))
-    if source_id is None and settings.library and settings.library.is_dir():
+    if source_id is None and kind in (None, 'unrecorded') and settings.library and settings.library.is_dir():
+        known.update(files.path_key(row['new_path']) for row in operations)
         for path in sorted(settings.library.rglob('*')):
             if path.name in ('.DS_Store','Thumbs.db','desktop.ini') or path.name.startswith('._'):
                 continue
-            if not path.is_symlink() and path.is_file() and unicodedata.normalize('NFC',str(path)).casefold() not in known:
+            if not path.is_symlink() and path.is_file() and files.path_key(path) not in known:
                 result.append(dict(kind='unrecorded',resolved_path=str(path),status='available',hint='Use resource add SOURCE --path on this file to record it'))
-    return {'items':[item for item in result if kind is None or item['kind']==kind]}
+    return {'items':result}
 
 
 
@@ -244,14 +252,15 @@ def register_copy(settings: Settings, source: dict, target: Path, digest: str, o
 
 def copy(settings: Settings, reference: str, path: Path, *, resource_id=None, keep_name=False, dry_run=False, label=None, media_type=None) -> dict:
     source = sources.show(settings.catalog_path(),reference)
-    plan = plan_copy(settings,source,path,keep_name=keep_name,check_duplicates=resource_id is None,label=label)
+    origin = locate(settings,path=path)
+    existing = next((item for item in source['resources'] if item['id']==resource_id),None) if resource_id else next((item for item in source['resources'] if all(item.get(key)==value for key,value in origin.items())),None)
+    if resource_id and (existing is None or any(existing.get(key)!=value for key,value in origin.items())):
+        raise RefError('resource_conflict','Select the resource that records the original copy source')
+    plan = plan_copy(settings,source,path,keep_name=keep_name,exclude_resource_id=existing['id'] if existing else None,label=label)
     if plan.get('duplicate_resource_id'):
         return plan | dict(dry_run=dry_run,copied=False)
     source_path, target = Path(plan['path']), Path(plan['destination'])
     origin = plan['copied_from']
-    existing = next((item for item in source['resources'] if item['id']==resource_id),None) if resource_id else next((item for item in source['resources'] if all(item.get(key)==value for key,value in origin.items())),None)
-    if resource_id and (existing is None or any(existing.get(key)!=value for key,value in origin.items())):
-        raise RefError('resource_conflict','Select the resource that records the original copy source')
     if dry_run:
         return plan
     if not source.get('loc'):
@@ -284,7 +293,25 @@ def copy(settings: Settings, reference: str, path: Path, *, resource_id=None, ke
         raise RefError('copy_failed','Copy failed; inspect the original and retry after correcting the cause',5,path=str(source_path),details={'cause':str(exc)}) from exc
 
 
-def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, check_duplicates=False, label=None) -> dict:
+def duplicate_attachment(settings: Settings, source: dict, path: Path, origin: dict, exclude_resource_id=None) -> dict | None:
+    if path.is_symlink() or not path.is_file():
+        return None
+    digest = files.hash_file(path)
+    for item in source.get('resources', []):
+        if item['id'] == exclude_resource_id or all(item.get(key) == value for key, value in origin.items()):
+            continue
+        try:
+            existing_path = resolve_path(settings,item)
+            same = existing_path.is_file() and files.hash_file(existing_path) == digest
+        except (OSError,RefError):
+            continue
+        if same:
+            warning = notice('duplicate_attachment', f"Same file content already attached as resource {item['id']} ({existing_path}); no copy made", path=str(path), details={'resource_id':item['id'],'path':str(existing_path)})
+            return dict(citation_key=source['citation_key'],path=str(path),duplicate_resource_id=item['id'],warnings=[warning])
+    return None
+
+
+def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, exclude_resource_id=None, label=None) -> dict:
     from refs import naming
 
     expanded = path.expanduser()
@@ -299,27 +326,16 @@ def plan_copy(settings: Settings, source: dict, path: Path, *, keep_name=False, 
     origin = locate(settings,path=source_path)
     if settings.catalog_path().stat().st_dev != library.stat().st_dev:
         raise RefError('staging_volume_mismatch','Keep catalog staging and the library on the same volume')
-    name = source_path.name if keep_name else naming.filename(source,source_path.name,label)
+    name, fell_back = (source_path.name, False) if keep_name else naming.filename(source,source_path.name,label,report_fallback=True)
     warnings = []
-    if not keep_name and (naming.issued_year(source)=='ND' or not re.search(r'[^\W_]+',naming.short_title(source))):
-        warnings.append(dict(code='filename_unavailable',message='Conventional filename unavailable; keeping the original name',path=str(source_path),details={},retryable=False))
+    if fell_back:
+        warnings.append(notice('filename_unavailable', 'Conventional filename unavailable; keeping the original name', path=str(source_path)))
     folder = library/(source.get('loc') or UNFILED)
     if any(parent.is_symlink() for parent in [folder,*folder.parents]) or not folder.resolve().is_relative_to(library) or folder.exists() and not folder.is_dir():
         raise RefError('unsafe_path','Inspect the library unfiled path before copying')
     target = folder/name
-    if label and (target.exists() or target.is_symlink()):
-        raise RefError('destination_exists','Inspect the existing destination; copy never overwrites or adopts it',path=str(target))
-    if check_duplicates:
-        digest = files.hash_file(source_path)
-        for item in source.get('resources',[]):
-            try:
-                existing_path = resolve_path(settings,item)
-                same = existing_path.is_file() and files.hash_file(existing_path)==digest
-            except (OSError,RefError):
-                continue
-            if same:
-                notice = dict(code='duplicate_attachment',message=f"Same file content already attached as resource {item['id']} ({existing_path}); no copy made",path=str(source_path),details={'resource_id':item['id'],'path':str(existing_path)},retryable=False)
-                return dict(citation_key=source['citation_key'],path=str(source_path),duplicate_resource_id=item['id'],warnings=[notice])
+    if duplicate := duplicate_attachment(settings,source,source_path,origin,exclude_resource_id):
+        return duplicate
     if target.exists() or target.is_symlink():
         raise RefError('destination_exists','Inspect the existing destination; copy never overwrites or adopts it',path=str(target))
     preview = dict(dry_run=True,citation_key=source['citation_key'],path=str(source_path),destination=str(target),copied_from=origin,warnings=warnings)
@@ -341,11 +357,16 @@ def capture_file(settings: Settings, data: dict, path: Path, *, mode: str, keep_
             admit(settings,path)
         proposal = locate(settings,path=path) if linked else plan_copy(settings,source,path,keep_name=keep_name)
         proposal['moved'] = moving
-        if moving:
+        if moving and not proposal.get('duplicate_resource_id'):
             from refs.moves import preview_move
             proposal.update(moves=[preview_move(None,Path(proposal['path']),Path(proposal['destination']))],unlinked_paths=[])
         return data | {'resources':[proposal]} | {key:proposal[key] for key in ('moves','unlinked_paths') if key in proposal}, proposal
     try:
+        if mode == 'copy':
+            proposal = plan_copy(settings,data,path,keep_name=keep_name)
+            if proposal.get('duplicate_resource_id'):
+                current = inspect_source(settings,data['id'])
+                return current | dict(outcome=data['outcome'],warnings=data.get('warnings',[])+proposal['warnings']), proposal
         if moving:
             from refs.moves import intake
             resource = intake(settings,data['id'],path,keep_name=keep_name)
@@ -367,29 +388,10 @@ def capture_file(settings: Settings, data: dict, path: Path, *, mode: str, keep_
 
 def zotero_attachment(connection, settings, source_id: str, item: dict, manifest: dict, *, dry_run=False) -> dict:
     """Resolve original Zotero locators; never use the extraction directory."""
+    from refs.adapters.zotero import attachment_path
+
     data = item['data']
-    mode = data.get('linkMode')
-    expression = data.get('path', '')
-    if mode in ('imported_file', 'imported_url'):
-        base = Path(manifest['data_directory'])/'storage'/item['key']
-        suffix = Path(data.get('filename') or '')
-        if not suffix.name or suffix.is_absolute() or '..' in suffix.parts:
-            raise RefError('invalid_attachment_path', 'Inspect the stored attachment filename')
-        path = base/suffix
-    elif mode == 'linked_file':
-        if expression.startswith('attachments:'):
-            if not manifest.get('base_path'):
-                raise RefError('attachment_base_missing', 'Supply the original linked-attachment base path')
-            suffix = Path(expression.removeprefix('attachments:'))
-            if suffix.is_absolute() or '..' in suffix.parts:
-                raise RefError('invalid_attachment_path', 'Inspect the base-relative attachment path')
-            path = Path(manifest['base_path'])/suffix
-        else:
-            path = Path(expression)
-            if not path.is_absolute():
-                raise RefError('invalid_attachment_path', 'Supply an absolute or base-relative attachment path')
-    else:
-        raise RefError('unsupported_attachment', 'Inspect the attachment link mode')
+    path = attachment_path(item, manifest)
     locator = locate(settings, path=path) if settings else dict(path=str(path), root=None, relative=None)
     identity = json.dumps(locator, sort_keys=True)
     old = connection.execute('SELECT id FROM resources WHERE source_id=? AND locator=?', (source_id, identity)).fetchone()

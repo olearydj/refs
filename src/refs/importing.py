@@ -13,7 +13,7 @@ from refs import naming, sources
 from refs.adapters import bibtex, zotero
 from refs.catalog import changed, connect
 from refs.models import SourceCreate, editable, revalidate
-from refs.results import RefError
+from refs.results import RefError, notice
 
 
 def preserve(connection, raw: bytes, locator: str, file_digest: str, *, source_id=None, format='bib', origin='import', definitions=None):
@@ -203,7 +203,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         else:
             likely = connection.execute("SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json,'$.title'))=lower(?)", (source.metadata.title,)).fetchall()
             if likely:
-                warnings.append(dict(code='likely_match', message='Similar title found; imported separately because title alone is not identity', path=None, details={'candidates':[dict(row) for row in likely]}, retryable=False))
+                warnings.append(notice('likely_match', 'Similar title found; imported separately because title alone is not identity', details={'candidates':[dict(row) for row in likely]}))
             if not dry_run:
                 if loc is not None and source.loc is None:
                     source.loc = loc
@@ -222,7 +222,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         if isinstance(exc, ValidationError):
             message = f'Entry at byte {block["start"]}: citation key is empty' if re.match(rb'@\w+\s*[{(]\s*,', raw) else 'Entry cannot satisfy the record profile; inspect its preserved original'
             exc = RefError('invalid_bib_entry', message, 2)
-        conflict = exc.issue['code'] in ('identity_conflict', 'source_removed', 'likely_match')
+        conflict = exc.issue['code'] in ('identity_conflict', 'source_removed', 'likely_match', 'alias_conflict')
         outcome = dict(outcome='conflict' if conflict else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'], limitations=exc.issue['details'].get('limitations', []))
     outcome['incoming'] = incoming
     outcome['citation_key'] = key
@@ -345,13 +345,7 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
         if source_id:
             result = dict(status='conflict' if conflicts else 'applied' if binding.get('filled') else 'unchanged', source_id=source_id, conflicts=conflicts)
         else:
-            provenance = dict(origin='supplied', policy=None, table_version=None, unicode_version=None)
-            if source.citation_key is None:
-                base, index = naming.key(incoming, settings.values if settings else None), 0
-                while connection.execute('SELECT 1 FROM sources WHERE citation_key=?', (base+naming.suffix(index),)).fetchone():
-                    index += 1
-                source.citation_key = base+naming.suffix(index)
-                provenance = naming.provenance(settings.values if settings else None)
+            provenance = sources.allocate_key(connection, source, settings.values if settings else None)
             if not dry_run:
                 source_id = sources.insert_source(connection, source, entry['raw'], entry['locator'], format='zotero-json', warnings=warnings, key_provenance=provenance)['id']
             result = dict(status='applied', source_id=source_id)
@@ -452,18 +446,12 @@ def import_collections(connection, bundle: dict) -> dict:
 
 
 def child_context(bundle: dict, parent: str) -> list[dict]:
-    import html
     result = []
     for entry in bundle['items']:
         data = entry['data']
         if data.get('parentItem') != parent:
             continue
-        text = None
-        if data['itemType'] == 'note':
-            text = html.unescape(re.sub(r'<[^>]*>', ' ', data.get('note','')))
-            text = ' '.join(text.split())
-        elif data['itemType'] == 'attachment' and data.get('linkMode') == 'linked_url':
-            text = data.get('url')
+        text = zotero.context(entry['item'])
         if text:
             result.append(dict(text=text, origin='import', original_ref=bundle['manifest']['library_uri']+'/items/'+entry['key']))
     return result
@@ -475,9 +463,7 @@ def associate(connection, bundle: dict, entry: dict, source_id: str, collections
     if not dry_run:
         for key in entry['data'].get('collections', []):
             connection.execute('INSERT OR IGNORE INTO source_collections VALUES (?,?)', (source_id,collections[key]['id']))
-        relations = entry['data'].get('relations', {}).get('dc:relation', [])
-        for target in [relations] if isinstance(relations,str) else relations:
-            endpoint = target.removeprefix('http://zotero.org/').removeprefix('https://zotero.org/')
+        for endpoint in zotero.relations(entry['item']):
             uri, _, key = endpoint.rpartition('/items/')
             bound = connection.execute("SELECT source_id FROM origin_identities WHERE namespace='zotero' AND library_uri=? AND item_key=?", (uri,key)).fetchone()
             connection.execute('INSERT OR IGNORE INTO source_relations VALUES (?,?,?,?)', (source_id,endpoint,bound[0] if bound else None,bundle['manifest']['library_uri']))
@@ -489,7 +475,7 @@ def associate(connection, bundle: dict, entry: dict, source_id: str, collections
             resource = zotero_attachment(connection,settings,source_id,child['item'],bundle['manifest'],dry_run=dry_run)
             resources.append(resource)
             if resource['status'] == 'missing':
-                warnings.append(dict(code='attachment_missing',message='Original attachment file is missing; restore it at the recorded path',path=child['locator'],details=resource,retryable=False))
+                warnings.append(notice('attachment_missing', 'Original attachment file is missing; restore it at the recorded path', path=child['locator'], details=resource))
         except RefError as exc:
             if exc.issue['code'] == 'log_unwritable':
                 raise

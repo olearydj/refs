@@ -59,6 +59,20 @@ def test_correct_managed_file_keeps_health_check(initialized,tmp_path,reference_
     assert initialized('resource','check','--kind','managed_mismatch')['data']['items']==[]
 
 
+def test_kind_filter_skips_hashing_excluded_resources(initialized,tmp_path,reference_path,monkeypatch):
+    settings=select(str(tmp_path/'config.toml'),str(tmp_path/'cat'),no_project_config=True)
+    source=initialized('add','--format','refs','--input',reference_path,'--loc','Topic')['data']
+    path=tmp_path/'managed.pdf'
+    path.write_bytes(b'verified bytes')
+    initialized('resource','add',source['id'],'--path',path,'--copy')
+    def unexpected_hash(path):
+        raise AssertionError(f'Filtered resource was hashed: {path}')
+    monkeypatch.setattr(resources.files,'hash_file',unexpected_hash)
+    assert resources.check(settings,source['id'],verify=True,kind='linked_pending')['items']==[]
+    with pytest.raises(AssertionError,match='Filtered resource was hashed'):
+        resources.check(settings,source['id'],verify=True)
+
+
 def test_library_scan_ignores_os_metadata_but_reports_unrecorded_files(initialized,tmp_path):
     library=tmp_path/'lib'
     topic=library/'Topic'

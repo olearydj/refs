@@ -3,6 +3,19 @@ import json
 from conftest import extracted
 
 from refs.catalog import connect
+from refs.adapters import zotero
+
+
+def test_zotero_adapter_owns_child_paths_context_and_relations(tmp_path):
+    manifest = {'data_directory': str(tmp_path / 'Zotero'), 'base_path': str(tmp_path / 'Links')}
+    stored = {'key': 'FILE0001', 'data': {'linkMode': 'imported_file', 'filename': 'paper.pdf'}}
+    linked = {'key': 'FILE0002', 'data': {'linkMode': 'linked_file', 'path': 'attachments:topic/paper.pdf'}}
+    note = {'data': {'itemType': 'note', 'note': '<p>A &amp; B</p>'}}
+    parent = {'data': {'relations': {'dc:relation': ['http://zotero.org/users/123/items/ITEM0001']}}}
+    assert zotero.attachment_path(stored, manifest) == tmp_path / 'Zotero/storage/FILE0001/paper.pdf'
+    assert zotero.attachment_path(linked, manifest) == tmp_path / 'Links/topic/paper.pdf'
+    assert zotero.context(note) == 'A & B'
+    assert zotero.relations(parent) == ['users/123/items/ITEM0001']
 
 
 def test_children_are_linked_without_touching_files(initialized, zotero_fixture, tmp_path):

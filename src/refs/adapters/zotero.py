@@ -1,19 +1,57 @@
 """Admission and mapping of the published Zotero JSON directory."""
 
+import html
 import json
 import re
 from pathlib import Path
-from urllib.parse import urlparse
 
 from pydantic import ValidationError
 
-from refs.models import REGISTRY, Date, SourceCreate, normalize_arxiv, normalize_doi
+from refs.models import MONTHS, REGISTRY, Date, SourceCreate, assign_path, portable_url
 from refs.results import RefError
 
 CHILDREN = {'attachment', 'note', 'annotation'}
 KEY = re.compile(r'[A-Z0-9]{8}')
 SCHEMES = {'arxiv': 'extensions.identifiers.arxiv', 'oclc': 'extensions.identifiers.oclc',
            'doi': 'metadata.DOI', 'pmid': 'metadata.PMID', 'pmcid': 'metadata.PMCID', 'issn': 'metadata.ISSN'}
+
+
+def attachment_path(item: dict, manifest: dict) -> Path:
+    data = item['data']
+    mode = data.get('linkMode')
+    expression = data.get('path', '')
+    if mode in ('imported_file', 'imported_url'):
+        suffix = Path(data.get('filename') or '')
+        if not suffix.name or suffix.is_absolute() or '..' in suffix.parts:
+            raise RefError('invalid_attachment_path', 'Inspect the stored attachment filename')
+        return Path(manifest['data_directory']) / 'storage' / item['key'] / suffix
+    if mode == 'linked_file':
+        if expression.startswith('attachments:'):
+            if not manifest.get('base_path'):
+                raise RefError('attachment_base_missing', 'Supply the original linked-attachment base path')
+            suffix = Path(expression.removeprefix('attachments:'))
+            if suffix.is_absolute() or '..' in suffix.parts:
+                raise RefError('invalid_attachment_path', 'Inspect the base-relative attachment path')
+            return Path(manifest['base_path']) / suffix
+        path = Path(expression)
+        if path.is_absolute():
+            return path
+        raise RefError('invalid_attachment_path', 'Supply an absolute or base-relative attachment path')
+    raise RefError('unsupported_attachment', 'Inspect the attachment link mode')
+
+
+def context(item: dict) -> str | None:
+    data = item['data']
+    if data['itemType'] == 'note':
+        return ' '.join(html.unescape(re.sub(r'<[^>]*>', ' ', data.get('note', ''))).split()) or None
+    if data['itemType'] == 'attachment' and data.get('linkMode') == 'linked_url':
+        return data.get('url')
+    return None
+
+
+def relations(item: dict) -> list[str]:
+    values = item['data'].get('relations', {}).get('dc:relation', [])
+    return [target.removeprefix('http://zotero.org/').removeprefix('https://zotero.org/') for target in ([values] if isinstance(values, str) else values)]
 
 
 def read(directory: Path) -> dict:
@@ -70,19 +108,6 @@ def read(directory: Path) -> dict:
         raise RefError('invalid_zotero_input', f'Inspect the Zotero JSON directory: {exc}', 2) from exc
 
 
-def assign(target: dict, path: str, value) -> None:
-    if path == 'metadata.DOI':
-        value = normalize_doi(value)
-    elif path == 'extensions.identifiers.arxiv':
-        value = normalize_arxiv(value)
-    parts = path.split('.')
-    for part in parts[:-1]:
-        target = target.setdefault(part, {})
-    if parts[-1] in target and target[parts[-1]] != value:
-        raise RefError('alias_conflict', f'Competing values for {path}; inspect the original item', 3)
-    target[parts[-1]] = value
-
-
 def date_range(value: str) -> dict | None:
     """Read explicit endpoints before considering Zotero's parsed start date."""
     parts = None
@@ -91,8 +116,7 @@ def date_range(value: str) -> dict | None:
     elif match := re.fullmatch(r'(\d{4}(?:-\d{1,2}){0,2})\s*(?:/|–|—| to | - )\s*(\d{4}(?:-\d{1,2}){0,2})', value):
         parts = [[int(n) for n in endpoint.split('-')] for endpoint in match.groups()]
     elif match := re.fullmatch(r'(\d{1,2})\s*[-–—]\s*(\d{1,2})\s+([A-Za-z]+)\.?\s+(\d{4})', value):
-        names = 'january february march april may june july august september october november december'.split()
-        months = {alias:number for number,name in enumerate(names,1) for alias in (name,name[:3])}
+        months = {alias:number for number,pair in enumerate(MONTHS,1) for alias in pair}
         month = months.get(match[3].lower())
         if month:
             parts = [[int(match[4]), month, int(match[index])] for index in (1,2)]
@@ -163,10 +187,10 @@ def parse(item: dict, manifest: dict) -> dict:
                     limitations.append(dict(field=field,reason='Date retained literally; verify its precision'))
             elif field == 'assignee':
                 value = [{'literal': value}]
-            elif field == 'url' and (urlparse(value).scheme not in ('http', 'https') or not urlparse(value).netloc):
+            elif field == 'url' and not portable_url(value):
                 path = None
         if path:
-            assign(source, path, value)
+            assign_path(source, path, value)
         else:
             limitations.append(dict(field=field, reason=f'Preserved from import: {field}'))
     for creator in data.get('creators', []):
@@ -185,7 +209,7 @@ def parse(item: dict, manifest: dict) -> dict:
                 raise RefError('alias_conflict', 'Conflicting Citation Key lines; inspect Extra', 3)
             extra_key = value
         elif separator and label in SCHEMES and value:
-            assign(source, SCHEMES[label], value)
+            assign_path(source, SCHEMES[label], value)
         elif line.strip() and not any(entry['field'] == 'extra' for entry in limitations):
             limitations.append(dict(field='extra', reason='Preserved from import: extra'))
     key = data.get('citationKey') or extra_key or manifest.get('legacy_keys', {}).get(item['key'])

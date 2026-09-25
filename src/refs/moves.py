@@ -25,10 +25,10 @@ def checkpoint(point, operation):
 def preserved_target(folder: Path, name: str, reserved: set) -> Path:
     name = unicodedata.normalize('NFC', name)
     candidate, index = folder/name, 0
-    while candidate.exists() or candidate.is_symlink() or str(candidate).casefold() in reserved:
+    while candidate.exists() or candidate.is_symlink() or files.path_key(candidate) in reserved:
         index += 1
         candidate = folder/(Path(name).stem + naming.suffix(index+1) + Path(name).suffix)
-    reserved.add(str(candidate).casefold())
+    reserved.add(files.path_key(candidate))
     return candidate
 
 
@@ -77,7 +77,7 @@ def verified(path, saved_identity, digest):
 def pointer_matches(settings, row):
     with connect(settings.catalog_path()) as c:
         item = next((item for item in resources.inventory(c) if item['id']==row['resource_id']),None)
-    return item is not None and resources.resolve_path(settings,item)==Path(row['new_path'])
+    return item is not None and files.path_key(resources.resolve_path(settings,item))==files.path_key(row['new_path'])
 
 
 def create(settings, resource_id, target):
@@ -255,9 +255,9 @@ def move(settings, resource_id, target: Path):
         with connect(settings.catalog_path()) as c:
             previous=c.execute('SELECT * FROM file_operations WHERE resource_id=? ORDER BY created_at DESC LIMIT 1',(resource_id,)).fetchone()
         row=dict(previous) if previous else None
-        if row and row['state']=='removed' and row['new_path']!=str(target):
+        if row and row['state']=='removed' and files.path_key(row['new_path'])!=files.path_key(target):
             row=None
-        if row and (row['last_state'] if row['state']=='failed' else row['state']) not in ('recorded','removed') and row['new_path']!=str(target):
+        if row and (row['last_state'] if row['state']=='failed' else row['state']) not in ('recorded','removed') and files.path_key(row['new_path'])!=files.path_key(target):
             raise RefError('move_conflict','Requested destination differs from the unfinished move')
         if row is None:
             row=create(settings,resource_id,target)
@@ -269,7 +269,7 @@ def admit(settings, path: Path):
     with connect(settings.catalog_path()) as c:
         for item in resources.inventory(c):
             existing=resources.resolve_path(settings,item)
-            if existing==path.resolve() or existing.exists() and path.exists() and existing.samefile(path):
+            if files.path_key(existing)==files.path_key(path) or existing.exists() and path.exists() and existing.samefile(path):
                 raise RefError('resource_already_recorded',f"File is already resource {item['id']}; use reorg",details={'resource_id':item['id']})
 
 
@@ -290,6 +290,8 @@ def intake(settings, reference, path: Path, *, keep_name=False, dry_run=False, l
     else:
         admit(settings,path)
         plan=resources.plan_copy(settings,source,path,keep_name=keep_name,label=label)
+        if plan.get('duplicate_resource_id'):
+            return plan | dict(dry_run=dry_run,moved=False,moves=[],unlinked_paths=[])
         target=Path(plan['destination'])
         resource_id=None
     if dry_run:
@@ -323,13 +325,13 @@ def selection(settings, reference=None, loc=None):
         return (source_id is None or source.get('id')==source_id) and (not prefix or value==prefix or value.startswith(prefix+'/'))
     by_resource={item['id']:item for item in items}
     pending=[row for row in unfinished if selected(records.get(by_resource.get(row['resource_id'],{}).get('source_id'),{}),row['loc'])]
-    reserved={row['new_path'].casefold() for row in unfinished}
+    reserved={files.path_key(row['new_path']) for row in unfinished}
     busy={row['resource_id'] for row in unfinished}
     paths={item['id']:resources.resolve_path(settings,item) for item in items}
     by_path={}
     by_file={}
     for resource_id,path in paths.items():
-        by_path.setdefault(str(path.resolve()),set()).add(resource_id)
+        by_path.setdefault(files.path_key(path),set()).add(resource_id)
         try:
             stat=path.stat()
         except FileNotFoundError:
@@ -341,13 +343,13 @@ def selection(settings, reference=None, loc=None):
         if item['id'] in busy or source['state']!='active' or not source['loc'] or not selected(source):
             continue
         path=paths[item['id']]
-        if item['root']=='library' and unicodedata.normalize('NFC',str(path.parent.relative_to(settings.library))).casefold()==source['loc'].casefold():
+        if item['root']=='library' and not resources.misplaced(settings,item,source['loc']):
             continue
         if settings.library is None or not settings.library.is_dir():
             raise RefError('library_unavailable','Restore the library before reorganizing')
         target=preserved_target(settings.library/source['loc'],path.name,reserved)
         entry=preview_move(item['id'],path,target)
-        shared=set(by_path[str(path.resolve())])
+        shared=set(by_path[files.path_key(path)])
         if path.exists():
             stat=path.stat()
             shared.update(by_file[(stat.st_dev,stat.st_ino)])
@@ -401,7 +403,7 @@ def unlinked_paths(settings, planned):
     with connect(settings.catalog_path()) as c:
         known={str(resources.resolve_path(settings,item)) for item in resources.inventory(c)}
         known.update(row[0] for row in c.execute("SELECT old_path FROM file_operations WHERE state!='removed'"))
-    known={unicodedata.normalize('NFC',path) for path in known}
+    known={files.path_key(path) for path in known}
     parents={Path(item['old_path']).parent for item in planned}
     parents={path for path in parents if not any(other!=path and path.is_relative_to(other) for other in parents)}
     found=set()
@@ -411,7 +413,7 @@ def unlinked_paths(settings, planned):
             dirs[:]=[name for name in dirs if not (base/name).is_symlink() and base/name not in (settings.library,settings.catalog_path())]
             for name in names:
                 path=base/name
-                if not path.is_symlink() and path.is_file() and path!=settings.config and unicodedata.normalize('NFC',str(path)) not in known:
+                if not path.is_symlink() and path.is_file() and files.path_key(path)!=files.path_key(settings.config) and files.path_key(path) not in known:
                     found.add(str(path))
     return sorted(found)
 

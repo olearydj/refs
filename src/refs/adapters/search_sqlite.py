@@ -3,7 +3,7 @@
 import json
 
 from refs import naming
-from refs.models import Metadata, normalize_arxiv, normalize_doi
+from refs.models import IDENTIFIER_FIELDS, Metadata, normalize_arxiv, normalize_doi, person_name
 
 
 def projection(record: dict):
@@ -13,7 +13,7 @@ def projection(record: dict):
         if isinstance(value, list) and field and 'Name' in str(field.annotation):
             for person in value:
                 parts = ('given', 'dropping-particle', 'non-dropping-particle', 'family', 'suffix', 'literal')
-                yield 'metadata.' + name, 'metadata', ' '.join(person[part] for part in parts if person.get(part))
+                yield 'metadata.' + name, 'metadata', person_name(person, parts)
         elif name in ('title', 'abstract'):
             yield 'metadata.' + name, 'metadata', value
     for entry in record.get('context', []):
@@ -80,7 +80,7 @@ def page(connection, query: str | None, *, loc: str | None, project_id: str | No
                 exact=True
             elif not any(char.isspace() for char in query) and row['citation_key'].startswith(query):
                 fields.insert(0,dict(field='citation_key',origin='catalog',text=row['citation_key']))
-            for field in ('DOI','ISBN','ISSN','PMID','PMCID'):
+            for field in (field for field in IDENTIFIER_FIELDS if field != 'URL'):
                 stored=metadata.get(field)
                 if stored and identifier(field,str(stored))==identifier(field,query):
                     fields.insert(0,dict(field='metadata.'+field,origin='metadata',text=stored))

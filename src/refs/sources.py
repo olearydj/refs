@@ -15,7 +15,7 @@ from refs import logging as action_log
 from refs.adapters.search_sqlite import refresh
 from refs.catalog import changed, connect
 from refs.models import REGISTRY, SourceCreate, editable, normalize_doi, parse, revalidate
-from refs.results import RefError
+from refs.results import RefError, notice
 
 
 def core_record(connection, source_id: str) -> dict:
@@ -38,16 +38,16 @@ def record(connection, source_id: str) -> dict:
         "SELECT id, sha256, byte_length, format, origin, locator FROM originals WHERE source_id=? ORDER BY id",
         (source_id,))]
     result['limitations'] = languages.limitations(result['metadata'])
-    for original in connection.execute("SELECT definitions_json FROM originals WHERE source_id=? AND origin LIKE 'import-%'", (source_id,)):
+    for original in connection.execute("SELECT definitions_json FROM originals WHERE source_id=? AND (origin LIKE 'import-%' OR (origin='add' AND format='csljson'))", (source_id,)):
         for limitation in json.loads(original[0]).get('limitations', []):
             paths = [row['canonical_path'] for row in REGISTRY['rows'] if row['input_format']=='bib' and row['source_field']==limitation['field']]
             if paths and any(path in result['corrected_fields'] for path in paths):
                 continue
             if limitation not in result['limitations']:
                 result['limitations'].append(limitation)
-    from refs.adapters.bibtex import preserved_fields
-    raw_entries = connection.execute("SELECT DISTINCT raw_bytes FROM originals WHERE source_id=? AND format='bib' AND instr(lower(CAST(raw_bytes AS TEXT)), 'howpublished')>0", (source_id,))
-    preserved = {field for raw, in raw_entries for field in preserved_fields(raw)}
+    from refs.adapters.bibtex import original_facts
+    raw_entries = connection.execute("SELECT DISTINCT raw_bytes FROM originals WHERE source_id=? AND format='bib'", (source_id,))
+    preserved = {'howpublished' for raw, in raw_entries for entry in original_facts(raw) if entry['howpublished']}
     for field in sorted(preserved):
         if not any(item['field'] == field for item in result['limitations']):
             result['limitations'].append(dict(field=field, reason=f'Preserved from import: {field}'))
@@ -83,6 +83,16 @@ def bindings(source: SourceCreate) -> list[tuple[str, str, str]]:
     ))
 
 
+def allocate_key(connection, source: SourceCreate, policy: dict | None = None) -> dict:
+    if source.citation_key is not None:
+        return dict(origin='supplied', policy=None, table_version=None, unicode_version=None)
+    base, index = naming.key(source.canonical(), policy), 0
+    while connection.execute('SELECT 1 FROM sources WHERE citation_key=?', (base + naming.suffix(index),)).fetchone():
+        index += 1
+    source.citation_key = SourceCreate.valid_key(base + naming.suffix(index))
+    return naming.provenance(policy)
+
+
 def add(catalog: Path, raw: bytes, locator: str, **options) -> dict:
     result = _add(catalog,raw,locator,**options)
     if result['outcome'] == 'needs_attention':
@@ -92,7 +102,7 @@ def add(catalog: Path, raw: bytes, locator: str, **options) -> dict:
 
 def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_run: bool = False, policy: dict | None = None, loc: str | None = None) -> dict:
     from refs.adapters import csl
-    source = csl.parse(raw) if format == "csljson" else parse(raw)
+    source, limitations = csl.parse(raw, with_limitations=True) if format == "csljson" else (parse(raw), [])
     normalized, warnings = naming.normalize(source.canonical(),policy)
     source = SourceCreate.model_validate(normalized)
     with connect(catalog, write=not dry_run) as connection:
@@ -106,11 +116,11 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
             raise
         if existing:
             if not dry_run and not connection.execute('SELECT 1 FROM originals WHERE source_id=? AND sha256=?', (existing,hashlib.sha256(raw).hexdigest())).fetchone():
-                preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key})
+                preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key,'limitations':limitations})
             current = record(connection,existing)
             if binding['conflicts']:
                 if not dry_run:
-                    original = preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key})
+                    original = preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key,'limitations':limitations})
                     save_add_conflict(connection,raw,locator,dict(status='conflict',source_id=existing,citation_key=current['citation_key'],binding=binding,conflicts=[item['path'] for item in binding['conflicts']],incoming=source.canonical(),original_ref=original))
                 return current | dict(outcome='needs_attention', binding=binding, warnings=warnings, dry_run=dry_run)
             current = set_loc(connection, current, loc, dry_run=dry_run)
@@ -119,23 +129,16 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
             "SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json, '$.title'))=lower(?)",
             (source.metadata.title,))]
         if likely:
-            warnings.append(dict(code="likely_match", message="Similar title found; created separately because title alone is not identity", path=None, details={"candidates": likely}, retryable=False))
-        key_provenance = {"origin": "supplied", "policy": None, "table_version": None, "unicode_version": None}
-        if source.citation_key is None:
-            base = naming.key(source.canonical(),policy)
-            index = 0
-            while connection.execute("SELECT 1 FROM sources WHERE citation_key=?", (base + naming.suffix(index),)).fetchone():
-                index += 1
-            source.citation_key = SourceCreate.valid_key(base + naming.suffix(index))
-            key_provenance = naming.provenance(policy)
+            warnings.append(notice('likely_match', 'Similar title found; created separately because title alone is not identity', details={'candidates': likely}))
+        key_provenance = allocate_key(connection, source, policy)
         if dry_run:
             if loc is not None and source.loc is None:
                 source.loc = loc
             return dict(dry_run=True, outcome="created", id=None, citation_key=source.citation_key,
-                        record=source.canonical(), key_provenance=key_provenance, warnings=warnings)
+                        record=source.canonical(), key_provenance=key_provenance, warnings=warnings, limitations=limitations)
         if loc is not None and source.loc is None:
             source.loc = loc
-        return insert_source(connection, source, raw, locator, format=format, warnings=warnings, key_provenance=key_provenance)
+        return insert_source(connection, source, raw, locator, format=format, warnings=warnings, key_provenance=key_provenance, limitations=limitations)
 
 
 def set_loc(connection, current: dict, loc: str | None, *, dry_run: bool = False) -> dict:
@@ -147,7 +150,7 @@ def set_loc(connection, current: dict, loc: str | None, *, dry_run: bool = False
     return store_record(connection, current, revalidate(canonical), current['corrected_fields'])
 
 
-def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *, format: str, warnings: list, key_provenance: dict) -> dict:
+def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *, format: str, warnings: list, key_provenance: dict, limitations: list | None = None) -> dict:
     fingerprint = hashlib.sha256(raw).hexdigest()
     source_id = str(uuid4())
     now = datetime.now(UTC).isoformat()
@@ -168,8 +171,8 @@ def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *,
             raise RefError('key_conflict','Citation key is already reserved') from exc
         raise
     connection.execute(
-        "INSERT INTO originals (id, source_id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator) VALUES (?, ?, ?, ?, ?, ?, 'add', ?, ?)",
-        (str(uuid4()), source_id, raw, fingerprint, len(raw), format, fingerprint, locator))
+        "INSERT INTO originals (id, source_id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator, definitions_json) VALUES (?, ?, ?, ?, ?, ?, 'add', ?, ?, ?)",
+        (str(uuid4()), source_id, raw, fingerprint, len(raw), format, fingerprint, locator, json.dumps({'limitations':limitations or []})))
     for binding in bindings(source):
         connection.execute("INSERT INTO origin_identities VALUES (?, ?, ?, ?, ?)", (*binding, source_id, fingerprint))
     refresh(connection, record(connection, source_id))
@@ -265,7 +268,7 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
             canonical, warnings = naming.normalize(canonical,policy,title_fields)
             if dropped_terms:
                 names = ', '.join(f'{field}: {term}' for field, term in dropped_terms)
-                warnings.append(dict(code='protected_terms_dropped', message=f'Protected terms no longer in the edited title were dropped: {names}', path='title_protection', details={'terms':[{'field':field,'term':term} for field,term in dropped_terms]}, retryable=False))
+                warnings.append(notice('protected_terms_dropped', f'Protected terms no longer in the edited title were dropped: {names}', path='title_protection', details={'terms':[{'field':field,'term':term} for field,term in dropped_terms]}))
             canonical = revalidate(canonical)
         except ValidationError as exc:
             raise RefError('invalid_patch', 'Patch does not match the supported record profile', 2, details={'issues':exc.errors(include_url=False,include_context=False,include_input=False)}) from exc
@@ -297,7 +300,7 @@ def change_identity(catalog: Path, reference: str, revision: int | None, *, new_
             if occupied:
                 raise RefError('key_conflict', 'Citation key is already reserved')
             field, value = 'citation_key', new_key
-            warnings = [{'code': 'external_citations_unchanged', 'message': 'External citations are not rewritten', 'path': None, 'details': {}, 'retryable': False}]
+            warnings = [notice('external_citations_unchanged', 'External citations are not rewritten')]
         else:
             field, value = 'state', state
         if current[field] == value:

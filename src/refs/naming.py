@@ -9,7 +9,7 @@ from importlib.resources import files
 from pathlib import Path
 
 from refs import languages
-from refs.results import RefError
+from refs.results import RefError, notice
 
 LATIN_BYTES = files('refs').joinpath('data/creator-latin-v1.json').read_bytes()
 LATIN = json.loads(LATIN_BYTES)
@@ -78,16 +78,16 @@ def normalize(record: dict, policy: dict | None = None, fields: set[str] | None 
         protection['protected_terms'] = list(dict.fromkeys(protection.get('protected_terms', []) + acronyms + [term for term in policy.get('titles',{}).get('protected_terms',GLOBAL_TERMS) if protected_spans(text, [term])]))
         for term in protection['protected_terms']:
             if not protected_spans(text, [term]):
-                warnings.append({'code': 'protected_term_missing', 'message': f'Protected term is absent: {term}', 'path': f'metadata.{field}', 'details': {}, 'retryable': False})
+                warnings.append(notice('protected_term_missing', f'Protected term is absent: {term}', path=f'metadata.{field}'))
         language = (languages.tag(metadata.get('language', '')) or '').lower()
         if not language and any(char.isalpha() and not char.isascii() for char in text):
-            warnings.append({'code': 'title_language_unknown_or_nonenglish', 'message': 'Title language is unknown; spelling retained', 'path': f'metadata.{field}', 'details': {}, 'retryable': False})
+            warnings.append(notice('title_language_unknown_or_nonenglish', 'Title language is unknown; spelling retained', path=f'metadata.{field}'))
             continue
         if language and not language.startswith('en'):
             continue
         spans = protected_spans(text, protection['protected_terms'])
         if not protection.get('preserve_case') and (shouted or any(any(char.isupper() for char in match.group()[1:]) and not any(a <= match.start() and match.end() <= b for a, b in spans) for match in re.finditer(r'\w+', text))):
-            warnings.append({'code': 'unprotected_capital', 'message': 'Review unprotected internal capitals', 'path': f'metadata.{field}', 'details': {}, 'retryable': False})
+            warnings.append(notice('unprotected_capital', 'Review unprotected internal capitals', path=f'metadata.{field}'))
         main = record.get('title_parts', {}).get('main_title') if field == 'title' else None
         metadata[field] = title_case(text, protection, len(unicodedata.normalize('NFC', main)) if main else None,policy.get('titles',{}).get('minor_words'))
         if main:
@@ -152,11 +152,11 @@ def edition_display(value: int | str) -> str:
     return value
 
 
-def filename(record: dict, original: str, label: str | None = None) -> str:
+def filename(record: dict, original: str, label: str | None = None, *, report_fallback: bool = False):
     year = issued_year(record)
     words = re.findall(r'[^\W_]+', short_title(record))
     if year == 'ND' or not words:
-        return original
+        return (original, True) if report_fallback else original
     name = ''.join(word[0].upper() + word[1:] for word in words)
     edition = record['metadata'].get('edition')
     version = record['metadata'].get('version')
@@ -165,4 +165,5 @@ def filename(record: dict, original: str, label: str | None = None) -> str:
     elif version:
         name += '-v' + re.sub(r'[^\w.-]', '', version.removeprefix('v'))
     slug = ''.join(char for char in label or '' if char.isalpha() or char.isdigit() or char in '.-')
-    return f'{name}-{year}' + (f'-{slug}' if slug else '') + Path(original).suffix
+    result = f'{name}-{year}' + (f'-{slug}' if slug else '') + Path(original).suffix
+    return (result, False) if report_fallback else result

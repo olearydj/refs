@@ -11,6 +11,11 @@ def test_labelled_releases_and_collision(initialized,tmp_path):
         incoming.write_bytes(label.encode())
         result=initialized('resource','add','git','--path',incoming,'--copy','--label',label)['data']
         assert result['relative']==f'unfiled/BoostYourGitDX-2023-{label}.pdf'
+    duplicate=initialized('resource','add','git','--path',incoming,'--copy','--label','r2023-10-04')
+    assert duplicate['data']['copied'] is False
+    assert duplicate['data']['duplicate_resource_id']==result['id']
+    assert duplicate['warnings'][0]['code']=='duplicate_attachment'
+    incoming.write_bytes(b'different release')
     failed=initialized('resource','add','git','--path',incoming,'--copy','--label','r2023-10-04',expected=3)
     assert failed['errors'][0]['code']=='destination_exists'
     assert naming.filename(value,'download.pdf')=='BoostYourGitDX-2023.pdf'

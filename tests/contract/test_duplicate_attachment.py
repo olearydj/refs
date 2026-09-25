@@ -3,6 +3,22 @@ import json
 from refs import sources
 
 
+def test_duplicate_content_is_skipped_by_move_and_add_copy(initialized,tmp_path,reference_path):
+    source = initialized('add','--format','refs','--input',reference_path)['data']
+    linked_path = tmp_path / 'linked.pdf'
+    incoming = tmp_path / 'incoming.pdf'
+    linked_path.write_bytes(b'same attachment')
+    incoming.write_bytes(b'same attachment')
+    linked = initialized('resource','add',source['id'],'--path',linked_path)['data']
+    move = initialized('resource','add',source['id'],'--path',incoming,'--move')['data']
+    assert move['moved'] is False and move['duplicate_resource_id'] == linked['id']
+    added = initialized('add','--format','refs','--input',reference_path,'--file',incoming,'--copy')['data']
+    assert added['file_action']['duplicate_resource_id'] == linked['id']
+    assert incoming.read_bytes() == b'same attachment'
+    assert not list((tmp_path / 'lib').rglob('*.pdf'))
+
+
+
 def test_copy_warns_without_writes_for_linked_duplicate(initialized,tmp_path):
     source=sources.add(tmp_path/'cat',json.dumps({'schema_version':'1.0','citation_key':'attention','metadata':{'type':'article','title':'Attention Is All You Need'}}).encode(),'synthetic.json')
     box=tmp_path/'box-linked.pdf'

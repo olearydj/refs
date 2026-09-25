@@ -43,6 +43,11 @@ def test_titles_and_filenames():
     assert naming.edition_display(2) == '2nd ed.'
 
 
+def test_filename_reports_its_own_fallback():
+    assert naming.filename(record(issued={}), 'download.pdf', report_fallback=True) == ('download.pdf', True)
+    assert naming.filename(record(title='Practical Vim', issued={'date-parts': [[2015]]}), 'download.pdf', report_fallback=True) == ('PracticalVim-2015.pdf', False)
+
+
 @pytest.mark.parametrize('text, language, expected, warns', [
     ('learning from examples', None, 'Learning From Examples', False),
     ('études françaises', None, 'études françaises', True),

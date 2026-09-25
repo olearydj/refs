@@ -11,8 +11,15 @@ from pydantic import ValidationError
 
 from refs import files, languages, models, projects, sources
 from refs.catalog import changed, connect
-from refs.models import doi_arxiv, normalize_arxiv, normalize_doi
-from refs.results import RefError
+from refs.models import (
+    IDENTIFIER_FIELDS,
+    MONTHS,
+    doi_arxiv,
+    normalize_arxiv,
+    normalize_doi,
+    person_name,
+)
+from refs.results import RefError, notice
 
 PROFILE = "portable-bibtex-v1"
 PROFILE_FINGERPRINT = files.digest(PROFILE.encode())
@@ -41,10 +48,7 @@ def title(value: str, protection: dict) -> str:
 
 
 def warning(key: str, code: str, message: str, **details) -> dict:
-    return dict(code=code, message=message, path=None, details={"citation_key": key, **details}, retryable=False)
-
-
-MONTHS = 'jan feb mar apr may jun jul aug sep oct nov dec'.split()
+    return notice(code, message, details={"citation_key": key, **details})
 
 
 def enforce_losses(losses: list[dict], *, allow_unknown: bool = False) -> None:
@@ -95,8 +99,8 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             if kind in ('webpage', 'post-weblog'):
                 message += '; Pandoc may change title quotation marks and emphasis for this portable type'
             assess('type_fallback', 'documented_fallback', message, 'metadata.type')
-        for notice in record.get('_projection_notices', []):
-            assess(notice['code'], 'info' if notice['code'] == 'title_protection_added' else 'documented_fallback', notice['message'], notice['path'])
+        for item in record.get('_projection_notices', []):
+            assess(item['code'], 'info' if item['code'] == 'title_protection_added' else 'documented_fallback', item['message'], item['path'])
         for limitation in record.get('limitations', []):
             if limitation['field']=='language' or limitation['reason'].startswith('Preserved from import:'):
                 continue
@@ -136,7 +140,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                     continue
                 if any(name.get(flag) for flag in ('static-ordering', 'comma-suffix', 'parse-names')):
                     assess('name_projection_unassessed', 'unknown', 'Consumer handling of this name flag is unassessed', 'metadata.' + role)
-                family = ' '.join(name[part] for part in ('dropping-particle', 'non-dropping-particle', 'family') if name.get(part))
+                family = person_name(name, ('dropping-particle', 'non-dropping-particle', 'family'))
                 if not family:
                     assess('given_only_name', 'unknown', 'Given-only personal names have unassessed citation behavior', 'metadata.' + role)
                     family = name.get('given', '')
@@ -196,7 +200,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                 start, end = issued['date-parts']
                 put('year', start[0])
                 if len(start)>1 and len(end)>1 and start[1]==end[1]:
-                    put('month', MONTHS[start[1]-1], literal=True)
+                    put('month', MONTHS[start[1]-1][0], literal=True)
                 interval = '/'.join('-'.join([str(part[0]), *[f'{n:02d}' for n in part[1:]]]) for part in (start,end))
                 assess('date_range_projected', 'documented_fallback', f'Issued range {interval} projects to its start year and shared month; full precision remains in the catalog', 'metadata.issued')
             elif not issued.get('date-parts') or len(issued['date-parts']) != 1 or any(issued.get(name) for name in ('literal', 'circa', 'season')):
@@ -205,7 +209,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                 parts = issued['date-parts'][0]
                 put('year', parts[0])
                 if len(parts) > 1:
-                    put('month', MONTHS[parts[1]-1], literal=True)
+                    put('month', MONTHS[parts[1]-1][0], literal=True)
                 if len(parts) > 2:
                     iso = '-'.join([str(parts[0]), *[f'{number:02d}' for number in parts[1:]]])
                     put('date', iso)
@@ -269,7 +273,8 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                 if field in metadata:
                     notes.append(label + ': ' + str(metadata[field]))
                     assess('field_in_note', 'info', f'{field} is retained in note', 'metadata.' + field)
-            for source, target in [('DOI', 'doi'), ('URL', 'url'), ('ISBN', 'isbn'), ('ISSN', 'issn'), ('PMID', 'pmid'), ('PMCID', 'pmcid')]:
+            for source in IDENTIFIER_FIELDS:
+                target = source.lower()
                 used.add(source)
                 if source not in metadata:
                     continue
@@ -316,7 +321,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                     for member in extension:
                         if member == 'assignees':
                             names = extension[member]
-                            labels = [name.get('literal') or ' '.join(name[part] for part in ('given','dropping-particle','non-dropping-particle','family','suffix') if name.get(part)) for name in names]
+                            labels = [name.get('literal') or person_name(name) for name in names]
                             notes.append('Assignee: ' + '; '.join(labels))
                             assess('assignee_in_note', 'info', 'Patent assignees are retained in note, separately from inventors', 'extensions.patent.assignees')
                             continue
@@ -340,22 +345,17 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
 
 def preserved_bib_fields(connection, record: dict) -> dict:
     """Only unmodeled howpublished comes from original bytes, never modeled facts."""
-    import bibtexparser
-
-    from refs.adapters.bibtex import decode
+    from refs.adapters.bibtex import decode, original_facts
     values, notices = set(), []
     for row in connection.execute("SELECT raw_bytes FROM originals WHERE source_id=? AND format='bib'", (record['id'],)):
-        library = bibtexparser.parse_string(row[0].decode('utf-8'))
-        for entry in library.entries:
-            if entry.entry_type.lower() != record.get('native_type', {}).get('value'):
+        for entry in original_facts(row[0]):
+            if entry['type'] != record.get('native_type', {}).get('value'):
                 continue
-            values.update(field.value for field in entry.fields if field.key.lower() == 'howpublished')
-            for field in entry.fields:
-                name, raw = field.key.lower(), field.value
-                if name in ('author', 'editor', 'publisher', 'institution', 'school') and re.search(r'\\relax|\\[uvH]\s*\{?\s*\\i', raw):
-                    notice = dict(code='tex_decoded', path=name, message=f'TeX relax or a dotless-i accent in {name} was decoded to Unicode; Pandoc may render the original spelling differently')
-                    if notice not in notices:
-                        notices.append(notice)
+            values.update(entry['howpublished'])
+            for item in entry['tex_notices']:
+                if item not in notices:
+                    notices.append(item)
+            for name, raw in entry['containers']:
                 canonical = {'journal':'container-title', 'journaltitle':'container-title', 'booktitle':'container-title'}.get(name)
                 if canonical:
                     try:
@@ -364,10 +364,10 @@ def preserved_bib_fields(connection, record: dict) -> dict:
                         continue
                     if before != record['metadata'].get(canonical) and before.casefold() == record['metadata'].get(canonical, '').casefold():
                         notices.append(dict(code='container_title_case', path='metadata.'+canonical, message='Container title follows the catalog Title Case convention; verify proper-name capitalization'))
-                if name == 'title':
-                    terms = record.get('title_protection', {}).get('title', {}).get('protected_terms', [])
-                    if 'R' in terms and '{R}' not in raw:
-                        notices.append(dict(code='title_protection_added', path='metadata.title', message='The programming-language name R is protected from citation-style lowercasing'))
+            terms = record.get('title_protection', {}).get('title', {}).get('protected_terms', [])
+            for raw in entry['titles']:
+                if 'R' in terms and '{R}' not in raw:
+                    notices.append(dict(code='title_protection_added', path='metadata.title', message='The programming-language name R is protected from citation-style lowercasing'))
     if len(values) > 1:
         raise RefError('export_blocked', 'Original howpublished values disagree; inspect the preserved entries', details={'entries':[dict(citation_key=record['citation_key'], code='work_identity_changed', message='Conflicting original howpublished values', **{'class':'blocking'})]})
     return {'_projection_notices': list({(notice['code'], notice['path']): notice for notice in notices}.values())} | ({'_howpublished': next(iter(values))} if values else {})
