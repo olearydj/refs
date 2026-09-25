@@ -222,7 +222,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         if isinstance(exc, ValidationError):
             message = f'Entry at byte {block["start"]}: citation key is empty' if re.match(rb'@\w+\s*[{(]\s*,', raw) else 'Entry cannot satisfy the record profile; inspect its preserved original'
             exc = RefError('invalid_bib_entry', message, 2)
-        conflict = exc.issue['code'] in ('identity_conflict', 'source_removed', 'likely_match')
+        conflict = exc.issue['code'] in ('identity_conflict', 'source_removed', 'likely_match', 'alias_conflict')
         outcome = dict(outcome='conflict' if conflict else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'], limitations=exc.issue['details'].get('limitations', []))
     outcome['incoming'] = incoming
     outcome['citation_key'] = key

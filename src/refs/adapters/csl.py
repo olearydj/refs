@@ -4,11 +4,11 @@ import json
 
 from pydantic import ValidationError
 
-from refs.models import Metadata, SourceCreate
+from refs.models import Metadata, SourceCreate, assign_path, portable_url
 from refs.results import RefError
 
 
-def parse(raw: bytes) -> SourceCreate:
+def parse(raw: bytes, *, with_limitations: bool = False):
     try:
         metadata = json.loads(raw)
         if isinstance(metadata, list) and len(metadata) == 1:
@@ -20,15 +20,18 @@ def parse(raw: bytes) -> SourceCreate:
             raise ValueError('CSL id must be a string or integer')
         for alias, canonical in [('shortTitle', 'title-short'), ('journalAbbreviation', 'container-title-short'), ('event', 'event-title')]:
             if alias in metadata:
-                if canonical in metadata and metadata[canonical] != metadata[alias]:
-                    raise ValueError(f'Conflicting aliases for {canonical}')
-                metadata[canonical] = metadata.pop(alias)
+                assign_path(metadata, canonical, metadata.pop(alias))
         fields = {field.alias or name for name, field in Metadata.model_fields.items()}
+        limitations = [dict(field=key, reason=f'Preserved from import: {key}') for key in metadata if key not in fields]
+        if 'URL' in metadata and not portable_url(metadata['URL']):
+            limitations.append(dict(field='URL', reason='Non-HTTP(S) or relative URL preserved verbatim; supply an absolute URL to use it'))
+            metadata.pop('URL')
         metadata = {key: value for key, value in metadata.items() if key in fields}
         provenance = {'origin': 'import', 'access': 'unknown'}
         if external_id is not None:
             provenance['source_identity'] = {'namespace': 'csljson', 'item_key': str(external_id)}
-        return SourceCreate.model_validate({'schema_version': '1.0', 'metadata': metadata, 'provenance': [provenance]})
+        source = SourceCreate.model_validate({'schema_version': '1.0', 'metadata': metadata, 'provenance': [provenance]})
+        return (source, limitations) if with_limitations else source
     except ValidationError as exc:
         raise RefError('invalid_record', 'Input does not match the supported record profile', 2, details={'issues':exc.errors(include_url=False,include_context=False,include_input=False)}) from exc
     except ValueError as exc:

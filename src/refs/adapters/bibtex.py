@@ -2,14 +2,13 @@
 
 import logging
 import re
-from urllib.parse import urlparse
 
 import bibtexparser
 from bibtexparser.model import Entry
 from pydantic import ValidationError
 from pylatexenc.latex2text import LatexNodes2Text
 
-from refs.models import REGISTRY, SourceCreate
+from refs.models import REGISTRY, SourceCreate, assign_path, portable_url
 from refs.results import RefError
 
 # The parser reports malformed blocks through logging before returning failed_blocks.
@@ -195,15 +194,6 @@ def parse(raw: bytes) -> dict:
             limitations.append(dict(field=field, reason='Unresolved macro or concatenation'))
         traditional = kind == 'inbook' and 'booktitle' not in fields and ('chapter' in fields or 'pages' in fields)
 
-        def assign(path, incoming):
-            target: dict = value
-            parts = path.split('.')
-            for part in parts[:-1]:
-                target = target.setdefault(part, {})
-            if parts[-1] in target and target[parts[-1]] != incoming:
-                raise ValueError(f'Conflicting aliases for {path}')
-            target[parts[-1]] = incoming
-
         for row in REGISTRY['rows']:
             field = row['source_field']
             if row['input_format'] != 'bib' or kind not in row['type_scope'] or field not in fields:
@@ -225,7 +215,7 @@ def parse(raw: bytes) -> dict:
                 if field in ('author', 'editor', 'translator', 'bookauthor', 'holder'):
                     incoming = names(contents)
                 elif field in ('doi', 'url'):
-                    if field == 'url' and (urlparse(contents).scheme not in ('http', 'https') or not urlparse(contents).netloc):
+                    if field == 'url' and not portable_url(contents):
                         limitations.append(dict(field='url', reason='Non-HTTP(S) or relative URL preserved verbatim; supply an absolute URL to use it'))
                         continue
                     incoming = contents
@@ -238,14 +228,14 @@ def parse(raw: bytes) -> dict:
                     if field in ('language', 'langid'):
                         from refs.languages import normalize
                         incoming = normalize(incoming)
-                assign(path, incoming)
+                assign_path(value, path, incoming)
                 if 'title' in path:
                     protection_text = re.sub(r'\\(?:[A-Za-z]+|[^A-Za-z])\s*\{[^{}]*\}', '', contents)
                     terms = [decode(group) for group in re.findall(r'(?<![\\\w])\{([^{}]+)\}', protection_text) if not group.startswith('\\')]
                     if terms:
                         protection[path[9:]] = dict(protected_terms=terms, preserve_case=contents.startswith('{') and contents.endswith('}') and decode(contents) in terms)
             except ValueError as exc:
-                if field in ('author', 'editor', 'translator', 'bookauthor', 'holder') or str(exc).startswith('Conflicting aliases'):
+                if field in ('author', 'editor', 'translator', 'bookauthor', 'holder'):
                     raise
                 limitations.append(dict(field=field, reason=str(exc)))
         for field in set(fields) - consumed:

@@ -4,11 +4,10 @@ import json
 import html
 import re
 from pathlib import Path
-from urllib.parse import urlparse
 
 from pydantic import ValidationError
 
-from refs.models import REGISTRY, Date, SourceCreate, normalize_arxiv, normalize_doi
+from refs.models import REGISTRY, Date, SourceCreate, assign_path, portable_url
 from refs.results import RefError
 
 CHILDREN = {'attachment', 'note', 'annotation'}
@@ -109,19 +108,6 @@ def read(directory: Path) -> dict:
         raise RefError('invalid_zotero_input', f'Inspect the Zotero JSON directory: {exc}', 2) from exc
 
 
-def assign(target: dict, path: str, value) -> None:
-    if path == 'metadata.DOI':
-        value = normalize_doi(value)
-    elif path == 'extensions.identifiers.arxiv':
-        value = normalize_arxiv(value)
-    parts = path.split('.')
-    for part in parts[:-1]:
-        target = target.setdefault(part, {})
-    if parts[-1] in target and target[parts[-1]] != value:
-        raise RefError('alias_conflict', f'Competing values for {path}; inspect the original item', 3)
-    target[parts[-1]] = value
-
-
 def date_range(value: str) -> dict | None:
     """Read explicit endpoints before considering Zotero's parsed start date."""
     parts = None
@@ -202,10 +188,10 @@ def parse(item: dict, manifest: dict) -> dict:
                     limitations.append(dict(field=field,reason='Date retained literally; verify its precision'))
             elif field == 'assignee':
                 value = [{'literal': value}]
-            elif field == 'url' and (urlparse(value).scheme not in ('http', 'https') or not urlparse(value).netloc):
+            elif field == 'url' and not portable_url(value):
                 path = None
         if path:
-            assign(source, path, value)
+            assign_path(source, path, value)
         else:
             limitations.append(dict(field=field, reason=f'Preserved from import: {field}'))
     for creator in data.get('creators', []):
@@ -224,7 +210,7 @@ def parse(item: dict, manifest: dict) -> dict:
                 raise RefError('alias_conflict', 'Conflicting Citation Key lines; inspect Extra', 3)
             extra_key = value
         elif separator and label in SCHEMES and value:
-            assign(source, SCHEMES[label], value)
+            assign_path(source, SCHEMES[label], value)
         elif line.strip() and not any(entry['field'] == 'extra' for entry in limitations):
             limitations.append(dict(field='extra', reason='Preserved from import: extra'))
     key = data.get('citationKey') or extra_key or manifest.get('legacy_keys', {}).get(item['key'])

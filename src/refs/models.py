@@ -35,6 +35,26 @@ def normalize_arxiv(value: str) -> str:
     return re.sub(r'\s*\[[^\]]+\]\s*$','',value).strip()
 
 
+def portable_url(value: object) -> bool:
+    if not isinstance(value, str):
+        return False
+    parsed = urlparse(value)
+    return parsed.scheme in ('http', 'https') and bool(parsed.netloc)
+
+
+def assign_path(target: dict, path: str, value) -> None:
+    if path == 'metadata.DOI':
+        value = normalize_doi(value)
+    elif path == 'extensions.identifiers.arxiv':
+        value = normalize_arxiv(value)
+    parts = path.split('.')
+    for part in parts[:-1]:
+        target = target.setdefault(part, {})
+    if parts[-1] in target and target[parts[-1]] != value:
+        raise RefError('alias_conflict', f'Conflicting aliases for {path}; Competing values in the original item', 3)
+    target[parts[-1]] = value
+
+
 def doi_arxiv(value: str) -> str | None:
     doi = normalize_doi(value)
     return normalize_arxiv(doi[len('10.48550/arxiv.'):]) if doi.startswith('10.48550/arxiv.') else None
@@ -126,8 +146,7 @@ class MetadataBase(StrictModel):
         if isinstance(value.get("edition"), float):
             value["edition"] = int(value["edition"])
         if "URL" in value:
-            url = urlparse(value["URL"]) if isinstance(value["URL"], str) else None
-            if url is None or url.scheme not in ("http", "https") or not url.netloc:
+            if not portable_url(value["URL"]):
                 raise ValueError("URL must be absolute HTTP(S)")
         if not value.get("title") and not value.get("URL") and not (kind == "chapter" and value.get("container-title") and (value.get("page") or value.get("chapter-number"))):
             raise ValueError("A source needs a title, URL or identified traditional book part")

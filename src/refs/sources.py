@@ -38,7 +38,7 @@ def record(connection, source_id: str) -> dict:
         "SELECT id, sha256, byte_length, format, origin, locator FROM originals WHERE source_id=? ORDER BY id",
         (source_id,))]
     result['limitations'] = languages.limitations(result['metadata'])
-    for original in connection.execute("SELECT definitions_json FROM originals WHERE source_id=? AND origin LIKE 'import-%'", (source_id,)):
+    for original in connection.execute("SELECT definitions_json FROM originals WHERE source_id=? AND (origin LIKE 'import-%' OR (origin='add' AND format='csljson'))", (source_id,)):
         for limitation in json.loads(original[0]).get('limitations', []):
             paths = [row['canonical_path'] for row in REGISTRY['rows'] if row['input_format']=='bib' and row['source_field']==limitation['field']]
             if paths and any(path in result['corrected_fields'] for path in paths):
@@ -92,7 +92,7 @@ def add(catalog: Path, raw: bytes, locator: str, **options) -> dict:
 
 def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_run: bool = False, policy: dict | None = None, loc: str | None = None) -> dict:
     from refs.adapters import csl
-    source = csl.parse(raw) if format == "csljson" else parse(raw)
+    source, limitations = csl.parse(raw, with_limitations=True) if format == "csljson" else (parse(raw), [])
     normalized, warnings = naming.normalize(source.canonical(),policy)
     source = SourceCreate.model_validate(normalized)
     with connect(catalog, write=not dry_run) as connection:
@@ -106,11 +106,11 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
             raise
         if existing:
             if not dry_run and not connection.execute('SELECT 1 FROM originals WHERE source_id=? AND sha256=?', (existing,hashlib.sha256(raw).hexdigest())).fetchone():
-                preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key})
+                preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key,'limitations':limitations})
             current = record(connection,existing)
             if binding['conflicts']:
                 if not dry_run:
-                    original = preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key})
+                    original = preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key,'limitations':limitations})
                     save_add_conflict(connection,raw,locator,dict(status='conflict',source_id=existing,citation_key=current['citation_key'],binding=binding,conflicts=[item['path'] for item in binding['conflicts']],incoming=source.canonical(),original_ref=original))
                 return current | dict(outcome='needs_attention', binding=binding, warnings=warnings, dry_run=dry_run)
             current = set_loc(connection, current, loc, dry_run=dry_run)
@@ -132,10 +132,10 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
             if loc is not None and source.loc is None:
                 source.loc = loc
             return dict(dry_run=True, outcome="created", id=None, citation_key=source.citation_key,
-                        record=source.canonical(), key_provenance=key_provenance, warnings=warnings)
+                        record=source.canonical(), key_provenance=key_provenance, warnings=warnings, limitations=limitations)
         if loc is not None and source.loc is None:
             source.loc = loc
-        return insert_source(connection, source, raw, locator, format=format, warnings=warnings, key_provenance=key_provenance)
+        return insert_source(connection, source, raw, locator, format=format, warnings=warnings, key_provenance=key_provenance, limitations=limitations)
 
 
 def set_loc(connection, current: dict, loc: str | None, *, dry_run: bool = False) -> dict:
@@ -147,7 +147,7 @@ def set_loc(connection, current: dict, loc: str | None, *, dry_run: bool = False
     return store_record(connection, current, revalidate(canonical), current['corrected_fields'])
 
 
-def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *, format: str, warnings: list, key_provenance: dict) -> dict:
+def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *, format: str, warnings: list, key_provenance: dict, limitations: list | None = None) -> dict:
     fingerprint = hashlib.sha256(raw).hexdigest()
     source_id = str(uuid4())
     now = datetime.now(UTC).isoformat()
@@ -168,8 +168,8 @@ def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *,
             raise RefError('key_conflict','Citation key is already reserved') from exc
         raise
     connection.execute(
-        "INSERT INTO originals (id, source_id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator) VALUES (?, ?, ?, ?, ?, ?, 'add', ?, ?)",
-        (str(uuid4()), source_id, raw, fingerprint, len(raw), format, fingerprint, locator))
+        "INSERT INTO originals (id, source_id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator, definitions_json) VALUES (?, ?, ?, ?, ?, ?, 'add', ?, ?, ?)",
+        (str(uuid4()), source_id, raw, fingerprint, len(raw), format, fingerprint, locator, json.dumps({'limitations':limitations or []})))
     for binding in bindings(source):
         connection.execute("INSERT INTO origin_identities VALUES (?, ?, ?, ?, ?)", (*binding, source_id, fingerprint))
     refresh(connection, record(connection, source_id))
