@@ -322,18 +322,35 @@ def selection(settings, reference=None, loc=None):
     pending=[row for row in unfinished if selected(records.get(by_resource.get(row['resource_id'],{}).get('source_id'),{}),row['loc'])]
     reserved={row['new_path'].casefold() for row in unfinished}
     busy={row['resource_id'] for row in unfinished}
+    paths={item['id']:resources.resolve_path(settings,item) for item in items}
+    by_path={}
+    by_file={}
+    for resource_id,path in paths.items():
+        by_path.setdefault(str(path.resolve()),set()).add(resource_id)
+        try:
+            stat=path.stat()
+        except FileNotFoundError:
+            continue
+        by_file.setdefault((stat.st_dev,stat.st_ino),set()).add(resource_id)
     planned=[]
     for item in sorted(items,key=lambda item:(item['root']!='library',item['id'])):
         source=records[item['source_id']]
         if item['id'] in busy or source['state']!='active' or not source['loc'] or not selected(source):
             continue
-        path=resources.resolve_path(settings,item)
+        path=paths[item['id']]
         if item['root']=='library' and unicodedata.normalize('NFC',str(path.parent.relative_to(settings.library))).casefold()==source['loc'].casefold():
             continue
         if settings.library is None or not settings.library.is_dir():
             raise RefError('library_unavailable','Restore the library before reorganizing')
         target=preserved_target(settings.library/source['loc'],path.name,reserved)
-        planned.append(preview_move(item['id'],path,target))
+        entry=preview_move(item['id'],path,target)
+        shared=set(by_path[str(path.resolve())])
+        if path.exists():
+            stat=path.stat()
+            shared.update(by_file[(stat.st_dev,stat.st_ino)])
+        if len(shared)>1:
+            entry.update(state='shared',error='Shared by resources '+', '.join(sorted(shared)))
+        planned.append(entry)
     return pending,planned
 
 
@@ -354,7 +371,7 @@ def reorg(settings, *, reference=None, loc=None, execute=False):
         _,planned=selection(settings,reference,loc)
         for item in planned:
             current=item
-            result['moves'].append(move(settings,item['resource_id'],Path(item['new_path'])))
+            result['moves'].append(item if item['state']=='shared' else move(settings,item['resource_id'],Path(item['new_path'])))
     except RefError as exc:
         result['moves'].extend((exc.data or {}).get('moves',[]) or ([current | dict(state='failed',error=str(exc))] if current else []))
         raise RefError(exc.issue['code'],str(exc),exc.exit_code,data=result,details=exc.issue['details']) from exc
