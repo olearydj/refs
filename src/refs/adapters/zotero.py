@@ -160,6 +160,22 @@ def date(value: str, parsed: str | None = None) -> dict:
     return {'literal': value}
 
 
+def extra_lines(data: dict, source: dict, limitations: list[dict]) -> str | None:
+    extra_key = None
+    for line in data.get('extra', '').splitlines():
+        label, separator, value = line.partition(':')
+        label, value = label.strip().casefold(), value.strip()
+        if separator and label == 'citation key':
+            if extra_key and extra_key != value:
+                raise RefError('alias_conflict', 'Conflicting Citation Key lines; inspect Extra', 3)
+            extra_key = value
+        elif separator and label in SCHEMES and value:
+            assign_path(source, SCHEMES[label], value)
+        elif line.strip() and not any(entry['field'] == 'extra' for entry in limitations):
+            limitations.append(dict(field='extra', reason='Preserved from import: extra'))
+    return extra_key
+
+
 def parse(item: dict, manifest: dict) -> dict:
     data = item['data']
     kind = data['itemType']
@@ -200,18 +216,7 @@ def parse(item: dict, manifest: dict) -> dict:
             raise RefError('unknown_creator_role', f'No assessed mapping for creator role {role}; inspect the preserved item', 2)
         name = {'literal': creator['name']} if creator.get('name') else {target: creator[field] for field, target in [('lastName', 'family'), ('firstName', 'given')] if creator.get(field)}
         source['metadata'].setdefault(path.split('.')[1], []).append(name)
-    extra_key = None
-    for line in data.get('extra', '').splitlines():
-        label, separator, value = line.partition(':')
-        label, value = label.strip().casefold(), value.strip()
-        if separator and label == 'citation key':
-            if extra_key and extra_key != value:
-                raise RefError('alias_conflict', 'Conflicting Citation Key lines; inspect Extra', 3)
-            extra_key = value
-        elif separator and label in SCHEMES and value:
-            assign_path(source, SCHEMES[label], value)
-        elif line.strip() and not any(entry['field'] == 'extra' for entry in limitations):
-            limitations.append(dict(field='extra', reason='Preserved from import: extra'))
+    extra_key = extra_lines(data, source, limitations)
     key = data.get('citationKey') or extra_key or manifest.get('legacy_keys', {}).get(item['key'])
     try:
         validated = SourceCreate.model_validate(source)

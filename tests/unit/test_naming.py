@@ -40,7 +40,7 @@ def test_titles_and_filenames():
     assert naming.short_title(record(title='Main Title: Subtitle') | {'title_parts': {'main_title': 'Main Title'}}) == 'Main Title'
     assert naming.sort_title(record()) == 'turing trap'
     assert naming.sort_title(record() | {'overrides': {'sort_title': 'Chosen'}}) == 'chosen'
-    assert naming.edition_display(2) == '2nd ed.'
+    assert naming.filename(record(title='Practical Vim', edition=3, issued={'date-parts': [[2015]]}), 'download.pdf') == 'PracticalVim-3E-2015.pdf'
 
 
 def test_filename_reports_its_own_fallback():

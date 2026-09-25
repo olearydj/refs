@@ -45,6 +45,28 @@ def identifier(field: str, value: str) -> str:
     return ''.join(char for char in value.casefold() if char.isalnum())
 
 
+def exact_matches(record: dict, query: str) -> tuple[list[dict], bool]:
+    fields = []
+    exact = False
+    key = record['citation_key']
+    metadata = record['metadata']
+    if query == key:
+        fields.insert(0, dict(field='citation_key', origin='catalog', text=query))
+        exact = True
+    elif not any(char.isspace() for char in query) and key.startswith(query):
+        fields.insert(0, dict(field='citation_key', origin='catalog', text=key))
+    for field in (field for field in IDENTIFIER_FIELDS if field != 'URL'):
+        stored = metadata.get(field)
+        if stored and identifier(field, str(stored)) == identifier(field, query):
+            fields.insert(0, dict(field='metadata.' + field, origin='metadata', text=stored))
+            exact = True
+    for scheme, stored in record.get('extensions', {}).get('identifiers', {}).items():
+        if (normalize_arxiv(query) if scheme == 'arxiv' else query) == stored:
+            fields.insert(0, dict(field='extensions.identifiers.' + scheme, origin='metadata', text=stored))
+            exact = True
+    return fields, exact
+
+
 def ordering(record: dict, sort: str, policy: dict | None = None):
     if sort == 'key':
         return (record['citation_key'],)
@@ -75,20 +97,8 @@ def page(connection, query: str | None, *, loc: str | None, project_id: str | No
         fields=list(lexical.get(row['id'],[]))
         exact=False
         if query:
-            if query==row['citation_key']:
-                fields.insert(0,dict(field='citation_key',origin='catalog',text=query))
-                exact=True
-            elif not any(char.isspace() for char in query) and row['citation_key'].startswith(query):
-                fields.insert(0,dict(field='citation_key',origin='catalog',text=row['citation_key']))
-            for field in (field for field in IDENTIFIER_FIELDS if field != 'URL'):
-                stored=metadata.get(field)
-                if stored and identifier(field,str(stored))==identifier(field,query):
-                    fields.insert(0,dict(field='metadata.'+field,origin='metadata',text=stored))
-                    exact=True
-            for scheme,stored in record.get('extensions',{}).get('identifiers',{}).items():
-                if (normalize_arxiv(query) if scheme=='arxiv' else query)==stored:
-                    fields.insert(0,dict(field='extensions.identifiers.'+scheme,origin='metadata',text=stored))
-                    exact=True
+            exact_fields, exact = exact_matches(record, query)
+            fields = exact_fields + fields
             if not fields:
                 continue
         found.append(dict(id=row['id'],revision=row['revision'],matches=fields,exact_match=exact,order=ordering(record,sort,policy)))

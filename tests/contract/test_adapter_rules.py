@@ -2,7 +2,7 @@ import json
 
 from conftest import extracted
 
-from refs.adapters import bibtex, csl, zotero
+from refs.adapters import bibtex, zotero
 from refs.models import portable_url
 
 

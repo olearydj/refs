@@ -9,6 +9,8 @@ import unicodedata
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
+
 from refs.results import RefError
 
 
@@ -133,6 +135,47 @@ def project_path(explicit: str | None, disabled: bool) -> Path | None:
     return next((path/'.refs.toml' for path in candidates if (path/'.refs.toml').is_file()),None)
 
 
+class ConfigTable(BaseModel):
+    model_config = ConfigDict(extra='forbid', strict=True)
+
+
+class KeyTable(ConfigTable):
+    template: str = ''
+    without_creator: str = ''
+    missing_year: str = ''
+    title_words: int = 0
+    stopwords: list[str] = Field(default_factory=list)
+    transliteration_policy: str = ''
+    corporate_aliases: dict[str, str] = Field(default_factory=dict)
+
+
+class TitleTable(ConfigTable):
+    policy: str = ''
+    minor_words: list[str] = Field(default_factory=list)
+    protected_terms: list[str] = Field(default_factory=list)
+
+
+class SortingTable(ConfigTable):
+    ignore_leading_articles: list[str] = Field(default_factory=list)
+
+
+class ExportTable(ConfigTable):
+    profile: str = ''
+    output: str = ''
+    consumers: list[str] = Field(default_factory=list)
+
+
+class PolicyTables(ConfigTable):
+    schema_version: int = 1
+    catalog: dict = Field(default_factory=dict)
+    resources: dict = Field(default_factory=dict)
+    keys: KeyTable = Field(default_factory=KeyTable)
+    titles: TitleTable = Field(default_factory=TitleTable)
+    sorting: SortingTable = Field(default_factory=SortingTable)
+    export: ExportTable = Field(default_factory=ExportTable)
+    project: str = ''
+
+
 def policies(user: dict, config: Path, explicit: str | None, disabled: bool) -> tuple[dict,dict]:
     from refs import naming
     defaults: dict={'keys':{'template':'{author}-{year}-{title}','without_creator':'{title}-{year}','missing_year':'ND','title_words':2,'stopwords':sorted(naming.STOPWORDS),'transliteration_policy':'creator-latin-v1','corporate_aliases':{}},
@@ -149,29 +192,21 @@ def policies(user: dict, config: Path, explicit: str | None, disabled: bool) -> 
             raise RefError('invalid_config','Cannot read project configuration; correct the selected file',2,path=str(selected),details={'cause':str(exc)}) from exc
     for values,path,project in layers:
         try:
-            allowed={'project','export'} if project else {'schema_version','catalog','resources','keys','titles','sorting','export','project'}
-            if set(values)-allowed:
+            if project and set(values)-{'project','export'}:
                 raise ValueError('Unsupported configuration section')
-            for section in ('catalog','resources','keys','titles','sorting','export'):
-                if section in values and not isinstance(values[section],dict):
-                    raise ValueError(f'{section} must be a table')
             if 'catalog' in values and set(values['catalog'])-{'path'}:
                 raise ValueError('Unsupported catalog setting')
             if 'resources' in values and set(values['resources'])-{'library_root','roots'}:
                 raise ValueError('Unsupported resource setting')
+            values=PolicyTables.model_validate(values).model_dump(exclude_unset=True)
             for section in ('keys','titles','sorting','export'):
                 for key,value in values.get(section,{}).items():
-                    permitted=set(defaults[section]) | ({'output','consumers'} if section=='export' else set())
-                    if key not in permitted:
-                        raise ValueError(f'Unsupported {section}.{key}')
                     if key=='corporate_aliases':
-                        if not isinstance(value,dict):
-                            raise ValueError('Corporate aliases must be a table')
-                        if any(not name.strip() or not isinstance(token,str) for name,token in value.items()):
+                        if any(not name.strip() for name in value):
                             raise ValueError('Corporate aliases require nonblank names and string tokens')
                         value={unicodedata.normalize('NFC',name):naming.creator_token(token) for name,token in value.items() if name.strip()}
                     elif key in ('stopwords','minor_words','protected_terms','ignore_leading_articles','consumers'):
-                        if not isinstance(value,list) or any(not isinstance(item,str) or not item.strip() for item in value):
+                        if any(not item.strip() for item in value):
                             raise ValueError(f'{key} must be a list of nonblank strings')
                         seen=set()
                         deduplicated=[]
@@ -181,12 +216,13 @@ def policies(user: dict, config: Path, explicit: str | None, disabled: bool) -> 
                                 seen.add(item.casefold())
                         value=deduplicated
                     elif key=='title_words':
-                        if type(value) is not int or value not in (1,2):
+                        if value not in (1,2):
                             raise ValueError('title_words must be 1 or 2')
-                    elif not isinstance(value,str) or not value.strip():
+                    elif not value.strip():
                         raise ValueError(f'{key} must be a nonblank string')
                     if key in ('template','without_creator'):
-                        assert isinstance(value,str)
+                        if not isinstance(value,str):
+                            raise ValueError(f'{key} must be a nonblank string')
                         tokens=re.findall(r'\{([^{}]+)\}',value)
                         allowed_tokens={'year','title'} | ({'author'} if key=='template' else set())
                         separators=re.sub(r'\{[^{}]+\}','',value)
@@ -197,15 +233,16 @@ def policies(user: dict, config: Path, explicit: str | None, disabled: bool) -> 
                     if key=='missing_year' and isinstance(value,str) and re.search(r'[\s,{}()=\\#%"]',value):
                         raise ValueError('missing_year must be a valid citation-key token')
                     if key=='output':
-                        assert isinstance(value,str)
+                        if not isinstance(value,str):
+                            raise ValueError('output must be a nonblank string')
                         value=str(absolute(value,path.parent))
                     effective.setdefault(section,{})[key]=value
                     origins[section+'.'+key]=('default+config: ' if key in ('stopwords','minor_words','protected_terms','ignore_leading_articles') else '')+str(path)
             if 'project' in values:
-                if not isinstance(values['project'],str) or not values['project'].strip():
+                if not values['project'].strip():
                     raise ValueError('project must be a nonblank name or ID')
                 effective['project']=values['project']
                 origins['project']=str(path)
-        except (ValueError,TypeError,AttributeError,RefError) as exc:
+        except (ValueError,TypeError,AttributeError,ValidationError,RefError) as exc:
             raise RefError('invalid_config',str(exc),2,path=str(path),details={'origin':str(path),'values':values}) from exc
     return effective,origins

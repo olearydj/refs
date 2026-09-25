@@ -44,7 +44,8 @@ def prepare(sample, work):
         old_folder.rename(new_folder)
     config=work/'config.toml'
     config.write_text(toml_text(dict(schema_version=1,catalog=dict(path=str(work/'cat')),resources=dict(library_root=str(library),roots=dict(library=str(library))))))
-    catalog.migrate(work/'cat')
+    with catalog.connect(work/'cat'):
+        pass
     def remap(old):
         path=Path(old)
         for prefix,relative in sorted(manifest['roots'].items(),key=lambda pair:len(pair[0]),reverse=True):

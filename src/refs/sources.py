@@ -14,7 +14,7 @@ from refs import languages, naming
 from refs import logging as action_log
 from refs.adapters.search_sqlite import refresh
 from refs.catalog import changed, connect
-from refs.models import REGISTRY, SourceCreate, editable, normalize_doi, parse, revalidate
+from refs.models import REGISTRY, SourceCreate, editable, parse, revalidate
 from refs.results import RefError, notice
 
 
@@ -68,10 +68,6 @@ def resolve(connection, reference: str) -> str:
 def show(catalog: Path, reference: str) -> dict:
     with connect(catalog) as connection:
         return record(connection, resolve(connection, reference))
-
-
-def doi_identity(value: str) -> str:
-    return normalize_doi(value)
 
 
 def bindings(source: SourceCreate) -> list[tuple[str, str, str]]:
@@ -280,49 +276,52 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
         return store_record(connection, current, canonical, corrections) | {'warnings': warnings}
 
 
-def change_identity(catalog: Path, reference: str, revision: int | None, *, new_key: str | None = None,
-                    state: str | None = None, execute: bool = False) -> dict:
+def _change_identity(connection, current: dict, field: str, value: str, event: str, warnings: list[dict], execute: bool) -> dict:
+    if current[field] == value:
+        return current | dict(unchanged=True, warnings=warnings)
+    if not execute:
+        return current | {field: value, 'dry_run': True, 'warnings': warnings}
+    action_log.log_mutation(event, {'id':current['id'],'citation_key':current['citation_key']},
+                            {'revision':current['revision']}, {'revision':current['revision']+1},
+                            changes={field:{'old':current[field],'new':value}})
+    # Column names are internal constants, never user paths.
+    try:
+        updated = connection.execute(f'UPDATE sources SET {field}=?, revision=revision+1, updated_at=? WHERE id=? AND revision=?',
+                                     (value, datetime.now(UTC).isoformat(), current['id'],current['revision']))
+    except sqlite3.IntegrityError as exc:
+        if field == 'citation_key' and 'sources.citation_key' in str(exc):
+            raise RefError('key_conflict','Citation key is already reserved') from exc
+        raise
+    if updated.rowcount != 1:
+        raise RefError('stale_revision','Reload the source and use its current revision',details={'expected':current['revision']})
+    if field == 'citation_key':
+        connection.execute('UPDATE sources SET key_provenance_json=? WHERE id=?', (json.dumps({'origin': 'explicit_rekey'}), current['id']))
+    refresh(connection, record(connection, current['id']))
+    changed(connection)
+    return record(connection, current['id']) | {'warnings': warnings} | ({'previous_key': current['previous_key']} if field == 'citation_key' else {})
+
+
+def rekey(catalog: Path, reference: str, revision: int, new_key: str, *, execute: bool = False) -> dict:
     with connect(catalog, write=execute) as connection:
-        if revision is None and (state != 'active' or new_key is not None):
+        current = checked_record(connection, reference, revision)
+        current['previous_key'] = current['citation_key']
+        try:
+            SourceCreate.valid_key(new_key)
+        except ValueError as exc:
+            raise RefError('invalid_key', str(exc), 2) from exc
+        if not new_key.strip():
+            raise RefError('invalid_key', 'Citation key cannot be blank', 2)
+        occupied = connection.execute('SELECT id FROM sources WHERE citation_key=? AND id<>?', (new_key, current['id'])).fetchone()
+        if occupied:
+            raise RefError('key_conflict', 'Citation key is already reserved')
+        warnings = [notice('external_citations_unchanged', 'External citations are not rewritten')]
+        return _change_identity(connection, current, 'citation_key', new_key, 'source.key_set', warnings, execute)
+
+
+def set_state(catalog: Path, reference: str, revision: int | None, state: str, *, execute: bool = False) -> dict:
+    with connect(catalog, write=execute) as connection:
+        if revision is None and state != 'active':
             raise RefError('revision_required', 'Supply the current revision', 2)
         current = record(connection, resolve(connection, reference)) if revision is None else checked_record(connection, reference, revision)
-        if new_key is not None:
-            current['previous_key'] = current['citation_key']
-        warnings = []
-        if new_key is not None:
-            try:
-                SourceCreate.valid_key(new_key)
-            except ValueError as exc:
-                raise RefError('invalid_key', str(exc), 2) from exc
-            if not new_key.strip():
-                raise RefError('invalid_key', 'Citation key cannot be blank', 2)
-            occupied = connection.execute('SELECT id FROM sources WHERE citation_key=? AND id<>?', (new_key, current['id'])).fetchone()
-            if occupied:
-                raise RefError('key_conflict', 'Citation key is already reserved')
-            field, value = 'citation_key', new_key
-            warnings = [notice('external_citations_unchanged', 'External citations are not rewritten')]
-        else:
-            field, value = 'state', state
-        if current[field] == value:
-            return current | dict(unchanged=True, warnings=warnings)
-        if not execute:
-            return current | {field: value, 'dry_run': True, 'warnings': warnings}
-        action_log.log_mutation('source.key_set' if new_key is not None else 'source.remove' if state == 'removed' else 'source.reactivate',
-                                {'id':current['id'],'citation_key':current['citation_key']},
-                                {'revision':current['revision']}, {'revision':current['revision']+1},
-                                changes={field:{'old':current[field],'new':value}})
-        # Column names are internal constants, never user paths.
-        try:
-            updated = connection.execute(f'UPDATE sources SET {field}=?, revision=revision+1, updated_at=? WHERE id=? AND revision=?',
-                                         (value, datetime.now(UTC).isoformat(), current['id'],current['revision']))
-        except sqlite3.IntegrityError as exc:
-            if new_key is not None and 'sources.citation_key' in str(exc):
-                raise RefError('key_conflict','Citation key is already reserved') from exc
-            raise
-        if updated.rowcount != 1:
-            raise RefError('stale_revision','Reload the source and use its current revision',details={'expected':current['revision']})
-        if new_key is not None:
-            connection.execute('UPDATE sources SET key_provenance_json=? WHERE id=?', (json.dumps({'origin': 'explicit_rekey'}), current['id']))
-        refresh(connection, record(connection, current['id']))
-        changed(connection)
-        return record(connection, current['id']) | {'warnings': warnings} | ({'previous_key': current['previous_key']} if new_key is not None else {})
+        event = 'source.remove' if state == 'removed' else 'source.reactivate'
+        return _change_identity(connection, current, 'state', state, event, [], execute)

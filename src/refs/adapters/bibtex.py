@@ -139,6 +139,111 @@ def date(value: str) -> dict:
     return {'literal': value}
 
 
+def validate_surface(text: str, entry: Entry, fields: dict):
+    # Compare the library field list with surface assignments. This is a
+    # corruption guard, not an alternative field parser.
+    surface = re.sub(r'\\.', '  ', text)
+    depth = 0
+    quoted = False
+    masked = []
+    for char in surface:
+        if char == '{':
+            depth += 1
+        elif char == '}':
+            depth -= 1
+        elif char == '"' and depth == 1:
+            quoted = not quoted
+        masked.append(' ' if depth > 1 or quoted else char)
+    header, _, body = ''.join(masked).partition(',')
+    assignments = re.findall(r'(?:^|,)\s*([\w-]+)\s*=', body)
+    if [name.lower() for name in assignments] != list(fields):
+        raise ValueError('Field assignments disagree with parser output')
+    # Missing equals can be swallowed into the preceding bare value.
+    if any(re.search(r',\s*[\w-]+\s*(?:,|$)', field.value) for field in entry.fields if field.key not in entry.parser_metadata.get('removed_enclosing', {})):
+        raise ValueError('Possible missing equals in field list')
+
+
+def map_fields(value: dict, fields: dict, kind: str, traditional: bool, unsupported: set, protection: dict, limitations: list):
+    consumed = set()
+    for row in REGISTRY['rows']:
+        field = row['source_field']
+        if row['input_format'] != 'bib' or kind not in row['type_scope'] or field not in fields:
+            continue
+        consumed.add(field)
+        if field in unsupported or field in ('year', 'month', 'date', 'howpublished', 'note', 'file'):
+            continue
+        path = row['canonical_path']
+        if field == 'title' and traditional:
+            path = 'metadata.container-title'
+        if kind == 'book' and field == 'number' and 'series' not in fields:
+            limitations.append(dict(field=field, reason='Series number requires series evidence'))
+            continue
+        if field == 'eprint' and not (fields.get('archiveprefix') or fields.get('eprinttype')):
+            limitations.append(dict(field=field, reason='Preprint locator requires repository evidence'))
+            continue
+        contents = fields[field]
+        try:
+            if field in ('author', 'editor', 'translator', 'bookauthor', 'holder'):
+                incoming = names(contents)
+            elif field in ('doi', 'url'):
+                if field == 'url' and not portable_url(contents):
+                    limitations.append(dict(field='url', reason='Non-HTTP(S) or relative URL preserved verbatim; supply an absolute URL to use it'))
+                    continue
+                incoming = contents
+            elif field == 'urldate':
+                incoming = date(decode(contents))
+            elif field == 'keywords':
+                incoming = [term.strip() for term in decode(contents).split(',') if term.strip()]
+            else:
+                incoming = decode(contents)
+                if field in ('language', 'langid'):
+                    from refs.languages import normalize
+                    incoming = normalize(incoming)
+            assign_path(value, path, incoming)
+            if 'title' in path:
+                protection_text = re.sub(r'\\(?:[A-Za-z]+|[^A-Za-z])\s*\{[^{}]*\}', '', contents)
+                terms = [decode(group) for group in re.findall(r'(?<![\\\w])\{([^{}]+)\}', protection_text) if not group.startswith('\\')]
+                if terms:
+                    protection[path[9:]] = dict(protected_terms=terms, preserve_case=contents.startswith('{') and contents.endswith('}') and decode(contents) in terms)
+        except ValueError as exc:
+            if field in ('author', 'editor', 'translator', 'bookauthor', 'holder'):
+                raise
+            limitations.append(dict(field=field, reason=str(exc)))
+    return consumed
+
+
+def assemble_date(metadata: dict, fields: dict, unsupported: set, parsed_month: int | None, limitations: list):
+    parts = None
+    if 'year' in fields and 'year' not in unsupported:
+        year = fields['year']
+        if year.isdecimal():
+            parts = [int(year)]
+            if parsed_month is not None and 'month' not in unsupported:
+                parts.append(parsed_month)
+        else:
+            metadata['issued'] = {'literal': year}
+            limitations.append(dict(field='year', reason='Unparseable year retained as literal date'))
+    if 'date' in fields and 'date' not in unsupported:
+        supplied = date(fields['date'])
+        if parts:
+            supplied_parts = supplied.get('date-parts', [[]])[0]
+            overlap = min(len(parts),len(supplied_parts))
+            if not supplied_parts or supplied_parts[:overlap] != parts[:overlap]:
+                raise ValueError('Date and year/month disagree')
+            supplied = {'date-parts':[parts if len(parts)>len(supplied_parts) else supplied_parts]}
+        if parsed_month is not None and 'month' not in unsupported and 'date-parts' in supplied:
+            supplied_parts = supplied['date-parts'][0]
+            if len(supplied_parts)>1 and supplied_parts[1] != parsed_month:
+                raise ValueError('Date and month disagree')
+            if len(supplied_parts)==1:
+                supplied_parts.append(parsed_month)
+        metadata['issued'] = supplied
+    elif parts:
+        metadata['issued'] = {'date-parts': [parts]}
+    if 'month' in fields and 'year' not in fields and 'date' not in fields:
+        limitations.append(dict(field='month', reason='Month without year remains unresolved'))
+
+
 def parse(raw: bytes) -> dict:
     """Return one validated proposal and explicit preserved-only limitations."""
     limitations = []
@@ -156,27 +261,7 @@ def parse(raw: bytes) -> dict:
         if len(fields) != len(entry.fields):
             raise ValueError('Case-colliding fields require inspection')
         parsed_month = month_number(fields['month']) if 'month' in fields else None
-        # Compare the library field list with surface assignments. This is a
-        # corruption guard, not an alternative field parser.
-        surface = re.sub(r'\\.', '  ', text)
-        depth = 0
-        quoted = False
-        masked = []
-        for char in surface:
-            if char == '{':
-                depth += 1
-            elif char == '}':
-                depth -= 1
-            elif char == '"' and depth == 1:
-                quoted = not quoted
-            masked.append(' ' if depth > 1 or quoted else char)
-        header, _, body = ''.join(masked).partition(',')
-        assignments = re.findall(r'(?:^|,)\s*([\w-]+)\s*=', body)
-        if [name.lower() for name in assignments] != list(fields):
-            raise ValueError('Field assignments disagree with parser output')
-        # Missing equals can be swallowed into the preceding bare value.
-        if any(re.search(r',\s*[\w-]+\s*(?:,|$)', field.value) for field in entry.fields if field.key not in entry.parser_metadata.get('removed_enclosing', {})):
-            raise ValueError('Possible missing equals in field list')
+        validate_surface(text, entry, fields)
         kind = entry.entry_type.lower()
         canonical = REGISTRY['bib_type_aliases'].get(kind)
         if canonical is None:
@@ -184,7 +269,6 @@ def parse(raw: bytes) -> dict:
         metadata = {'type': canonical}
         value: dict = {'schema_version': '1.0', 'metadata': metadata, 'native_type': {'namespace':'bibtex', 'value':kind}, 'provenance': [{'origin': 'import', 'access': 'unknown'}]}
         protection = {}
-        consumed = set()
         enclosing = {key.lower(): value for key,value in entry.parser_metadata.get('removed_enclosing', {}).items()}
         unsupported = {field for field, contents in fields.items() if field not in enclosing and not contents.isdecimal() and field != 'month'}
         for field in unsupported:
@@ -193,86 +277,12 @@ def parse(raw: bytes) -> dict:
             limitations.append(dict(field=field, reason='Unresolved macro or concatenation'))
         traditional = kind == 'inbook' and 'booktitle' not in fields and ('chapter' in fields or 'pages' in fields)
 
-        for row in REGISTRY['rows']:
-            field = row['source_field']
-            if row['input_format'] != 'bib' or kind not in row['type_scope'] or field not in fields:
-                continue
-            consumed.add(field)
-            if field in unsupported or field in ('year', 'month', 'date', 'howpublished', 'note', 'file'):
-                continue
-            path = row['canonical_path']
-            if field == 'title' and traditional:
-                path = 'metadata.container-title'
-            if kind == 'book' and field == 'number' and 'series' not in fields:
-                limitations.append(dict(field=field, reason='Series number requires series evidence'))
-                continue
-            if field == 'eprint' and not (fields.get('archiveprefix') or fields.get('eprinttype')):
-                limitations.append(dict(field=field, reason='Preprint locator requires repository evidence'))
-                continue
-            contents = fields[field]
-            try:
-                if field in ('author', 'editor', 'translator', 'bookauthor', 'holder'):
-                    incoming = names(contents)
-                elif field in ('doi', 'url'):
-                    if field == 'url' and not portable_url(contents):
-                        limitations.append(dict(field='url', reason='Non-HTTP(S) or relative URL preserved verbatim; supply an absolute URL to use it'))
-                        continue
-                    incoming = contents
-                elif field == 'urldate':
-                    incoming = date(decode(contents))
-                elif field == 'keywords':
-                    incoming = [term.strip() for term in decode(contents).split(',') if term.strip()]
-                else:
-                    incoming = decode(contents)
-                    if field in ('language', 'langid'):
-                        from refs.languages import normalize
-                        incoming = normalize(incoming)
-                assign_path(value, path, incoming)
-                if 'title' in path:
-                    protection_text = re.sub(r'\\(?:[A-Za-z]+|[^A-Za-z])\s*\{[^{}]*\}', '', contents)
-                    terms = [decode(group) for group in re.findall(r'(?<![\\\w])\{([^{}]+)\}', protection_text) if not group.startswith('\\')]
-                    if terms:
-                        protection[path[9:]] = dict(protected_terms=terms, preserve_case=contents.startswith('{') and contents.endswith('}') and decode(contents) in terms)
-            except ValueError as exc:
-                if field in ('author', 'editor', 'translator', 'bookauthor', 'holder'):
-                    raise
-                limitations.append(dict(field=field, reason=str(exc)))
+        consumed = map_fields(value, fields, kind, traditional, unsupported, protection, limitations)
         for field in set(fields) - consumed:
             limitations.append(dict(field=field, reason='Unmapped field preserved verbatim'))
-        notes = [decode(fields[field]) for field in ('note',) if field in fields and field not in unsupported]
-        if notes:
-            metadata['note'] = '\n'.join(notes)
-        parts = None
-        if 'year' in fields and 'year' not in unsupported:
-            year = fields['year']
-            if year.isdecimal():
-                parts = [int(year)]
-                month = fields.get('month', '')
-                if month and 'month' not in unsupported:
-                    parts.append(parsed_month)
-            else:
-                metadata['issued'] = {'literal': year}
-                limitations.append(dict(field='year', reason='Unparseable year retained as literal date'))
-        if 'date' in fields and 'date' not in unsupported:
-            supplied = date(fields['date'])
-            if parts:
-                supplied_parts = supplied.get('date-parts', [[]])[0]
-                overlap = min(len(parts),len(supplied_parts))
-                if not supplied_parts or supplied_parts[:overlap] != parts[:overlap]:
-                    raise ValueError('Date and year/month disagree')
-                supplied = {'date-parts':[parts if len(parts)>len(supplied_parts) else supplied_parts]}
-            if 'month' in fields and 'month' not in unsupported and 'date-parts' in supplied:
-                month = parsed_month
-                supplied_parts = supplied['date-parts'][0]
-                if len(supplied_parts)>1 and supplied_parts[1] != month:
-                    raise ValueError('Date and month disagree')
-                if len(supplied_parts)==1:
-                    supplied_parts.append(month)
-            metadata['issued'] = supplied
-        elif parts:
-            metadata['issued'] = {'date-parts': [parts]}
-        if 'month' in fields and 'year' not in fields and 'date' not in fields:
-            limitations.append(dict(field='month', reason='Month without year remains unresolved'))
+        if 'note' in fields and 'note' not in unsupported:
+            metadata['note'] = decode(fields['note'])
+        assemble_date(metadata, fields, unsupported, parsed_month, limitations)
         if kind in ('phdthesis', 'mastersthesis'):
             degree = 'PhD thesis' if kind == 'phdthesis' else "Master's thesis"
             if 'genre' not in metadata:

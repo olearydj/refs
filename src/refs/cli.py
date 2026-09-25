@@ -176,14 +176,13 @@ def project_cite(ctx: typer.Context, project: str, reference: Annotated[str | No
                  from_import: Annotated[str | None, typer.Option()] = None,
                  dry_run: Annotated[bool, typer.Option()] = False):
     catalog = settings(ctx).catalog_path()
-    if (reference is None) == (from_import is None):
-        raise RefError('invalid_invocation', 'Supply one source or --from-import ORIGIN', 2)
-    if from_import is not None:
+    if from_import is not None and reference is None:
         report(ctx, 'project cite', projects.cite_import(catalog, project, from_import, dry_run=dry_run))
         return
-    assert reference is not None
-    data = projects.cite(catalog, project, reference, dry_run=dry_run)
-    report(ctx, "project cite", data)
+    if reference is not None and from_import is None:
+        report(ctx, "project cite", projects.cite(catalog, project, reference, dry_run=dry_run))
+        return
+    raise RefError('invalid_invocation', 'Supply one source or --from-import ORIGIN', 2)
 
 
 @app.command("export")
@@ -196,7 +195,9 @@ def export_bibliography(ctx: typer.Context, project: Annotated[str | None, typer
                        dry_run: Annotated[bool, typer.Option()] = False):
     selected = settings(ctx)
     project, output, profile = export_options(selected, project, output, profile)
-    data = bibliography.export(selected.catalog_path(), project, output.expanduser(), profile=profile, dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite, adopt=adopt)
+    if profile != bibliography.PROFILE:
+        raise RefError('unsupported_profile', 'This milestone supports portable-bibtex-v1', 2)
+    data = bibliography.export(selected.catalog_path(), project, output.expanduser(), dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite, adopt=adopt)
     report(ctx, 'export', data)
 
 
@@ -238,21 +239,21 @@ def set_key(ctx: typer.Context, reference: str, key: Annotated[str, typer.Option
             if_revision: Annotated[int, typer.Option(min=1)],
             execute: Annotated[bool, typer.Option()] = False,
             dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, "key set", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, new_key=key, execute=requested(execute, dry_run)))
+    report(ctx, "key set", sources.rekey(settings(ctx).catalog_path(), reference, if_revision, key, execute=requested(execute, dry_run)))
 
 
 @app.command()
 def remove(ctx: typer.Context, reference: str, if_revision: Annotated[int, typer.Option(min=1)],
            execute: Annotated[bool, typer.Option()] = False,
            dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, "remove", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="removed", execute=requested(execute, dry_run)))
+    report(ctx, "remove", sources.set_state(settings(ctx).catalog_path(), reference, if_revision, "removed", execute=requested(execute, dry_run)))
 
 
 @app.command()
 def reactivate(ctx: typer.Context, reference: str, if_revision: Annotated[int | None, typer.Option(min=1)] = None,
                execute: Annotated[bool, typer.Option()] = False,
                dry_run: Annotated[bool, typer.Option()] = False):
-    report(ctx, "reactivate", sources.change_identity(settings(ctx).catalog_path(), reference, if_revision, state="active", execute=requested(execute, dry_run)))
+    report(ctx, "reactivate", sources.set_state(settings(ctx).catalog_path(), reference, if_revision, "active", execute=requested(execute, dry_run)))
 
 
 @app.command("search")

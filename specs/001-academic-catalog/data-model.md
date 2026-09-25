@@ -20,6 +20,8 @@ SQLite is the sole authority. Slice 1 has ten logical tables. Slice 2 adds four:
 | source_relations — slice 2 | Deduplicated related-item pairs with origin identities; retain unresolved endpoints as evidence rather than inventing sources. No relationship editor. |
 | file_operations (slice 3) | One row per file transfer: ID, resource ID, old/new paths and names, original/destination/staging identities, size, mtime, digest, expected source/resource revisions and loc, state, last completed state, error and timestamps. States and transaction boundaries follow [the move protocol](contracts/files-and-recovery.md#move-protocol-and-journal). recorded means pending original removal; removed is final. The resource ID is historical, kept without a foreign key so completed move history survives unlink; operation creation checks the resource exists. |
 
+Project and collection revision columns are retained as a seam for future guarded edits, although no current command reads them.
+
 ## Authority and mutations
 
 Bibliographic facts live once in sources.metadata_json under the bounded CSL-shaped [record profile](contracts/records.md). The optional native label is not a second editable fact namespace. Original bytes never revive a cleared modeled value or a field incompatible with a changed type. corrected_fields marks every explicit update, including clear; imported omissions propose nothing. The marker is current state, not a history ledger.

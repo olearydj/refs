@@ -2,8 +2,8 @@ import json
 
 from conftest import extracted
 
-from refs.catalog import connect
 from refs.adapters import zotero
+from refs.catalog import connect
 
 
 def test_zotero_adapter_owns_child_paths_context_and_relations(tmp_path):

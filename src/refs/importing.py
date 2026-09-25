@@ -12,7 +12,7 @@ from pydantic import ValidationError
 from refs import naming, sources
 from refs.adapters import bibtex, zotero
 from refs.catalog import changed, connect
-from refs.models import SourceCreate, editable, revalidate
+from refs.models import SourceCreate, editable, normalize_doi, revalidate
 from refs.results import RefError, notice
 
 
@@ -39,7 +39,7 @@ def differences(incoming: dict, current: dict, prefix='') -> list[str]:
         existing = current.get(key)
         if isinstance(value, dict):
             result.extend(differences(value, existing if isinstance(existing, dict) else {}, path))
-        elif key == 'DOI' and isinstance(existing, str) and sources.doi_identity(value) == sources.doi_identity(existing):
+        elif key == 'DOI' and isinstance(existing, str) and normalize_doi(value) == normalize_doi(existing):
             continue
         elif value != existing:
             result.append(path)
@@ -73,7 +73,7 @@ def doi_plan(connection) -> dict[str, set[str]]:
     for row in connection.execute('SELECT id,metadata_json FROM sources'):
         doi = json.loads(row['metadata_json']).get('DOI')
         if doi:
-            existing.setdefault(sources.doi_identity(doi), set()).add(row['id'])
+            existing.setdefault(normalize_doi(doi), set()).add(row['id'])
     return existing
 
 
@@ -88,13 +88,13 @@ def match(connection, source: SourceCreate, fingerprint: str, *, isbn_groups=Non
     ids = {row[0] for row in connection.execute('SELECT id FROM sources WHERE citation_key=?', (source.citation_key,))}
     ids.update(row[0] for row in connection.execute('SELECT source_id FROM originals WHERE sha256=? AND source_id IS NOT NULL', (fingerprint,)))
     if source.metadata.DOI:
-        doi = sources.doi_identity(source.metadata.DOI)
+        doi = normalize_doi(source.metadata.DOI)
         if doi_groups is not None:
             ids.update(doi_groups.get(doi, ()))
         else:
             for row in connection.execute('SELECT id,metadata_json FROM sources'):
                 metadata = json.loads(row['metadata_json'])
-                if metadata.get('DOI') and doi==sources.doi_identity(metadata['DOI']):
+                if metadata.get('DOI') and doi==normalize_doi(metadata['DOI']):
                     ids.add(row['id'])
     for binding in sources.bindings(source):
         row = connection.execute('SELECT source_id FROM origin_identities WHERE namespace=? AND library_uri=? AND item_key=?', binding).fetchone()
@@ -222,7 +222,7 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         if isinstance(exc, ValidationError):
             message = f'Entry at byte {block["start"]}: citation key is empty' if re.match(rb'@\w+\s*[{(]\s*,', raw) else 'Entry cannot satisfy the record profile; inspect its preserved original'
             exc = RefError('invalid_bib_entry', message, 2)
-        conflict = exc.issue['code'] in ('identity_conflict', 'source_removed', 'likely_match', 'alias_conflict')
+        conflict = exc.issue['code'] in ('identity_conflict', 'source_removed', 'alias_conflict')
         outcome = dict(outcome='conflict' if conflict else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'], limitations=exc.issue['details'].get('limitations', []))
     outcome['incoming'] = incoming
     outcome['citation_key'] = key
@@ -282,7 +282,7 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
             if doi_groups is not None and (outcome in ('applied','unchanged') or result.get('binding',{}).get('bound')) and result.get('source_id') and result.get('incoming'):
                 doi = result['incoming']['metadata'].get('DOI')
                 if doi:
-                    doi_groups.setdefault(sources.doi_identity(doi),set()).add(result['source_id'])
+                    doi_groups.setdefault(normalize_doi(doi),set()).add(result['source_id'])
             counts[outcome] += 1
             if not dry_run:
                 save_entry(connection, run_id, f"{locator}#bytes={block['start']}:{block['end']}", result)
@@ -307,7 +307,7 @@ def add(catalog: Path, raw: bytes, locator: str, *, dry_run=False, settings=None
         if not dry_run:
             save_add_conflict(connection, raw, locator, entry)
     if entry['outcome'] in ('conflict', 'invalid'):
-        raise RefError(entry.get('code', 'import_conflict'), entry.get('message', 'Inspect conflicting fields and use update'), 2 if entry['outcome'] == 'invalid' else 3, details=entry,
+        raise RefError(entry['code'], entry.get('message', 'Inspect conflicting fields and use update'), 2 if entry['outcome'] == 'invalid' else 3, details=entry,
                        data={'outcome':'needs_attention', 'citation_key':entry.get('citation_key')})
     record = sources.show(catalog, entry['source_id']) if entry['source_id'] else bibtex.parse(blocks[0]['raw'])['source'].canonical()
     if dry_run and loc is not None and not record.get('loc'):
@@ -363,39 +363,37 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
     return result
 
 
-def run_zotero(catalog: Path, directory: Path, *, dry_run=False, origin=None, settings=None) -> dict:
-    bundle = zotero.read(directory)
-    manifest = bundle['manifest']
-    evidence = [(directory/name).read_bytes() for name in ('manifest.json','collections.json')]
-    fingerprint = hashlib.sha256(b''.join(evidence + [entry['raw'] for entry in bundle['items']])).hexdigest()
-    batch = str(uuid4())
-    counts = dict(applied=0, unchanged=0, conflict=0, invalid=0)
+def zotero_isbn_groups(catalog: Path, bundle: dict) -> dict:
     incoming = []
     for entry in bundle['items']:
         if entry['data']['itemType']=='book' and isinstance(entry['data'].get('ISBN'),str):
             incoming.append(SourceCreate.model_validate({'schema_version':'1.0','metadata':{'type':'book','title':'ISBN group candidate','ISBN':entry['data']['ISBN']}}))
     with connect(catalog) as connection:
-        isbn_groups = isbn_plan(connection,incoming)
-    if not dry_run:
-        with connect(catalog, write=True) as connection:
-            start_batch(connection, batch, origin or str(directory), fingerprint)
-            for name, raw in zip(('manifest.json','collections.json'), evidence, strict=True):
-                preserve(connection, raw, str(directory/name), fingerprint, format='zotero-evidence', origin='import-file')
-            for entry in bundle['items']:
-                if entry['data']['itemType'] in zotero.CHILDREN:
-                    preserve(connection, entry['raw'], entry['locator'], fingerprint, format='zotero-json', origin='import-child')
-            changed(connection)
-    collections = {}
-    if not dry_run:
-        with connect(catalog, write=True) as connection:
-            collections = import_collections(connection, bundle)
+        return isbn_plan(connection,incoming)
+
+
+def start_zotero_batch(catalog: Path, directory: Path, bundle: dict, evidence: list[bytes], fingerprint: str, batch: str, origin: str | None) -> dict:
+    with connect(catalog, write=True) as connection:
+        start_batch(connection, batch, origin or str(directory), fingerprint)
+        for name, raw in zip(('manifest.json','collections.json'), evidence, strict=True):
+            preserve(connection, raw, str(directory/name), fingerprint, format='zotero-evidence', origin='import-file')
+        for entry in bundle['items']:
+            if entry['data']['itemType'] in zotero.CHILDREN:
+                preserve(connection, entry['raw'], entry['locator'], fingerprint, format='zotero-json', origin='import-child')
+        changed(connection)
+    with connect(catalog, write=True) as connection:
+        return import_collections(connection, bundle)
+
+
+def zotero_entries(catalog: Path, directory: Path, bundle: dict, fingerprint: str, batch: str, collections: dict, isbn_groups: dict, settings, dry_run: bool, origin: str | None) -> tuple[list[dict], dict]:
     entries = []
+    counts = dict(applied=0, unchanged=0, conflict=0, invalid=0)
     for entry in bundle['items']:
         if entry['data']['itemType'] in zotero.CHILDREN:
             continue
         entry['context'] = child_context(bundle, entry['key'])
         with connect(catalog, write=not dry_run) as connection:
-            result = apply_zotero(connection, entry, manifest, fingerprint, dry_run=dry_run, settings=settings, batch=batch,isbn_groups=isbn_groups,origin=origin or str(directory))
+            result = apply_zotero(connection, entry, bundle['manifest'], fingerprint, dry_run=dry_run, settings=settings, batch=batch,isbn_groups=isbn_groups,origin=origin or str(directory))
             if result.get('source_id') and result['status'] in ('applied','unchanged'):
                 result['resources'], notices = associate(connection,bundle,entry,result['source_id'],collections,settings=settings,dry_run=dry_run)
                 result.setdefault('warnings', []).extend(notices)
@@ -406,17 +404,33 @@ def run_zotero(catalog: Path, directory: Path, *, dry_run=False, origin=None, se
                 connection.execute(f'UPDATE imports SET {status}={status}+1, revision=revision+1 WHERE id=?', (batch,))
                 changed(connection)
             entries.append(result)
+    return entries, counts
+
+
+def finish_zotero_batch(catalog: Path, batch: str, counts: dict) -> None:
+    with connect(catalog, write=True) as connection:
+        from refs import logging as action_log
+        action_log.log_mutation('import.batch_close', {'batch_id':batch},
+                                {'finished':False}, {'finished':True,'counts':counts})
+        connection.execute('UPDATE imports SET finished_at=? WHERE id=?', (datetime.now(UTC).isoformat(), batch))
+        for relation in connection.execute('SELECT source_id,target_uri FROM source_relations WHERE target_id IS NULL').fetchall():
+            uri, _, key = relation['target_uri'].rpartition('/items/')
+            bound = connection.execute("SELECT source_id FROM origin_identities WHERE namespace='zotero' AND library_uri=? AND item_key=?", (uri,key)).fetchone()
+            if bound:
+                connection.execute('UPDATE source_relations SET target_id=? WHERE source_id=? AND target_uri=?', (bound[0],relation['source_id'],relation['target_uri']))
+
+
+def run_zotero(catalog: Path, directory: Path, *, dry_run=False, origin=None, settings=None) -> dict:
+    bundle = zotero.read(directory)
+    manifest = bundle['manifest']
+    evidence = [(directory/name).read_bytes() for name in ('manifest.json','collections.json')]
+    fingerprint = hashlib.sha256(b''.join(evidence + [entry['raw'] for entry in bundle['items']])).hexdigest()
+    batch = str(uuid4())
+    isbn_groups = zotero_isbn_groups(catalog, bundle)
+    collections = start_zotero_batch(catalog, directory, bundle, evidence, fingerprint, batch, origin) if not dry_run else {}
+    entries, counts = zotero_entries(catalog, directory, bundle, fingerprint, batch, collections, isbn_groups, settings, dry_run, origin)
     if not dry_run:
-        with connect(catalog, write=True) as connection:
-            from refs import logging as action_log
-            action_log.log_mutation('import.batch_close', {'batch_id':batch},
-                                    {'finished':False}, {'finished':True,'counts':counts})
-            connection.execute('UPDATE imports SET finished_at=? WHERE id=?', (datetime.now(UTC).isoformat(), batch))
-            for relation in connection.execute('SELECT source_id,target_uri FROM source_relations WHERE target_id IS NULL').fetchall():
-                uri, _, key = relation['target_uri'].rpartition('/items/')
-                bound = connection.execute("SELECT source_id FROM origin_identities WHERE namespace='zotero' AND library_uri=? AND item_key=?", (uri,key)).fetchone()
-                if bound:
-                    connection.execute('UPDATE source_relations SET target_id=? WHERE source_id=? AND target_uri=?', (bound[0],relation['source_id'],relation['target_uri']))
+        finish_zotero_batch(catalog, batch, counts)
     preservation = dict(manifest.get('skipped', {}))
     preservation['attachment_outlines'] = sum(bool(item['data'].get('note')) for item in bundle['items'] if item['data']['itemType']=='attachment')
     preservation['standalone_children'] = sum(not item['data'].get('parentItem') for item in bundle['items'] if item['data']['itemType'] in zotero.CHILDREN)
@@ -524,6 +538,74 @@ def show(catalog: Path, batch: str, status=None) -> dict:
         return inspect_batch(connection,batch,status)
 
 
+def select_reconciliation(connection, review: dict, selectors: list[str], keep_current: list[str] | None) -> dict:
+    selected: dict[str, dict[str,str]] = {}
+    choices = [(selector,'take_incoming') for selector in selectors] + [(selector,'keep_current') for selector in keep_current or []]
+    for selector, action in choices:
+        exact = [entry for entry in review['entries'] if entry.get('citation_key') == selector]
+        candidates = exact or [entry for entry in review['entries'] if entry.get('citation_key') and selector.startswith(entry['citation_key']+'.')]
+        if len(candidates) != 1:
+            raise RefError('ambiguous_selection', 'Use one unambiguous batch citation key and canonical field path', details={'selector':selector})
+        entry = candidates[0]
+        if not entry.get('source_id') or not entry.get('incoming') or not entry.get('binding',{}).get('bound'):
+            raise RefError('identity_conflict', 'Inspect identity or invalid-entry conflicts before accepting metadata', details={'selector':selector})
+        current = sources.record(connection,entry['source_id'])
+        if current['state'] != 'active':
+            raise RefError('source_removed', 'Reactivate the source before reconciling')
+        available = [item['path'] for item in entry.get('binding',{}).get('conflicts',[])]
+        requested = available if exact else [selector[len(entry['citation_key'])+1:]]
+        if any(path not in available for path in requested):
+            raise RefError('invalid_selection', 'Select a conflicting canonical path from import show', 2)
+        target = selected.setdefault(entry['entry_id'],{})
+        for path in requested:
+            if path in target and target[path] != action:
+                raise RefError('invalid_selection', 'Choose one decision per field', 2)
+            target[path] = action
+    return selected
+
+
+def apply_reconciliation(connection, batch: str, review: dict, selected: dict, execute: bool) -> list[dict]:
+    proposals = []
+    for entry in review['entries']:
+        if entry['entry_id'] not in selected:
+            continue
+        current = sources.record(connection,entry['source_id'])
+        canonical = editable(current)
+        decisions = []
+        for path in sorted(selected[entry['entry_id']]):
+            incoming, previous = value_at(entry['incoming'],path), value_at(current,path)
+            if incoming != previous:
+                action = selected[entry['entry_id']][path]
+                if action == 'take_incoming':
+                    sources.patch_path(canonical,path,incoming,clear=False)
+                decisions.append(dict(path=path,current=previous,incoming=incoming,action=action))
+        try:
+            canonical = revalidate(canonical)
+        except ValidationError as exc:
+            raise RefError('invalid_selection', 'Selected values do not form a valid source; inspect dependent fields', 2) from exc
+        remaining = [item for item in entry.get('binding',{}).get('conflicts',[]) if item['path'] not in selected[entry['entry_id']] and value_at(canonical,item['path']) != item['incoming']]
+        proposals.append(dict(citation_key=entry['citation_key'],source_id=current['id'],source_revision=current['revision'],decisions=decisions,remaining_conflicts=remaining))
+        if execute and (decisions or entry['status']=='conflict' and not remaining):
+            from refs import logging as action_log
+            action_log.log_mutation('import.reconcile', {'batch_id':batch,'entry_id':entry['entry_id'],'source_id':current['id'],'citation_key':current['citation_key']},
+                                    {'revision':current['revision'],'status':entry['status']},
+                                    {'revision':current['revision']+bool(any(item['action']=='take_incoming' for item in decisions)),'status':'conflict' if remaining else 'applied'},
+                                    changes={item['path']:{'old':item['current'],'new':item['incoming'] if item['action']=='take_incoming' else item['current']} for item in decisions})
+            taken = [item['path'] for item in decisions if item['action']=='take_incoming']
+            if taken:
+                sources.store_record(connection,current,canonical,list(dict.fromkeys(current['corrected_fields']+taken)))
+            if entry.get('original_ref'):
+                original = connection.execute('SELECT * FROM originals WHERE id=?',(entry['original_ref'],)).fetchone()
+                preserve(connection,original['raw_bytes'],original['locator'],original['file_digest'],source_id=current['id'],format=original['format'],origin='import-reconciled',definitions=json.loads(original['definitions_json']))
+            status = 'conflict' if remaining else 'applied'
+            saved = json.loads(connection.execute('SELECT decisions_json FROM import_entries WHERE id=?',(entry['entry_id'],)).fetchone()[0])
+            connection.execute('UPDATE import_entries SET status=?,conflicts_json=?,source_revision=?,decisions_json=? WHERE id=?',
+                               (status,json.dumps(remaining),sources.record(connection,current['id'])['revision'],json.dumps(saved+decisions),entry['entry_id']))
+            connection.execute(f'UPDATE imports SET {entry["status"]}={entry["status"]}-1, {status}={status}+1, revision=revision+1 WHERE id=?' if status != entry['status'] else 'UPDATE imports SET revision=revision+1 WHERE id=?', (batch,))
+            changed(connection)
+    return proposals
+
+
 def reconcile(catalog: Path, batch: str, selectors: list[str], *, keep_current=None, execute=False, revision=None) -> dict:
     if not selectors and not keep_current:
         raise RefError('invalid_selection', 'Supply --take-incoming or --keep-current KEY[.field]', 2)
@@ -533,64 +615,6 @@ def reconcile(catalog: Path, batch: str, selectors: list[str], *, keep_current=N
         review = inspect_batch(connection,batch)
         if execute and review['batch_revision'] != revision:
             raise RefError('stale_revision', 'Preview the batch again; its entries or source revisions changed', details={'expected':revision,'actual':review['batch_revision']})
-        selected: dict[str, dict[str,str]] = {}
-        choices = [(selector,'take_incoming') for selector in selectors] + [(selector,'keep_current') for selector in keep_current or []]
-        for selector, action in choices:
-            exact = [entry for entry in review['entries'] if entry.get('citation_key') == selector]
-            candidates = exact or [entry for entry in review['entries'] if entry.get('citation_key') and selector.startswith(entry['citation_key']+'.')]
-            if len(candidates) != 1:
-                raise RefError('ambiguous_selection', 'Use one unambiguous batch citation key and canonical field path', details={'selector':selector})
-            entry = candidates[0]
-            if not entry.get('source_id') or not entry.get('incoming') or not entry.get('binding',{}).get('bound'):
-                raise RefError('identity_conflict', 'Inspect identity or invalid-entry conflicts before accepting metadata', details={'selector':selector})
-            current = sources.record(connection,entry['source_id'])
-            if current['state'] != 'active':
-                raise RefError('source_removed', 'Reactivate the source before reconciling')
-            available = [item['path'] for item in entry.get('binding',{}).get('conflicts',[])]
-            requested = available if exact else [selector[len(entry['citation_key'])+1:]]
-            if any(path not in available for path in requested):
-                raise RefError('invalid_selection', 'Select a conflicting canonical path from import show', 2)
-            target = selected.setdefault(entry['entry_id'],{})
-            for path in requested:
-                if path in target and target[path] != action:
-                    raise RefError('invalid_selection', 'Choose one decision per field', 2)
-                target[path] = action
-        proposals = []
-        for entry in review['entries']:
-            if entry['entry_id'] not in selected:
-                continue
-            current = sources.record(connection,entry['source_id'])
-            canonical = editable(current)
-            decisions = []
-            for path in sorted(selected[entry['entry_id']]):
-                incoming, previous = value_at(entry['incoming'],path), value_at(current,path)
-                if incoming != previous:
-                    action = selected[entry['entry_id']][path]
-                    if action == 'take_incoming':
-                        sources.patch_path(canonical,path,incoming,clear=False)
-                    decisions.append(dict(path=path,current=previous,incoming=incoming,action=action))
-            try:
-                canonical = revalidate(canonical)
-            except ValidationError as exc:
-                raise RefError('invalid_selection', 'Selected values do not form a valid source; inspect dependent fields', 2) from exc
-            remaining = [item for item in entry.get('binding',{}).get('conflicts',[]) if item['path'] not in selected[entry['entry_id']] and value_at(canonical,item['path']) != item['incoming']]
-            proposals.append(dict(citation_key=entry['citation_key'],source_id=current['id'],source_revision=current['revision'],decisions=decisions,remaining_conflicts=remaining))
-            if execute and (decisions or entry['status']=='conflict' and not remaining):
-                from refs import logging as action_log
-                action_log.log_mutation('import.reconcile', {'batch_id':batch,'entry_id':entry['entry_id'],'source_id':current['id'],'citation_key':current['citation_key']},
-                                        {'revision':current['revision'],'status':entry['status']},
-                                        {'revision':current['revision']+bool(any(item['action']=='take_incoming' for item in decisions)),'status':'conflict' if remaining else 'applied'},
-                                        changes={item['path']:{'old':item['current'],'new':item['incoming'] if item['action']=='take_incoming' else item['current']} for item in decisions})
-                taken = [item['path'] for item in decisions if item['action']=='take_incoming']
-                if taken:
-                    sources.store_record(connection,current,canonical,list(dict.fromkeys(current['corrected_fields']+taken)))
-                if entry.get('original_ref'):
-                    original = connection.execute('SELECT * FROM originals WHERE id=?',(entry['original_ref'],)).fetchone()
-                    preserve(connection,original['raw_bytes'],original['locator'],original['file_digest'],source_id=current['id'],format=original['format'],origin='import-reconciled',definitions=json.loads(original['definitions_json']))
-                status = 'conflict' if remaining else 'applied'
-                saved = json.loads(connection.execute('SELECT decisions_json FROM import_entries WHERE id=?',(entry['entry_id'],)).fetchone()[0])
-                connection.execute('UPDATE import_entries SET status=?,conflicts_json=?,source_revision=?,decisions_json=? WHERE id=?',
-                                   (status,json.dumps(remaining),sources.record(connection,current['id'])['revision'],json.dumps(saved+decisions),entry['entry_id']))
-                connection.execute(f'UPDATE imports SET {entry["status"]}={entry["status"]}-1, {status}={status}+1, revision=revision+1 WHERE id=?' if status != entry['status'] else 'UPDATE imports SET revision=revision+1 WHERE id=?', (batch,))
-                changed(connection)
+        selected = select_reconciliation(connection, review, selectors, keep_current)
+        proposals = apply_reconciliation(connection, batch, review, selected, execute)
         return dict(import_id=batch,batch_revision=inspect_batch(connection,batch)['batch_revision'],dry_run=not execute,entries=proposals)

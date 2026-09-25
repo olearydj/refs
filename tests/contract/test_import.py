@@ -164,7 +164,7 @@ def test_import_conflict_clear_and_removed(initialized, tmp_path):
     assert result['counts']['conflict'] == 1
     assert 'DOI' not in sources.show(catalog, 'x')['metadata']
     source = sources.show(catalog, 'x')
-    sources.change_identity(catalog, 'x', source['revision'], state='removed', execute=True)
+    sources.set_state(catalog, 'x', source['revision'], 'removed', execute=True)
     result = importing.run(catalog, GOOD, 'input.bib')
     assert result['entries'][0]['code'] == 'source_removed'
 

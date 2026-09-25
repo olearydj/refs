@@ -34,8 +34,6 @@ def validate_database(path: Path) -> dict:
                     raise RefError('unsupported_schema','Catalog tables do not match the supported schema; retain this snapshot for inspection',5)
         connection.row_factory=sqlite3.Row
         meta=connection.execute('SELECT * FROM catalog_meta WHERE singleton=1').fetchone()
-        if meta is None or meta['schema_version'] not in range(1,SCHEMA_VERSION+1):
-            raise RefError('unsupported_schema','Use a supported catalog schema',5)
         return dict(meta)
 
 
