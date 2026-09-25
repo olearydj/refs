@@ -49,3 +49,53 @@ The five completed batches took 2,830.34 seconds in aggregate; each stayed below
 | Export refuses unassessed projections and unsafe values. | Beebe has 190 unsafe identifiers; native Zotero blocks four exports for names, mapping, extension, or identifier findings; CSL blocks three for date loss or unassessed mapping. | Kept as named safety limits; no blocked export was rendered. |
 
 The JSON gate itself is pinned by `test_csl_array_worker_counts_each_add_and_readd` and the native-wrapper test in commit `4e86a0a`. The product fix and wrapper adjustment each passed the full 703-test suite, Ruff, and ty on `src/refs`. Final verification repeated 703 passing tests, 121 demo checks, and the isolated real-trial harness with zero failures. The round-three gate introduced no table, command, dependency, or changed input contract.
+
+## Unsupported type census across rounds one to three
+
+This census counts source entries by their declared type, independently of which validation error an import reported first. Round two includes round one's files; round three includes round two's files and adds Beebe BibTeX and BBT JSON. Counts are therefore cumulative within each route, not additive across columns. BibTeX has 27 unsupported-type entries in the 18-file round-one manifest, 157 in the 105-file round-two manifest, and 520 in the 120 BibTeX files of round three; the latter includes 363 Beebe entries. Round three adds 15 CSL entries with unsupported types and seven Zotero parent items of unsupported types with child notes or attachments. The earlier reports count 143 and 362 `invalid_bib_entry` outcomes whose first reported reason was unsupported type; this source census also counts entries with another first failure. No type is admitted by this census.
+
+| Route | Unsupported type | Round 1 | Round 2 | Round 3 | Example entry |
+| --- | --- | ---: | ---: | ---: | --- |
+| bib | `audio` | 0 | 10 | 10 | Import error with character '+' in BibTeX field name #2660.bib: 10.13:91a |
+| bib | `booklet` | 0 | 0 | 32 | font.bib: Anonymous:1986:MCF |
+| bib | `collection` | 0 | 7 | 7 | BBT does not import groups from JabRef 5.1 #1641.bib: Hornborg2012 |
+| bib | `constitution` | 0 | 6 | 6 | Import error with character '+' in BibTeX field name #2660.bib: 11.9:23 |
+| bib | `dataset` | 0 | 6 | 6 | Import error with character '+' in BibTeX field name #2660.bib: 10.9:75a |
+| bib | `film` | 1 | 1 | 1 | web_page and other mendeley idiocy.bib: <empty key> |
+| bib | `generic` | 24 | 24 | 24 | web_page and other mendeley idiocy.bib: Callahan2011 |
+| bib | `hardware` | 0 | 2 | 2 | Import error with character '+' in BibTeX field name #2660.bib: 10.10:78a |
+| bib | `image` | 0 | 11 | 11 | Import error with character '+' in BibTeX field name #2660.bib: 10.14:97a |
+| bib | `inreference` | 0 | 3 | 3 | Better BibLaTeX import improvements #549.bib: Algar1985 |
+| bib | `jurisdiction` | 0 | 8 | 8 | Import error with character '+' in BibTeX field name #2660.bib: 11.4:1 |
+| bib | `legadminmaterial` | 0 | 3 | 3 | Import error with character '+' in BibTeX field name #2660.bib: 11.7:19 |
+| bib | `legal` | 0 | 1 | 1 | Import error with character '+' in BibTeX field name #2660.bib: 11.10:29 |
+| bib | `legislation` | 0 | 8 | 8 | Import error with character '+' in BibTeX field name #2660.bib: 11.5:8 |
+| bib | `legmaterial` | 0 | 4 | 4 | Import error with character '+' in BibTeX field name #2660.bib: 11.6:14 |
+| bib | `movie` | 0 | 2 | 2 | Improve import of films #1837.bib: Marka.S:2011movie |
+| bib | `nameonly` | 0 | 28 | 28 | Import error with character '+' in BibTeX field name #2660.bib: 9.44:1a |
+| bib | `periodical` | 0 | 2 | 177 | Import error with character '+' in BibTeX field name #2660.bib: 10.1:12a |
+| bib | `presentation` | 0 | 4 | 4 | Import error with character '+' in BibTeX field name #2660.bib: 10.5:60 |
+| bib | `proceedings` | 1 | 3 | 159 | Some bibtex entries quietly discarded on import from bib file #873.bib: Etzioni:SWAgents |
+| bib | `reference` | 0 | 1 | 1 | Import error with character '+' in BibTeX field name #2660.bib: 10.2:33c |
+| bib | `softwareversion` | 1 | 1 | 1 | import software related biblatex entries #1544.bib: delebecque:hal-02090402v1 |
+| bib | `talk` | 0 | 1 | 1 | Import Jabref fileDirectory, unexpected reference type #1058.bib: Afonso2011 |
+| bib | `video` | 0 | 20 | 20 | Film references do not export properly for APA formating #2494.bib: formanOneFlewCuckoo1975 |
+| bib | `webpage` | 0 | 1 | 1 | accessDate must be ISO date #2376.bib: r42 |
+| csl | `broadcast` | 0 | 0 | 3 | Export of creator-type fields from embedded CSL variables #365 uppercase DOI #825.csl.json: friends:leia:tv |
+| csl | `dataset` | 0 | 0 | 1 | Setting the item type via the cheater syntax #587.csl.json: noauthor_object_nodate |
+| csl | `entry-encyclopedia` | 0 | 0 | 2 | Export of creator-type fields from embedded CSL variables #365 uppercase DOI #825.csl.json: Blair2004 |
+| csl | `legal_case` | 0 | 0 | 1 | Better CSL JSON does not include authority field #2019.csl.json: WhiteState1966 |
+| csl | `motion_picture` | 0 | 0 | 2 | Export of creator-type fields from embedded CSL variables #365 uppercase DOI #825.csl.json: Doe2015 |
+| csl | `musical_score` | 0 | 0 | 1 | Setting the item type via the cheater syntax #587.csl.json: mozart_sonatas_1960 |
+| csl | `pamphlet` | 0 | 0 | 1 | Setting the item type via the cheater syntax #587.csl.json: clark_mesopotamia_1957 |
+| csl | `performance` | 0 | 0 | 1 | Does setting a type via cheater syntax work currently #2473.csl.json: nachwilliamshakespeareHamlet2001 |
+| csl | `review-book` | 0 | 0 | 2 | Setting the item type via the cheater syntax #587.csl.json: kamp_deconstructing_2006 |
+| csl | `video` | 0 | 0 | 1 | Extra field type video not exported #3536.csl.json: marreEdge1992 |
+| zotero | `artwork` | 0 | 0 | 1 | Does setting a type via cheater syntax work currently #2473.json: Hamlet nach William Shakespeare |
+| zotero | `encyclopediaArticle` | 0 | 0 | 1 | Bulk performance test.json: All Watched Over by Machines of Loving Grace (TV series) |
+| zotero | `map` | 0 | 0 | 2 | Bulk performance test.json: Brönsholm By. Karlebo Sogn, Lynge Kronborg Herred, Frederiksborg Amt. Matrikulskort i 1:4000. Trykt i juli 1939. Gyldighedsperiode 1939-77 |
+| zotero | `podcast` | 0 | 0 | 1 | raw bibtex fields with colon in extra #2750.json: ‘Unfinished business’: Ring CEO Liz Hamren leads Amazon’s home monitoring products into the AI era |
+| zotero | `tvBroadcast` | 0 | 0 | 1 | Export of creator-type fields from embedded CSL variables #365 uppercase DOI #825.json: The one with the Princess Leia fantasy |
+| zotero | `videoRecording` | 0 | 0 | 1 | Export of creator-type fields from embedded CSL variables #365 uppercase DOI #825.json: The one with the Princess Leia fantasy |
+
+The examples identify the source file and its entry key, CSL id, or Zotero parent title. Each source path is in the corresponding manifest under `/Volumes/Casa/tmp/refs-phase6.2V9Id6`, `/Volumes/Casa/tmp/refs-corpus2.kMP4Kz`, or `/Volumes/Casa/tmp/refs-corpus3.UJF8YT`. The repeatable counter is `tests/fixtures/real-trial/corpus_type_census.py`; its minimized three-route fixture test pins the counting rule.
