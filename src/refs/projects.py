@@ -76,14 +76,20 @@ def cite_import(catalog: Path, project_ref: str, origin: str, *, dry_run=False) 
             raise RefError('import_origin_missing', 'Use the origin supplied to import, or its input path when no origin was supplied')
         # Older originals predate import_id. Creation time identifies their run;
         # a later unchanged import of the same bytes must not claim the source.
+        # Two indexed paths, unioned in Python: the OR form of this join defeats every index and scales with sources times imports.
         candidates = {}
-        for row in connection.execute("""SELECT s.id, s.citation_key, i.origin FROM sources s
+        by_batch = """SELECT s.id, s.citation_key, i.origin FROM sources s
             JOIN originals o ON o.source_id=s.id AND o.origin='import-applied'
-            JOIN imports i ON i.id=json_extract(o.definitions_json,'$.import_id') OR
-              (json_extract(o.definitions_json,'$.import_id') IS NULL AND i.file_digest=o.file_digest
-               AND i.applied>0 AND s.created_at>=i.started_at AND (i.finished_at IS NULL OR s.created_at<=i.finished_at))
-            WHERE s.state='active' ORDER BY s.citation_key"""):
-            candidates.setdefault((row['id'], row['citation_key']), set()).add(row['origin'])
+            JOIN imports i ON i.id=json_extract(o.definitions_json,'$.import_id')
+            WHERE s.state='active'"""
+        by_digest = """SELECT s.id, s.citation_key, i.origin FROM sources s
+            JOIN originals o ON o.source_id=s.id AND o.origin='import-applied' AND json_extract(o.definitions_json,'$.import_id') IS NULL
+            JOIN imports i ON i.file_digest=o.file_digest AND i.applied>0 AND s.created_at>=i.started_at AND (i.finished_at IS NULL OR s.created_at<=i.finished_at)
+            WHERE s.state='active'"""
+        for statement in (by_batch, by_digest):
+            for row in connection.execute(statement):
+                candidates.setdefault((row['id'], row['citation_key']), set()).add(row['origin'])
+        candidates = dict(sorted(candidates.items(), key=lambda item: item[0][1]))
         selected = []
         for (source_id, key), origins in candidates.items():
             if origin in origins:

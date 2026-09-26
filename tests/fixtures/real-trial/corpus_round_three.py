@@ -300,7 +300,9 @@ def run(sample: Path, work: Path, manifest_path: Path) -> dict:
             clone_database(home/'cat/catalog.sqlite', checkpoint)
             progress['active_index'] = index
             save_progress(progress_path, progress)
+            file_started = time.monotonic()
             result = gate_file(settings, home, index, row, remaining)
+            result['seconds'] = round(time.monotonic()-file_started, 2)
             results.append(result)
             progress['active_index'] = None
             progress['peak_temporary_bytes'] = max(peak_disk, baseline_free-shutil.disk_usage(work).free)

@@ -12,8 +12,8 @@ from pathlib import Path
 
 import pytest
 
-SCHEMA_VERSION = 5
-TABLE_COUNT = 15
+SCHEMA_VERSION = 6
+TABLE_COUNT = 16
 REFS_COMMAND = [sys.executable, "-m", "refs", "--no-project-config"]
 
 

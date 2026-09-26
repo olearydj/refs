@@ -77,6 +77,16 @@ def doi_plan(connection) -> dict[str, set[str]]:
     return existing
 
 
+def title_plan(connection) -> dict[str, list[dict]]:
+    """Lowered title to the sources carrying it, built once per batch so the likely-match warning never scans per entry."""
+    existing: dict[str, list[dict]] = {}
+    for row in connection.execute('SELECT id,citation_key,metadata_json FROM sources'):
+        title = json.loads(row['metadata_json']).get('title')
+        if isinstance(title, str) and title:
+            existing.setdefault(title.lower(), []).append(dict(id=row['id'], citation_key=row['citation_key']))
+    return existing
+
+
 def decisions_plan(connection, origin: str) -> dict[str, list[dict]]:
     kept: dict[str, list[dict]] = {}
     for row in connection.execute("SELECT e.source_id,e.decisions_json FROM import_entries e JOIN imports i ON i.id=e.import_id WHERE i.origin=? AND e.source_id IS NOT NULL AND e.decisions_json!='[]'",(origin,)):
@@ -173,7 +183,7 @@ def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False
     return source_id, dict(bound=compatible, incoming_key=source.citation_key, catalog_key=current['citation_key'], filled=fills, conflicts=conflicts)
 
 
-def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None, doi_groups=None, kept_by_source=None, origin=None, loc=None) -> dict:
+def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None, doi_groups=None, kept_by_source=None, origin=None, loc=None, title_groups=None) -> dict:
     raw = block['raw']
     parsed = None
     incoming = None
@@ -201,9 +211,13 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
                 sources.set_loc(connection, sources.core_record(connection, source_id), loc, dry_run=dry_run)
             outcome = dict(outcome='applied' if binding.get('filled') else 'unchanged', source_id=source_id, citation_key=key)
         else:
-            likely = connection.execute("SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json,'$.title'))=lower(?)", (source.metadata.title,)).fetchall()
+            title = source.metadata.title
+            if title_groups is not None:
+                likely = list(title_groups.get(title.lower(), [])) if isinstance(title, str) else []
+            else:
+                likely = [dict(row) for row in connection.execute("SELECT id, citation_key FROM sources WHERE lower(json_extract(metadata_json,'$.title'))=lower(?)", (title,)).fetchall()]
             if likely:
-                warnings.append(notice('likely_match', 'Similar title found; imported separately because title alone is not identity', details={'candidates':[dict(row) for row in likely]}))
+                warnings.append(notice('likely_match', 'Similar title found; imported separately because title alone is not identity', details={'candidates': likely}))
             if not dry_run:
                 if loc is not None and source.loc is None:
                     source.loc = loc
@@ -272,13 +286,18 @@ def run(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: str |
         isbn_groups = isbn_plan(connection,incoming)
         doi_groups = doi_plan(connection) if any(source.metadata.DOI for source in incoming) else None
         kept_by_source = decisions_plan(connection,origin or locator)
+        title_groups = title_plan(connection)
     entries = []
     for block in blocks:
         if block['kind'] != 'entry':
             continue
         with connect(catalog, write=not dry_run) as connection:
-            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings, import_id=run_id,isbn_groups=isbn_groups,doi_groups=doi_groups,kept_by_source=kept_by_source,origin=origin or locator)
+            result = apply_entry(connection, block, locator, fingerprint, dry_run=dry_run, settings=settings, import_id=run_id,isbn_groups=isbn_groups,doi_groups=doi_groups,kept_by_source=kept_by_source,origin=origin or locator,title_groups=title_groups)
             outcome = result['outcome']
+            if outcome == 'applied' and result.get('source_id') and result.get('incoming'):
+                created_title = result['incoming']['metadata'].get('title')
+                if isinstance(created_title, str) and created_title:
+                    title_groups.setdefault(created_title.lower(), []).append(dict(id=result['source_id'], citation_key=result.get('citation_key')))
             if doi_groups is not None and (outcome in ('applied','unchanged') or result.get('binding',{}).get('bound')) and result.get('source_id') and result.get('incoming'):
                 doi = result['incoming']['metadata'].get('DOI')
                 if doi:
@@ -637,8 +656,8 @@ def inspect_batch(connection, batch: str, status=None) -> dict:
     entries, revisions = [], []
     for row in connection.execute('SELECT * FROM import_entries WHERE import_id=? ORDER BY rowid', (batch,)):
         entry = json.loads(row['payload_json'])
-        current = sources.record(connection,row['source_id']) if row['source_id'] else None
-        revision = current['revision'] if current else None
+        found = connection.execute('SELECT revision FROM sources WHERE id=?', (row['source_id'],)).fetchone() if row['source_id'] else None
+        revision = found[0] if found else None
         revisions.append((row['id'], row['source_id'], revision))
         entry.update(entry_id=row['id'], status=row['status'], source_revision=revision,
                      candidates=json.loads(row['candidates_json']), decisions=json.loads(row['decisions_json']))
@@ -658,9 +677,13 @@ def inspect_batch(connection, batch: str, status=None) -> dict:
 def list_batches(catalog: Path) -> dict:
     with connect(catalog) as connection:
         items = []
-        for row in connection.execute('SELECT id,started_at FROM imports ORDER BY started_at DESC,rowid DESC'):
-            review = inspect_batch(connection,row['id'])
-            items.append({name:review[name] for name in ('import_id','origin','counts','batch_revision')} | {'created':row['started_at']})
+        for run in connection.execute('SELECT id,origin,started_at,revision,applied,unchanged,conflict,invalid FROM imports ORDER BY started_at DESC,rowid DESC'):
+            # The review token binds the batch revision and every observed source revision, read in one indexed query per batch.
+            revisions = [(row['id'], row['source_id'], row['revision']) for row in connection.execute(
+                'SELECT e.id, e.source_id, s.revision FROM import_entries e LEFT JOIN sources s ON s.id=e.source_id WHERE e.import_id=? ORDER BY e.rowid', (run['id'],))]
+            token = int.from_bytes(hashlib.sha256(json.dumps([run['revision'],revisions]).encode()).digest()[:8], 'big')
+            items.append(dict(import_id=run['id'], origin=run['origin'], counts={name:run[name] for name in ('applied','unchanged','conflict','invalid')},
+                              batch_revision=token, created=run['started_at']))
         return dict(items=items)
 
 

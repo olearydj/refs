@@ -23,10 +23,16 @@ def projection(record: dict):
 
 
 def refresh(connection, record: dict) -> None:
-    connection.execute('DELETE FROM search_projection WHERE source_id=?', (record['id'],))
+    # The FTS table cannot index a plain column, so a source's rows are found by rowid through search_rows.
+    rows = [row[0] for row in connection.execute('SELECT rowid FROM search_rows WHERE source_id=?', (record['id'],))]
+    if rows:
+        connection.execute(f"DELETE FROM search_projection WHERE rowid IN ({','.join('?' * len(rows))})", rows)
+        connection.execute('DELETE FROM search_rows WHERE source_id=?', (record['id'],))
     if record['state'] == 'active':
-        connection.executemany('INSERT INTO search_projection (source_id, field, origin, text) VALUES (?, ?, ?, ?)',
-                               [(record['id'], field, origin, text) for field, origin, text in projection(record)])
+        for field, origin, text in projection(record):
+            cursor = connection.execute('INSERT INTO search_projection (source_id, field, origin, text) VALUES (?, ?, ?, ?)',
+                                        (record['id'], field, origin, text))
+            connection.execute('INSERT INTO search_rows (rowid, source_id) VALUES (?, ?)', (cursor.lastrowid, record['id']))
 
 
 def matches(connection, query: str) -> dict[str, list[dict]]:

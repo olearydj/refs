@@ -17,7 +17,7 @@ from refs.config import Settings, absolute, toml_text
 from refs.results import RefError, notice, upgrade_notices
 
 MIGRATIONS = ('001_initial.sql', '002_zotero_ingest.sql', '003_source_loc.sql',
-              '004_file_operations.sql', '005_lowercase_unfiled.sql')
+              '004_file_operations.sql', '005_lowercase_unfiled.sql', '006_lookup_indexes.sql')
 SCHEMA_VERSION = len(MIGRATIONS)
 
 

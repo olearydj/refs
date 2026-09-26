@@ -414,12 +414,17 @@ def phase6_corpus(sample, work, manifest_path):
     results = []
     try:
         linked_before = 0
+        file_started = [time.monotonic()]
+        def finish(result):
+            result['seconds'] = round(time.monotonic()-file_started[0], 2)
+            results.append(result)
         for index, row in enumerate(classification):
+            file_started[0] = time.monotonic()
             peak_disk = max(peak_disk, baseline_free-shutil.disk_usage(work).free)
             if time.monotonic()-started > limits['seconds'] or peak_disk > limits['temporary_bytes']:
                 raise ValueError('Corpus time or disk ceiling exceeded')
             if row['kind'] == 'refused_whole':
-                results.append(row)
+                finish(row)
                 continue
             origin = f'phase6-{index}'
             code, imported = bounded_cli('import', '--format', 'bib', '--input', row['path'], '--origin', origin)
@@ -450,7 +455,7 @@ def phase6_corpus(sample, work, manifest_path):
             bounded_cli('project', 'create', project)
             cited_code, cited = bounded_cli('project', 'cite', project, '--from-import', origin)
             if cited_code:
-                results.append(row | dict(import_exit=code, outcomes=dict(outcomes), entry_codes=dict(entry_codes), invalid_reasons=dict(invalid_reasons), conflict_paths=dict(conflict_paths), examples=examples, linked_resources_added=linked_added, reimport=again_counts, project_cite_code=cited['errors'][0]['code'], export=dict(skipped='project citation refused')))
+                finish(row | dict(import_exit=code, outcomes=dict(outcomes), entry_codes=dict(entry_codes), invalid_reasons=dict(invalid_reasons), conflict_paths=dict(conflict_paths), examples=examples, linked_resources_added=linked_added, reimport=again_counts, project_cite_code=cited['errors'][0]['code'], export=dict(skipped='project citation refused')))
                 continue
             target = home/f'export-{index}.bib'
             export_code, export = bounded_cli('export', '--project', project, '--output', str(target))
@@ -467,7 +472,7 @@ def phase6_corpus(sample, work, manifest_path):
                 render = dict(skipped='pandoc unavailable')
             else:
                 render = dict(skipped='export blocked', codes=export_codes)
-            results.append(row | dict(import_exit=code, outcomes=dict(outcomes), entry_codes=dict(entry_codes), invalid_reasons=dict(invalid_reasons), conflict_paths=dict(conflict_paths), examples=examples, linked_resources_added=linked_added, reimport=again_counts, project_cite_code=None, export_exit=export_code, export_entries=(export.get('data') or {}).get('count'), export_codes=export_codes, export_findings=dict(export_findings), export_examples=export_examples, render=render))
+            finish(row | dict(import_exit=code, outcomes=dict(outcomes), entry_codes=dict(entry_codes), invalid_reasons=dict(invalid_reasons), conflict_paths=dict(conflict_paths), examples=examples, linked_resources_added=linked_added, reimport=again_counts, project_cite_code=None, export_exit=export_code, export_entries=(export.get('data') or {}).get('count'), export_codes=export_codes, export_findings=dict(export_findings), export_examples=export_examples, render=render))
             peak_disk = max(peak_disk, baseline_free-shutil.disk_usage(work).free)
             if time.monotonic()-started > limits['seconds'] or peak_disk > limits['temporary_bytes']:
                 raise ValueError('Corpus time or disk ceiling exceeded')
