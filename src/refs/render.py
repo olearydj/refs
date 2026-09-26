@@ -167,6 +167,11 @@ def style_key(value: str, key: str, terminal: bool, width: int) -> str:
     return output.getvalue().rstrip('\n')
 
 
+def type_label(record: dict) -> str:
+    native = record.get('native_type', {}).get('value')
+    return record['metadata']['type'] + (f' ({native})' if native else '')
+
+
 def record_list(command: str, data: dict, terminal: bool, width: int, warnings: list[dict] | None = None) -> str:
     items = data['items'] if 'items' in data else data['sources']
     if not items:
@@ -181,7 +186,7 @@ def record_list(command: str, data: dict, terminal: bool, width: int, warnings: 
         creator = first.get('family') or first.get('literal') or next(iter(authors(item)), '(no author)')
         row = [item['citation_key'], issued_year(item), creator]
         if extras:
-            row.append(item['metadata'].get('type', ''))
+            row.append(type_label(item))
         if count:
             row.append(str(len(item.get('resources', []))))
         title_index = len(row)
@@ -214,7 +219,7 @@ def record_list(command: str, data: dict, terminal: bool, width: int, warnings: 
 def one_record(command: str, data: dict, terminal: bool, width: int, warnings: list[dict] | None = None) -> str:
     metadata = data['metadata']
     rows = [
-        ['Key', data['citation_key']], ['Type', metadata['type']],
+        ['Key', data['citation_key']], ['Type', type_label(data)],
         ['Authors', '; '.join(authors(data)) or '(not supplied)'],
         ['Year', issued_year(data)], ['Title', metadata.get('title', '(not supplied)')],
     ]

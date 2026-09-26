@@ -46,6 +46,7 @@ def test_zotero_unsupported_note_parent_is_item_refusal(initialized, tmp_path):
     directory = tmp_path/'zotero'
     (directory/'items').mkdir(parents=True)
     entries = json.loads(fixture.read_text())['items']
+    next(entry for entry in entries if entry['key']=='PARENT01')['data']['itemType'] = 'case'
     for entry in entries:
         (directory/'items'/f"{entry['key']}.json").write_text(json.dumps(entry))
     (directory/'collections.json').write_text('[]')
@@ -56,7 +57,7 @@ def test_zotero_unsupported_note_parent_is_item_refusal(initialized, tmp_path):
     assert result['counts'] == dict(applied=1, unchanged=0, conflict=0, invalid=1)
     refused = next(entry for entry in result['entries'] if entry['item_key'] == 'PARENT01')
     assert refused['code'] == 'unknown_zotero_type'
-    assert 'artwork' in refused['message']
+    assert 'case' in refused['message']
     with connect(tmp_path/'cat') as connection:
         assert connection.execute('SELECT count(*) FROM sources').fetchone()[0] == 1
         original = connection.execute("SELECT raw_bytes FROM originals WHERE locator LIKE '%CHILD001.json'").fetchone()[0]

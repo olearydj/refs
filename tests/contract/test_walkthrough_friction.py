@@ -47,7 +47,7 @@ def test_project_show_uses_key_sorted_list_rows(human, initialized, tmp_path, re
     for key in ('smith-2024-learningPython','alpha'):
         initialized('project','cite','paper',key)
     assert human('project','show','paper').splitlines()[1:] == human('list','--sort','key').splitlines()
-    assert human('project','show','paper').splitlines()[1] == 'alpha\t2025\tJones\tbook\t0\tZebra Study'
+    assert human('project','show','paper').splitlines()[1] == 'alpha\t2025\tJones\tbook (book)\t0\tZebra Study'
 
 
 

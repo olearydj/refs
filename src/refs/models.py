@@ -144,6 +144,7 @@ class MetadataBase(StrictModel):
         if isinstance(value.get("language"), str):
             value["language"] = languages.normalize(value["language"])
         kind = value.setdefault("type", "document")
+        kind = value["type"] = REGISTRY.get("csl_type_aliases", {}).get(kind, kind)
         if kind not in REGISTRY["core_fields"]["type"]["schema"]["enum"]:
             raise ValueError("Unsupported source type")
         for key, item in value.items():
@@ -167,7 +168,7 @@ class MetadataBase(StrictModel):
 
 
 class Metadata(MetadataBase):
-    type: Literal['article', 'article-journal', 'article-magazine', 'article-newspaper', 'book', 'chapter', 'document', 'manuscript', 'paper-conference', 'patent', 'post-weblog', 'report', 'software', 'speech', 'standard', 'thesis', 'webpage'] = "document"
+    type: Literal[tuple(REGISTRY["core_fields"]["type"]["schema"]["enum"])] = "document"  # ty: ignore[invalid-type-form]
     language: Text | None = None
     author: list[Name] | None = None
     collection_editor: list[Name] | None = Field(default=None, alias='collection-editor')

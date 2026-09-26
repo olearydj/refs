@@ -115,7 +115,7 @@ def _project_titles(metadata, kind, entry_type, used, notes, copy, assess):
         if not metadata.get('container-title'):
             assess('missing_journal', 'faithful_incomplete', 'No journal was supplied')
     elif kind in ('chapter', 'paper-conference'):
-        copy('container-title', 'title' if entry_type == 'inbook' else 'booktitle')
+        copy('container-title', 'title' if entry_type == 'inbook' and not metadata.get('title') else 'booktitle')
     elif 'container-title' in metadata:
         notes.append('Website: ' + str(metadata['container-title']))
         used.add('container-title')
@@ -329,6 +329,9 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             native = value.get('native_type', {}).get('value', '')
             degree = str(metadata.get('genre', '')).casefold().replace('.', '')
             entry_type = 'phdthesis' if native == 'phdthesis' or degree in ('phd', 'phd thesis', 'doctoral thesis', 'dissertation') else 'mastersthesis' if native == 'mastersthesis' or degree in ('masters', "master's thesis", 'master thesis', 'msc', 'ma') else 'misc'
+        native = value.get('native_type', {}).get('value', '')
+        if native in REGISTRY['portable_entry_types']:
+            entry_type = native
         if kind == 'chapter' and not metadata.get('title'):
             entry_type = 'inbook'
         if entry_type == 'misc' or kind in ('article', 'article-magazine', 'article-newspaper'):
@@ -374,6 +377,10 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             _project_language(metadata, used, put, assess)
             _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess)
             _project_identifiers(metadata, used, put, assess)
+            if kind in ('periodical', 'entry-encyclopedia', 'map', 'graphic', 'motion_picture', 'song', 'broadcast', 'dataset', 'post'):
+                put('csltype', kind)
+                if metadata.get('genre'):
+                    put('cslgenre', metadata['genre'])
             _project_note_fields(metadata, used, notes, assess)
             _project_extensions(metadata, value, record, entry_type, notes, put, assess)
             _finish_notes(metadata, kind, record, notes, put)

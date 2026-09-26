@@ -278,11 +278,13 @@ def parse(raw: bytes) -> dict:
         parsed_month = month_number(fields['month']) if 'month' in fields else None
         validate_surface(text, entry, fields)
         kind = entry.entry_type.lower()
-        canonical = REGISTRY['bib_type_aliases'].get(kind)
+        canonical = decode(fields['csltype']) if kind == 'misc' and 'csltype' in fields else REGISTRY['bib_type_aliases'].get(kind)
         if canonical is None:
             raise ValueError('Unsupported entry type')
         metadata = {'type': canonical}
         value: dict = {'schema_version': '1.0', 'metadata': metadata, 'native_type': {'namespace':'bibtex', 'value':kind}, 'provenance': [{'origin': 'import', 'access': 'unknown'}]}
+        if canonical != REGISTRY['bib_type_aliases'].get(kind):
+            value.pop('native_type')
         protection = {}
         enclosing = {key.lower(): value for key,value in entry.parser_metadata.get('removed_enclosing', {}).items()}
         unsupported = {field for field, contents in fields.items() if field not in enclosing and not contents.isdecimal() and field != 'month'}
