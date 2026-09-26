@@ -43,7 +43,7 @@ def census(manifest: Path) -> dict:
         elif route == 'zotero':
             for index, item in enumerate(json.loads(path.read_bytes())['items']):
                 kind = item.get('itemType')
-                if not isinstance(kind, str) or kind in ZOTERO_TYPES or not (item.get('notes') or item.get('attachments')):
+                if not isinstance(kind, str) or kind in ZOTERO_TYPES or kind in {'note', 'attachment'}:
                     continue
                 counts[(route, kind)] += 1
                 examples.setdefault((route, kind), f"{path.name}: {item.get('key') or item.get('title') or f'index {index}'}")
