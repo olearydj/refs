@@ -10,6 +10,7 @@ from pylatexenc.latex2text import LatexNodes2Text
 
 from refs import math_text
 from refs.models import (
+    ARTICLE_SUBTYPES,
     MONTHS,
     REGISTRY,
     SEASONS,
@@ -295,15 +296,17 @@ def parse(raw: bytes) -> dict:
         parsed_month = month_number(fields['month']) if 'month' in fields and parsed_season is None else None
         validate_surface(text, entry, fields)
         kind = entry.entry_type.lower()
+        subtype = fields['entrysubtype'].strip().casefold() if kind == 'article' and any(name.lower() == 'entrysubtype' for name in entry.parser_metadata.get('removed_enclosing', {})) else None
         canonical = decode(fields['csltype']) if kind == 'misc' and 'csltype' in fields else REGISTRY['bib_type_aliases'].get(kind)
         if canonical is None:
             details = deferred_type('bib', kind)
             if details:
                 raise RefError('invalid_bib_entry', 'Unsupported entry type. ' + details['recommendation'], 2, details=details | {'limitations': limitations})
             raise ValueError('Unsupported entry type')
+        canonical = ARTICLE_SUBTYPES.get(subtype, canonical)
         metadata = {'type': canonical}
         value: dict = {'schema_version': '1.0', 'metadata': metadata, 'native_type': {'namespace':'bibtex', 'value':kind}, 'provenance': [{'origin': 'import', 'access': 'unknown'}]}
-        if canonical != REGISTRY['bib_type_aliases'].get(kind):
+        if canonical != REGISTRY['bib_type_aliases'].get(kind) and subtype not in ARTICLE_SUBTYPES:
             value.pop('native_type')
         protection = {}
         enclosing = {key.lower(): value for key,value in entry.parser_metadata.get('removed_enclosing', {}).items()}
@@ -315,6 +318,8 @@ def parse(raw: bytes) -> dict:
         traditional = kind == 'inbook' and 'booktitle' not in fields and ('chapter' in fields or 'pages' in fields)
 
         consumed = map_fields(value, fields, kind, traditional, unsupported, protection, limitations)
+        if subtype in ARTICLE_SUBTYPES:
+            consumed.add('entrysubtype')
         for field in set(fields) - consumed:
             limitations.append(dict(field=field, reason='Unmapped field preserved verbatim'))
         if 'note' in fields and 'note' not in unsupported:

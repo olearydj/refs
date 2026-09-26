@@ -73,6 +73,7 @@ class StrictModel(BaseModel):
 
 REGISTRY_BYTES = files("refs").joinpath("data/bibliographic-coverage.json").read_bytes()
 REGISTRY = json.loads(REGISTRY_BYTES)
+ARTICLE_SUBTYPES = {row["entrysubtype"]: row["canonical"] for row in REGISTRY["type_mappings"] if row.get("entrysubtype")}
 REGISTRY_PROVENANCE = json.loads(files("refs").joinpath("data/provenance.json").read_text())
 if hashlib.sha256(REGISTRY_BYTES).hexdigest() != REGISTRY_PROVENANCE["registry"]["sha256"]:
     raise RuntimeError("Packaged mapping registry failed its provenance hash check")
@@ -409,7 +410,8 @@ class SourceCreate(StrictModel):
         if self.native_type is not None:
             label = self.native_type
             mappings = {row["zotero"]: row["canonical"] for row in REGISTRY["type_mappings"]} if label.namespace == "zotero" else REGISTRY["bib_type_aliases"] if label.namespace in ("bibtex", "biblatex") else {}
-            if mappings.get(label.value) != kind:
+            article_subtype = label.namespace in ("bibtex", "biblatex") and label.value == "article" and kind in ARTICLE_SUBTYPES.values()
+            if mappings.get(label.value) != kind and not article_subtype:
                 raise ValueError("Native label contradicts the canonical type or uses an unknown namespace")
         if self.extensions.patent is not None and kind != "patent":
             raise ValueError("Patent extensions require type patent")

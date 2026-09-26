@@ -70,7 +70,7 @@ There is no saved export projection in slice 1. Re-importing a documented lossy 
 
 ## Applicability
 
-The registry explicitly lists field_applicability and extension_applicability by canonical type. An input mapping applies within its type scope. Any pinned CSL variable is accepted on any supported type during capture, editing and import. Applicability is assessed only on export: a fact without a portable slot is a documented omission. Source type defaults to document only when omitted for casual capture. The core type enum is restricted to the modeled types; the pinned CSL schema supplies the accepted variable vocabulary. `chapter-number` owns the traditional part identifier.
+The registry explicitly lists field_applicability and extension_applicability by canonical type. An input mapping applies within its type scope. Any pinned CSL variable is accepted on any supported type during capture, editing and import. Applicability is assessed only on export: a fact without a portable slot is a documented omission. Source type defaults to document only when omitted for casual capture. The core type enum is restricted to the modeled types; the pinned CSL schema supplies the accepted variable vocabulary. `chapter-number` owns the traditional part identifier. Portable @article output uses entrysubtype and address to carry the newspaper and magazine distinction and place.
 
 ## Complete envelope and import omission rules
 

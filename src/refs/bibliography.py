@@ -258,7 +258,12 @@ def _project_note_fields(metadata, used, notes, assess):
             assess('noncitation_omission', 'info', f'{field} is retained in the catalog', 'metadata.' + field)
     used.add('note')
     if metadata.get('note'):
-        notes.insert(0, str(metadata['note']))
+        note = str(metadata['note'])
+        if metadata['type'] in models.ARTICLE_SUBTYPES.values() and metadata.get('publisher-place'):
+            redundant = 'Published in ' + str(metadata['publisher-place']) + '.'
+            note = '; '.join(part for part in note.split('; ') if part != redundant)
+        if note:
+            notes.insert(0, note)
     for field in sorted(set(metadata) - used):
         if metadata[field]:
             assess('unassessed_mapping', 'unknown', f'No assessed portable projection for {field}', 'metadata.' + field)
@@ -384,6 +389,10 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
         try:
             _project_names(metadata, entry_type, fields, used, put, assess)
             _project_titles(metadata, kind, entry_type, used, notes, copy, assess)
+            if entry_type == 'article':
+                for subtype, canonical in models.ARTICLE_SUBTYPES.items():
+                    if kind == canonical:
+                        put('entrysubtype', subtype)
             _project_dates(metadata, used, notes, put, assess)
             _project_language(metadata, used, put, assess)
             _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess, misc_projection=misc_projection)

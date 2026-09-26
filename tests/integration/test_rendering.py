@@ -241,3 +241,20 @@ def test_exported_podcast_genre_reaches_pandoc_csl_json(tmp_path, pytestconfig):
     assert len(records) == 1
     assert records[0]['id'] == 'podcast'
     assert records[0]['genre'] == 'Audio podcast'
+
+
+@pytest.mark.slow
+def test_exported_pilot_newspaper_type_date_and_place_reach_pandoc(tmp_path, pytestconfig):
+    from refs.models import SourceCreate
+
+    source = SourceCreate.model_validate_json((ROOT/'tests/fixtures/rendering/newspaper.json').read_bytes())
+    output, _ = serialize([source.canonical()])
+    (tmp_path/'newspaper.bib').write_bytes(output)
+    rendered = run([tool('pandoc', pytestconfig), 'newspaper.bib', '--from=bibtex', '--to=csljson'], tmp_path)
+    records = json.loads(rendered)
+    assert len(records) == 1
+    assert records[0]['id'] == 'kt-1942-10-30'
+    assert records[0]['type'] == 'article-newspaper'
+    assert records[0]['issued'] == {'date-parts': [[1942, 10, 30]]}
+    assert records[0]['page'] == '1'
+    assert records[0]['publisher-place'] == 'Kingsport, Tennessee'

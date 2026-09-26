@@ -70,12 +70,14 @@
       "zotero": "magazineArticle",
       "canonical": "article-magazine",
       "portable": "article",
+      "entrysubtype": "magazine",
       "fixture": "magazine"
     },
     {
       "zotero": "newspaperArticle",
       "canonical": "article-newspaper",
       "portable": "article",
+      "entrysubtype": "newspaper",
       "fixture": "magazine"
     },
     {
@@ -6528,6 +6530,8 @@
       "post"
     ],
     "publisher-place": [
+      "article-newspaper",
+      "article-magazine",
       "book",
       "chapter",
       "paper-conference",

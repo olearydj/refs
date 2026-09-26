@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "citation_key": "kt-1942-10-30",
+  "metadata": {
+    "type": "article-newspaper",
+    "author": [{"literal": "Kingsport Times"}],
+    "title": "Two of Kingsport enlist in Army",
+    "container-title": "Kingsport Times",
+    "issued": {"date-parts": [[1942, 10, 30]]},
+    "page": "1",
+    "publisher-place": "Kingsport, Tennessee",
+    "note": "Published in Kingsport, Tennessee."
+  },
+  "title_protection": {"title": {"preserve_case": true}}
+}
