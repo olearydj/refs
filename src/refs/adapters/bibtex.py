@@ -234,7 +234,7 @@ def map_fields(value: dict, fields: dict, kind: str, traditional: bool, unsuppor
                 if terms:
                     protection[path[9:]] = dict(protected_terms=terms, preserve_case=contents.startswith('{') and contents.endswith('}') and decode(contents) in terms)
         except ValueError as exc:
-            if isinstance(exc, math_text.UnbalancedMath) or field in ('author', 'editor', 'translator', 'bookauthor', 'holder'):
+            if field in ('author', 'editor', 'translator', 'bookauthor', 'holder'):
                 raise
             limitations.append(dict(field=field, reason=str(exc)))
     return consumed

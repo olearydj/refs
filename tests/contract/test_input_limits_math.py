@@ -6,7 +6,6 @@ import pytest
 
 from refs import bibliography, naming
 from refs.adapters import bibtex
-from refs.results import RefError
 
 
 @pytest.mark.parametrize('span', [r'$\alpha$', r'$$\alpha$$', r'\(\alpha\)'])
@@ -44,9 +43,26 @@ def test_unknown_command_outside_math_keeps_its_refusal(initialized,tmp_path):
         assert connection.execute("SELECT raw_bytes FROM originals WHERE origin='import-invalid'").fetchone()[0] == raw
 
 
-def test_unbalanced_dollar_refuses_with_delimiter_reason():
-    with pytest.raises(RefError) as caught:
-        bibtex.parse(br'@article{bad,title={On $\alpha-stable processes}}')
-    assert caught.value.exit_code == 2
-    assert caught.value.issue['code'] == 'invalid_bib_entry'
-    assert caught.value.issue['message'] == 'Unbalanced math delimiter: $'
+def test_unbalanced_dollar_refuses_with_delimiter_reason(initialized, tmp_path):
+    title_raw = br'@article{bad,title={On $\alpha-stable processes}}'
+    title_path = tmp_path/'title.bib'
+    title_path.write_bytes(title_raw)
+    refused = initialized('import', '--format', 'bib', '--input', title_path, expected=4)['data']
+    assert refused['counts'] == dict(applied=0, unchanged=0, conflict=0, invalid=1)
+    assert refused['entries'][0]['code'] == 'invalid_bib_entry'
+    assert {'field':'title', 'reason':'Unbalanced math delimiter: $'} in refused['entries'][0]['limitations']
+    with sqlite3.connect(tmp_path/'cat/catalog.sqlite') as connection:
+        assert connection.execute('SELECT count(*) FROM sources').fetchone()[0] == 0
+        assert connection.execute("SELECT raw_bytes FROM originals WHERE origin='import-invalid'").fetchone()[0] == title_raw
+
+    keywords_raw = br'@article{good,title={A Study},keywords={Drama,Mentally ill$$QMentally ill}}'
+    keywords_path = tmp_path/'keywords.bib'
+    keywords_path.write_bytes(keywords_raw)
+    applied = initialized('import', '--format', 'bib', '--input', keywords_path)['data']
+    assert applied['counts'] == dict(applied=1, unchanged=0, conflict=0, invalid=0)
+    assert applied['entries'][0]['limitations'] == [{'field':'keywords', 'reason':'Unbalanced math delimiter: $$'}]
+    record = initialized('show', 'good')['data']
+    assert record['metadata']['title'] == 'A Study'
+    assert record['legacy_tags'] == []
+    with sqlite3.connect(tmp_path/'cat/catalog.sqlite') as connection:
+        assert connection.execute("SELECT raw_bytes FROM originals WHERE origin='import-applied'").fetchone()[0] == keywords_raw
