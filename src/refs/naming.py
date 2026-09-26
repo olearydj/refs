@@ -8,7 +8,7 @@ from copy import deepcopy
 from importlib.resources import files
 from pathlib import Path
 
-from refs import languages
+from refs import languages, math_text
 from refs.results import RefError, notice
 
 LATIN_BYTES = files('refs').joinpath('data/creator-latin-v1.json').read_bytes()
@@ -45,11 +45,11 @@ def protected_spans(text: str, terms: list[str]) -> list[tuple[int, int]]:
 
 
 def title_case(text: str, protection: dict, boundary: int | None = None, minor_words=None) -> str:
-    text = unicodedata.normalize('NFC', text)
+    text = math_text.transform(text, lambda part: unicodedata.normalize('NFC', part))
     if protection.get('preserve_case'):
         return text
     words = list(re.finditer(r"[^\W_]+(?:['’][^\W_]+)*", text))
-    spans = protected_spans(text, protection.get('protected_terms', []))
+    spans = protected_spans(text, protection.get('protected_terms', [])) + math_text.spans(text)
     pieces, end = [], 0
     for index, match in enumerate(words):
         word = match.group()
@@ -85,7 +85,7 @@ def normalize(record: dict, policy: dict | None = None, fields: set[str] | None 
             continue
         if language and not language.startswith('en'):
             continue
-        spans = protected_spans(text, protection['protected_terms'])
+        spans = protected_spans(text, protection['protected_terms']) + math_text.spans(text)
         if not protection.get('preserve_case') and (shouted or any(any(char.isupper() for char in match.group()[1:]) and not any(a <= match.start() and match.end() <= b for a, b in spans) for match in re.finditer(r'\w+', text))):
             warnings.append(notice('unprotected_capital', 'Review unprotected internal capitals', path=f'metadata.{field}'))
         main = record.get('title_parts', {}).get('main_title') if field == 'title' else None

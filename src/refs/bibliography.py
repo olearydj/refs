@@ -9,7 +9,7 @@ from uuid import uuid4
 
 from pydantic import ValidationError
 
-from refs import files, languages, models, projects, sources
+from refs import files, languages, math_text, models, projects, sources
 from refs.catalog import changed, connect
 from refs.models import (
     IDENTIFIER_FIELDS,
@@ -33,22 +33,25 @@ TEX_ESCAPES = {"\\": r"\textbackslash{}", "{": r"\{", "}": r"\}", "&": r"\&", "%
 def tex(value: str) -> str:
     if any(ord(char) < 32 and char not in "\n\t" for char in value):
         raise ValueError("Control characters cannot be exported")
-    return "".join(TEX_ESCAPES.get(char, char) for char in value)
+    return math_text.transform(value, lambda text: "".join(TEX_ESCAPES.get(char, char) for char in text))
 
 
 def title(value: str, protection: dict) -> str:
-    value = unicodedata.normalize("NFC", value)
+    value = math_text.transform(value, lambda text: unicodedata.normalize("NFC", text))
     if protection.get("preserve_case"):
         return "{" + tex(value) + "}"
     terms = sorted({unicodedata.normalize("NFC", term) for term in protection.get("protected_terms", [])}, key=lambda term: (-len(term), term))
     if not terms:
         return tex(value)
     pattern = re.compile(r"(?<!\w)(?:" + "|".join(re.escape(term) for term in terms) + r")(?!\w)")
-    parts, end = [], 0
-    for match in pattern.finditer(value):
-        parts.extend([tex(value[end:match.start()]), "{" + tex(match.group()) + "}"])
-        end = match.end()
-    return "".join(parts) + tex(value[end:])
+
+    def protected_text(text):
+        parts, end = [], 0
+        for match in pattern.finditer(text):
+            parts.extend([tex(text[end:match.start()]), "{" + tex(match.group()) + "}"])
+            end = match.end()
+        return "".join(parts) + tex(text[end:])
+    return math_text.transform(value, protected_text)
 
 
 def warning(key: str, code: str, message: str, **details) -> dict:

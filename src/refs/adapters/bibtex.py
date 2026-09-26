@@ -8,6 +8,7 @@ from bibtexparser.model import Entry
 from pydantic import ValidationError
 from pylatexenc.latex2text import LatexNodes2Text
 
+from refs import math_text
 from refs.models import MONTHS, REGISTRY, SourceCreate, assign_path, deferred_type, portable_url
 from refs.results import RefError
 
@@ -95,9 +96,11 @@ def original_facts(raw: bytes) -> list[dict]:
 def decode(value: str) -> str:
     # Unknown macros must not disappear through the text decoder.
     allowed = {'relax', 'textit', 'textbf', 'emph', 'textrm', 'texttt', 'textnormal', 'LaTeX', 'TeX', 'ae', 'AE', 'oe', 'OE', 'aa', 'AA', 'o', 'O', 'l', 'L', 'ss', 'i', 'j', 'textbackslash', 'textasciitilde', 'textasciicircum', 'textbraceleft', 'textbraceright', 'c', 'v', 'u', 'H', 'k', 'r', 'b', 'd', 't'}
-    if '$' in value or any(name not in allowed for name in re.findall(r'\\([A-Za-z]+)', value)):
-        raise ValueError('Unsupported TeX command or math; preserve and preprocess explicitly')
-    return LatexNodes2Text().latex_to_text(value).strip()
+    def text_decode(text):
+        if any(name not in allowed for name in re.findall(r'\\([A-Za-z]+)', text)):
+            raise ValueError('Unsupported TeX command or math; preserve and preprocess explicitly')
+        return LatexNodes2Text().latex_to_text(text)
+    return math_text.transform(value, text_decode, strict=True).strip()
 
 
 def names(value: str) -> list[dict]:
@@ -222,7 +225,7 @@ def map_fields(value: dict, fields: dict, kind: str, traditional: bool, unsuppor
                 if terms:
                     protection[path[9:]] = dict(protected_terms=terms, preserve_case=contents.startswith('{') and contents.endswith('}') and decode(contents) in terms)
         except ValueError as exc:
-            if field in ('author', 'editor', 'translator', 'bookauthor', 'holder'):
+            if isinstance(exc, math_text.UnbalancedMath) or field in ('author', 'editor', 'translator', 'bookauthor', 'holder'):
                 raise
             limitations.append(dict(field=field, reason=str(exc)))
     return consumed
