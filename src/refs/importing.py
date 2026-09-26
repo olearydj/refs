@@ -393,7 +393,7 @@ def apply_csl_entry(connection, block: dict, locator: str, file_digest: str, *, 
         elif source_id:
             result = dict(status='applied' if binding.get('filled') else 'unchanged', source_id=source_id)
         else:
-            provenance = sources.allocate_key(connection, source, settings.values if settings else None)
+            provenance = sources.allocate_key(connection, source, settings.values if settings else None, warnings=warnings)
             if not dry_run:
                 source_id = sources.insert_source(connection, source, raw, evidence_locator, format='csljson', warnings=warnings, key_provenance=provenance, limitations=limitations)['id']
             result = dict(status='applied', source_id=source_id)
@@ -502,7 +502,7 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
             if conflicts:
                 result['code'] = 'value_conflict'
         else:
-            provenance = sources.allocate_key(connection, source, settings.values if settings else None)
+            provenance = sources.allocate_key(connection, source, settings.values if settings else None, warnings=warnings)
             if not dry_run:
                 source_id = sources.insert_source(connection, source, entry['raw'], entry['locator'], format='zotero-json', warnings=warnings, key_provenance=provenance)['id']
             result = dict(status='applied', source_id=source_id)

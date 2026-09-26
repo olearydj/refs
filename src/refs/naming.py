@@ -113,7 +113,7 @@ def issued_year(record: dict) -> str:
     return str(parts[0][0]) if parts and parts[0] else 'ND'
 
 
-def key(record: dict, policy: dict | None = None) -> str:
+def key(record: dict, policy: dict | None = None, *, warnings: list[dict] | None = None) -> str:
     settings=(policy or {}).get('keys',{})
     stopwords={word.casefold() for word in settings.get('stopwords',STOPWORDS)}
     words = [word for word in re.findall(r'[^\W_]+', short_title(record)) if word.lower() not in stopwords][:settings.get('title_words',2)]
@@ -129,8 +129,18 @@ def key(record: dict, policy: dict | None = None) -> str:
     year = issued_year(record)
     if year=='ND':
         year=settings.get('missing_year','ND')
-    template=settings.get('template','{author}-{year}-{title}') if creator else settings.get('without_creator','{title}-{year}')
-    return template.format(author=creator_token(creator) if creator else '',year=year,title=title_token)
+    token = ''
+    if creator:
+        try:
+            token = creator_token(creator)
+        except RefError as exc:
+            if record.get('key_author') or exc.issue['code'] != 'key_author_required':
+                raise
+            if warnings is not None:
+                warnings.append(notice('creator_token_fallback', 'Creator gave no usable token; the key uses the title, and key_author can be supplied',
+                                       details={'creator': creator, 'reason': exc.issue['message']}))
+    template=settings.get('template','{author}-{year}-{title}') if token else settings.get('without_creator','{title}-{year}')
+    return template.format(author=token,year=year,title=title_token)
 
 
 def suffix(index: int) -> str:

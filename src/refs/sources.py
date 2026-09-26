@@ -80,10 +80,10 @@ def bindings(source: SourceCreate) -> list[tuple[str, str, str]]:
     ))
 
 
-def allocate_key(connection, source: SourceCreate, policy: dict | None = None) -> dict:
+def allocate_key(connection, source: SourceCreate, policy: dict | None = None, *, warnings: list[dict] | None = None) -> dict:
     if source.citation_key is not None:
         return dict(origin='supplied', policy=None, table_version=None, unicode_version=None)
-    base, index = naming.key(source.canonical(), policy), 0
+    base, index = naming.key(source.canonical(), policy, warnings=warnings), 0
     while connection.execute('SELECT 1 FROM sources WHERE citation_key=?', (base + naming.suffix(index),)).fetchone():
         index += 1
     source.citation_key = SourceCreate.valid_key(base + naming.suffix(index))
@@ -138,7 +138,7 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
         if likely:
             warnings.append(notice('likely_match', 'Similar title found; created separately because title alone is not identity', details={'candidates': likely}))
         warnings.extend(kinds.warnings(normalized))
-        key_provenance = allocate_key(connection, source, policy)
+        key_provenance = allocate_key(connection, source, policy, warnings=warnings)
         if dry_run:
             if loc is not None and source.loc is None:
                 source.loc = loc
