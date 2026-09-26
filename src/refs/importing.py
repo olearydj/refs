@@ -382,7 +382,19 @@ def apply_csl_entry(connection, block: dict, locator: str, file_digest: str, *, 
     result: dict = {}
     try:
         source, limitations = csl.parse(raw, with_limitations=True)
-        canonical, warnings = naming.normalize(source.canonical(), settings.values if settings else None)
+        identity = source.provenance[0].source_identity
+        row = connection.execute('SELECT id FROM sources WHERE citation_key=?', (identity.item_key,)).fetchone() if identity else None
+        current = sources.core_record(connection, row[0]) if row else None
+        canonical = source.canonical()
+        if current:
+            # Exported CSL ids are catalog keys; unrelated external ids still use normal key allocation.
+            canonical['citation_key'] = current['citation_key']
+        if current and canonical['metadata'] == current['metadata']:
+            # The identity export excludes casing policy; keep it when the stored metadata is already identical.
+            canonical['title_protection'] = current['title_protection']
+            warnings = []
+        else:
+            canonical, warnings = naming.normalize(canonical, settings.values if settings else None)
         warnings.extend(kinds.warnings(canonical))
         source = SourceCreate.model_validate(canonical)
         incoming = source.canonical()

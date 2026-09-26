@@ -282,3 +282,32 @@ def test_pilot_misc_fields_reach_pandoc(tmp_path, pytestconfig):
     for key in ['so363', 'macr-5804']:
         assert 'medium' not in by_key[key]
         assert 'Medium: scanned copy' in by_key[key]['note']
+
+
+@pytest.mark.slow
+def test_csl_identity_profile_preserves_pilot_fields_for_pandoc(initialized, tmp_path, pytestconfig):
+    records = json.loads((ROOT / 'tests/fixtures/real-trial/minimized/jhl-misc-projection.json').read_text())
+    records[0]['metadata']['archive'] = 'Wartime archive'
+    records.append(json.loads((ROOT / 'tests/fixtures/rendering/newspaper.json').read_text()))
+    initialized('project', 'create', 'pilot')
+    for record in records:
+        path = tmp_path / (record['citation_key'] + '.json')
+        path.write_text(json.dumps(record))
+        initialized('add', '--format', 'refs', '--input', path)
+        initialized('project', 'cite', 'pilot', record['citation_key'])
+    output = tmp_path / 'references.json'
+    result = initialized('export', '--project', 'pilot', '--output', output, '--profile', 'csl-json-v1')
+    assert result['warnings'] == [] and result['data']['info'] == []
+    entries = json.loads(run([tool('pandoc', pytestconfig), str(output), '--from=csljson', '--to=csljson'], tmp_path))
+    by_key = {entry['id']: entry for entry in entries}
+    assert len(by_key) == 6
+    for record in records:
+        for field in ('type', 'issued', 'medium', 'genre', 'container-title', 'publisher', 'archive', 'note'):
+            if field in record['metadata']:
+                assert by_key[record['citation_key']][field] == record['metadata'][field]
+    newspaper = by_key['kt-1942-10-30']
+    assert newspaper['type'] == 'article-newspaper'
+    assert newspaper['issued'] == {'date-parts': [[1942, 10, 30]]}
+    assert newspaper['publisher-place'] == 'Kingsport, Tennessee'
+    imported = initialized('import', '--format', 'csljson', '--input', output)
+    assert imported['data']['counts'] == dict(applied=0, unchanged=6, conflict=0, invalid=0)

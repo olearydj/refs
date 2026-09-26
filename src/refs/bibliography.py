@@ -1,11 +1,11 @@
-"""Portable article projection and explicit, recoverable export."""
+"""Bibliography profiles and explicit, recoverable export."""
 
+import json
 import re
 import sqlite3
 import unicodedata
 from contextlib import nullcontext
 from pathlib import Path
-from uuid import uuid4
 
 from pydantic import ValidationError
 
@@ -23,7 +23,7 @@ from refs.models import (
 from refs.results import RefError, notice
 
 PROFILE = "portable-bibtex-v1"
-PROFILE_FINGERPRINT = files.digest(PROFILE.encode())
+PROFILES = (PROFILE, "csl-json-v1")
 # These pre-admission projections retain their original byte output.
 ORIGINAL_TYPES = frozenset(('article', 'article-journal', 'article-magazine', 'article-newspaper',
     'book', 'chapter', 'document', 'manuscript', 'paper-conference', 'patent', 'post-weblog',
@@ -417,6 +417,20 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
 
 
 
+def serialize_csl(records: list[dict]) -> tuple[bytes, list[dict]]:
+    entries, losses = [], []
+    for record in sorted(records, key=lambda row: row['citation_key']):
+        try:
+            models.revalidate(models.editable(record))
+        except (ValidationError, ValueError) as exc:
+            losses.append(dict(citation_key=record['citation_key'], code='unsupported_record',
+                               **{'class': 'structural'}, path='', message=str(exc)))
+            continue
+        entries.append(record['metadata'] | {'id': record['citation_key']})
+    enforce_losses(losses, allow_unknown=False)
+    return (json.dumps(entries, ensure_ascii=False, sort_keys=True, indent=2) + '\n').encode('utf-8'), []
+
+
 def container_case_notices(entry: dict, record: dict, decode) -> list[dict]:
     notices = []
     for name, raw in entry['containers']:
@@ -455,10 +469,13 @@ def preserved_bib_fields(connection, record: dict) -> dict:
         raise RefError('export_blocked', 'Original howpublished values disagree; inspect the preserved entries', details={'entries':[dict(citation_key=record['citation_key'], code='work_identity_changed', message='Conflicting original howpublished values', **{'class':'blocking'})]})
     return {'_projection_notices': list({(notice['code'], notice['path']): notice for notice in notices}.values())} | ({'_howpublished': next(iter(values))} if values else {})
 
-def target_state(connection, target: Path, project_id: str, *, overwrite: bool = False, adopt: bool = False, candidate_digest: str | None = None) -> tuple[str | None, bool, bool]:
+def target_state(connection, target: Path, project_id: str, *, overwrite: bool = False, adopt: bool = False, candidate_digest: str | None = None, profile: str = PROFILE) -> tuple[str | None, bool, bool]:
     row = connection.execute("SELECT * FROM export_targets WHERE destination=?", (str(target),)).fetchone()
     current = files.current_digest(target)
-    binding_matches = row is not None and row['project_id'] == project_id and row['profile_fingerprint'] == PROFILE_FINGERPRINT
+    fingerprint = files.digest(profile.encode())
+    binding_matches = row is not None and row['project_id'] == project_id and row['profile_fingerprint'] == fingerprint
+    if row is not None and not binding_matches:
+        raise RefError("target_binding_conflict", "Destination belongs to another project or profile", path=str(target))
     if adopt and current is not None and not binding_matches:
         proof = connection.execute('SELECT 1 FROM imports WHERE file_digest=? AND finished_at IS NOT NULL', (current,)).fetchone()
         if not proof:
@@ -470,9 +487,7 @@ def target_state(connection, target: Path, project_id: str, *, overwrite: bool =
         if current is not None:
             raise RefError("unadopted_target", "Existing bibliography has not been adopted", path=str(target))
         return None, False, False
-    if row["project_id"] != project_id or row["profile_fingerprint"] != PROFILE_FINGERPRINT:
-        raise RefError("target_binding_conflict", "Destination belongs to another project or profile", path=str(target))
-    if candidate_digest == files.digest(b'') and current not in (None, candidate_digest) and not overwrite:
+    if candidate_digest == files.digest(b'[]\n' if profile == 'csl-json-v1' else b'') and current not in (None, candidate_digest) and not overwrite:
         raise RefError('outside_edit', 'Selection is empty; pass --overwrite to replace the non-empty bibliography', path=str(target))
     if current is not None and current == row["baseline_digest"]:
         return current, False, True
@@ -495,19 +510,24 @@ def finish_export(catalog: Path, target: Path, digest: str) -> None:
         changed(connection)
 
 
-def export(catalog: Path, project_ref: str, output: Path, *, dry_run: bool = False, allow_unknown: bool = False, overwrite: bool = False, adopt: bool = False) -> dict:
+def export(catalog: Path, project_ref: str, output: Path, *, dry_run: bool = False, allow_unknown: bool = False, overwrite: bool = False, adopt: bool = False, profile: str = PROFILE) -> dict:
+    from refs import importing
     from refs import logging as action_log
+    if profile not in PROFILES:
+        raise RefError('unsupported_profile', 'Supported profiles: ' + ', '.join(PROFILES), 2)
+    fingerprint = files.digest(profile.encode())
     target = files.destination(output)
     with connect(catalog) as connection:
         project = projects.resolve(connection, project_ref)
         selected = [sources.record(connection, row[0]) for row in connection.execute(
             "SELECT s.id FROM sources s JOIN project_sources ps ON s.id=ps.source_id WHERE ps.project_id=? AND ps.cited=1 AND s.state='active' ORDER BY s.citation_key",
             (project["id"],))]
-        for record in selected:
-            record.update(preserved_bib_fields(connection, record))
+        if profile == PROFILE:
+            for record in selected:
+                record.update(preserved_bib_fields(connection, record))
         revision = connection.execute("SELECT revision FROM catalog_meta").fetchone()[0]
     try:
-        data, warnings = serialize(selected, allow_unknown=allow_unknown)
+        data, warnings = serialize(selected, allow_unknown=allow_unknown) if profile == PROFILE else serialize_csl(selected)
     except RefError as exc:
         if exc.issue['code'] == 'export_blocked':
             exc.issue['path'] = str(target)
@@ -517,20 +537,25 @@ def export(catalog: Path, project_ref: str, output: Path, *, dry_run: bool = Fal
     if not selected:
         warnings.append(warning('(selection)', 'empty_selection', f'Wrote {target} (0 entries)'))
     candidate_digest = files.digest(data)
-    result = dict(output=str(target), profile=PROFILE, count=len(selected),
+    result = dict(output=str(target), profile=profile, count=len(selected),
                   keys=[record["citation_key"] for record in selected], sha256=candidate_digest,
                   catalog_revision=revision, warnings=warnings, info=info)
     # Preview never acquires the file lock, stages bytes or reconciles intent.
     with nullcontext() if dry_run else files.file_lock(catalog):
         with connect(catalog) as connection:
-            current, recoverable, known = target_state(connection, target, project["id"], overwrite=overwrite, adopt=adopt, candidate_digest=candidate_digest)
+            current, recoverable, known = target_state(connection, target, project["id"], overwrite=overwrite, adopt=adopt, candidate_digest=candidate_digest, profile=profile)
             if adopt and current is not None and not known:
-                from refs import importing
                 from refs.adapters import bibtex
                 original = target.read_bytes()
                 if files.digest(original) != current:
                     raise RefError('outside_edit', 'File changed during adoption; import it again')
-                result['import_conflicts'] = [entry for block in bibtex.partition(original) if block['kind'] == 'entry' and (entry := importing.apply_entry(connection, block, str(target), current, dry_run=True))['outcome'] in ('conflict', 'invalid')]
+                if profile == PROFILE:
+                    blocks = [block for block in bibtex.partition(original) if block['kind'] == 'entry']
+                    apply_entry = importing.apply_entry
+                else:
+                    blocks = importing.csl_blocks(original)
+                    apply_entry = importing.apply_csl_entry
+                result['import_conflicts'] = [entry for block in blocks if (entry := apply_entry(connection, block, str(target), current, dry_run=True))['outcome'] in ('conflict', 'invalid')]
         if dry_run:
             return result | dict(dry_run=True, recoverable=recoverable)
         if recoverable:
@@ -539,17 +564,17 @@ def export(catalog: Path, project_ref: str, output: Path, *, dry_run: bool = Fal
         if current == candidate_digest:
             if not known:
                 with connect(catalog, write=True) as connection:
-                    checked, _, _ = target_state(connection, target, project['id'], overwrite=overwrite, adopt=adopt, candidate_digest=candidate_digest)
+                    checked, _, _ = target_state(connection, target, project['id'], overwrite=overwrite, adopt=adopt, candidate_digest=candidate_digest, profile=profile)
                     if checked != current:
                         raise RefError('outside_edit', 'File changed during adoption; import it again')
                     action_log.log_mutation('export.adopt', {'path':str(target),'project_id':project['id']}, None,
                                             {'baseline_digest':current,'catalog_revision':revision}, count=len(selected))
-                    connection.execute('INSERT INTO export_targets VALUES (?,?,?,?,NULL) ON CONFLICT(destination) DO UPDATE SET project_id=excluded.project_id, profile_fingerprint=excluded.profile_fingerprint, baseline_digest=excluded.baseline_digest, pending_digest=NULL', (str(target), project['id'], PROFILE_FINGERPRINT, current))
+                    connection.execute('INSERT INTO export_targets VALUES (?,?,?,?,NULL) ON CONFLICT(destination) DO UPDATE SET project_id=excluded.project_id, profile_fingerprint=excluded.profile_fingerprint, baseline_digest=excluded.baseline_digest, pending_digest=NULL', (str(target), project['id'], fingerprint, current))
                     changed(connection)
             return result | dict(unchanged=True, recovered=recoverable)
         with files.staged(target, data) as temporary:
             with connect(catalog, write=True) as connection:
-                checked, _, _ = target_state(connection, target, project["id"], overwrite=overwrite, adopt=adopt, candidate_digest=candidate_digest)
+                checked, _, _ = target_state(connection, target, project["id"], overwrite=overwrite, adopt=adopt, candidate_digest=candidate_digest, profile=profile)
                 if checked != current:
                     raise RefError("outside_edit", "Destination changed while preparing export")
                 action_log.log_mutation('export.write', {'path':str(target),'project_id':project['id']},
@@ -560,10 +585,10 @@ def export(catalog: Path, project_ref: str, output: Path, *, dry_run: bool = Fal
                         outside = target.read_bytes()
                         if files.digest(outside) != current:
                             raise RefError('outside_edit', 'Outside bytes changed during preservation')
-                        connection.execute("INSERT OR IGNORE INTO originals (id, raw_bytes, sha256, byte_length, format, origin, file_digest, locator) VALUES (?, ?, ?, ?, 'bib', 'export-overwrite', ?, ?)",
-                                           (str(uuid4()), outside, current, len(outside), current, str(target)))
+                        importing.preserve(connection, outside, str(target), current,
+                                           format='bib' if profile == PROFILE else 'csljson', origin='export-overwrite')
                 if not known:
-                    connection.execute("INSERT INTO export_targets VALUES (?, ?, ?, NULL, ?) ON CONFLICT(destination) DO UPDATE SET project_id=excluded.project_id, profile_fingerprint=excluded.profile_fingerprint, baseline_digest=NULL, pending_digest=excluded.pending_digest", (str(target), project["id"], PROFILE_FINGERPRINT, candidate_digest))
+                    connection.execute("INSERT INTO export_targets VALUES (?, ?, ?, NULL, ?) ON CONFLICT(destination) DO UPDATE SET project_id=excluded.project_id, profile_fingerprint=excluded.profile_fingerprint, baseline_digest=NULL, pending_digest=excluded.pending_digest", (str(target), project["id"], fingerprint, candidate_digest))
                 else:
                     connection.execute("UPDATE export_targets SET pending_digest=? WHERE destination=?", (candidate_digest, str(target)))
                 changed(connection)

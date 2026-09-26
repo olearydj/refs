@@ -178,6 +178,7 @@ class PolicyTables(ConfigTable):
 
 def policies(user: dict, config: Path, explicit: str | None, disabled: bool) -> tuple[dict,dict]:
     from refs import naming
+    from refs.bibliography import PROFILES
     defaults: dict={'keys':{'template':'{author}-{year}-{title}','without_creator':'{title}-{year}','missing_year':'ND','title_words':2,'stopwords':sorted(naming.STOPWORDS),'transliteration_policy':'creator-latin-v1','corporate_aliases':{}},
               'titles':{'policy':'english-title-case-v1','minor_words':sorted(naming.MINOR),'protected_terms':list(naming.GLOBAL_TERMS)},
               'sorting':{'ignore_leading_articles':['a','an','the']},'export':{'profile':'portable-bibtex-v1'}}
@@ -228,7 +229,9 @@ def policies(user: dict, config: Path, explicit: str | None, disabled: bool) -> 
                         separators=re.sub(r'\{[^{}]+\}','',value)
                         if not tokens or set(tokens)-allowed_tokens or re.search(r'[^\W_]|[\s{},()=\\#%"]',separators):
                             raise ValueError('Templates allow documented tokens and literal separators only')
-                    if key in ('policy','transliteration_policy','profile') and value!=defaults[section][key]:
+                    if key=='profile' and value not in PROFILES:
+                        raise ValueError(f'Unsupported profile: {value}; choose ' + ', '.join(PROFILES))
+                    if key in ('policy','transliteration_policy') and value!=defaults[section][key]:
                         raise ValueError(f'Unsupported {key}: {value}')
                     if key=='missing_year' and isinstance(value,str) and re.search(r'[\s,{}()=\\#%"]',value):
                         raise ValueError('missing_year must be a valid citation-key token')

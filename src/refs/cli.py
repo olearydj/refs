@@ -198,9 +198,7 @@ def export_bibliography(ctx: typer.Context, project: Annotated[str | None, typer
                        dry_run: Annotated[bool, typer.Option()] = False):
     selected = settings(ctx)
     project, output, profile = export_options(selected, project, output, profile)
-    if profile != bibliography.PROFILE:
-        raise RefError('unsupported_profile', 'This milestone supports portable-bibtex-v1', 2)
-    data = bibliography.export(selected.catalog_path(), project, output.expanduser(), dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite, adopt=adopt)
+    data = bibliography.export(selected.catalog_path(), project, output.expanduser(), dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite, adopt=adopt, profile=profile)
     report(ctx, 'export', data)
 
 
