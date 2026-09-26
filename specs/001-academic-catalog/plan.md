@@ -239,6 +239,51 @@ Every finding in the investigation is fixed, deferred to the export pass, or kep
 
 The light loop, in four batches, each its own kickoff and report: the liveness fixes; the storage moves and the command layer; the adapters and the collapsed rules; dead code and the docs honesty. A corpus round after the last batch confirms nothing regressed at scale. Governing text stays net-flat: the rule narrowed in right-sizing and the registry header note are the only doc changes beyond the acceptance record.
 
+## Types and kinds brief: ask refs for podcasts
+
+Owner direction, from the round three census on 2026-09-25 and 2026-09-26. On the refusals: "shouldn't we be using these refusals as evidence that a parent item type needs to be added?" On what admitting means: "we would essentially create a schema that is specific to refs, a superset of the others, and a mapping to those ... correct?", answered that the canonical vocabulary is CSL's and admitting a type switches on a CSL type with its mappings. On proceedings: "could we have proceedings use the book CSL type but override that locally with `proceedings`?" On deferred types: "where anticipated refusals happen, i.e., where we defer legal family until an example import hits, we should announce that with a recommendation to add the type." On the vocabulary: "I don't want to have to remember that podcasts are internally labeled song, because that is dumb but the best csl allows. I want to refer to them by a more meaningful name. I don't want to have to think about other internal representations or how any of that should be correctly translated to any consumer schema. I just want to ask refs for podcasts and get the right stuff"; and "perhaps refs should announce when something is added to a category in which aliases exist and enumerate those?" On the revision guard: "`--if-revision 3` ... feels a bit too fidgety for human users." The recommendations below were accepted with "proceed as described" on 2026-09-26.
+
+### Outcome
+
+Eight more CSL types are admitted, five more spellings map onto types refs already has, and every other kind the census found refuses by name and says which CSL type would admit it. A kind is a name the owner uses, defined as a rule over the record, so `refs list --kind podcast` returns podcasts and nobody types the word song. The revision guard on `update` becomes optional for people and stays available for agents.
+
+### Decisions
+
+D1 Admitted types. `periodical`, `entry-encyclopedia`, `map`, `graphic`, `motion_picture`, `song`, `broadcast`, `dataset` and `post`, each with its Zotero and BibLaTeX spellings on import, its field applicability, and a portable projection. Plain BibTeX has none of these, so the projection is `@misc` carrying the canonical type and genre in fields that survive a round trip: export then import yields the same canonical type and genre, and one test per type proves it. A BibLaTeX profile that emits the native entry types is deferred until a consumer needs it.
+
+D2 Mappings onto existing types. BibLaTeX `proceedings` and `collection` to `book`; `booklet` and CSL `pamphlet` to `document`; `generic` to `document`; `presentation` and `talk` to `speech`; `softwareversion` to `software`; Zotero `forumPost` to `post`. The native label already stored on every imported source refines export the way it does for theses: a `book` whose native label is `proceedings` exports as `@proceedings`, and the same for any native label that is a valid entry type in the portable profile. Human output shows the native label beside the type when one exists.
+
+D3 Deferred types announce themselves. The registry lists the CSL types refs knows and has not admitted (`legislation`, `legal_case`, `bill`, `regulation`, `treaty`, `hearing`, `personal_communication`, `review-book`, `musical_score`, `performance`) with their route spellings. A refusal for one keeps its code and adds the CSL type and one sentence recommending admission by a type row. `nameonly` and `hardware` refuse as before with no recommendation, since CSL has no type for them.
+
+D4 Kinds. A kind is a registry row: a name, a canonical type, and the field values that define it, read from metadata and written by setting metadata, never stored as a fact of its own. The first kinds: `podcast` is `song` with genre "Audio podcast"; `lecture` is `motion_picture` with genre "Lecture recording"; `talk` is `speech` with genre "Conference presentation"; `proceedings` is `book` with the native label `proceedings`; `dataset` is the type `dataset`. The genre wording is the registry row's and changes without code. A record has one kind, because it has one type and one genre.
+
+D5 Assignment. Import assigns a kind when the origin determines it: a Zotero podcast is a podcast. Where a type has kinds and none is determined, the entry carries a warning naming them, in the dry run and in the import record. `add --kind` and `update --kind` set the defining fields; setting a kind on a record whose defining field holds a different value refuses and shows both values, as import conflicts are shown. `list --kind` and `search --kind` filter; `--kind unassigned` lists sources whose type has kinds and none set. `refs kinds` prints the table.
+
+D6 The revision guard. `--if-revision` on `update` is optional. Omitted, the update applies to the current revision and the result reports the new one; given, it behaves as now. Agents keep passing it. One sentence changes in the records contract.
+
+D7 Authority, stated once. The registry is the authority for admission, spellings, field applicability, kinds and deferred types, and the importers read it. The exporter's per-type projection remains code, as D3 of the fix pass decided; each admitted type adds its branch beside a registry row that documents the projection. The structured projection column stays a later pass.
+
+### What is built
+
+1. Registry rows for D1 to D4, and the model's type literal generated from the registry so the two lists cannot disagree.
+2. The exporter branches for the nine types and the native-label refinement, with the round-trip test per type.
+3. The refusal detail and sentence for deferred types.
+4. Kinds: the reader, the filter on list and search, the option on add and update, the warning at import, the `kinds` command.
+5. The optional guard on update.
+6. Tests per the convention: admission and refusal by name per type and per route; the round trips; the kind rules including the conflict refusal and the unassigned listing; the warning's presence in dry run and record; the guard omitted and given.
+
+### What must never break
+
+The export of every existing entry, byte-identical, proven by the export test over the owner's catalog. The result envelope. Import never guessing a type or a kind it was not told. The never-cut list in `AGENTS.md`. No new table; one new command, `kinds`; no new runtime dependency.
+
+### Acceptance
+
+The corpus gates rerun through the parallel driver: entries of the admitted types move from invalid to applied by the counts the census predicts, no other outcome changes, and the census no longer lists them. The right-sizing checkpoint reports the command count, options added and lines by part.
+
+### Process
+
+The light loop, in its own worktree, in four commits with the corpus rerun after the last: types and mappings with their projections; deferred-type announcements; kinds; the guard. Governing text grows by the kinds paragraph in the records contract, the option rows in the CLI contract and the guard sentence, named here as the whole of the growth. The help and release pass follows and documents the new surface once.
+
 ## Deferred work
 
 This is a boundary ledger, not a later-slice specification.
