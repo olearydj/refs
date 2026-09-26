@@ -258,3 +258,27 @@ def test_exported_pilot_newspaper_type_date_and_place_reach_pandoc(tmp_path, pyt
     assert records[0]['issued'] == {'date-parts': [[1942, 10, 30]]}
     assert records[0]['page'] == '1'
     assert records[0]['publisher-place'] == 'Kingsport, Tennessee'
+
+
+@pytest.mark.slow
+def test_pilot_misc_fields_reach_pandoc(tmp_path, pytestconfig):
+    records = json.loads((ROOT / 'tests/fixtures/real-trial/minimized/jhl-misc-projection.json').read_text())
+    output, _ = serialize(records)
+    path = tmp_path / 'references.bib'
+    path.write_bytes(output)
+    entries = json.loads(run([tool('pandoc', pytestconfig), str(path), '--from=bibtex', '--to=csljson'], tmp_path))
+    by_key = {entry['id']: entry for entry in entries}
+    assert len(by_key) == 5
+    assert by_key['so363']['publisher'] == '457th Bomb Group Association'
+    assert by_key['so363']['genre'] == 'Original wartime document'
+    assert by_key['afhi-750']['publisher'] == 'Air Force Historical Research Agency'
+    assert by_key['afhi-750']['container-title'] == 'Air Force History Index'
+    assert by_key['nara-aad']['container-title'] == 'Access to Archival Databases'
+    assert by_key['iwm-person']['publisher'] == 'Imperial War Museums'
+    assert by_key['iwm-person']['genre'] == 'Person record'
+    assert by_key['iwm-person']['container-title'] == 'American Archive'
+    assert by_key['macr-5804']['publisher'] == '457th Bomb Group Association'
+    assert by_key['macr-5804']['genre'] == 'Missing Air Crew Report'
+    for key in ['so363', 'macr-5804']:
+        assert 'medium' not in by_key[key]
+        assert 'Medium: scanned copy' in by_key[key]['note']

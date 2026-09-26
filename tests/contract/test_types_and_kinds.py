@@ -111,12 +111,12 @@ def test_unrepresented_bib_types_have_no_admission_recommendation(label):
     assert 'recommendation' not in caught.value.issue['details']
 
 
-def test_misc_type_is_genre_only_with_canonical_type_marker():
+def test_misc_type_is_genre_with_or_without_canonical_type_marker():
     raw = b'@misc{example,title={Recorded Work},type={Audio podcast}}'
     unmarked = bibtex.parse(raw)
     assert unmarked['source'].metadata.type == 'document'
-    assert unmarked['source'].metadata.genre is None
-    assert any(item['field'] == 'type' for item in unmarked['limitations'])
+    assert unmarked['source'].metadata.genre == 'Audio podcast'
+    assert unmarked['limitations'] == []
     marked = bibtex.parse(raw[:-1] + b',csltype={song}}')
     assert marked['source'].metadata.type == 'song'
     assert marked['source'].metadata.genre == 'Audio podcast'

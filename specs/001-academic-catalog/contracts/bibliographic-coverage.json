@@ -2495,7 +2495,8 @@
         "periodical",
         "post",
         "song",
-        "video"
+        "video",
+        "misc"
       ],
       "source_field": "journal",
       "canonical_path": "metadata.container-title",
@@ -2896,7 +2897,8 @@
         "periodical",
         "post",
         "song",
-        "video"
+        "video",
+        "misc"
       ],
       "source_field": "type",
       "canonical_path": "metadata.genre",

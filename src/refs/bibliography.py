@@ -118,7 +118,9 @@ def _project_names(metadata, entry_type, fields, used, put, assess):
 def _project_titles(metadata, kind, entry_type, used, notes, copy, assess):
     copy('title', 'title')
     copy('title-short', 'shorttitle')
-    if kind in ('article-journal', 'article-magazine', 'article-newspaper'):
+    if entry_type == 'misc':
+        copy('container-title', 'journal')
+    elif kind in ('article-journal', 'article-magazine', 'article-newspaper'):
         copy('container-title', 'journal')
         if not metadata.get('container-title'):
             assess('missing_journal', 'faithful_incomplete', 'No journal was supplied')
@@ -179,7 +181,7 @@ def _project_language(metadata, used, put, assess):
 
 
 
-def _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess, *, misc_projection=False):
+def _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess):
     for source, target in [('volume', 'volume'), ('issue', 'number'), ('publisher-place', 'address'), ('edition', 'edition'), ('collection-title', 'series'), ('collection-number', 'number'), ('container-title-short', 'shortjournal'), ('chapter-number', 'chapter')]:
         copy(source, target)
     used.add('page')
@@ -195,8 +197,6 @@ def _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy
             put('school', publisher, literal=True)
         elif entry_type == 'techreport':
             put('institution', publisher, literal=True)
-        elif entry_type == 'misc':
-            notes.append(str(metadata['publisher']))
         else:
             put('publisher', publisher, literal=True)
     used.update(('number', 'archive', 'genre'))
@@ -210,10 +210,10 @@ def _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy
     elif kind in ('patent', 'standard'):
         copy('number', 'number')
         copy('genre', 'type')
-        notes.extend(str(metadata[field]) for field in ('genre', 'number') if metadata.get(field))
+        notes.extend(str(metadata[field]) for field in (('number',) if entry_type == 'misc' else ('genre', 'number')) if metadata.get(field))
     else:
         copy('number', 'number')
-        if misc_projection or entry_type in ('techreport', 'phdthesis', 'mastersthesis'):
+        if entry_type in ('misc', 'techreport', 'phdthesis', 'mastersthesis'):
             copy('genre', 'type')
         elif metadata.get('genre'):
             notes.append(str(metadata['genre']))
@@ -225,7 +225,10 @@ def _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy
         used.add(field)
         if field in metadata:
             notes.append(label + ': ' + str(metadata[field]))
-            assess('field_in_note', 'info', f'{field} is retained in note', 'metadata.' + field)
+            if field == 'medium':
+                assess('medium_consumer_limit', 'documented_fallback', 'Pandoc has no BibTeX field for medium; retained in note, which IEEE does not print', 'metadata.medium')
+            else:
+                assess('field_in_note', 'info', f'{field} is retained in note', 'metadata.' + field)
 
 
 
@@ -312,6 +315,7 @@ def _finish_notes(metadata, kind, record, notes, put):
 def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[bytes, list[dict]]:
     from refs.models import REGISTRY
     entries, warnings, losses = [], [], []
+    misc_paths = {row['canonical_path'] for row in REGISTRY['rows'] if row['input_format'] == 'bib' and row['source_field'] in ('journal', 'publisher', 'type') and 'misc' in row['type_scope']}
     seen = set()
     for record in sorted(records, key=lambda row: row['citation_key']):
         key = record['citation_key']
@@ -336,11 +340,6 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
         types = {row['canonical']: row['portable'] for row in REGISTRY['type_mappings']}
         entry_type = types[kind]
         misc_projection = entry_type == 'misc' and kind not in ORIGINAL_TYPES
-        for field in list(metadata):
-            applicable = REGISTRY['field_applicability'].get(field)
-            if applicable is not None and kind not in applicable:
-                assess('field_omitted', 'documented_fallback', f'{field} has no portable slot for {kind}; retained in catalog', 'metadata.' + field)
-                del metadata[field]
         if kind == 'thesis':
             native = value.get('native_type', {}).get('value', '')
             degree = str(metadata.get('genre', '')).casefold().replace('.', '')
@@ -350,6 +349,11 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             entry_type = native
         if kind == 'chapter' and not metadata.get('title'):
             entry_type = 'inbook'
+        for field in list(metadata):
+            applicable = REGISTRY['field_applicability'].get(field)
+            if applicable is not None and kind not in applicable and not (entry_type == 'misc' and 'metadata.' + field in misc_paths):
+                assess('field_omitted', 'documented_fallback', f'{field} has no portable slot for {kind}; retained in catalog', 'metadata.' + field)
+                del metadata[field]
         if entry_type == 'misc' or kind in ('article', 'article-magazine', 'article-newspaper'):
             message = f'{kind} is projected as @{entry_type}'
             if kind in ('webpage', 'post-weblog'):
@@ -395,7 +399,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                         put('entrysubtype', subtype)
             _project_dates(metadata, used, notes, put, assess)
             _project_language(metadata, used, put, assess)
-            _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess, misc_projection=misc_projection)
+            _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess)
             _project_identifiers(metadata, used, put, assess)
             if misc_projection:
                 put('csltype', kind)

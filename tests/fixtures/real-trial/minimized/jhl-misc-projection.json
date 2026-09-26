@@ -1,0 +1,124 @@
+[
+  {
+    "schema_version": "1.0",
+    "citation_key": "so363",
+    "metadata": {
+      "type": "document",
+      "title": "Special Orders No. 363, Headquarters Wendover Field, Utah, 29 December 1943 (movement order, 457th Bombardment Group flight echelon; Fischer crew 16S-129 on page 12)",
+      "author": [
+        {
+          "literal": "Headquarters, Wendover Field, Utah"
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            1943,
+            12,
+            29
+          ]
+        ]
+      },
+      "publisher": "457th Bomb Group Association",
+      "genre": "Original wartime document",
+      "medium": "scanned copy"
+    },
+    "title_protection": {
+      "title": {
+        "preserve_case": true
+      }
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "citation_key": "macr-5804",
+    "metadata": {
+      "type": "report",
+      "title": "Missing Air Crew Report 5804: B-17G 42-97579, 14 June 1944, pilot Roy W. Allen",
+      "author": [
+        {
+          "literal": "U.S. Army Air Forces"
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            1944
+          ]
+        ]
+      },
+      "number": "5804",
+      "publisher": "457th Bomb Group Association",
+      "genre": "Missing Air Crew Report",
+      "medium": "scanned copy"
+    },
+    "title_protection": {
+      "title": {
+        "preserve_case": true
+      }
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "citation_key": "afhi-750",
+    "metadata": {
+      "type": "webpage",
+      "title": "750th Bombardment Squadron (Heavy) unit histories, April to December 1944, IRIS 49571 to 49579, microfilm reel A0658",
+      "author": [
+        {
+          "literal": "Air Force Historical Research Agency"
+        }
+      ],
+      "publisher": "Air Force Historical Research Agency",
+      "container-title": "Air Force History Index"
+    },
+    "title_protection": {
+      "title": {
+        "preserve_case": true
+      }
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "citation_key": "nara-aad",
+    "metadata": {
+      "type": "webpage",
+      "title": "Electronic Army Serial Number Merged File, ca. 1938 to 1946 (Enlistment Records): record for Long, James H, ASN 14160682",
+      "author": [
+        {
+          "literal": "National Archives and Records Administration"
+        }
+      ],
+      "note": "Record Group 64, record 967268",
+      "publisher": "National Archives and Records Administration",
+      "container-title": "Access to Archival Databases"
+    },
+    "title_protection": {
+      "title": {
+        "preserve_case": true
+      }
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "citation_key": "iwm-person",
+    "metadata": {
+      "type": "webpage",
+      "title": "James Harvey Long",
+      "author": [
+        {
+          "literal": "Imperial War Museums, American Air Museum in Britain"
+        }
+      ],
+      "note": "sources stated as the records of the National Museum of the Mighty Eighth Air Force, supplied by daughter and wife",
+      "publisher": "Imperial War Museums",
+      "genre": "Person record",
+      "container-title": "American Archive"
+    },
+    "title_protection": {
+      "title": {
+        "preserve_case": true
+      }
+    }
+  }
+]

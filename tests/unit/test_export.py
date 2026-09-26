@@ -162,14 +162,19 @@ def test_preserved_import_field_is_documented_omission(field):
     ('book', {'number-of-pages': 168}, 'noncitation_omission'),
     ('book', {'publisher': 'Research and Development'}, 'literal_publisher'),
     ('paper-conference', {'event-title': 'Synthetic Meeting'}, 'field_in_note'),
-    ('webpage', {'container-title': 'Synthetic Site'}, 'container_in_note'),
+    ('webpage', {'container-title': 'Synthetic Site'}, None),
 ])
-def test_documented_retention_is_info(kind,metadata,code):
+def test_projected_fields_and_documented_retention(kind,metadata,code):
     from refs.render import warning_lines
-    _, notices = bibliography.serialize([record(kind, **metadata)])
-    selected = [notice for notice in notices if notice['code']==code]
-    assert selected and all(notice['details']['class']=='info' for notice in selected)
-    assert warning_lines('export',selected)==[]
+    output, notices = bibliography.serialize([record(kind, **metadata)])
+    if code is None:
+        assert b'journal = {Synthetic Site}' in output
+        assert b'Website:' not in output
+        assert not any(notice['code'] == 'container_in_note' for notice in notices)
+    else:
+        selected = [notice for notice in notices if notice['code']==code]
+        assert selected and all(notice['details']['class']=='info' for notice in selected)
+        assert warning_lines('export',selected)==[]
 
 
 def test_missing_metadata_warnings_collapse_by_code():
