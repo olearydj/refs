@@ -25,6 +25,7 @@ from refs.results import RefError
 
 Text = Annotated[str, StringConstraints(min_length=1, pattern=r"\S")]
 MONTHS = tuple((calendar.month_abbr[number].lower(), calendar.month_name[number].lower()) for number in range(1, 13))
+SEASONS = ('spring', 'summer', 'autumn', 'winter')
 IDENTIFIER_FIELDS = ('DOI', 'URL', 'ISBN', 'ISSN', 'PMID', 'PMCID')
 
 

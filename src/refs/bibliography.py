@@ -14,6 +14,7 @@ from refs.catalog import changed, connect
 from refs.models import (
     IDENTIFIER_FIELDS,
     MONTHS,
+    SEASONS,
     doi_arxiv,
     normalize_arxiv,
     normalize_doi,
@@ -145,14 +146,16 @@ def _project_dates(metadata, used, notes, put, assess):
             put('month', MONTHS[start[1]-1][0], literal=True)
         interval = '/'.join('-'.join([str(part[0]), *[f'{n:02d}' for n in part[1:]]]) for part in (start,end))
         assess('date_range_projected', 'documented_fallback', f'Issued range {interval} projects to its start year and shared month; full precision remains in the catalog', 'metadata.issued')
-    elif not issued.get('date-parts') or len(issued['date-parts']) != 1 or any(issued.get(name) for name in ('literal', 'circa', 'season')):
+    elif not issued.get('date-parts') or len(issued['date-parts']) != 1 or any(issued.get(name) for name in ('literal', 'circa')):
         assess('issued_date_lost_or_changed', 'blocking', 'Portable year/month cannot preserve this issued precision', 'metadata.issued')
     else:
         parts = issued['date-parts'][0]
         put('year', parts[0])
-        if len(parts) > 1:
+        if issued.get('season'):
+            put('month', SEASONS[issued['season']-1])
+        elif len(parts) > 1:
             put('month', MONTHS[parts[1]-1][0], literal=True)
-        if len(parts) > 2:
+        if len(parts) > 2 or issued.get('season') and len(parts) > 1:
             iso = '-'.join([str(parts[0]), *[f'{number:02d}' for number in parts[1:]]])
             put('date', iso)
             notes.append('Issued: ' + iso)
@@ -392,7 +395,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             _finish_notes(metadata, kind, record, notes, put)
             entry = '@' + entry_type + '{' + key + ',\n'
             for name, text in fields.items():
-                entry += f'  {name} = {text},\n' if name == 'month' else f'  {name} = {{{text}}},\n'
+                entry += f'  {name} = {text},\n' if name == 'month' and text in {short for short, _ in MONTHS} else f'  {name} = {{{text}}},\n'
             entries.append(entry + '}\n')
         except ValueError as exc:
             assess('invalid_export_value', 'structural', str(exc))

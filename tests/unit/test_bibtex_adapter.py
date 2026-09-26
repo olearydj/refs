@@ -60,7 +60,7 @@ def test_full_english_month_fixture_and_equivalent_spellings():
     for spelling in ('8', '08', 'aug', 'AUG', 'August', 'aUgUsT'):
         raw = f'@book{{month-{spelling},title={{A Study}},year={{1977}},month={{{spelling}}}}}'.encode()
         assert parse(raw)['source'].canonical()['metadata']['issued'] == {'date-parts': [[1977, 8]]}
-    for spelling in ('Spring', '0', '13'):
+    for spelling in ('0', '13'):
         with pytest.raises(RefError) as error:
             parse(f'@book{{bad,title={{A Study}},year={{1977}},month={{{spelling}}}}}'.encode())
         assert error.value.issue['code'] == 'invalid_bib_entry'
@@ -74,7 +74,7 @@ def test_period_after_month_abbreviation_fixture():
     for spelling in ('Jun', 'jun.', 'JUN.'):
         raw = f'@book{{x,title={{A Study}},year={{1977}},month={{{spelling}}}}}'.encode()
         assert parse(raw)['source'].metadata.issued.date_parts == [[1977, 6]]
-    for spelling in ('June.', 'Spring', 'jun # jul'):
+    for spelling in ('June.', 'jun # jul'):
         raw = f'@book{{x,title={{A Study}},year={{1977}},month={{{spelling}}}}}'.encode()
         with pytest.raises(RefError) as error:
             parse(raw)

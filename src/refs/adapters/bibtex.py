@@ -9,7 +9,15 @@ from pydantic import ValidationError
 from pylatexenc.latex2text import LatexNodes2Text
 
 from refs import math_text
-from refs.models import MONTHS, REGISTRY, SourceCreate, assign_path, deferred_type, portable_url
+from refs.models import (
+    MONTHS,
+    REGISTRY,
+    SEASONS,
+    SourceCreate,
+    assign_path,
+    deferred_type,
+    portable_url,
+)
 from refs.results import RefError
 
 # The parser reports malformed blocks through logging before returning failed_blocks.
@@ -18,6 +26,7 @@ from refs.results import RefError
 logging.getLogger('bibtexparser.splitter').addHandler(logging.NullHandler())
 
 MONTH_NUMBERS = {alias: number for number, pair in enumerate(MONTHS, 1) for alias in pair}
+SEASON_NUMBERS = {word: number for number, word in enumerate(SEASONS, 1)} | {'fall': 3}
 MARKER = re.compile(rb'@([A-Za-z]+)\s*([{(])')
 
 
@@ -231,7 +240,7 @@ def map_fields(value: dict, fields: dict, kind: str, traditional: bool, unsuppor
     return consumed
 
 
-def assemble_date(metadata: dict, fields: dict, unsupported: set, parsed_month: int | None, limitations: list):
+def assemble_date(metadata: dict, fields: dict, unsupported: set, parsed_month: int | None, parsed_season: int | None, limitations: list):
     parts = None
     if 'year' in fields and 'year' not in unsupported:
         year = fields['year']
@@ -259,6 +268,9 @@ def assemble_date(metadata: dict, fields: dict, unsupported: set, parsed_month: 
         metadata['issued'] = supplied
     elif parts:
         metadata['issued'] = {'date-parts': [parts]}
+    if parsed_season is not None and metadata.get('issued', {}).get('date-parts'):
+        issued: dict = metadata['issued']
+        issued['season'] = parsed_season
     if 'month' in fields and 'year' not in fields and 'date' not in fields:
         limitations.append(dict(field='month', reason='Month without year remains unresolved'))
 
@@ -279,7 +291,8 @@ def parse(raw: bytes) -> dict:
         fields = {field.key.lower(): field.value for field in entry.fields}
         if len(fields) != len(entry.fields):
             raise ValueError('Case-colliding fields require inspection')
-        parsed_month = month_number(fields['month']) if 'month' in fields else None
+        parsed_season = SEASON_NUMBERS.get(fields.get('month', '').strip().casefold())
+        parsed_month = month_number(fields['month']) if 'month' in fields and parsed_season is None else None
         validate_surface(text, entry, fields)
         kind = entry.entry_type.lower()
         canonical = decode(fields['csltype']) if kind == 'misc' and 'csltype' in fields else REGISTRY['bib_type_aliases'].get(kind)
@@ -306,7 +319,7 @@ def parse(raw: bytes) -> dict:
             limitations.append(dict(field=field, reason='Unmapped field preserved verbatim'))
         if 'note' in fields and 'note' not in unsupported:
             metadata['note'] = decode(fields['note'])
-        assemble_date(metadata, fields, unsupported, parsed_month, limitations)
+        assemble_date(metadata, fields, unsupported, parsed_month, parsed_season, limitations)
         if kind in ('phdthesis', 'mastersthesis'):
             degree = 'PhD thesis' if kind == 'phdthesis' else "Master's thesis"
             if 'genre' not in metadata:
