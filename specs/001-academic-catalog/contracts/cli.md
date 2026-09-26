@@ -52,7 +52,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | project show [PROJECT] | Project and active cited sources, plus removed-source diagnostics; no argument lists projects. |
 | project cite PROJECT REF | Add active source with cited=true; duplicate is no-op. `--from-import ORIGIN` refuses when a source belongs to more than one import origin. |
 | project uncite PROJECT REF | Delete that association, leave source/other projects/files; absent association is no-op. |
-| export | --project PROJECT --output PATH --profile portable-bibtex-v1; optional --adopt, --overwrite, --allow-unknown-mappings. Allowed defaults from config; complete four-class report. |
+| export | --project PROJECT --output PATH --profile portable-bibtex-v1 or csl-json-v1; optional --adopt, --overwrite, --allow-unknown-mappings. Allowed defaults from config; complete four-class report. |
 | remove REF | --if-revision N --execute; tombstone while retaining identity/key/relationships. |
 | reactivate REF | Optional --if-revision N and --execute; restore same identity/key, report retained associations. |
 | backup | --output NEW_DIRECTORY; consistent catalog/config snapshot and external-file inventory. |
@@ -133,7 +133,7 @@ protected_terms = ["AI", "GPT-4", "LaTeX", "PhD", "Python", "R", "nbgrader", "pH
 [sorting]
 ignore_leading_articles = ["a", "an", "the"]
 [export]
-profile = "portable-bibtex-v1"
+profile = "portable-bibtex-v1"  # or "csl-json-v1"
 ```
 
 Each resource root has a name and an absolute local path. The library_root setting and roots.library must agree. Relative paths in configuration are resolved against the configuration file; command-line paths are resolved against the current directory. Expand a leading ~, but never evaluate shell expressions. When the library is disabled, metadata capture, linking and export remain available. Copy and move intake fail if the library is unavailable; neither silently becomes a link.
