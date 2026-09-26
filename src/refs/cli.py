@@ -14,6 +14,7 @@ from refs import (
     bibliography,
     collections,
     importing,
+    kinds,
     projects,
     recovery,
     resources,
@@ -104,6 +105,7 @@ def init(ctx: typer.Context, reuse_config: Annotated[bool, typer.Option()] = Fal
 def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         input: Annotated[str, typer.Option()],
         loc: Annotated[str | None, typer.Option()] = None,
+        kind: Annotated[str | None, typer.Option()] = None,
         file: Annotated[Path | None, typer.Option()] = None,
         link: Annotated[bool, typer.Option()] = False,
         copy: Annotated[bool, typer.Option()] = False,
@@ -120,9 +122,9 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         raise RefError("invalid_loc", str(exc), 2) from exc
     raw,locator = read_payload(input)
     if format == 'bib':
-        data = importing.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run, settings=settings(ctx), loc=loc)
+        data = importing.add(settings(ctx).catalog_path(), raw, locator, dry_run=dry_run, settings=settings(ctx), loc=loc, kind=kind)
     else:
-        data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run,policy=settings(ctx).values,loc=loc)
+        data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run,policy=settings(ctx).values,loc=loc,kind=kind)
     file_action = None
     if file is not None:
         data, file_action = resources.capture_file(settings(ctx),data,file,mode=mode,keep_name=keep_name,dry_run=dry_run)
@@ -214,10 +216,11 @@ def key_group(ctx: typer.Context):
 @app.command("update")
 def update_source(ctx: typer.Context, reference: str,
                   if_revision: Annotated[int, typer.Option(min=1)],
+                  kind: Annotated[str | None, typer.Option()] = None,
                   patch: Annotated[str | None, typer.Option()] = None,
                   set_values: Annotated[list[str] | None, typer.Option("--set")] = None,
                   dry_run: Annotated[bool, typer.Option()] = False):
-    if bool(patch) == bool(set_values):
+    if (patch and set_values) or not (patch or set_values or kind):
         raise RefError("invalid_invocation", "Choose --patch or --set", 2)
     try:
         if patch:
@@ -232,7 +235,7 @@ def update_source(ctx: typer.Context, reference: str,
             value = {"schema_version": "1.0", "set": values}
     except (ValueError, UnicodeError) as exc:
         raise RefError("invalid_patch", str(exc), 2) from exc
-    report(ctx, "update", sources.update(settings(ctx).catalog_path(), reference, value, if_revision, dry_run=dry_run,policy=settings(ctx).values))
+    report(ctx, "update", sources.update(settings(ctx).catalog_path(), reference, value, if_revision, dry_run=dry_run,policy=settings(ctx).values,kind=kind))
 
 
 @key_app.command("set")
@@ -258,18 +261,23 @@ def reactivate(ctx: typer.Context, reference: str, if_revision: Annotated[int | 
 
 
 @app.command("search")
-def search_sources(ctx: typer.Context, query: str, loc: Annotated[str | None, typer.Option()] = None, collection: Annotated[str | None, typer.Option()] = None, project: Annotated[str | None, typer.Option()] = None,
+def search_sources(ctx: typer.Context, query: str, kind: Annotated[str | None, typer.Option()] = None, loc: Annotated[str | None, typer.Option()] = None, collection: Annotated[str | None, typer.Option()] = None, project: Annotated[str | None, typer.Option()] = None,
                    limit: Annotated[int, typer.Option(min=1, max=1000)] = 50,
                    offset: Annotated[int, typer.Option(min=0)] = 0):
-    report(ctx, "search", search.retrieve(settings(ctx).catalog_path(), query, loc=loc, collection=collection, project=project or settings(ctx).values.get('project'), limit=limit, offset=offset,policy=settings(ctx).values))
+    report(ctx, "search", search.retrieve(settings(ctx).catalog_path(), query, loc=loc, collection=collection, project=project or settings(ctx).values.get('project'), limit=limit, offset=offset,policy=settings(ctx).values,kind=kind))
 
 
 @app.command("list")
-def list_sources(ctx: typer.Context, loc: Annotated[str | None, typer.Option()] = None, collection: Annotated[str | None, typer.Option()] = None, project: Annotated[str | None, typer.Option()] = None,
+def list_sources(ctx: typer.Context, kind: Annotated[str | None, typer.Option()] = None, loc: Annotated[str | None, typer.Option()] = None, collection: Annotated[str | None, typer.Option()] = None, project: Annotated[str | None, typer.Option()] = None,
                  limit: Annotated[int, typer.Option(min=1, max=1000)] = 50,
                  offset: Annotated[int, typer.Option(min=0)] = 0,
                  sort: Annotated[str, typer.Option()] = "title"):
-    report(ctx, "list", search.retrieve(settings(ctx).catalog_path(), loc=loc, collection=collection, project=project or settings(ctx).values.get('project'), limit=limit, offset=offset, sort=sort,policy=settings(ctx).values))
+    report(ctx, "list", search.retrieve(settings(ctx).catalog_path(), loc=loc, collection=collection, project=project or settings(ctx).values.get('project'), limit=limit, offset=offset, sort=sort,policy=settings(ctx).values,kind=kind))
+
+
+@app.command('kinds')
+def list_kinds(ctx: typer.Context):
+    report(ctx, 'kinds', {'items': kinds.REGISTRY['kinds']})
 
 
 @app.command("schema")

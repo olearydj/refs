@@ -312,6 +312,8 @@ def confirmation(command: str, data: dict, terminal: bool, width: int, warnings:
         return table_rows([[label, data[name]['path'] or '(not configured)'] for name, label in [('config', 'Configuration'), ('catalog', 'Catalog'), ('library', 'Library')]], wrap=1, limits={1: max(20, width - 20)} if terminal else None, fixed={1}, path_cells={(0, 1), (1, 1), (2, 1)}, terminal=terminal, width=width)
     if command == 'config show':
         return 'Configuration: ' + str(data['config']) + ''.join(f"\n{name} = {value} ({data['origins'].get(name, 'default')})" for name, value in data['values'].items())
+    if command == 'kinds':
+        return table_rows([['Kind', 'Type', 'Defining fields'], *[[item['name'], item['type'], ', '.join(f'{path}={value}' for path, value in item['fields'].items()) or '(type alone)'] for item in data['items']]], terminal=terminal, width=width)
     if command == 'schema':
         return '\n'.join(data['schemas']) if 'schemas' in data else json.dumps(data, ensure_ascii=False, indent=2)
     if command == 'project show' and 'items' in data:
@@ -394,6 +396,9 @@ def render_error(command: str, issue: dict, data: dict | None = None, *, termina
         lines.extend(f"{entry.get('citation_key') or entry.get('details', {}).get('citation_key', '(source)')}: {entry['message']}" for entry in issue['details'].get('entries', []))
     if data and data.get('outcome') == 'needs_attention':
         lines.append(f"Needs attention: {data.get('citation_key') or '(input)'}")
+    if issue['details'].get('kind'):
+        for conflict in issue['details'].get('conflicts', []):
+            lines.append(f"{conflict['path']}: current {json.dumps(conflict['current'], ensure_ascii=False)}; incoming {json.dumps(conflict['incoming'], ensure_ascii=False)}")
     issues = issue['details'].get('issues', [])
     message = issue['message']
     if issues:

@@ -10,7 +10,7 @@ from uuid import uuid4
 
 from pydantic import ValidationError
 
-from refs import languages, naming
+from refs import kinds, languages, naming
 from refs import logging as action_log
 from refs.adapters.search_sqlite import refresh
 from refs.catalog import changed, connect
@@ -29,6 +29,7 @@ def core_record(connection, source_id: str) -> dict:
     result["metadata"] = json.loads(result.pop("metadata_json"))
     result["corrected_fields"] = json.loads(result.pop("corrected_fields_json"))
     result["key_provenance"] = json.loads(result.pop("key_provenance_json"))
+    result['kind'] = kinds.identify(result)
     return result
 
 
@@ -96,10 +97,19 @@ def add(catalog: Path, raw: bytes, locator: str, **options) -> dict:
     return result
 
 
-def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_run: bool = False, policy: dict | None = None, loc: str | None = None) -> dict:
+def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_run: bool = False, policy: dict | None = None, loc: str | None = None, kind: str | None = None) -> dict:
     from refs.adapters import csl
     source, limitations = csl.parse(raw, with_limitations=True) if format == "csljson" else (parse(raw), [])
-    normalized, warnings = naming.normalize(source.canonical(),policy)
+    canonical = source.canonical()
+    if kind is not None:
+        payload = json.loads(raw)
+        if isinstance(payload, list):
+            payload = payload[0]
+        supplied = payload.get('metadata', {}) if format == 'refs' else payload
+        if 'type' not in supplied:
+            canonical['metadata'].pop('type')
+        canonical = kinds.assign(canonical, kind)
+    normalized, warnings = naming.normalize(canonical,policy)
     source = SourceCreate.model_validate(normalized)
     with connect(catalog, write=not dry_run) as connection:
         try:
@@ -114,6 +124,7 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
             if not dry_run and not connection.execute('SELECT 1 FROM originals WHERE source_id=? AND sha256=?', (existing,hashlib.sha256(raw).hexdigest())).fetchone():
                 preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key,'limitations':limitations})
             current = record(connection,existing)
+            warnings.extend(kinds.warnings(current))
             if binding['conflicts']:
                 if not dry_run:
                     original = preserve(connection,raw,locator,hashlib.sha256(raw).hexdigest(),source_id=existing,format=format,origin='import-capture',definitions={'incoming_key':source.citation_key,'limitations':limitations})
@@ -126,12 +137,13 @@ def _add(catalog: Path, raw: bytes, locator: str, *, format: str = "refs", dry_r
             (source.metadata.title,))]
         if likely:
             warnings.append(notice('likely_match', 'Similar title found; created separately because title alone is not identity', details={'candidates': likely}))
+        warnings.extend(kinds.warnings(normalized))
         key_provenance = allocate_key(connection, source, policy)
         if dry_run:
             if loc is not None and source.loc is None:
                 source.loc = loc
             return dict(dry_run=True, outcome="created", id=None, citation_key=source.citation_key,
-                        record=source.canonical(), key_provenance=key_provenance, warnings=warnings, limitations=limitations)
+                        record=source.canonical() | {'kind': kinds.identify(source.canonical())}, kind=kinds.identify(source.canonical()), key_provenance=key_provenance, warnings=warnings, limitations=limitations)
         if loc is not None and source.loc is None:
             source.loc = loc
         return insert_source(connection, source, raw, locator, format=format, warnings=warnings, key_provenance=key_provenance, limitations=limitations)
@@ -241,7 +253,7 @@ def patch_path(value: dict, path: str, replacement, *, clear: bool) -> None:
         node[parts[-1]] = replacement
 
 
-def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run: bool = False, policy: dict | None = None) -> dict:
+def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run: bool = False, policy: dict | None = None, kind: str | None = None) -> dict:
     from refs.models import SourcePatch
     try:
         patch_model = SourcePatch.model_validate(patch)
@@ -255,6 +267,8 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
             patch_path(canonical, path, value, clear=False)
         for path in patch_model.clear:
             patch_path(canonical, path, None, clear=True)
+        if kind is not None:
+            canonical = kinds.assign(canonical, kind)
         if patch_model.provenance:
             canonical.setdefault('provenance', []).extend(item.model_dump(exclude_none=True) for item in patch_model.provenance)
         try:
@@ -278,9 +292,10 @@ def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run
             raise RefError('invalid_patch', 'Patch does not match the supported record profile', 2, details={'issues':exc.errors(include_url=False,include_context=False,include_input=False)}) from exc
         if canonical == original:
             return current | {'unchanged': True, 'warnings': warnings}
-        corrections = sorted(set(current['corrected_fields']) | (set(patch_model.set) | set(patch_model.clear)) - {'loc'})
+        kind_paths = set(kinds.row(kind)['fields']) | {'metadata.type'} if kind else set()
+        corrections = sorted(set(current['corrected_fields']) | (set(patch_model.set) | set(patch_model.clear) | kind_paths) - {'loc'})
         if dry_run:
-            return current | canonical | dict(dry_run=True, corrected_fields=corrections, warnings=warnings)
+            return current | canonical | dict(kind=kinds.identify(canonical), dry_run=True, corrected_fields=corrections, warnings=warnings)
         return store_record(connection, current, canonical, corrections) | {'warnings': warnings}
 
 

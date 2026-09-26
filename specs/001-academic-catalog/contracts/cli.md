@@ -35,11 +35,12 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | paths | Resolve config/catalog/library and origins even before initialization. |
 | config show | Inspect effective values, origins and validation diagnostics; replaces config validate. |
 | schema NAME | Exactly source-create, source-patch, source-record, result; packaged, offline. |
-| add | --format refs\|csljson\|bib --input PATH accepts one reference. With --file PATH, slice 3 uses the intake flags below. --keep-name preserves the basename. --dry-run shows normalization, key components and the destination. |
+| add | --format refs\|csljson\|bib --input PATH accepts one reference; --kind NAME sets its defining fields. With --file PATH, slice 3 uses the intake flags below. --keep-name preserves the basename. --dry-run shows normalization, key components and the destination. |
 | show REF | Canonical record, revision, origins/corrections, context, limitations and resource list/availability. |
-| update REF | --patch PATH or repeated --set PATH=JSON; --if-revision N required. |
-| search QUERY | Exact key/normalized identifier match first, then literal lexical query; --project PROJECT, --limit N, --offset N; matched fields and source identities. |
-| list | Same filters/pagination; --sort title\|key. |
+| update REF | --patch PATH or repeated --set PATH=JSON; --kind NAME sets its defining fields; --if-revision N required. |
+| search QUERY | Exact key/normalized identifier match first, then literal lexical query; --project PROJECT, --kind NAME (or unassigned), --limit N, --offset N; matched fields and source identities. |
+| list | Same filters/pagination, including --kind NAME (or unassigned); --sort title\|key. |
+| kinds | Read-only registry names, canonical types and defining fields. |
 | key set REF | --key TEXT --if-revision N --execute; preview otherwise, warn external citations remain unchanged. |
 | import | --format bib --input PATH --origin TEXT; preview or apply .bib with per-entry report and aggregate run counts. |
 | import --format csljson --input PATH --origin TEXT | Preview or apply one CSL-JSON object or an array as a batch with per-entry outcomes and aggregate run counts. |

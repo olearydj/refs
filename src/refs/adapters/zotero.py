@@ -7,6 +7,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
+from refs import kinds
 from refs.models import (
     MONTHS,
     REGISTRY,
@@ -231,7 +232,7 @@ def parse(item: dict, manifest: dict) -> dict:
     extra_key = extra_lines(data, source, limitations)
     key = data.get('citationKey') or extra_key or manifest.get('legacy_keys', {}).get(item['key'])
     try:
-        validated = SourceCreate.model_validate(source)
+        validated = SourceCreate.model_validate(kinds.from_origin(source, 'zotero', kind))
         if key:
             validated.citation_key = key
         return dict(source=validated, limitations=limitations)

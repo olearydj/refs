@@ -500,6 +500,7 @@ class SourceRecord(SourceCreate):
     originals: list[OriginalReference]
     resources: list[dict]
     limitations: list[dict] = Field(default_factory=list)
+    kind: str | None = None
     projects: list[dict] = Field(default_factory=list)
 
 

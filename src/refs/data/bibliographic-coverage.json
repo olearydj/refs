@@ -6921,5 +6921,45 @@
         "zotero": []
       }
     }
+  ],
+  "kinds": [
+    {
+      "name": "podcast",
+      "type": "song",
+      "fields": {
+        "metadata.genre": "Audio podcast"
+      },
+      "origins": {
+        "zotero": [
+          "podcast"
+        ]
+      }
+    },
+    {
+      "name": "lecture",
+      "type": "motion_picture",
+      "fields": {
+        "metadata.genre": "Lecture recording"
+      }
+    },
+    {
+      "name": "talk",
+      "type": "speech",
+      "fields": {
+        "metadata.genre": "Conference presentation"
+      }
+    },
+    {
+      "name": "proceedings",
+      "type": "book",
+      "fields": {
+        "native_type.value": "proceedings"
+      }
+    },
+    {
+      "name": "dataset",
+      "type": "dataset",
+      "fields": {}
+    }
   ]
 }

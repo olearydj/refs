@@ -2,7 +2,7 @@
 
 import json
 
-from refs import naming
+from refs import kinds, naming
 from refs.models import IDENTIFIER_FIELDS, Metadata, normalize_arxiv, normalize_doi, person_name
 
 
@@ -83,7 +83,7 @@ def ordering(record: dict, sort: str, policy: dict | None = None):
 
 
 def page(connection, query: str | None, *, loc: str | None, project_id: str | None, collection_id: str | None,
-         limit: int, offset: int, sort: str, policy: dict | None) -> tuple[list[dict], int]:
+         limit: int, offset: int, sort: str, policy: dict | None, kind: str | None = None) -> tuple[list[dict], int]:
     clauses=["s.state='active'"]
     arguments=[]
     if project_id:
@@ -100,6 +100,8 @@ def page(connection, query: str | None, *, loc: str | None, project_id: str | No
             continue
         metadata=json.loads(row['metadata_json'])
         record=json.loads(row['details_json']) | dict(id=row['id'],revision=row['revision'],citation_key=row['citation_key'],metadata=metadata)
+        if not kinds.matches(record, kind):
+            continue
         fields=list(lexical.get(row['id'],[]))
         exact=False
         if query:

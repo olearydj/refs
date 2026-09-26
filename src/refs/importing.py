@@ -9,7 +9,7 @@ from uuid import uuid4
 
 from pydantic import ValidationError
 
-from refs import naming, sources
+from refs import kinds, naming, sources
 from refs.adapters import bibtex, csl, zotero
 from refs.catalog import changed, connect
 from refs.models import SourceCreate, editable, normalize_doi, revalidate
@@ -183,7 +183,7 @@ def bind_and_fill(connection, source: SourceCreate, raw: bytes, *, dry_run=False
     return source_id, dict(bound=compatible, incoming_key=source.citation_key, catalog_key=current['citation_key'], filled=fills, conflicts=conflicts)
 
 
-def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None, doi_groups=None, kept_by_source=None, origin=None, loc=None, title_groups=None) -> dict:
+def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_run=False, settings=None, import_id=None, isbn_groups=None, doi_groups=None, kept_by_source=None, origin=None, loc=None, title_groups=None, kind=None) -> dict:
     raw = block['raw']
     parsed = None
     incoming = None
@@ -196,7 +196,11 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         parsed = bibtex.parse(raw)
         source = parsed['source']
         key = source.citation_key
-        canonical, warnings = naming.normalize(source.canonical(),settings.values if settings else None)
+        canonical = source.canonical()
+        if kind is not None:
+            canonical = kinds.assign(canonical, kind)
+        canonical, warnings = naming.normalize(canonical,settings.values if settings else None)
+        warnings.extend(kinds.warnings(canonical))
         canonical.pop('citation_key', None)
         canonical['provenance'][0]['source_identity'] = dict(namespace='bibtex', library_uri=locator, item_key=key)
         source = SourceCreate.model_validate(canonical)
@@ -236,8 +240,9 @@ def apply_entry(connection, block: dict, locator: str, file_digest: str, *, dry_
         if isinstance(exc, ValidationError):
             message = f'Entry at byte {block["start"]}: citation key is empty' if re.match(rb'@\w+\s*[{(]\s*,', raw) else 'Entry cannot satisfy the record profile; inspect its preserved original'
             exc = RefError('invalid_bib_entry', message, 2)
-        conflict = exc.issue['code'] in ('identity_conflict', 'source_removed', 'alias_conflict')
+        conflict = exc.issue['code'] in ('identity_conflict', 'source_removed', 'alias_conflict', 'value_conflict')
         outcome = dict(outcome='conflict' if conflict else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'], limitations=exc.issue['details'].get('limitations', []))
+    outcome['kind'] = kinds.identify(incoming) if incoming else None
     outcome['incoming'] = incoming
     outcome['citation_key'] = key
     outcome['status'] = outcome['outcome']
@@ -378,6 +383,7 @@ def apply_csl_entry(connection, block: dict, locator: str, file_digest: str, *, 
     try:
         source, limitations = csl.parse(raw, with_limitations=True)
         canonical, warnings = naming.normalize(source.canonical(), settings.values if settings else None)
+        warnings.extend(kinds.warnings(canonical))
         source = SourceCreate.model_validate(canonical)
         incoming = source.canonical()
         source_id, binding = bind_and_fill(connection, source, raw, dry_run=dry_run, isbn_groups=isbn_groups, doi_groups=doi_groups, kept_by_source=kept_by_source, origin=origin or locator)
@@ -397,8 +403,8 @@ def apply_csl_entry(connection, block: dict, locator: str, file_digest: str, *, 
             raise
         if isinstance(exc, ValidationError):
             exc = RefError('invalid_record', 'Input does not match the supported record profile', 2)
-        result = dict(status='conflict' if exc.issue['code'] in ('identity_conflict', 'source_removed', 'alias_conflict') else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'], limitations=exc.issue['details'].get('limitations', []))
-    result.update(outcome=result['status'], incoming=incoming, start=block['start'], end=block['end'], preserved=True, editable=result['status'] in ('applied', 'unchanged'), searchable=result['status'] in ('applied', 'unchanged'), exportable='requires export assessment')
+        result = dict(status='conflict' if exc.issue['code'] in ('identity_conflict', 'source_removed', 'alias_conflict', 'value_conflict') else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'], limitations=exc.issue['details'].get('limitations', []))
+    result.update(kind=kinds.identify(incoming) if incoming else None, outcome=result['status'], incoming=incoming, start=block['start'], end=block['end'], preserved=True, editable=result['status'] in ('applied', 'unchanged'), searchable=result['status'] in ('applied', 'unchanged'), exportable='requires export assessment')
     if not dry_run:
         result['original_ref'] = preserve(connection, raw, evidence_locator, file_digest, source_id=source_id if result['status'] in ('applied', 'unchanged') else None, format='csljson', origin='import-'+result['status'], definitions=dict(start=block['start'], end=block['end'], limitations=result.get('limitations', []), import_id=import_id))
     return result
@@ -446,21 +452,21 @@ def run_csl(catalog: Path, raw: bytes, locator: str, *, dry_run=False, origin: s
     return dict(import_id=None if dry_run else run_id, input=locator, file_digest=fingerprint, counts=counts, entries=entries, dry_run=dry_run, warnings=[])
 
 
-def add(catalog: Path, raw: bytes, locator: str, *, dry_run=False, settings=None, loc=None) -> dict:
+def add(catalog: Path, raw: bytes, locator: str, *, dry_run=False, settings=None, loc=None, kind=None) -> dict:
     blocks = [block for block in bibtex.partition(raw) if block['kind'] == 'entry']
     if len(blocks) != 1:
         raise RefError('invalid_bib_input', 'Use add for one entry, or import for a bibliography', 2)
     with connect(catalog, write=not dry_run) as connection:
-        entry = apply_entry(connection, blocks[0], locator, hashlib.sha256(raw).hexdigest(), dry_run=dry_run, settings=settings, origin='add', loc=loc)
+        entry = apply_entry(connection, blocks[0], locator, hashlib.sha256(raw).hexdigest(), dry_run=dry_run, settings=settings, origin='add', loc=loc, kind=kind)
         if not dry_run:
             save_add_conflict(connection, raw, locator, entry)
     if entry['outcome'] in ('conflict', 'invalid'):
-        raise RefError(entry['code'], entry.get('message', 'Inspect conflicting fields and use update'), 2 if entry['outcome'] == 'invalid' else 3, details=entry,
+        raise RefError(entry['code'], entry.get('message', 'Inspect conflicting fields and use update'), 2 if entry['outcome'] == 'invalid' else 3, details=entry['details'] if entry.get('details', {}).get('kind') else entry,
                        data={'outcome':'needs_attention', 'citation_key':entry.get('citation_key')})
-    record = sources.show(catalog, entry['source_id']) if entry['source_id'] else bibtex.parse(blocks[0]['raw'])['source'].canonical()
+    record = sources.show(catalog, entry['source_id']) if entry['source_id'] else entry['incoming']
     if dry_run and loc is not None and not record.get('loc'):
         record['loc'] = loc
-    return record | dict(outcome='created' if entry['outcome'] == 'applied' else 'already_present', warnings=entry.get('warnings', []), dry_run=dry_run, limitations=entry['limitations'])
+    return record | dict(kind=kinds.identify(record), outcome='created' if entry['outcome'] == 'applied' else 'already_present', warnings=entry.get('warnings', []), dry_run=dry_run, limitations=entry['limitations'])
 
 
 def save_entry(connection, batch: str, locator: str, result: dict) -> None:
@@ -484,6 +490,7 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
         canonical = parsed['source'].canonical()
         key = canonical.pop('citation_key', None)
         incoming, warnings = naming.normalize(canonical, settings.values if settings else None)
+        warnings.extend(kinds.warnings(incoming))
         incoming['context'] = entry.get('context', [])
         source = SourceCreate.model_validate(incoming)
         source.citation_key = key
@@ -505,8 +512,8 @@ def apply_zotero(connection, entry: dict, manifest: dict, fingerprint: str, *, d
             raise
         if not isinstance(exc,RefError):
             exc = RefError('invalid_zotero_item','Malformed item fields; inspect the preserved original JSON',2)
-        result = dict(status='conflict' if exc.issue['code'] in ('identity_conflict', 'source_removed', 'alias_conflict') else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'])
-    result.update(outcome=result['status'], incoming=incoming, item_key=entry['key'], preserved=True)
+        result = dict(status='conflict' if exc.issue['code'] in ('identity_conflict', 'source_removed', 'alias_conflict', 'value_conflict') else 'invalid', code=exc.issue['code'], message=str(exc), details=exc.issue['details'])
+    result.update(kind=kinds.identify(incoming) if incoming else None, outcome=result['status'], incoming=incoming, item_key=entry['key'], preserved=True)
     if not dry_run:
         result['original_ref'] = preserve(connection, entry['raw'], entry['locator'], fingerprint, source_id=source_id if result['status'] in ('applied','unchanged') else None,
                  format='zotero-json', origin='import-'+result['status'], definitions=dict(limitations=result.get('limitations', []), import_id=batch, incoming_key=result.get('citation_key')))
