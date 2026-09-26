@@ -202,15 +202,23 @@ def store_record(connection, current: dict, canonical: dict, corrections: list[s
 def patch_path(value: dict, path: str, replacement, *, clear: bool) -> None:
     from typing import get_args
 
-    from refs.models import REGISTRY, Date, Metadata
+    from refs.models import Date, Metadata
     parts = path.split('.')
     dates = {field.alias or name for name,field in Metadata.model_fields.items() if Date in get_args(field.annotation)}
     date_members = {field.alias or name for name,field in Date.model_fields.items()}
     date_member = len(parts)==3 and parts[1] in dates and parts[2] in date_members
     if parts[0] in ('context', 'provenance', 'legacy_tags') and len(parts) != 1:
         raise RefError('invalid_patch', 'Replace arrays as a whole', 2)
-    if parts[0] == 'metadata' and (len(parts) > 2 and not date_member or len(parts) == 2 and parts[1] not in REGISTRY['core_fields']):
+    if parts[0] == 'metadata' and len(parts) > 2 and not date_member:
         raise RefError('invalid_patch', 'Unknown metadata path', 2)
+    if parts[0] == 'metadata' and len(parts) == 2:
+        probe = deepcopy(value)
+        probe.setdefault('metadata', {})[parts[1]] = '__validate_path__'
+        try:
+            SourceCreate.model_validate(probe)
+        except ValidationError as exc:
+            if any(item['type'] == 'extra_forbidden' for item in exc.errors()):
+                raise RefError('invalid_patch', 'Unknown metadata path', 2) from exc
     node = value
     for part in parts[:-1]:
         if part not in node:
