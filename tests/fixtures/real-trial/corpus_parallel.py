@@ -45,7 +45,7 @@ def merge_reports(manifest: dict, reports: list[dict]) -> dict:
     results = sorted((result for report in reports for result in report.get('results', [])), key=lambda result: order[result['path']])
     classification = sorted((row for report in reports for row in report.get('classification', [])), key=lambda row: order[row['path']])
     outcomes = sum((Counter(report.get('outcomes', {})) for report in reports), Counter())
-    per_file = sorted(((result.get('seconds', 0), result['path']) for result in results), reverse=True)
+    per_file = sorted(((result.get('wall_seconds', 0), result['path']) for result in results), reverse=True)
     return dict(classification=classification, results=results, total_entries=sum(report.get('total_entries', 0) for report in reports),
                 outcomes=dict(outcomes),
                 post_resource_check=[report.get('post_resource_check') for report in reports],
@@ -53,7 +53,7 @@ def merge_reports(manifest: dict, reports: list[dict]) -> dict:
                 wall_seconds=max((report.get('wall_seconds', 0) for report in reports), default=0),
                 shard_wall_seconds=[report.get('wall_seconds', 0) for report in reports],
                 peak_temporary_bytes=sum(report.get('peak_temporary_bytes', 0) for report in reports),
-                slowest_files=[dict(seconds=seconds, path=path) for seconds, path in per_file[:10]],
+                slowest_files=[dict(wall_seconds=seconds, path=path) for seconds, path in per_file[:10]],
                 ceilings=manifest.get('ceilings'), workers=len(reports))
 
 
@@ -69,6 +69,8 @@ def run(script: str, sample: Path, work: Path, manifest_path: Path, workers: int
         shard_dir.mkdir(exist_ok=True)
         shard_manifest_path = shard_dir / 'manifest.json'
         shard_manifest_path.write_text(json.dumps(shard, indent=2))
+        # both gates refuse a work directory that does not already exist
+        (shard_dir / 'work').mkdir(exist_ok=True)
         processes.append((index, shard_dir, command_for(script, sample, shard_dir / 'work', shard_manifest_path)))
     if launcher is subprocess.run:
         running = [(index, shard_dir, subprocess.Popen(command, stdout=(shard_dir / 'report.json').open('w'), stderr=(shard_dir / 'stderr.txt').open('w'))) for index, shard_dir, command in processes]

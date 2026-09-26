@@ -52,7 +52,7 @@ The JSON gate itself is pinned by `test_csl_array_worker_counts_each_add_and_rea
 
 ## Unsupported type census across rounds one to three
 
-This census counts source entries by their declared type, independently of which validation error an import reported first. Round two includes round one's files; round three includes round two's files and adds Beebe BibTeX and BBT JSON. Counts are therefore cumulative within each route, not additive across columns. BibTeX has 27 unsupported-type entries in the 18-file round-one manifest, 157 in the 105-file round-two manifest, and 520 in the 120 BibTeX files of round three; the latter includes 363 Beebe entries. Round three adds 15 CSL entries with unsupported types and seven Zotero parent items of unsupported types with child notes or attachments. The earlier reports count 143 and 362 `invalid_bib_entry` outcomes whose first reported reason was unsupported type; this source census also counts entries with another first failure. No type is admitted by this census.
+This census counts source entries by their declared type, independently of which validation error an import reported first. Round two includes round one's files; round three includes round two's files and adds Beebe BibTeX and BBT JSON. Counts are therefore cumulative within each route, not additive across columns. BibTeX has 27 unsupported-type entries in the 18-file round-one manifest, 157 in the 105-file round-two manifest, and 520 in the 120 BibTeX files of round three; the latter includes 363 Beebe entries. Round three adds 15 CSL entries with unsupported types and 147 Zotero primary items of unsupported types, including seven with child notes or attachments. The earlier reports count 143 and 362 `invalid_bib_entry` outcomes whose first reported reason was unsupported type; this source census also counts entries with another first failure. No type is admitted by this census.
 
 | Route | Unsupported type | Round 1 | Round 2 | Round 3 | Example entry |
 | --- | --- | ---: | ---: | ---: | --- |
@@ -61,7 +61,7 @@ This census counts source entries by their declared type, independently of which
 | bib | `collection` | 0 | 7 | 7 | BBT does not import groups from JabRef 5.1 #1641.bib: Hornborg2012 |
 | bib | `constitution` | 0 | 6 | 6 | Import error with character '+' in BibTeX field name #2660.bib: 11.9:23 |
 | bib | `dataset` | 0 | 6 | 6 | Import error with character '+' in BibTeX field name #2660.bib: 10.9:75a |
-| bib | `film` | 1 | 1 | 1 | web_page and other mendeley idiocy.bib: <empty key> |
+| bib | `film` | 1 | 1 | 1 | web_page and other mendeley idiocy.bib: `<empty key>` |
 | bib | `generic` | 24 | 24 | 24 | web_page and other mendeley idiocy.bib: Callahan2011 |
 | bib | `hardware` | 0 | 2 | 2 | Import error with character '+' in BibTeX field name #2660.bib: 10.10:78a |
 | bib | `image` | 0 | 11 | 11 | Import error with character '+' in BibTeX field name #2660.bib: 10.14:97a |
@@ -92,10 +92,75 @@ This census counts source entries by their declared type, independently of which
 | csl | `review-book` | 0 | 0 | 2 | Setting the item type via the cheater syntax #587.csl.json: kamp_deconstructing_2006 |
 | csl | `video` | 0 | 0 | 1 | Extra field type video not exported #3536.csl.json: marreEdge1992 |
 | zotero | `artwork` | 0 | 0 | 1 | Does setting a type via cheater syntax work currently #2473.json: Hamlet nach William Shakespeare |
-| zotero | `encyclopediaArticle` | 0 | 0 | 1 | Bulk performance test.json: All Watched Over by Machines of Loving Grace (TV series) |
-| zotero | `map` | 0 | 0 | 2 | Bulk performance test.json: Brönsholm By. Karlebo Sogn, Lynge Kronborg Herred, Frederiksborg Amt. Matrikulskort i 1:4000. Trykt i juli 1939. Gyldighedsperiode 1939-77 |
+| zotero | `bill` | 0 | 0 | 1 | Customise name-separator and list-separator #1927.json: of Rights |
+| zotero | `case` | 0 | 0 | 5 | @jurisdiction; map court,authority to institution #326.json: Dalain |
+| zotero | `dataset` | 0 | 0 | 3 | Add support for new Zotero item types #2496.json: MY DGS – annotated. Public Corpus of German Sign Language |
+| zotero | `encyclopediaArticle` | 0 | 0 | 85 | Better BibTeX does not export collections #901.json: Abduction |
+| zotero | `film` | 0 | 0 | 3 | Export of creator-type fields from embedded CSL variables #365 uppercase DOI #825.json: A film |
+| zotero | `forumPost` | 0 | 0 | 2 | add date, origdate functions, and format-date filter #1488.json: Forum post with full date and time |
+| zotero | `letter` | 0 | 0 | 13 | Bulk performance test.json: Brev fra Byplannævnet, Hovedstadsafdelingen, til Byudviklingsudvalget for Københavnsegnen |
+| zotero | `map` | 0 | 0 | 21 | Bulk performance test.json: Helhedsplan permanent vand |
 | zotero | `podcast` | 0 | 0 | 1 | raw bibtex fields with colon in extra #2750.json: ‘Unfinished business’: Ring CEO Liz Hamren leads Amazon’s home monitoring products into the AI era |
-| zotero | `tvBroadcast` | 0 | 0 | 1 | Export of creator-type fields from embedded CSL variables #365 uppercase DOI #825.json: The one with the Princess Leia fantasy |
-| zotero | `videoRecording` | 0 | 0 | 1 | Export of creator-type fields from embedded CSL variables #365 uppercase DOI #825.json: The one with the Princess Leia fantasy |
+| zotero | `statute` | 0 | 0 | 3 | @legislation; map code,container-title to journaltitle #327.json: Loi n<sup>o</sup> 2011-525 du 17 mai 2011 de simplification et d'amélioration de la qualité du droit |
+| zotero | `tvBroadcast` | 0 | 0 | 6 | Export of creator-type fields from embedded CSL variables #365 uppercase DOI #825.json: The one with the Princess Leia fantasy |
+| zotero | `videoRecording` | 0 | 0 | 3 | Bulk performance test.json: Bruno Latour & Antoine Hennion: L’Ange de l’œuvre. Étienne Souriau, from Aesthetics to an Ontology of Uncertain Beings |
 
 The examples identify the source file and its entry key, CSL id, or Zotero parent title. Each source path is in the corresponding manifest under `/Volumes/Casa/tmp/refs-phase6.2V9Id6`, `/Volumes/Casa/tmp/refs-corpus2.kMP4Kz`, or `/Volumes/Casa/tmp/refs-corpus3.UJF8YT`. The repeatable counter is `tests/fixtures/real-trial/corpus_type_census.py`; its minimized three-route fixture test pins the counting rule.
+
+## Rerun after the owner-approved input decisions
+
+The three batches of the prior 105-file manifest match the round-three record exactly in per-file and aggregate outcome counts. The Beebe batch is the first changed result; its count difference is measured against the original round-three result, not against round two. These four completed batches used the same source files in fresh disposable homes under `/Volumes/Casa/tmp/refs-corpus3-fixes.sUA4yE`, each under the 60-minute and 8-GB limits.
+
+| Batch | Entries | Applied before → after | Unchanged before → after | Conflict before → after | Invalid before → after | New time | New peak additional disk |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Prior manifest A | 3,954 | 2,739 → 2,739 | 212 → 212 | 714 → 714 | 289 → 289 | 145.89 s | 76,058,624 B |
+| Prior manifest B | 8,520 | 7,357 → 7,357 | 7 → 7 | 16 → 16 | 1,140 → 1,140 | 684.35 s | 56,627,200 B |
+| Prior manifest large file | 8,965 | 8,906 → 8,906 | 0 → 0 | 45 → 45 | 14 → 14 | 1,031.07 s | 1,127,796,736 B |
+| Beebe | 12,196 | 4,793 → 9,860 | 284 → 285 | 5,376 → 227 | 1,743 → 1,824 | 794.87 s | 1,014,169,600 B |
+
+In Beebe, `alias_conflict` fell from 5,174 to five. The 5,169 resolved alias refusals became 5,067 applied, one unchanged, 20 `value_conflict`, and 81 invalid on later checks; 74 of those invalid entries lack a usable publication identity and seven contain unsupported TeX or math. Re-import applied zero, with 10,145 unchanged, 227 conflict, and 1,824 invalid. One Beebe export rendered through Pandoc with exit zero, five remained blocked, three were empty, and six project citations refused `import_origin_ambiguous`, one more than before. Each completed batch passed resource verification and backup/restore with all 20 tables matching.
+
+## Closing full-manifest rerun: checkpoint
+
+Measured on the pre-performance code, the closing run uses the unchanged 545-file, 60,454-entry manifest, with 120 BibTeX files in one working home and 425 JSON files in another, under `/Volumes/Casa/tmp/refs-corpus3-close.T7ELYa`. The product code includes the accepted CSL batch import (`ab74c0c`); the resumable JSON harness is `5ea3977`. The BibTeX harness now has the same completed-file checkpoint rule, pinned by `test_bib_gate_resumes_after_file_deadline_without_replaying_completed_file`. The earlier separate-home regression comparison above remains the controlled comparison: pooling the prior three BibTeX batches adds cross-file identity interactions.
+
+The BibTeX gate completed all 33,635 entries: 28,187 applied, 570 unchanged, 1,611 conflict, and 3,267 invalid. Against the original separate batches, those counts were 23,795 applied, 503 unchanged, 6,151 conflict, and 3,186 invalid. The prior 105 files in the pooled home contributed 18,327 applied, 285 unchanged, 1,384 conflict, and 1,443 invalid; their separate-home reruns were identical to the round-three record. Beebe contributed 9,860 applied, 285 unchanged, 227 conflict, and 1,824 invalid, matching its fixed-code separate-home result exactly.
+
+BibTeX entry refusal codes were `invalid_bib_entry` 3,267, `value_conflict` 1,575, `identity_conflict` 26, and `alias_conflict` ten. Re-import applied zero: 28,757 unchanged, 1,611 conflict, and 3,267 invalid. Sixty-three exports rendered, twelve were blocked, 33 were empty, and twelve project citations refused `import_origin_ambiguous`. Blocked-export findings were `invalid_identifier` 806, `case_colliding_key` 26, `invalid_export_value` two, and `accessed_unassessed` one. Resource check retained all 556 available managed resources and reported 186 missing and one available linked resource. Backup/restore matched all 20 tables and checked 743 resources. `bib-resume-result.json` holds the complete result.
+
+The first BibTeX attempt exhausted its 60-minute deadline without a checkpoint. The resumable attempt exhausted 120 minutes with 117 files saved, and its retry finished in 1,980.02 seconds; cumulative resumable gate time was 9,180.03 seconds (153.00 minutes), measured on the pre-performance code. Peak volume-wide additional disk measured 6,520,156,160 bytes against 8,000,000,000. JSON likewise exhausted 120 minutes with 302 files saved; its retry later exited at the automatic disk check, with 377 files saved and no active file. Neither process was manually stopped. The JSON checkpoint records 9,225,224,192 bytes of volume-wide free-space loss, while the retained work directory accounts for approximately 5.24 GB of allocated blocks. These partial results are not a completed gate. The owner has superseded the pending disk-accounting question: retain volume-wide measurement and use 100,000,000,000 temporary bytes and 86,400 seconds in the future rerun manifests. Neither the checkpoint nor its manifests are changed now.
+
+The 377 completed JSON files account for 26,125 applied, 57 unchanged, 77 conflict, 413 invalid, 56 created, and 30 already-present outcomes. Re-import applied or created zero. Its named entry refusals so far are `invalid_zotero_item` 51, `unknown_zotero_type` 144, `key_author_required` 172, `value_conflict` 77, `invalid_record` 38, `unknown_creator_role` four, and `invalid_patch` four. One successful native import's project citation returned `lock_timeout`; its export was skipped. Final route totals and comparisons will follow completion.
+
+The large CSL array completed 24,352 elements: 24,250 applied, six conflict, and 96 invalid; re-import applied zero and kept those six conflicts and 96 invalid outcomes. Four invalid outcomes expose a bound-source fill inconsistency: the shared CSL validator accepts `metadata.source`, but binding attempts to fill it through a patch path absent from the editable registry. `tests/fixtures/real-trial/minimized/csl-bound-source-fill.json` reduces this to two entries with one DOI and a later `source` field. This is recorded for owner triage; the closing batch adds no type or product admission rule. The census above now includes every unsupported primary Zotero type, rather than only parents with children: 147 items across 13 types, of which seven have children. `test_zotero_type_census_includes_parents_without_children` pins that distinction.
+
+The shared batch driver is deferred to the export-registry pass: `run_csl` is the third copy of the import batch loop. Verification at this checkpoint is 713 passing tests, clean Ruff and ty checks, 121 passing demo checks, and zero isolated real-trial failures. The owner-copy catalog hash remains `d4c75afdcb436136d15bc855e3ebb399731bbadf56479f0993864c09373f26d5`.
+
+### Slowest completed files so far
+
+These wall-time estimates use the saved first command opening and last command closing for each completed file, excluding abandoned deadline attempts. They omit checkpoint setup and any Pandoc work after the final CLI close. The final `typeset.bib` log was removed with its successful working home before capture; its value is an upper bound from its first import to gate completion and includes final verification. Direct monotonic per-file timers are now in both harnesses, with a fault-and-resume test proving a saved file retains its own duration and an interrupted retry records only its successful attempt. The final report will retain these measurement limits.
+
+| Rank | File | Route | Wall time |
+| --- | --- | --- | ---: |
+| 1 | Really Big whopping library.csl.json | CSL batch | 6,261.57 s |
+| 2 | Async import, large library #720.bib | BibTeX | 1,675.36 s |
+| 3 | tugboat.bib | BibTeX | 1,651.34 s |
+| 4 | Unabbreviate on import #1436-3.bib | BibTeX | 1,506.58 s |
+| 5 | stanford-cstr.bib | BibTeX | 759.68 s |
+| 6 | font.bib | BibTeX | 342.37 s |
+| 7 | typeset.bib | BibTeX | ≤305.68 s |
+| 8 | texbook3.bib | BibTeX | 206.48 s |
+| 9 | texbook2.bib | BibTeX | 186.64 s |
+| 10 | Maintain the JabRef group and subgroup structure when importing a BibTeX db #97.bib | BibTeX | 139.49 s |
+
+### Retained artifacts and the next-run boundary
+
+| Directory | Contents | Deletion status |
+| --- | --- | --- |
+| `/Volumes/Casa/tmp/refs-corpus3.UJF8YT` | Original full manifest, bounded manifests, original round-three results, and diagnostic JSON results; all gate-home subdirectories are empty. | Retain the full manifest and original comparison results until the replacement rerun is recorded, or archive them before deletion. |
+| `/Volumes/Casa/tmp/refs-corpus3-fixes.sUA4yE` | Completed fixed-code separate-home BibTeX results (`batch-a-result.json`, `batch-b-result.json`, `batch-large-result.json`, `beebe-result.json`), unused CSL slices and manifests; gate-home subdirectories are empty. | Free to delete if the report's recorded comparison figures suffice; retain or archive the result JSON files if per-file audit evidence is wanted. No checkpoint depends on this directory. |
+| `/Volumes/Casa/tmp/refs-corpus3-close.T7ELYa` | Complete pooled BibTeX result at `bib-resume-result.json`, also cached under `bib-retry/bib-corpus-progress.json`; JSON saved results at `json/corpus-progress.json` and its retained home at `json/corpus`. Failed-attempt outputs and manifests are alongside them. | Retain the machine results for the report. The JSON home is disposable and will not be resumed; archive the progress file before deleting it if the partial per-file evidence is wanted. |
+
+Inspection of the JSON progress file confirms 377 completed results and `active_index: null`, so file 378 is the next unprocessed file; the earlier description of 378 saved files was an off-by-one status count. Nothing was deleted. The saved product-and-harness digest will be invalid after the performance merge, so this checkpoint is historical evidence rather than the starting point for the next gate.
+
+The review session owns merging `perf-batch` (`9b66700`), fixing the parallel driver to create each shard work directory and read `wall_seconds`, and proving it with a live small-manifest run. Only after that proof will item 7 rerun the whole round-three manifest on the merged code. Until then no gate runs and the four existing corpus harness scripts are frozen after this commit. Opening a retained catalog on the merged code will automatically upgrade it to schema 6 and write `before-schema-6-<date>.sqlite` beside the catalog; the measured 27k-source-copy upgrade took approximately one second. That is context for the later rerun, not an action in this closing checkpoint.

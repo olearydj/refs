@@ -1,5 +1,6 @@
 """Rehearse moves on a disposable sample, never on original attachment trees."""
 import argparse
+import hashlib
 import json
 import runpy
 import shutil
@@ -377,6 +378,13 @@ def phase6_restore(settings, snapshot, restored, *, timeout=None):
 
 
 def phase6_corpus(sample, work, manifest_path):
+    from corpus_round_three import (
+        clone_database,
+        code_version,
+        reset_interrupted_file,
+        save_progress,
+    )
+
     phase6_paths(sample, work)
     manifest = json.loads(manifest_path.read_text())
     limits = manifest['ceilings']
@@ -400,10 +408,33 @@ def phase6_corpus(sample, work, manifest_path):
     if total_entries > limits['entries']:
         raise ValueError('Corpus entry count exceeds manifest ceiling')
     started = time.monotonic()
-    baseline_free = shutil.disk_usage(work).free
-    peak_disk = 0
     home = work/'corpus'
-    settings = clone_owner_copy(sample, home)
+    progress_path = work/'bib-corpus-progress.json'
+    checkpoint = work/'bib-corpus-before-file.sqlite'
+    identity = dict(manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(), code_version=code_version())
+    resumed = progress_path.exists()
+    if resumed:
+        progress = json.loads(progress_path.read_text())
+        if any(progress.get(key) != value for key, value in identity.items()):
+            raise ValueError('Bib corpus progress belongs to a different manifest or code version')
+        if 'final_result' in progress:
+            return progress['final_result']
+        if not home.is_dir():
+            raise ValueError('Bib corpus progress has no working catalog to resume')
+        if progress.get('active_index') is not None:
+            reset_interrupted_file(home, checkpoint, progress['active_index'])
+            progress['active_index'] = None
+            save_progress(progress_path, progress)
+        settings = select(str(home/'config.toml'), str(home/'cat'), no_project_config=True)
+    else:
+        baseline_free = shutil.disk_usage(work).free
+        settings = clone_owner_copy(sample, home)
+        progress = identity | dict(results=[], active_index=None, baseline_free=baseline_free, peak_temporary_bytes=0, run_seconds=[])
+        save_progress(progress_path, progress)
+    results = progress['results']
+    if len(results) > len(classification) or any(result['path'] != classification[index]['path'] for index, result in enumerate(results)):
+        raise ValueError('Bib corpus progress does not match the classified manifest')
+    baseline_free, peak_disk = progress['baseline_free'], progress['peak_temporary_bytes']
     def remaining():
         seconds = limits['seconds']-(time.monotonic()-started)
         if seconds <= 0:
@@ -411,20 +442,28 @@ def phase6_corpus(sample, work, manifest_path):
         return seconds
     def bounded_cli(*args):
         return phase6_cli(settings,*args,timeout=remaining())
-    results = []
     try:
-        linked_before = 0
-        file_started = [time.monotonic()]
-        def finish(result):
-            result['seconds'] = round(time.monotonic()-file_started[0], 2)
+        linked_before = sum(result.get('linked_resources_added', 0) for result in results)
+
+        def record(result):
+            result['wall_seconds'] = round(time.monotonic()-file_started, 2)
             results.append(result)
-        for index, row in enumerate(classification):
-            file_started[0] = time.monotonic()
+            progress['active_index'] = None
+            progress['peak_temporary_bytes'] = max(peak_disk, baseline_free-shutil.disk_usage(work).free)
+            save_progress(progress_path, progress)
+            checkpoint.unlink(missing_ok=True)
+
+        for index in range(len(results), len(classification)):
+            row = classification[index]
             peak_disk = max(peak_disk, baseline_free-shutil.disk_usage(work).free)
             if time.monotonic()-started > limits['seconds'] or peak_disk > limits['temporary_bytes']:
                 raise ValueError('Corpus time or disk ceiling exceeded')
+            file_started = time.monotonic()
+            clone_database(home/'cat/catalog.sqlite', checkpoint)
+            progress['active_index'] = index
+            save_progress(progress_path, progress)
             if row['kind'] == 'refused_whole':
-                finish(row)
+                record(row)
                 continue
             origin = f'phase6-{index}'
             code, imported = bounded_cli('import', '--format', 'bib', '--input', row['path'], '--origin', origin)
@@ -455,7 +494,7 @@ def phase6_corpus(sample, work, manifest_path):
             bounded_cli('project', 'create', project)
             cited_code, cited = bounded_cli('project', 'cite', project, '--from-import', origin)
             if cited_code:
-                finish(row | dict(import_exit=code, outcomes=dict(outcomes), entry_codes=dict(entry_codes), invalid_reasons=dict(invalid_reasons), conflict_paths=dict(conflict_paths), examples=examples, linked_resources_added=linked_added, reimport=again_counts, project_cite_code=cited['errors'][0]['code'], export=dict(skipped='project citation refused')))
+                record(row | dict(import_exit=code, outcomes=dict(outcomes), entry_codes=dict(entry_codes), invalid_reasons=dict(invalid_reasons), conflict_paths=dict(conflict_paths), examples=examples, linked_resources_added=linked_added, reimport=again_counts, project_cite_code=cited['errors'][0]['code'], export=dict(skipped='project citation refused')))
                 continue
             target = home/f'export-{index}.bib'
             export_code, export = bounded_cli('export', '--project', project, '--output', str(target))
@@ -472,10 +511,12 @@ def phase6_corpus(sample, work, manifest_path):
                 render = dict(skipped='pandoc unavailable')
             else:
                 render = dict(skipped='export blocked', codes=export_codes)
-            finish(row | dict(import_exit=code, outcomes=dict(outcomes), entry_codes=dict(entry_codes), invalid_reasons=dict(invalid_reasons), conflict_paths=dict(conflict_paths), examples=examples, linked_resources_added=linked_added, reimport=again_counts, project_cite_code=None, export_exit=export_code, export_entries=(export.get('data') or {}).get('count'), export_codes=export_codes, export_findings=dict(export_findings), export_examples=export_examples, render=render))
+            record(row | dict(import_exit=code, outcomes=dict(outcomes), entry_codes=dict(entry_codes), invalid_reasons=dict(invalid_reasons), conflict_paths=dict(conflict_paths), examples=examples, linked_resources_added=linked_added, reimport=again_counts, project_cite_code=None, export_exit=export_code, export_entries=(export.get('data') or {}).get('count'), export_codes=export_codes, export_findings=dict(export_findings), export_examples=export_examples, render=render))
             peak_disk = max(peak_disk, baseline_free-shutil.disk_usage(work).free)
             if time.monotonic()-started > limits['seconds'] or peak_disk > limits['temporary_bytes']:
                 raise ValueError('Corpus time or disk ceiling exceeded')
+        shutil.rmtree(home/'snapshot', ignore_errors=True)
+        shutil.rmtree(home/'restored', ignore_errors=True)
         check_code, check = bounded_cli('resource', 'check', '--verify')
         if check_code or check['status'] != 'ok':
             raise AssertionError('Post-corpus resource check failed')
@@ -488,9 +529,17 @@ def phase6_corpus(sample, work, manifest_path):
         peak_disk = max(peak_disk, baseline_free-shutil.disk_usage(work).free)
         if elapsed > limits['seconds'] or peak_disk > limits['temporary_bytes']:
             raise ValueError('Corpus time or disk ceiling exceeded during backup or restore')
-        return dict(classification=classification, results=results, total_entries=total_entries, outcomes=dict(sum((Counter(result.get('outcomes', {})) for result in results), Counter())), post_resource_check={f'{kind}:{status}': count for (kind,status),count in statuses.items()}, restore=restored, wall_seconds=round(elapsed, 2), peak_temporary_bytes=max(peak_disk,0), ceilings=limits)
-    finally:
+        report = dict(classification=classification, results=results, total_entries=total_entries, outcomes=dict(sum((Counter(result.get('outcomes', {})) for result in results), Counter())), post_resource_check={f'{kind}:{status}': count for (kind,status),count in statuses.items()}, restore=restored, wall_seconds=round(sum(progress['run_seconds'])+elapsed, 2), run_seconds=[*progress['run_seconds'], round(elapsed,2)], peak_temporary_bytes=max(peak_disk,0), ceilings=limits)
+        progress['final_result'] = report
+        progress['run_seconds'].append(round(elapsed,2))
+        save_progress(progress_path, progress)
         shutil.rmtree(home)
+        return report
+    finally:
+        if 'final_result' not in progress:
+            progress['run_seconds'].append(round(time.monotonic()-started,2))
+            progress['peak_temporary_bytes'] = max(peak_disk, baseline_free-shutil.disk_usage(work).free)
+            save_progress(progress_path, progress)
 
 
 if __name__=='__main__':

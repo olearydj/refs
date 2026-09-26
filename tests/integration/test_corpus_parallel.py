@@ -27,7 +27,7 @@ def fake_gate(command, capture_output, text):
     manifest = json.loads(Path(command[command.index('--manifest') + 1] if '--manifest' in command else command[command.index('--corpus-manifest') + 1]).read_text())
     files = manifest['files']
     report = dict(classification=[dict(f) for f in files],
-                  results=[f | dict(outcomes=dict(applied=f['entries']), seconds=float(f['entries'])) for f in files],
+                  results=[f | dict(outcomes=dict(applied=f['entries']), wall_seconds=float(f['entries'])) for f in files],
                   total_entries=sum(f['entries'] for f in files), outcomes=dict(applied=sum(f['entries'] for f in files)),
                   post_resource_check={'recorded:available': len(files)}, restore=dict(tables=16),
                   wall_seconds=float(sum(f['entries'] for f in files)), peak_temporary_bytes=1000 * len(files))
@@ -47,6 +47,7 @@ def test_two_workers_merge_to_the_same_report_as_one(tmp_path):
     assert two['peak_temporary_bytes'] == one['peak_temporary_bytes']
     assert two['slowest_files'][0]['path'] == '/corpus/file-3.bib'
     assert (tmp_path / 'two' / 'shard-1' / 'manifest.json').exists()
+    assert (tmp_path / 'two' / 'shard-1' / 'work').is_dir()
 
 
 def test_failed_shard_is_reported_by_index(tmp_path):

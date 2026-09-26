@@ -11,7 +11,7 @@ import pytest
 
 from refs.adapters import zotero
 from refs.catalog import connect
-from refs.config import select
+from refs.config import select, toml_text
 
 
 def harness(monkeypatch):
@@ -109,8 +109,11 @@ def test_json_gate_resumes_after_file_deadline_without_replaying_completed_file(
     monkeypatch.setattr(corpus, 'phase6_cli', lambda _settings, *args, **kwargs: (0, {'status':'ok', 'data':{'items':[]}}))
     monkeypatch.setattr(corpus, 'phase6_restore', lambda *args, **kwargs: dict(rows_match=True))
     attempts = []
+    clock = [0]
+    monkeypatch.setattr(corpus.time, 'monotonic', lambda: clock[0])
 
     def gate(_settings, home, index, row, _remaining):
+        clock[0] += 17
         with sqlite3.connect(home/'cat/catalog.sqlite') as connection:
             before = connection.execute('SELECT count(*) FROM markers').fetchone()[0]
             attempts.append((index, before))
@@ -127,7 +130,63 @@ def test_json_gate_resumes_after_file_deadline_without_replaying_completed_file(
     assert state['active_index'] == 1
     report = corpus.run(sample, work, manifest)
     assert len(report['results']) == 2
+    assert [row['wall_seconds'] for row in report['results']] == [17, 17]
     assert attempts == [(0, 0), (1, 1), (1, 1)]
     assert len(clones) == 1
     assert report['run_seconds'] and len(report['run_seconds']) == 2
     assert corpus.run(sample, work, manifest) == report
+
+
+def test_bib_gate_resumes_after_file_deadline_without_replaying_completed_file(initialized, tmp_path, monkeypatch):
+    harness(monkeypatch)
+    rehearsal = importlib.import_module('move_rehearsal')
+    monkeypatch.setattr(rehearsal, 'phase6_paths', lambda *args: None)
+    monkeypatch.setattr(rehearsal, 'sandboxed', lambda command: command)
+    monkeypatch.setattr(rehearsal.shutil, 'which', lambda name: None if name == 'pandoc' else '/usr/bin/true')
+    work = tmp_path/'bib-work'
+    work.mkdir()
+    files = [tmp_path/f'{index}.bib' for index in range(2)]
+    for index, path in enumerate(files):
+        path.write_text(f'@book{{bib{index},title={{Fixture {index}}},author={{Example, Ada}},year={{2024}}}}')
+    manifest = work/'manifest.json'
+    manifest.write_text(json.dumps(dict(ceilings=dict(files=2, entries=2, seconds=120, temporary_bytes=1_000_000_000),
+                                        files=[dict(path=str(path), source='fixture') for path in files])))
+    clones = []
+
+    def clone(_sample, home):
+        clones.append(home)
+        rehearsal.shutil.copytree(tmp_path/'cat', home/'cat')
+        (home/'lib').mkdir()
+        (home/'config.toml').write_text(toml_text(dict(schema_version=1, catalog=dict(path=str(home/'cat')),
+                                                      resources=dict(library_root=str(home/'lib'), roots=dict(library=str(home/'lib'))))))
+        return select(str(home/'config.toml'), str(home/'cat'), no_project_config=True)
+
+    monkeypatch.setattr(rehearsal, 'clone_owner_copy', clone)
+    actual_cli = rehearsal.phase6_cli
+    attempts = []
+
+    def call(settings, *args, timeout=None):
+        if args[:2] == ('resource', 'check'):
+            return 0, {'status':'ok', 'data':{'items':[]}}
+        if args[0] == 'backup':
+            return 0, {'status':'ok'}
+        if args[0] == 'import' and 'phase6-1' in args:
+            attempts.append('second')
+            if len(attempts) == 1:
+                actual_cli(settings, *args, timeout=timeout)
+                raise subprocess.TimeoutExpired('fixture gate', 1)
+        return actual_cli(settings, *args, timeout=timeout)
+
+    monkeypatch.setattr(rehearsal, 'phase6_cli', call)
+    monkeypatch.setattr(rehearsal, 'phase6_restore', lambda *args, **kwargs: dict(rows_match=True))
+    with pytest.raises(subprocess.TimeoutExpired):
+        rehearsal.phase6_corpus(tmp_path, work, manifest)
+    state = json.loads((work/'bib-corpus-progress.json').read_text())
+    assert len(state['results']) == 1
+    assert state['active_index'] == 1
+    report = rehearsal.phase6_corpus(tmp_path, work, manifest)
+    assert report['outcomes'] == {'applied':2}
+    assert len(report['results']) == 2
+    assert len(clones) == 1
+    assert len(report['run_seconds']) == 2
+    assert rehearsal.phase6_corpus(tmp_path, work, manifest) == report
