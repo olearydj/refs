@@ -55,3 +55,54 @@ def test_portable_native_label_refines_entry_type(label, canonical):
     restored=bibtex.parse(bibtex.partition(output)[0]['raw'])['source']
     assert restored.metadata.type == canonical
     assert render.type_label(source.canonical()) == f'{canonical} ({label})'
+
+
+@pytest.mark.parametrize(('label','canonical'), [('constitution','legislation'),('jurisdiction','legal_case'),('bill','bill'),
+    ('regulation','regulation'),('treaty','treaty'),('hearing','hearing'),('letter','personal_communication'),
+    ('review','review-book'),('score','musical_score'),('performance','performance')])
+def test_deferred_bib_types_refuse_by_csl_name(label, canonical):
+    from refs.results import RefError
+    with pytest.raises(RefError) as caught:
+        bibtex.parse(f'@{label}{{example,title={{Recorded Work}}}}'.encode())
+    assert caught.value.exit_code == 2
+    assert caught.value.issue['code'] == 'invalid_bib_entry'
+    assert caught.value.issue['details']['csl_type'] == canonical
+    assert caught.value.issue['details']['recommendation'] == f'Admit CSL type {canonical} by adding a registry type row.'
+    assert caught.value.issue['message'].endswith(caught.value.issue['details']['recommendation'])
+
+
+@pytest.mark.parametrize('canonical', ['legislation','legal_case','bill','regulation','treaty','hearing',
+    'personal_communication','review-book','musical_score','performance'])
+def test_deferred_csl_types_refuse_by_name(canonical):
+    import json
+
+    from refs.results import RefError
+    with pytest.raises(RefError) as caught:
+        csl.parse(json.dumps({'type':canonical,'title':'Recorded Work'}).encode())
+    assert caught.value.exit_code == 2
+    assert caught.value.issue['code'] == 'invalid_record'
+    assert caught.value.issue['details']['csl_type'] == canonical
+    assert caught.value.issue['message'].endswith(f'Admit CSL type {canonical} by adding a registry type row.')
+
+
+@pytest.mark.parametrize(('label','canonical'), [('statute','legislation'),('case','legal_case'),('bill','bill'),
+    ('hearing','hearing'),('letter','personal_communication'),('email','personal_communication'),('instantMessage','personal_communication')])
+def test_deferred_zotero_types_refuse_by_csl_name(label, canonical):
+    from refs.results import RefError
+    with pytest.raises(RefError) as caught:
+        zotero.parse({'key':'EXAMPLE1','data':{'itemType':label,'title':'Recorded Work'}}, {'library_uri':'users/fixture'})
+    assert caught.value.exit_code == 2
+    assert caught.value.issue['code'] == 'unknown_zotero_type'
+    assert caught.value.issue['details']['csl_type'] == canonical
+    assert caught.value.issue['message'].endswith(f'Admit CSL type {canonical} by adding a registry type row.')
+
+
+@pytest.mark.parametrize('label', ['nameonly','hardware'])
+def test_unrepresented_bib_types_have_no_admission_recommendation(label):
+    from refs.results import RefError
+    with pytest.raises(RefError) as caught:
+        bibtex.parse(f'@{label}{{example,title={{Recorded Work}}}}'.encode())
+    assert caught.value.exit_code == 2
+    assert caught.value.issue['code'] == 'invalid_bib_entry'
+    assert caught.value.issue['message'] == 'Unsupported entry type'
+    assert 'recommendation' not in caught.value.issue['details']

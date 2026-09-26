@@ -8,7 +8,7 @@ from bibtexparser.model import Entry
 from pydantic import ValidationError
 from pylatexenc.latex2text import LatexNodes2Text
 
-from refs.models import MONTHS, REGISTRY, SourceCreate, assign_path, portable_url
+from refs.models import MONTHS, REGISTRY, SourceCreate, assign_path, deferred_type, portable_url
 from refs.results import RefError
 
 # The parser reports malformed blocks through logging before returning failed_blocks.
@@ -280,6 +280,9 @@ def parse(raw: bytes) -> dict:
         kind = entry.entry_type.lower()
         canonical = decode(fields['csltype']) if kind == 'misc' and 'csltype' in fields else REGISTRY['bib_type_aliases'].get(kind)
         if canonical is None:
+            details = deferred_type('bib', kind)
+            if details:
+                raise RefError('invalid_bib_entry', 'Unsupported entry type. ' + details['recommendation'], 2, details=details | {'limitations': limitations})
             raise ValueError('Unsupported entry type')
         metadata = {'type': canonical}
         value: dict = {'schema_version': '1.0', 'metadata': metadata, 'native_type': {'namespace':'bibtex', 'value':kind}, 'provenance': [{'origin': 'import', 'access': 'unknown'}]}

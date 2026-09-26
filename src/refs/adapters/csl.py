@@ -4,7 +4,7 @@ import json
 
 from pydantic import ValidationError
 
-from refs.models import Metadata, SourceCreate, assign_path, portable_url
+from refs.models import Metadata, SourceCreate, assign_path, deferred_type, portable_url
 from refs.results import RefError
 
 
@@ -15,6 +15,9 @@ def parse(raw: bytes, *, with_limitations: bool = False):
             metadata = metadata[0]
         if not isinstance(metadata, dict):
             raise ValueError('Supply exactly one CSL object')
+        details = deferred_type('csl', metadata.get('type', ''))
+        if details:
+            raise RefError('invalid_record', 'Input does not match the supported record profile. ' + details['recommendation'], 2, details=details)
         external_id = metadata.pop('id', None)
         if external_id is not None and (isinstance(external_id, bool) or not isinstance(external_id, (str, int))):
             raise ValueError('CSL id must be a string or integer')

@@ -436,6 +436,14 @@ def revalidate(canonical: dict) -> dict:
     return SourceCreate.model_validate(canonical | {'citation_key':None}).canonical() | {'citation_key':canonical['citation_key']}
 
 
+def deferred_type(route: str, label: str) -> dict:
+    for row in REGISTRY['deferred_types']:
+        if label in row['spellings'].get(route, []):
+            kind = row['csl_type']
+            return dict(csl_type=kind, recommendation=f'Admit CSL type {kind} by adding a registry type row.')
+    return {}
+
+
 def parse(raw: bytes) -> SourceCreate:
     try:
         return SourceCreate.model_validate_json(raw)

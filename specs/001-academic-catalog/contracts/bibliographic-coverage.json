@@ -6777,5 +6777,149 @@
     "proceedings",
     "techreport",
     "unpublished"
+  ],
+  "deferred_types": [
+    {
+      "csl_type": "legislation",
+      "spellings": {
+        "bib": [
+          "legislation",
+          "constitution",
+          "legmaterial",
+          "legadminmaterial"
+        ],
+        "csl": [
+          "legislation"
+        ],
+        "zotero": [
+          "statute"
+        ]
+      }
+    },
+    {
+      "csl_type": "legal_case",
+      "spellings": {
+        "bib": [
+          "legal_case",
+          "jurisdiction",
+          "legal"
+        ],
+        "csl": [
+          "legal_case"
+        ],
+        "zotero": [
+          "case"
+        ]
+      }
+    },
+    {
+      "csl_type": "bill",
+      "spellings": {
+        "bib": [
+          "bill"
+        ],
+        "csl": [
+          "bill"
+        ],
+        "zotero": [
+          "bill"
+        ]
+      }
+    },
+    {
+      "csl_type": "regulation",
+      "spellings": {
+        "bib": [
+          "regulation"
+        ],
+        "csl": [
+          "regulation"
+        ],
+        "zotero": []
+      }
+    },
+    {
+      "csl_type": "treaty",
+      "spellings": {
+        "bib": [
+          "treaty"
+        ],
+        "csl": [
+          "treaty"
+        ],
+        "zotero": []
+      }
+    },
+    {
+      "csl_type": "hearing",
+      "spellings": {
+        "bib": [
+          "hearing"
+        ],
+        "csl": [
+          "hearing"
+        ],
+        "zotero": [
+          "hearing"
+        ]
+      }
+    },
+    {
+      "csl_type": "personal_communication",
+      "spellings": {
+        "bib": [
+          "personal_communication",
+          "letter",
+          "email"
+        ],
+        "csl": [
+          "personal_communication"
+        ],
+        "zotero": [
+          "letter",
+          "email",
+          "instantMessage"
+        ]
+      }
+    },
+    {
+      "csl_type": "review-book",
+      "spellings": {
+        "bib": [
+          "review-book",
+          "reviewbook",
+          "review"
+        ],
+        "csl": [
+          "review-book"
+        ],
+        "zotero": []
+      }
+    },
+    {
+      "csl_type": "musical_score",
+      "spellings": {
+        "bib": [
+          "musical_score",
+          "score"
+        ],
+        "csl": [
+          "musical_score"
+        ],
+        "zotero": []
+      }
+    },
+    {
+      "csl_type": "performance",
+      "spellings": {
+        "bib": [
+          "performance"
+        ],
+        "csl": [
+          "performance"
+        ],
+        "zotero": []
+      }
+    }
   ]
 }

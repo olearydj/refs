@@ -7,7 +7,15 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from refs.models import MONTHS, REGISTRY, Date, SourceCreate, assign_path, portable_url
+from refs.models import (
+    MONTHS,
+    REGISTRY,
+    Date,
+    SourceCreate,
+    assign_path,
+    deferred_type,
+    portable_url,
+)
 from refs.results import RefError
 
 CHILDREN = {'attachment', 'note', 'annotation'}
@@ -181,7 +189,11 @@ def parse(item: dict, manifest: dict) -> dict:
     kind = data['itemType']
     types = {row['zotero']: row['canonical'] for row in REGISTRY['type_mappings']}
     if kind not in types:
-        raise RefError('unknown_zotero_type', f'No assessed mapping for {kind}; inspect the preserved item', 2)
+        details = deferred_type('zotero', kind)
+        message = f'No assessed mapping for {kind}; inspect the preserved item'
+        if details:
+            message += '. ' + details['recommendation']
+        raise RefError('unknown_zotero_type', message, 2, details=details)
     source: dict = dict(schema_version='1.0', metadata={'type': types[kind]}, native_type={'namespace': 'zotero', 'value': kind},
                   provenance=[dict(origin='import', source_identity=dict(namespace='zotero', library_uri=manifest['library_uri'], item_key=item['key']))],
                   legacy_tags=[tag['tag'] for tag in data.get('tags', [])])

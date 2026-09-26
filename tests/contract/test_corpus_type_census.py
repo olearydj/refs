@@ -41,4 +41,4 @@ def test_zotero_type_census_includes_parents_without_children(tmp_path, monkeypa
     manifest = tmp_path/'manifest.json'
     manifest.write_text(json.dumps({'files':[{'path':str(source), 'route':'zotero'}]}))
     assert census.census(manifest)['rows'] == [
-        {'route':'zotero', 'type':'case', 'count':2, 'example':'parents.json: Without children'}]
+        {'route':'zotero', 'type':'case', 'count':2, 'example':'parents.json: Without children', 'csl_type':'legal_case', 'recommendation':'Admit CSL type legal_case by adding a registry type row.'}]

@@ -8,10 +8,10 @@ from pathlib import Path
 from typing import get_args
 
 from refs.adapters.bibtex import partition
-from refs.models import REGISTRY, Metadata
+from refs.models import REGISTRY, Metadata, deferred_type
 
 BIB_TYPES = set(REGISTRY['bib_type_aliases'])
-CSL_TYPES = set(get_args(Metadata.model_fields['type'].annotation))
+CSL_TYPES = set(get_args(Metadata.model_fields['type'].annotation)) | set(REGISTRY.get('csl_type_aliases', {}))
 ZOTERO_TYPES = {row['zotero'] for row in REGISTRY['type_mappings']}
 ENTRY = re.compile(br'^@\s*([^\s{(]+)\s*[{(]\s*([^,\s]*)', re.I)
 
@@ -47,7 +47,7 @@ def census(manifest: Path) -> dict:
                     continue
                 counts[(route, kind)] += 1
                 examples.setdefault((route, kind), f"{path.name}: {item.get('key') or item.get('title') or f'index {index}'}")
-    return {'files':len(files), 'rows':[dict(route=route, type=kind, count=count, example=examples[(route, kind)]) for (route, kind), count in sorted(counts.items())]}
+    return {'files':len(files), 'rows':[dict(route=route, type=kind, count=count, example=examples[(route, kind)], **deferred_type(route, kind)) for (route, kind), count in sorted(counts.items())]}
 
 
 if __name__ == '__main__':
