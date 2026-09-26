@@ -5797,20 +5797,6 @@
       "export_class": "value-dependent",
       "fixture": "types-kinds",
       "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
-    },
-    {
-      "input_format": "bib",
-      "type_scope": [
-        "misc"
-      ],
-      "source_field": "cslgenre",
-      "canonical_path": "metadata.genre",
-      "transform": "Decode supported title except traditional inbook branch: without booktitle and with chapter/pages map to metadata.container-title instead; preserve explicit key.",
-      "conflict": "Unequal competing values for one canonical path require reconciliation; no route priority.",
-      "portable_projection": "title",
-      "export_class": "value-dependent",
-      "fixture": "types-kinds",
-      "assessment_rule": "Supported text/protection serializer: faithful. Changed identifying title: work_identity_changed; damaged protected spelling: protected_spelling_changed; unprotected capitals: warning. Unsupported TeX: unknown."
     }
   ],
   "unmapped_policy": "Preserve per-entry original and report unassessed. Do not create native editable paths. Output uses four-class policy, never unknown-as-safe.",

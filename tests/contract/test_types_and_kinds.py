@@ -16,6 +16,9 @@ def test_new_type_and_genre_survive_portable_round_trip(kind):
         'metadata':{'type':kind,'title':'Recorded Work','genre':'Supplied genre','author':[{'family':'Example'}], 'issued':{'date-parts':[[2020]]}}})
     output, _ = bibliography.serialize([source.canonical()])
     assert output.startswith(b'@misc{example,')
+    assert b'type = {Supplied genre}' in output
+    assert b'cslgenre' not in output
+    assert b'note =' not in output
     restored = bibtex.parse(bibtex.partition(output)[0]['raw'])['source']
     assert restored.metadata.type == kind
     assert restored.metadata.genre == 'Supplied genre'
@@ -106,3 +109,26 @@ def test_unrepresented_bib_types_have_no_admission_recommendation(label):
     assert caught.value.issue['code'] == 'invalid_bib_entry'
     assert caught.value.issue['message'] == 'Unsupported entry type'
     assert 'recommendation' not in caught.value.issue['details']
+
+
+def test_misc_type_is_genre_only_with_canonical_type_marker():
+    raw = b'@misc{example,title={Recorded Work},type={Audio podcast}}'
+    unmarked = bibtex.parse(raw)
+    assert unmarked['source'].metadata.type == 'document'
+    assert unmarked['source'].metadata.genre is None
+    assert any(item['field'] == 'type' for item in unmarked['limitations'])
+    marked = bibtex.parse(raw[:-1] + b',csltype={song}}')
+    assert marked['source'].metadata.type == 'song'
+    assert marked['source'].metadata.genre == 'Audio podcast'
+
+
+def test_new_type_marker_follows_registry_portable_projection(monkeypatch):
+    rows = [row | {'portable':'techreport'} if row['canonical']=='song' else row for row in models.REGISTRY['type_mappings']]
+    monkeypatch.setitem(models.REGISTRY, 'type_mappings', rows)
+    source = models.SourceCreate.model_validate({'schema_version':'1.0', 'citation_key':'example',
+        'metadata':{'type':'song', 'title':'Recorded Work', 'genre':'Audio podcast'}})
+    output, _ = bibliography.serialize([source.canonical()])
+    assert output.startswith(b'@techreport{example,')
+    assert b'type = {Audio podcast}' in output
+    assert b'csltype' not in output
+    assert b'cslgenre' not in output

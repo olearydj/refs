@@ -225,3 +225,19 @@ def test_range_year_matches_bbt_render(consumer,raw,iso,parts,tmp_path,record_pr
     year=str(parts[0][0])
     assert year in baseline and year in rendered
     assert any(w['code']=='date_range_projected' for w in warnings)
+
+
+@pytest.mark.slow
+def test_exported_podcast_genre_reaches_pandoc_csl_json(tmp_path, pytestconfig):
+    from refs.models import SourceCreate
+
+    podcast = SourceCreate.model_validate({'schema_version':'1.0', 'citation_key':'podcast',
+        'metadata':{'type':'song', 'title':'Recorded Work', 'genre':'Audio podcast',
+                    'author':[{'family':'Example'}], 'issued':{'date-parts':[[2020]]}}}).canonical()
+    output, _ = serialize([podcast])
+    (tmp_path/'podcast.bib').write_bytes(output)
+    rendered = run([tool('pandoc', pytestconfig), 'podcast.bib', '--from=bibtex', '--to=csljson'], tmp_path)
+    records = json.loads(rendered)
+    assert len(records) == 1
+    assert records[0]['id'] == 'podcast'
+    assert records[0]['genre'] == 'Audio podcast'

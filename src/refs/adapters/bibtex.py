@@ -168,7 +168,8 @@ def map_fields(value: dict, fields: dict, kind: str, traditional: bool, unsuppor
     assigned: dict[str, tuple[int | None, str, object]] = {}
     for row in REGISTRY['rows']:
         field = row['source_field']
-        if row['input_format'] != 'bib' or kind not in row['type_scope'] or field not in fields:
+        scoped = kind in row['type_scope'] or (kind == 'misc' and 'csltype' in fields and field == 'type' and row['canonical_path'] == 'metadata.genre')
+        if row['input_format'] != 'bib' or not scoped or field not in fields:
             continue
         consumed.add(field)
         if field in unsupported or field in ('year', 'month', 'date', 'howpublished', 'note', 'file'):

@@ -1,7 +1,7 @@
 {
   "registry": {
     "source": "specs/001-academic-catalog/contracts/bibliographic-coverage.json",
-    "sha256": "aa1a0cbda8064eebf1537199479bb2c951c96dd6e87c30a9a47e681cd68e174b"
+    "sha256": "c707853be75ba5106146bcb9efd5ccd0c43adda6d2a873b95f8e7fa972e2939e"
   },
   "upstream": [
     {

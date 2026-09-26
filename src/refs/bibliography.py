@@ -23,6 +23,10 @@ from refs.results import RefError, notice
 
 PROFILE = "portable-bibtex-v1"
 PROFILE_FINGERPRINT = files.digest(PROFILE.encode())
+# These pre-admission projections retain their original byte output.
+ORIGINAL_TYPES = frozenset(('article', 'article-journal', 'article-magazine', 'article-newspaper',
+    'book', 'chapter', 'document', 'manuscript', 'paper-conference', 'patent', 'post-weblog',
+    'report', 'software', 'speech', 'standard', 'thesis', 'webpage'))
 TEX_ESCAPES = {"\\": r"\textbackslash{}", "{": r"\{", "}": r"\}", "&": r"\&", "%": r"\%", "#": r"\#", "_": r"\_", "$": r"\$", "~": r"\textasciitilde{}", "^": r"\textasciicircum{}"}
 
 
@@ -169,7 +173,7 @@ def _project_language(metadata, used, put, assess):
 
 
 
-def _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess):
+def _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess, *, misc_projection=False):
     for source, target in [('volume', 'volume'), ('issue', 'number'), ('publisher-place', 'address'), ('edition', 'edition'), ('collection-title', 'series'), ('collection-number', 'number'), ('container-title-short', 'shortjournal'), ('chapter-number', 'chapter')]:
         copy(source, target)
     used.add('page')
@@ -203,7 +207,7 @@ def _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy
         notes.extend(str(metadata[field]) for field in ('genre', 'number') if metadata.get(field))
     else:
         copy('number', 'number')
-        if entry_type in ('techreport', 'phdthesis', 'mastersthesis'):
+        if misc_projection or entry_type in ('techreport', 'phdthesis', 'mastersthesis'):
             copy('genre', 'type')
         elif metadata.get('genre'):
             notes.append(str(metadata['genre']))
@@ -320,6 +324,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
         kind = metadata['type']
         types = {row['canonical']: row['portable'] for row in REGISTRY['type_mappings']}
         entry_type = types[kind]
+        misc_projection = entry_type == 'misc' and kind not in ORIGINAL_TYPES
         for field in list(metadata):
             applicable = REGISTRY['field_applicability'].get(field)
             if applicable is not None and kind not in applicable:
@@ -375,12 +380,10 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             _project_titles(metadata, kind, entry_type, used, notes, copy, assess)
             _project_dates(metadata, used, notes, put, assess)
             _project_language(metadata, used, put, assess)
-            _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess)
+            _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess, misc_projection=misc_projection)
             _project_identifiers(metadata, used, put, assess)
-            if kind in ('periodical', 'entry-encyclopedia', 'map', 'graphic', 'motion_picture', 'song', 'broadcast', 'dataset', 'post'):
+            if misc_projection:
                 put('csltype', kind)
-                if metadata.get('genre'):
-                    put('cslgenre', metadata['genre'])
             _project_note_fields(metadata, used, notes, assess)
             _project_extensions(metadata, value, record, entry_type, notes, put, assess)
             _finish_notes(metadata, kind, record, notes, put)
