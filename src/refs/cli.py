@@ -215,7 +215,7 @@ def key_group(ctx: typer.Context):
 
 @app.command("update")
 def update_source(ctx: typer.Context, reference: str,
-                  if_revision: Annotated[int, typer.Option(min=1)],
+                  if_revision: Annotated[int | None, typer.Option(min=1)] = None,
                   kind: Annotated[str | None, typer.Option()] = None,
                   patch: Annotated[str | None, typer.Option()] = None,
                   set_values: Annotated[list[str] | None, typer.Option("--set")] = None,

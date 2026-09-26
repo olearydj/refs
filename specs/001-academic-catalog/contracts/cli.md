@@ -37,7 +37,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | schema NAME | Exactly source-create, source-patch, source-record, result; packaged, offline. |
 | add | --format refs\|csljson\|bib --input PATH accepts one reference; --kind NAME sets its defining fields. With --file PATH, slice 3 uses the intake flags below. --keep-name preserves the basename. --dry-run shows normalization, key components and the destination. |
 | show REF | Canonical record, revision, origins/corrections, context, limitations and resource list/availability. |
-| update REF | --patch PATH or repeated --set PATH=JSON; --kind NAME sets its defining fields; --if-revision N required. |
+| update REF | --patch PATH or repeated --set PATH=JSON; --kind NAME sets its defining fields; --if-revision N optional. |
 | search QUERY | Exact key/normalized identifier match first, then literal lexical query; --project PROJECT, --kind NAME (or unassigned), --limit N, --offset N; matched fields and source identities. |
 | list | Same filters/pagination, including --kind NAME (or unassigned); --sort title\|key. |
 | kinds | Read-only registry names, canonical types and defining fields. |

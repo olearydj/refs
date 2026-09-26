@@ -187,9 +187,9 @@ def insert_source(connection, source: SourceCreate, raw: bytes, locator: str, *,
     changed(connection)
     return record(connection, source_id) | {"outcome": "created", "warnings": warnings}
 
-def checked_record(connection, reference: str, revision: int) -> dict:
+def checked_record(connection, reference: str, revision: int | None) -> dict:
     current = record(connection, resolve(connection, reference))
-    if revision != current['revision']:
+    if revision is not None and revision != current['revision']:
         raise RefError('stale_revision', 'Reload the source and use its current revision',
                        details={'expected': revision, 'actual': current['revision']})
     return current
@@ -253,7 +253,7 @@ def patch_path(value: dict, path: str, replacement, *, clear: bool) -> None:
         node[parts[-1]] = replacement
 
 
-def update(catalog: Path, reference: str, patch: dict, revision: int, *, dry_run: bool = False, policy: dict | None = None, kind: str | None = None) -> dict:
+def update(catalog: Path, reference: str, patch: dict, revision: int | None = None, *, dry_run: bool = False, policy: dict | None = None, kind: str | None = None) -> dict:
     from refs.models import SourcePatch
     try:
         patch_model = SourcePatch.model_validate(patch)
