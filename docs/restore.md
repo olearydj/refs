@@ -56,7 +56,7 @@ with (home / "config.toml").open("x") as output:
 print("Restored catalog at", catalog)
 ```
 
-Schema-4 and schema-5 snapshots also preserve loc and the file_operations rows, including unfinished moves. They contain no staged or attachment bytes. Schema-2 snapshots restore all fourteen logical tables, including saved import entries and decisions, collection hierarchy and memberships, and related-source pairs. Older snapshots are validated and restored unchanged; the first command opening a catalog below schema 5 upgrades it after saving a dated safety copy. Migration 005 only updates catalog paths and loc; the owner separately renames the library intake folder to lowercase unfiled once.
+A schema-5 snapshot opened on schema 6 is upgraded automatically after the dated safety copy; the search_rows table is filled from the existing projection, so nothing is rebuilt from sources. Schema-4 and schema-5 snapshots also preserve loc and the file_operations rows, including unfinished moves. They contain no staged or attachment bytes. Schema-2 snapshots restore all fourteen logical tables, including saved import entries and decisions, collection hierarchy and memberships, and related-source pairs. Older snapshots are validated and restored unchanged; the first command opening a catalog below schema 5 upgrades it after saving a dated safety copy. Migration 005 only updates catalog paths and loc; the owner separately renames the library intake folder to lowercase unfiled once.
 
 Open the restored catalog without launching any resource viewer:
 

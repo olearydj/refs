@@ -1,6 +1,6 @@
 # Data Model: Slices 1–3
 
-SQLite is the sole authority. Slice 1 has ten logical tables. Slice 2 adds four: import_entries, collections, source_collections and source_relations. Slice 3 adds sources.loc and file_operations. FTS shadow tables are internal. No new runtime dependency is needed.
+SQLite is the sole authority. Slice 1 has ten logical tables. Slice 2 adds four: import_entries, collections, source_collections and source_relations. Slice 3 adds sources.loc and file_operations. The performance batch of 2026-09-25 (schema 6) adds search_rows and lookup indexes on originals and project_sources. FTS shadow tables are internal. No new runtime dependency is needed.
 
 | Table | Stored values and invariants |
 | --- | --- |
@@ -13,7 +13,7 @@ SQLite is the sole authority. Slice 1 has ten logical tables. Slice 2 adds four:
 | project_sources | Unique project/source pair and cited boolean. Every slice 1 row has cited=true. Cite inserts, uncite deletes; repeats are no-ops. Keep the column for future background membership. |
 | export_targets | Unique canonical destination, project/profile fingerprint and last successful byte digest. A nullable pending_digest records the intended output before publication. The baseline is nullable until first publication. Promote a matching pending digest on the next export; otherwise advance the baseline only after verified publication. No operation ID or per-source projection. |
 | imports | One row per actual import run: ID, origin, exact file digest, start/finish timestamps, slice 2 batch revision and aggregate counts (applied/unchanged/conflict/invalid); incomplete finish stays visible after interruption. Slice 2 entry accounting is in import_entries; reruns classify input again rather than replaying saved responses. |
-| search projection | Derived FTS5 metadata/context/legacy-tag text keyed by source ID; matching fields returned with current source revision. Rebuildable, never an authority or file-content index. |
+| search projection | Derived FTS5 metadata/context/legacy-tag text keyed by source ID; matching fields returned with current source revision. Rebuildable, never an authority or file-content index. search_rows (schema 6) maps each projection row to its source ID so a refresh removes a source's rows by rowid instead of scanning the FTS table; it is maintained by the refresh and filled from the projection on upgrade. |
 | import_entries — slice 2 | Run ID and entry locator reference preserved input; status is applied, unchanged, conflict or invalid. Store candidate source IDs, conflicting current/incoming values, reviewed revision and applied source ID. Persist reconciliation decisions without changing originals. |
 | collections — slice 2 | ID, parent ID, verbatim name, hierarchy path and revision. Preserve the imported library/item identity. Imported history, independent of loc; no collection-editing surface. |
 | source_collections — slice 2 | Unique source/collection pair, preserving every imported membership independently of projects and file placement. |
