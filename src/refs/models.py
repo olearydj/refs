@@ -451,8 +451,14 @@ def parse(raw: bytes) -> SourceCreate:
     try:
         return SourceCreate.model_validate_json(raw)
     except ValidationError as exc:
-        raise RefError("invalid_record", "Input does not match the supported record profile", 2,
-                       details={"issues": exc.errors(include_url=False, include_context=False, include_input=False)}) from exc
+        details: dict = {"issues": exc.errors(include_url=False, include_context=False, include_input=False)}
+        for issue in exc.errors(include_url=False, include_context=False):
+            if issue["loc"] == ("metadata",) and isinstance(issue.get("input"), dict):
+                details.update(deferred_type("csl", issue["input"].get("type", "")))
+        message = "Input does not match the supported record profile"
+        if "recommendation" in details:
+            message += ". " + details["recommendation"]
+        raise RefError("invalid_record", message, 2, details=details) from exc
 
 
 class SourcePatch(StrictModel):
