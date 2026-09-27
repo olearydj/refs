@@ -301,7 +301,7 @@ def list_sources(ctx: typer.Context, kind: Annotated[str | None, typer.Option()]
 
 @app.command('kinds')
 def list_kinds(ctx: typer.Context):
-    report(ctx, 'kinds', {'items': kinds.REGISTRY['kinds']})
+    report(ctx, 'kinds', {'items': [dict(row, announce=row.get('announce', True)) for row in kinds.REGISTRY['kinds']]})
 
 
 @app.command('summary')

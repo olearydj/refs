@@ -321,7 +321,7 @@ def confirmation(command: str, data: dict, terminal: bool, width: int, warnings:
     if command == 'config show':
         return 'Configuration: ' + str(data['config']) + ''.join(f"\n{name} = {value} ({data['origins'].get(name, 'default')})" for name, value in data['values'].items())
     if command == 'kinds':
-        return table_rows([['Kind', 'Type', 'Defining fields'], *[[item['name'], item['type'], ', '.join(f'{path}={value}' for path, value in item['fields'].items()) or '(type alone)'] for item in data['items']]], terminal=terminal, width=width)
+        return table_rows([['Kind', 'Type', 'Defining fields', 'Announce'], *[[item['name'], item['type'], ', '.join(f'{path}={value}' for path, value in item['fields'].items()) or '(type alone)', str(item.get('announce', True)).lower()] for item in data['items']]], terminal=terminal, width=width)
     if command == 'schema':
         return '\n'.join(data['schemas']) if 'schemas' in data else json.dumps(data, ensure_ascii=False, indent=2)
     if command == 'project show' and 'items' in data:
