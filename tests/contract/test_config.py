@@ -163,4 +163,8 @@ def test_project_title_policy_and_record_override(initialized, tmp_path, cli_env
     stored = initialized('show', added['citation_key'])['data']
     assert stored['metadata']['title'] == expected
     if policy == 'preserve' and protection is None:
-        assert stored['title_protection'] == {}
+        assert stored['title_protection'] == {'title': {'protected_terms': [], 'preserve_case': True}}
+    elif protection is not None:
+        assert stored['title_protection']['title'] == protection
+    else:
+        assert stored['title_protection']['title'] == {'protected_terms': [], 'preserve_case': False}
