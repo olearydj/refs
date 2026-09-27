@@ -156,10 +156,12 @@
             }
           },
           "fixture_provenance": {
-            "publication_commit": "257380218a02ce946379a2f21baad246b2df02d8",
-            "source": "accepted publication artifact; owner-approved seed",
-            "artifact_sha256": "5c715b09076a0bfe26925456b4eeda11a74a7c29bd15a6d9cbdb6ad554a31afc",
-            "fixture_sha256": "356b4527e865aedb3d1cc3a8b5042d625008647f44b13816880d40c2e60025d9"
+            "publication_commit": "f7afb1e56fa9b175d08cb60309ae954e3e596031",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-27T06:14:10.008217+00:00",
+            "artifact_sha256": "542cfbe9a847afc8a3d29ffc869f9e348d80627ff1911fcc55ce97a94e0abc0b",
+            "fixture_sha256": "356b4527e865aedb3d1cc3a8b5042d625008647f44b13816880d40c2e60025d9",
+            "refs_commit": "1243522"
           },
           "style": "Bundled Chicago Manual of Style 18th edition (author-date)"
         },
@@ -208,7 +210,16 @@
               "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
             }
           },
-          "style": "Pandoc default Chicago Manual of Style 18th edition (author-date); bibliography gate, not Inara layout"
+          "style": "Pandoc default Chicago Manual of Style 18th edition (author-date); bibliography gate, not Inara layout",
+          "fixture_provenance": {
+            "publication_commit": "f7afb1e56fa9b175d08cb60309ae954e3e596031",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-27T06:14:10.013983+00:00",
+            "artifact_sha256": "e999a511c5d999a4c787e2b1952752ef58db54b416bcdd3b9c72f0ea140c7f47",
+            "fixture_sha256": "594377b7eda1c73f535dc3d7d0c25fd7bd7e24cd3b8ee521641d8158bbfae600",
+            "refs_commit": "1243522",
+            "manuscript_commit": "3c6aff821bd94ba43d452e72e572c8d7901bd09c"
+          }
         }
       ],
       "inputs": [
