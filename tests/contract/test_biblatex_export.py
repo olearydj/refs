@@ -212,4 +212,12 @@ def test_other_profiles_bytes_match_before_identification_only_notes():
 
     for value in values:
         assert projected(bibliography.serialize, value, 'biblatex-v1') == projected(baseline.serialize, value, 'biblatex-v1')
-    assert bibliography.serialize_csl(values)[0] == baseline.serialize_csl(values)[0]
+    # arXiv CSL output now has an intentional repository projection, covered
+    # by its own contract and consumer tests rather than this old byte oracle.
+    unchanged_csl = [value for value in values if not value.get('extensions', {}).get('identifiers', {}).get('arxiv')]
+    current = json.loads(bibliography.serialize_csl(unchanged_csl)[0])
+    # The legacy-event alias is the only allowed change in the remaining set.
+    for entry in current:
+        if 'event' in entry:
+            assert entry.pop('event') == entry['event-title']
+    assert current == json.loads(baseline.serialize_csl(unchanged_csl)[0])

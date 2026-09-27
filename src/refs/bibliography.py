@@ -73,6 +73,9 @@ def _project_names(metadata, entry_type, fields, used, put, assess):
         if any(name.get('dropping-particle') or name.get('non-dropping-particle') for name in names):
             assess('name_particle_fallback', 'documented_fallback', 'Portable names retain the particle before the family name; consumers determine dropping behavior', 'metadata.' + role)
         for name in names:
+            if name in ({'family': 'others'}, {'literal': 'others'}):
+                output_names.append('others')
+                continue
             if 'literal' in name:
                 output_names.append('{' + tex(name['literal']) + '}')
                 continue
@@ -465,6 +468,17 @@ def serialize_csl(records: list[dict]) -> tuple[bytes, list[dict]]:
                                **{'class': 'structural'}, path='', message=str(exc)))
             continue
         entry = record['metadata'] | {'id': record['citation_key']}
+        for field, value in entry.items():
+            if isinstance(value, list):
+                entry[field] = [{'literal': 'others'} if name == {'family': 'others'} else name for name in value]
+        if 'event-title' in entry:
+            entry.setdefault('event', entry['event-title'])
+        arxiv = record.get('extensions', {}).get('identifiers', {}).get('arxiv')
+        if entry['type'] == 'article' and entry.get('archive', '').casefold() == 'arxiv' and arxiv:
+            entry.setdefault('publisher', 'arXiv')
+            entry.setdefault('number', arxiv)
+            if entry['publisher'].casefold() == entry['archive'].casefold():
+                entry.pop('archive')
         for field in ('title', 'container-title'):
             if field in entry:
                 entry[field] = title(entry[field], record.get('title_protection', {}).get(field, {}), csl=True)
