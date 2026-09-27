@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from refs.bibliography import serialize
+from refs.bibliography import serialize, serialize_csl
 
 ROOT = Path(__file__).resolve().parents[2]
 EVIDENCE = ROOT / 'specs/001-academic-catalog/reviews/evidence-2026-09-20/export'
@@ -315,8 +315,6 @@ def test_csl_identity_profile_preserves_pilot_fields_for_pandoc(initialized, tmp
 
 @pytest.mark.slow
 def test_csl_protection_keeps_jose_names_under_title_casing(tmp_path, pytestconfig):
-    from refs.bibliography import serialize_csl
-
     records = json.loads((ROOT / 'tests/fixtures/real-trial/minimized/jose-title-protection.json').read_text())
     (tmp_path / 'references.json').write_bytes(serialize_csl(records)[0])
     (tmp_path / 'paper.md').write_text('---\nnocite: "@*"\n---\n')
@@ -340,8 +338,6 @@ def test_csl_protection_keeps_jose_names_under_title_casing(tmp_path, pytestconf
 
 @pytest.mark.slow
 def test_csl_iise_venue_renders_literal_ampersand_under_chicago(tmp_path, pytestconfig):
-    from refs.bibliography import serialize_csl
-
     records = json.loads((ROOT / 'tests/fixtures/real-trial/minimized/manufacturing-iise-venue.json').read_text())
     output, _ = serialize_csl(records)
     assert json.loads(output)[0]['container-title'] == 'Proceedings of the <span class="nocase">IISE</span> Annual Conference & Expo 2025'
@@ -393,3 +389,33 @@ def test_elsevier_prints_only_distinct_conference_event(tmp_path, pytestconfig, 
     assert bbl.count('Proceedings of the Test Conference') == 1
     assert ('Event: Companion Workshop' in bbl) == (event == 'Companion Workshop')
     assert ('Event:' in bbl) == (event == 'Companion Workshop')
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize('profile,consumer', [('csl-json-v1', 'pandoc'), ('biblatex-v1', 'biber'), ('portable-bibtex-v1', 'bibtex')])
+def test_truncated_list_uses_consumer_et_al(profile, consumer, tmp_path, record_property, pytestconfig):
+    record = {'schema_version': '1.0', 'citation_key': 'truncated',
+              'metadata': {'type': 'book', 'title': 'Truncated Study',
+                           'author': [{'family': 'Smith', 'given': 'Alex'}, {'family': 'Jones', 'given': 'Blair'}, {'family': 'others'}],
+                           'issued': {'date-parts': [[2024]]}, 'publisher': 'Example Press'}}
+    raw, _ = serialize_csl([record]) if profile == 'csl-json-v1' else serialize([record], profile=profile)
+    if consumer == 'pandoc':
+        (tmp_path/'refs.json').write_bytes(raw)
+        (tmp_path/'paper.md').write_text('---\nnocite: "@*"\n---\n')
+        text = run([tool('pandoc', pytestconfig), 'paper.md', '--citeproc', '--bibliography', 'refs.json', '--csl', str(EVIDENCE/'csl/ieee.csl'), '-t', 'plain'], tmp_path)
+    else:
+        text = render_with_consumer(consumer, raw, tmp_path, record_property, pytestconfig)
+    assert re.search(r'et\s+al', text), text
+    assert 'others' not in text, text
+
+
+@pytest.mark.slow
+def test_legacy_ieee_style_prints_event_title(tmp_path, pytestconfig):
+    record = {'schema_version': '1.0', 'citation_key': 'talk',
+              'metadata': {'type': 'speech', 'title': 'A Talk', 'event-title': 'Annual Research Meeting',
+                           'author': [{'family': 'Smith', 'given': 'Alex'}], 'issued': {'date-parts': [[2024]]}}}
+    raw, _ = serialize_csl([record])
+    (tmp_path/'refs.json').write_bytes(raw)
+    (tmp_path/'paper.md').write_text('---\nnocite: "@*"\n---\n')
+    text = run([tool('pandoc', pytestconfig), 'paper.md', '--citeproc', '--bibliography', 'refs.json', '--csl', str(EVIDENCE/'csl/ieee.csl'), '-t', 'plain'], tmp_path)
+    assert 'Annual Research Meeting' in text

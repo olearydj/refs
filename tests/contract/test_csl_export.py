@@ -349,3 +349,52 @@ def test_csl_nocase_terms_keep_literal_entities(field):
     restored = csl.parse(output).canonical()
     assert restored['metadata'][field] == value
     assert restored['title_protection'][field]['protected_terms'] == ['R&amp;D']
+
+
+@pytest.mark.parametrize('sentinel', [{'family': 'others'}, {'literal': 'others'}])
+@pytest.mark.parametrize('profile', bibliography.PROFILES)
+def test_truncated_creator_exports_without_changing_record(sentinel, profile):
+    names = [{'family': 'Smith', 'given': 'Alex'}, sentinel]
+    record = {'schema_version': '1.0', 'citation_key': 'truncated',
+              'metadata': {'type': 'book', 'title': 'Study', 'author': names,
+                           'editor': names, 'issued': {'date-parts': [[2024]]}}}
+    before = deepcopy(record)
+    raw, _ = bibliography.serialize_csl([record]) if profile == PROFILE else bibliography.serialize([record], profile=profile)
+    if profile == PROFILE:
+        entry = json.loads(raw)[0]
+        assert entry['author'] == entry['editor'] == [{'family': 'Smith', 'given': 'Alex'}, {'literal': 'others'}]
+    else:
+        assert 'author = {Smith, Alex and others}' in raw.decode()
+        assert 'editor = {Smith, Alex and others}' in raw.decode()
+    assert record == before
+
+
+@pytest.mark.parametrize('name', [{'family': 'Others', 'given': 'Alex'}, {'literal': 'Others Institute'}, {'family': 'others', 'given': 'Alex'}])
+@pytest.mark.parametrize('profile', bibliography.PROFILES)
+def test_real_names_are_not_truncation_markers(name, profile):
+    record = {'schema_version': '1.0', 'citation_key': 'person',
+              'metadata': {'type': 'book', 'title': 'Study', 'author': [name]}}
+    raw, _ = bibliography.serialize_csl([record]) if profile == PROFILE else bibliography.serialize([record], profile=profile)
+    if profile == PROFILE:
+        assert json.loads(raw)[0]['author'] == [name]
+    else:
+        assert 'and others' not in raw.decode()
+        assert ('Institute' if 'literal' in name else 'Alex') in raw.decode()
+
+
+@pytest.mark.parametrize('event', [None, 'Annual Research Meeting'])
+def test_csl_legacy_event_alias_is_export_only(event):
+    metadata = {'type': 'speech', 'title': 'A Talk'}
+    if event:
+        metadata['event-title'] = event
+    record = {'schema_version': '1.0', 'citation_key': 'talk', 'metadata': metadata}
+    before = deepcopy(record)
+    raw, _ = bibliography.serialize_csl([record])
+    entry = json.loads(raw)[0]
+    if event:
+        assert entry['event'] == entry['event-title'] == event
+        imported = csl.parse(raw).canonical()
+        assert imported['metadata']['event-title'] == event
+    else:
+        assert 'event' not in entry
+    assert record == before

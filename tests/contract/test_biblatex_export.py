@@ -212,4 +212,10 @@ def test_other_profiles_bytes_match_before_identification_only_notes():
 
     for value in values:
         assert projected(bibliography.serialize, value, 'biblatex-v1') == projected(baseline.serialize, value, 'biblatex-v1')
-    assert bibliography.serialize_csl(values)[0] == baseline.serialize_csl(values)[0]
+    current = json.loads(bibliography.serialize_csl(values)[0])
+    # The later legacy-event compatibility rule is the only CSL difference
+    # allowed by this historical regression check.
+    for entry in current:
+        if 'event' in entry:
+            assert entry.pop('event') == entry['event-title']
+    assert current == json.loads(baseline.serialize_csl(values)[0])
