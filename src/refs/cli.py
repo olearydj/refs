@@ -243,9 +243,18 @@ def update_source(ctx: typer.Context, reference: str,
                   kind: Annotated[str | None, typer.Option()] = None,
                   patch: Annotated[str | None, typer.Option()] = None,
                   set_values: Annotated[list[str] | None, typer.Option("--set")] = None,
+                  link: Annotated[str | None, typer.Option()] = None,
+                  unlink: Annotated[str | None, typer.Option()] = None,
                   dry_run: Annotated[bool, typer.Option()] = False):
+    if link is not None or unlink is not None:
+        if (link is not None and unlink is not None) or patch is not None or set_values is not None or kind is not None:
+            raise RefError('invalid_invocation', 'Use --link or --unlink alone, with optional --if-revision and --dry-run', 2)
+        other = link if link is not None else unlink
+        assert other is not None
+        report(ctx, 'update', sources.change_link(settings(ctx).catalog_path(), reference, other, if_revision, unlink=unlink is not None, dry_run=dry_run))
+        return
     if (patch and set_values) or not (patch or set_values or kind):
-        raise RefError("invalid_invocation", "Choose --patch or --set", 2)
+        raise RefError("invalid_invocation", "Choose --patch, --set, --kind, --link or --unlink", 2)
     try:
         if patch:
             value = json.loads(read_payload(patch)[0])

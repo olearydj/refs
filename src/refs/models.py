@@ -511,6 +511,7 @@ class SourceRecord(SourceCreate):
     limitations: list[dict] = Field(default_factory=list)
     kind: str | None = None
     projects: list[dict] = Field(default_factory=list)
+    links: list[dict] = Field(default_factory=list)
 
 
 class Issue(StrictModel):
