@@ -55,7 +55,54 @@ def record(connection, source_id: str) -> dict:
     from refs.resources import inventory
     result["resources"] = inventory(connection, source_id)
     result["projects"] = [dict(row) for row in connection.execute("SELECT p.id, p.name FROM projects p JOIN project_sources ps ON ps.project_id=p.id WHERE ps.source_id=? AND ps.cited=1 ORDER BY p.name", (source_id,))]
+    result['links'] = linked_sources(connection, source_id)
     return result
+
+
+def linked_sources(connection, source_id: str) -> list[dict]:
+    rows = connection.execute(
+        "SELECT DISTINCT s.id, s.citation_key, s.metadata_json, s.state "
+        "FROM sources s JOIN source_relations r ON (r.source_id=? AND r.target_id=s.id) "
+        "OR (r.target_id=? AND r.source_id=s.id) ORDER BY s.citation_key", (source_id, source_id))
+    links = []
+    for row in rows:
+        link = dict(row)
+        link['title'] = json.loads(link.pop('metadata_json')).get('title')
+        links.append(link)
+    return links
+
+
+def change_link(catalog: Path, reference: str, other: str, revision: int | None = None, *, unlink: bool = False, dry_run: bool = False) -> dict:
+    with connect(catalog, write=not dry_run) as connection:
+        current = checked_record(connection, reference, revision)
+        target = record(connection, resolve(connection, other))
+        if current['id'] == target['id']:
+            raise RefError('invalid_link', 'Link two different sources', 2)
+        exists = any(link['id'] == target['id'] for link in current['links'])
+        if exists != unlink:
+            return current | {'unchanged': True}
+        links = [link for link in current['links'] if link['id'] != target['id']]
+        if not unlink:
+            links.append(dict(id=target['id'], citation_key=target['citation_key'], title=target['metadata'].get('title'), state=target['state']))
+        if dry_run:
+            return current | {'links': sorted(links, key=lambda link: link['citation_key']), 'dry_run': True}
+        revisions = {source['id']: source['revision'] for source in (current, target)}
+        action_log.log_mutation('source.unlink' if unlink else 'source.link',
+                                {'id': current['id'], 'citation_key': current['citation_key'], 'other_id': target['id']},
+                                {'revisions': revisions}, {'revisions': {key: value + 1 for key, value in revisions.items()}},
+                                changes={'linked': {'old': exists, 'new': not unlink}})
+        if unlink:
+            connection.execute('DELETE FROM source_relations WHERE (source_id=? AND target_id=?) OR (source_id=? AND target_id=?)',
+                               (current['id'], target['id'], target['id'], current['id']))
+        else:
+            connection.execute('INSERT INTO source_relations VALUES (?,?,?,?)', (current['id'], 'urn:uuid:' + target['id'], target['id'], 'refs'))
+        for source_id, old_revision in revisions.items():
+            updated = connection.execute('UPDATE sources SET revision=revision+1, updated_at=? WHERE id=? AND revision=?',
+                                         (datetime.now(UTC).isoformat(), source_id, old_revision))
+            if updated.rowcount != 1:
+                raise RefError('stale_revision', 'Reload the source and use its current revision', details={'expected': old_revision})
+        changed(connection)
+        return record(connection, current['id'])
 
 
 def resolve(connection, reference: str) -> str:

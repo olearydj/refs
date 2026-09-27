@@ -240,6 +240,8 @@ def one_record(command: str, data: dict, terminal: bool, width: int, warnings: l
     if not data.get('resources'):
         rows.append(['Files', '(none)'])
     rows.append(['Projects', ', '.join(item['name'] for item in data.get('projects', [])) or '(none)'])
+    for link in data.get('links', []):
+        rows.append(['Links', f"{link['citation_key']}: {link.get('title') or '(no title)'}" + (' [removed]' if link['state'] == 'removed' else '')])
     rows.append(['Revision', str(data.get('revision', ''))])
     return table_rows(rows, wrap=1, styles={0: 'dim'}, limits={1: max(20, width - 22)} if terminal else None, fixed={1}, key_cells={(0, 1)}, path_cells={(index, 1) for index, row in enumerate(rows) if row[0] == 'Files' and row[1] != '(none)'}, terminal=terminal, width=width)
 

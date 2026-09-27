@@ -37,8 +37,8 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | config show | Inspect effective values, origins and validation diagnostics; replaces config validate. |
 | schema NAME | Exactly source-create, source-patch, source-record, result; packaged, offline. |
 | add | --format refs\|csljson\|bib --input PATH accepts one reference; --kind NAME sets its defining fields. With --file PATH, slice 3 uses the intake flags below; --label TEXT labels the linked or managed resource (null when omitted) and requires --file. --keep-name preserves the basename. --dry-run shows normalization, key components and the destination. |
-| show REF | Canonical record, revision, origins/corrections, context, limitations and resource list/availability. |
-| update REF | --patch PATH or repeated --set PATH=JSON; --kind NAME sets its defining fields; --if-revision N optional. |
+| show REF | Canonical record, revision, origins/corrections, context, limitations, resource list/availability and linked catalog sources. |
+| update REF | --patch PATH or repeated --set PATH=JSON; --kind NAME sets its defining fields; alternatively --link OTHER or --unlink OTHER alone; --if-revision N optional. |
 | search QUERY | Exact key/normalized identifier match first, then literal lexical query; --project PROJECT, --kind NAME (or unassigned), --limit N, --offset N; matched fields and source identities. |
 | list | Same filters/pagination, including --kind NAME (or unassigned); --sort title\|key. When more sources exist than were shown, the human footer says how many of the total were shown and names the next --offset. |
 | kinds | Read-only registry names, canonical types and defining fields. |
@@ -57,6 +57,8 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | remove REF | --if-revision N --execute; tombstone while retaining identity/key/relationships. |
 | reactivate REF | Optional --if-revision N and --execute; restore same identity/key, report retained associations. |
 | backup | --output NEW_DIRECTORY; consistent catalog/config snapshot and external-file inventory. |
+
+`update REF --link OTHER` and `--unlink OTHER` manage an unnamed catalog-only link by ID or key: show lists each resolved linked source once in both directions (including imported Zotero links), mutations log and advance both source revisions, `--if-revision` guards REF, dry runs and repeated operations do not write, and removal retains links; self-links and mixing link options with metadata edits refuse.
 
 --keep-name is valid with add --file unless --link is supplied. For resource add, it requires --copy or --move. It is invalid without a file. Repeated resource linking of the same source/locator is a no-op. Add with a duplicate candidate reports the identity rather than silently creating another or merging differences. Search/list default limit=50, offset=0; limit 1–1000, nonnegative offset. Report total/catalog revision; separate pages need not share a snapshot. All project associations are cited, so no --cited flag is needed.
 
