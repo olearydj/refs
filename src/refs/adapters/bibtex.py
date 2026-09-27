@@ -147,8 +147,8 @@ def names(value: str) -> list[dict]:
 
 
 def date(value: str) -> dict:
-    if re.fullmatch(r'\d{4}(?:-\d{2}){0,2}', value):
-        return {'date-parts': [[int(part) for part in value.split('-')]]}
+    if re.fullmatch(r'\d{4}(?:-\d{2}){0,2}(?:/\d{4}(?:-\d{2}){0,2})?', value):
+        return {'date-parts': [[int(part) for part in date.split('-')] for date in value.split('/')]}
     return {'literal': value}
 
 

@@ -276,13 +276,14 @@ def test_csl_interrupted_publication_recovers_shared_intent(csl_project, monkeyp
         assert connection.execute('SELECT baseline_digest, pending_digest FROM export_targets').fetchone() == (hashlib.sha256(published).hexdigest(), None)
 
 
-def test_unsupported_profile_names_both_supported_choices(initialized, csl_project):
+def test_unsupported_profile_names_all_supported_choices(initialized, csl_project):
     catalog, output = csl_project
     before = (catalog / 'catalog.sqlite').read_bytes()
     result = initialized('export', '--project', 'demo', '--output', output, '--profile', 'unrecognized', expected=2)
     assert result['errors'][0]['code'] == 'unsupported_profile'
     assert 'portable-bibtex-v1' in result['errors'][0]['message']
     assert PROFILE in result['errors'][0]['message']
+    assert 'biblatex-v1' in result['errors'][0]['message']
     assert not output.exists() and (catalog / 'catalog.sqlite').read_bytes() == before
 
 

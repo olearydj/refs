@@ -24,7 +24,7 @@ from refs.models import (
 from refs.results import RefError, notice
 
 PROFILE = "portable-bibtex-v1"
-PROFILES = (PROFILE, "csl-json-v1")
+PROFILES = (PROFILE, "csl-json-v1", "biblatex-v1")
 # These pre-admission projections retain their original byte output.
 ORIGINAL_TYPES = frozenset(('article', 'article-journal', 'article-magazine', 'article-newspaper',
     'book', 'chapter', 'document', 'manuscript', 'paper-conference', 'patent', 'post-weblog',
@@ -115,13 +115,16 @@ def _project_names(metadata, entry_type, fields, used, put, assess):
         assess('container_author_omission', 'documented_fallback', 'Container authors are retained in bookauthor on book parts; classic styles may omit this field', 'metadata.container-author')
     if not metadata.get('author') and not fields.get('editor'):
         assess('missing_author', 'faithful_incomplete', 'No author or editor was supplied')
+    return render_names
 
 
 
-def _project_titles(metadata, kind, entry_type, used, notes, copy, assess):
+def _project_titles(metadata, kind, entry_type, used, notes, copy, assess, *, biblatex=False):
     copy('title', 'title')
     copy('title-short', 'shorttitle')
-    if entry_type == 'misc':
+    if biblatex:
+        copy('container-title', 'booktitle' if kind in ('chapter', 'paper-conference', 'entry-encyclopedia') else 'journaltitle')
+    elif entry_type == 'misc':
         copy('container-title', 'journal')
     elif kind in ('article-journal', 'article-magazine', 'article-newspaper'):
         copy('container-title', 'journal')
@@ -136,11 +139,16 @@ def _project_titles(metadata, kind, entry_type, used, notes, copy, assess):
 
 
 
-def _project_dates(metadata, used, notes, put, assess):
+def _project_dates(metadata, used, notes, put, assess, *, biblatex=False):
     used.add('issued')
     issued = metadata.get('issued')
     if not issued:
         assess('missing_issued', 'faithful_incomplete', 'No issued date was supplied')
+    elif biblatex:
+        if issued.get('date-parts') and not any(issued.get(k) for k in ('literal', 'circa', 'season')):
+            put('date', '/'.join('-'.join([str(parts[0]), *[f'{n:02d}' for n in parts[1:]]]) for parts in issued['date-parts']))
+        else:
+            assess('issued_date_lost_or_changed', 'blocking', 'BibLaTeX ISO date cannot preserve this issued value', 'metadata.issued')
     elif issued.get('literal') and not issued.get('date-parts') and not any(issued.get(name) for name in ('circa', 'season')):
         put('year', issued['literal'])
         assess('literal_issued_year', 'documented_fallback', 'Literal issued date written unchanged in year; verify the rendered date', 'metadata.issued')
@@ -184,7 +192,7 @@ def _project_language(metadata, used, put, assess):
 
 
 
-def _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess):
+def _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess, *, biblatex=False):
     for source, target in [('volume', 'volume'), ('issue', 'number'), ('publisher-place', 'address'), ('edition', 'edition'), ('collection-title', 'series'), ('collection-number', 'number'), ('container-title-short', 'shortjournal'), ('chapter-number', 'chapter')]:
         copy(source, target)
     used.add('page')
@@ -196,9 +204,9 @@ def _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy
         if ' and ' in str(metadata['publisher']):
             assess('literal_publisher', 'info', 'Publisher is one institution; BibLaTeX consumers will not split it on and', 'metadata.publisher')
             publisher = '{' + publisher + '}'
-        if entry_type in ('phdthesis', 'mastersthesis'):
+        if entry_type in ('phdthesis', 'mastersthesis', 'thesis'):
             put('school', publisher, literal=True)
-        elif entry_type == 'techreport':
+        elif entry_type in ('techreport', 'report'):
             put('institution', publisher, literal=True)
         else:
             put('publisher', publisher, literal=True)
@@ -206,14 +214,15 @@ def _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy
     if kind in ('article', 'manuscript'):
         copy('archive', 'archiveprefix')
         copy('number', 'eprint')
-        if (metadata.get('archive') or metadata.get('number')) and not (str(metadata.get('archive','')).casefold()=='arxiv' and value.get('extensions',{}).get('identifiers',{}).get('arxiv')):
+        if not biblatex and (metadata.get('archive') or metadata.get('number')) and not (str(metadata.get('archive','')).casefold()=='arxiv' and value.get('extensions',{}).get('identifiers',{}).get('arxiv')):
             notes.append(' '.join(str(metadata.get(field, '')) for field in ('archive', 'number')).strip())
         if metadata.get('genre'):
             notes.append(str(metadata['genre']))
     elif kind in ('patent', 'standard'):
         copy('number', 'number')
         copy('genre', 'type')
-        notes.extend(str(metadata[field]) for field in (('number',) if entry_type == 'misc' else ('genre', 'number')) if metadata.get(field))
+        if not biblatex:
+            notes.extend(str(metadata[field]) for field in (('number',) if entry_type == 'misc' else ('genre', 'number')) if metadata.get(field))
     else:
         copy('number', 'number')
         if entry_type in ('misc', 'techreport', 'phdthesis', 'mastersthesis'):
@@ -257,10 +266,10 @@ def _project_identifiers(metadata, used, put, assess):
 
 
 
-def _project_note_fields(metadata, used, notes, assess):
+def _project_note_fields(metadata, used, notes, assess, *, biblatex=False):
     for field in ('abstract', 'number-of-pages', 'number-of-volumes'):
         used.add(field)
-        if field != 'abstract' and field in metadata:
+        if not biblatex and field != 'abstract' and field in metadata:
             assess('noncitation_omission', 'info', f'{field} is retained in the catalog', 'metadata.' + field)
     used.add('note')
     if metadata.get('note'):
@@ -276,7 +285,7 @@ def _project_note_fields(metadata, used, notes, assess):
 
 
 
-def _project_extensions(metadata, value, record, entry_type, notes, put, assess):
+def _project_extensions(metadata, value, record, entry_type, notes, put, assess, *, biblatex=False, render_names=None):
     for field, extension in value.get('extensions', {}).items():
         if field == 'identifiers':
             if extension.get('arxiv'):
@@ -285,7 +294,7 @@ def _project_extensions(metadata, value, record, entry_type, notes, put, assess)
                 if (derived := doi_arxiv(str(metadata.get('DOI','')))):
                     put('eprint',derived)
                 put('eprinttype', 'arxiv')
-                if entry_type in ('misc', 'unpublished') and arxiv not in record.get('_howpublished', ''):
+                if not biblatex and entry_type in ('misc', 'unpublished') and arxiv not in record.get('_howpublished', ''):
                     notes.append('arXiv:' + arxiv)
                 assess('arxiv_fallback', 'documented_fallback', 'arXiv identifier retained in eprint fields and a classic-consumer note where needed', 'extensions.identifiers.arxiv')
             if extension.get('oclc'):
@@ -297,6 +306,10 @@ def _project_extensions(metadata, value, record, entry_type, notes, put, assess)
             for member in extension:
                 if member == 'assignees':
                     names = extension[member]
+                    if biblatex:
+                        assert render_names is not None
+                        put('holder', render_names('holder', names), literal=True)
+                        continue
                     labels = [name.get('literal') or person_name(name) for name in names]
                     notes.append('Assignee: ' + '; '.join(labels))
                     assess('assignee_in_note', 'info', 'Patent assignees are retained in note, separately from inventors', 'extensions.patent.assignees')
@@ -315,8 +328,18 @@ def _finish_notes(metadata, kind, record, notes, put):
 
 
 
-def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[bytes, list[dict]]:
+def _biblatex_fields(metadata, copy):
+    fields = {'version': 'version', 'genre': 'type', 'event-title': 'eventtitle',
+              'event-place': 'venue', 'status': 'pubstate', 'part-title': 'part',
+              'abstract': 'abstract', 'number-of-pages': 'pagetotal', 'number-of-volumes': 'volumes'}
+    for source, target in fields.items():
+        copy(source, target)
+    return {key: value for key, value in metadata.items() if key not in fields}
+
+
+def serialize(records: list[dict], *, allow_unknown: bool = False, profile: str = PROFILE) -> tuple[bytes, list[dict]]:
     from refs.models import REGISTRY
+    biblatex = profile == "biblatex-v1"
     entries, warnings, losses = [], [], []
     misc_paths = {row['canonical_path'] for row in REGISTRY['rows'] if row['input_format'] == 'bib' and row['source_field'] in ('journal', 'publisher', 'type') and 'misc' in row['type_scope']}
     seen = set()
@@ -352,12 +375,19 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
             entry_type = native
         if kind == 'chapter' and not metadata.get('title'):
             entry_type = 'inbook'
+        if biblatex:
+            mapping = REGISTRY['biblatex_types'][kind]
+            if kind == 'broadcast' and re.search(r'video|television|\btv\b', str(metadata.get('medium', '')), re.I):
+                mapping = mapping['video']
+            entry_type = mapping['entry_type']
+            if mapping['pandoc_type'] != kind:
+                assess('biblatex_consumer_type', 'documented_fallback', f"Pandoc reads @{entry_type} as {mapping['pandoc_type'] or 'an unspecified CSL type'}, not {kind}", 'metadata.type')
         for field in list(metadata):
             applicable = REGISTRY['field_applicability'].get(field)
-            if applicable is not None and kind not in applicable and not (entry_type == 'misc' and 'metadata.' + field in misc_paths):
+            if not biblatex and applicable is not None and kind not in applicable and not (entry_type == 'misc' and 'metadata.' + field in misc_paths):
                 assess('field_omitted', 'documented_fallback', f'{field} has no portable slot for {kind}; retained in catalog', 'metadata.' + field)
                 del metadata[field]
-        if entry_type == 'misc' or kind in ('article', 'article-magazine', 'article-newspaper'):
+        if not biblatex and (entry_type == 'misc' or kind in ('article', 'article-magazine', 'article-newspaper')):
             message = f'{kind} is projected as @{entry_type}'
             if kind in ('webpage', 'post-weblog'):
                 message += '; Pandoc may change title quotation marks and emphasis for this portable type'
@@ -394,20 +424,21 @@ def serialize(records: list[dict], *, allow_unknown: bool = False) -> tuple[byte
                 put(target, metadata[source])
 
         try:
-            _project_names(metadata, entry_type, fields, used, put, assess)
-            _project_titles(metadata, kind, entry_type, used, notes, copy, assess)
+            render_names = _project_names(metadata, entry_type, fields, used, put, assess)
+            _project_titles(metadata, kind, entry_type, used, notes, copy, assess, biblatex=biblatex)
             if entry_type == 'article':
                 for subtype, canonical in models.ARTICLE_SUBTYPES.items():
                     if kind == canonical:
                         put('entrysubtype', subtype)
-            _project_dates(metadata, used, notes, put, assess)
+            _project_dates(metadata, used, notes, put, assess, biblatex=biblatex)
             _project_language(metadata, used, put, assess)
-            _project_publisher(metadata, kind, entry_type, value, used, notes, put, copy, assess)
+            publisher_metadata = _biblatex_fields(metadata, copy) if biblatex else metadata
+            _project_publisher(publisher_metadata, kind, entry_type, value, used, notes, put, copy, assess, biblatex=biblatex)
             _project_identifiers(metadata, used, put, assess)
-            if misc_projection:
+            if misc_projection and not biblatex:
                 put('csltype', kind)
-            _project_note_fields(metadata, used, notes, assess)
-            _project_extensions(metadata, value, record, entry_type, notes, put, assess)
+            _project_note_fields(metadata, used, notes, assess, biblatex=biblatex)
+            _project_extensions(metadata, value, record, entry_type, notes, put, assess, biblatex=biblatex, render_names=render_names)
             _finish_notes(metadata, kind, record, notes, put)
             entry = '@' + entry_type + '{' + key + ',\n'
             for name, text in fields.items():
@@ -529,12 +560,12 @@ def export(catalog: Path, project_ref: str, output: Path, *, dry_run: bool = Fal
         selected = [sources.record(connection, row[0]) for row in connection.execute(
             "SELECT s.id FROM sources s JOIN project_sources ps ON s.id=ps.source_id WHERE ps.project_id=? AND ps.cited=1 AND s.state='active' ORDER BY s.citation_key",
             (project["id"],))]
-        if profile == PROFILE:
+        if profile != "csl-json-v1":
             for record in selected:
                 record.update(preserved_bib_fields(connection, record))
         revision = connection.execute("SELECT revision FROM catalog_meta").fetchone()[0]
     try:
-        data, warnings = serialize(selected, allow_unknown=allow_unknown) if profile == PROFILE else serialize_csl(selected)
+        data, warnings = serialize_csl(selected) if profile == "csl-json-v1" else serialize(selected, allow_unknown=allow_unknown, profile=profile)
     except RefError as exc:
         if exc.issue['code'] == 'export_blocked':
             exc.issue['path'] = str(target)
@@ -556,7 +587,7 @@ def export(catalog: Path, project_ref: str, output: Path, *, dry_run: bool = Fal
                 original = target.read_bytes()
                 if files.digest(original) != current:
                     raise RefError('outside_edit', 'File changed during adoption; import it again')
-                if profile == PROFILE:
+                if profile != "csl-json-v1":
                     blocks = [block for block in bibtex.partition(original) if block['kind'] == 'entry']
                     apply_entry = importing.apply_entry
                 else:
@@ -593,7 +624,7 @@ def export(catalog: Path, project_ref: str, output: Path, *, dry_run: bool = Fal
                         if files.digest(outside) != current:
                             raise RefError('outside_edit', 'Outside bytes changed during preservation')
                         importing.preserve(connection, outside, str(target), current,
-                                           format='bib' if profile == PROFILE else 'csljson', origin='export-overwrite')
+                                           format='csljson' if profile == 'csl-json-v1' else 'bib', origin='export-overwrite')
                 if not known:
                     connection.execute("INSERT INTO export_targets VALUES (?, ?, ?, NULL, ?) ON CONFLICT(destination) DO UPDATE SET project_id=excluded.project_id, profile_fingerprint=excluded.profile_fingerprint, baseline_digest=NULL, pending_digest=excluded.pending_digest", (str(target), project["id"], fingerprint, candidate_digest))
                 else:

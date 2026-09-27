@@ -53,7 +53,7 @@ def load_register(path):
             paths, consumers = set(), set()
             for target in project['targets']:
                 dest = relative(target['path'])
-                if dest in paths or target['profile'] not in ('csl-json-v1', 'portable-bibtex-v1'):
+                if dest in paths or target['profile'] not in ('csl-json-v1', 'portable-bibtex-v1', 'biblatex-v1'):
                     raise ValueError('Duplicate target or unsupported profile')
                 paths.add(dest)
             for consumer in project['consumers']:

@@ -1,0 +1,190 @@
+[
+  {
+    "schema_version": "1.0",
+    "citation_key": "bosk2026canvaslms",
+    "metadata": {
+      "type": "software",
+      "author": [
+        {
+          "family": "Bosk",
+          "given": "Daniel"
+        }
+      ],
+      "accessed": {
+        "date-parts": [
+          [
+            2026,
+            9,
+            26
+          ]
+        ]
+      },
+      "issued": {
+        "date-parts": [
+          [
+            2026,
+            9,
+            17
+          ]
+        ]
+      },
+      "genre": "Source code repository",
+      "note": "PyPI: https://pypi.org/project/canvaslms/",
+      "publisher": "GitHub",
+      "title": "canvaslms: A CLI to Canvas LMS",
+      "URL": "https://github.com/dbosk/canvaslms",
+      "version": "6.21"
+    },
+    "title_protection": {
+      "title": {
+        "protected_terms": [
+          "canvaslms",
+          "CLI",
+          "Canvas LMS",
+          "LMS"
+        ],
+        "preserve_case": false
+      }
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "citation_key": "jjuanrivvera2026canvascli",
+    "metadata": {
+      "type": "software",
+      "author": [
+        {
+          "literal": "jjuanrivvera"
+        }
+      ],
+      "accessed": {
+        "date-parts": [
+          [
+            2026,
+            9,
+            26
+          ]
+        ]
+      },
+      "issued": {
+        "date-parts": [
+          [
+            2026,
+            9,
+            25
+          ]
+        ]
+      },
+      "genre": "Source code repository",
+      "publisher": "GitHub",
+      "title": "Canvas CLI",
+      "URL": "https://github.com/jjuanrivvera/canvas-cli",
+      "version": "1.15.0"
+    },
+    "title_protection": {
+      "title": {
+        "protected_terms": [
+          "Canvas CLI",
+          "CLI"
+        ],
+        "preserve_case": true
+      }
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "citation_key": "ucfopen2026canvasapi",
+    "metadata": {
+      "type": "software",
+      "author": [
+        {
+          "literal": "University of Central Florida Center for Distributed Learning"
+        }
+      ],
+      "accessed": {
+        "date-parts": [
+          [
+            2026,
+            9,
+            26
+          ]
+        ]
+      },
+      "issued": {
+        "date-parts": [
+          [
+            2026,
+            4,
+            16
+          ]
+        ]
+      },
+      "genre": "Source code repository",
+      "note": "PyPI: https://pypi.org/project/canvasapi/",
+      "publisher": "GitHub",
+      "title": "CanvasAPI: Python API Wrapper for Instructure's Canvas LMS",
+      "URL": "https://github.com/ucfopen/canvasapi",
+      "version": "3.6.0"
+    },
+    "title_protection": {
+      "title": {
+        "protected_terms": [
+          "CanvasAPI",
+          "Instructure's",
+          "Canvas LMS",
+          "API",
+          "LMS",
+          "Python"
+        ],
+        "preserve_case": false
+      }
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "citation_key": "weng2026canvascli",
+    "metadata": {
+      "type": "software",
+      "author": [
+        {
+          "family": "Weng",
+          "given": "David"
+        }
+      ],
+      "accessed": {
+        "date-parts": [
+          [
+            2026,
+            9,
+            26
+          ]
+        ]
+      },
+      "issued": {
+        "date-parts": [
+          [
+            2026,
+            9,
+            21
+          ]
+        ]
+      },
+      "genre": "Source code repository",
+      "publisher": "GitHub",
+      "title": "canvas-cli: Agent-Friendly CLI for Canvas LMS",
+      "URL": "https://github.com/thedavidweng/canvas-cli",
+      "version": "0.4.1"
+    },
+    "title_protection": {
+      "title": {
+        "protected_terms": [
+          "canvas-cli",
+          "CLI",
+          "Canvas LMS",
+          "LMS"
+        ],
+        "preserve_case": false
+      }
+    }
+  }
+]

@@ -7,7 +7,7 @@ import sys
 import pytest
 
 
-@pytest.mark.parametrize('profile', ['portable-bibtex-v1', 'csl-json-v1'])
+@pytest.mark.parametrize('profile', ['portable-bibtex-v1', 'csl-json-v1', 'biblatex-v1'])
 @pytest.mark.parametrize('layer', ['user', 'project'])
 def test_export_profile_defaults_and_invocation_override(initialized, cli_env, cli_cwd, tmp_path, profile, layer):
     record = tmp_path / 'source.json'
