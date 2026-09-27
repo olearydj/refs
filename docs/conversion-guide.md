@@ -20,7 +20,7 @@ It has a bibliography file it builds from, kept by hand or by an agent, and the 
 
 6. **Files.** The library is for the owner's copies of published work: a paper's PDF is copied in, `add --file --copy` or `resource add --copy`, under a loc the owner names, and the original stays where it was. Raw research material that belongs to a project's own store, such as the vault's scans and captures, stays there and is linked in place with loc left empty; the family document is the example. A source with a scan and a transcription gets two resources with labels.
 
-7. **Export per consumer.** Export to a scratch path first, never over the project's file. A pandoc or Quarto consumer takes `--profile csl-json-v1`, the identity mapping; a LaTeX build or a venue that wants BibTeX takes `--profile portable-bibtex-v1`. Render the project from the scratch export and diff its reference list against the current render, entry by entry. Restructured wording is not a finding; a lost or altered fact is, and it is fixed in the catalog record or reported as a limit before anything is switched. Only then: export to the project's path, change the one bibliography line in the build configuration, write `.refs.toml` with the project and target, and commit those together, separately from any content change.
+7. **Export per consumer.** Export to a scratch path first, never over the project's file. A pandoc or Quarto consumer takes `--profile csl-json-v1`, the identity mapping; a LaTeX build or a venue that wants BibTeX takes `--profile portable-bibtex-v1`. Render the project from the scratch export and diff its reference list against the current render, entry by entry. Restructured wording is not a finding; a lost or altered fact is, and it is fixed in the catalog record or reported as a limit before anything is switched. Only then: export to the project's path, change the one bibliography line in the build configuration, write `.refs.toml` with the project and target, and commit those together, separately from any content change. When the gate passes, the exported file and the rendered reference-list text become that project's fixture, and the project joins the register below with the refs version and the pandoc and Quarto versions it was verified against.
 
 8. **Retire the hand-kept file** once nothing reads it, in the same commit as the reader's switch, never before.
 
@@ -32,9 +32,20 @@ It has a bibliography file it builds from, kept by hand or by an agent, and the 
 
 The catalog backup validates; the import's counts sum to the file's entry count and every invalid entry has a named reason; the project's cited count equals the reference list the prose needs; each linked or copied file's hash matches the original; the rendered reference list from the scratch export loses no fact; the build passes after the switch; the project's docs name the export and the re-export command.
 
+After any change in refs to an export profile or a projection, every project in the register is re-exported from the real catalog read-only, re-rendered with its own style, and its reference-list text diffed against the last verified render; every difference is listed and explained before the change merges. The suite tests refs's reading of its own exports and the corpus never renders, so the register is the only check that sees what a style prints. The real-trial harness automates this walk and stores each project's verified text as a fixture pinned to the tool versions that produced it.
+
 ## Boundaries
 
 Prose is never edited for a conversion. Citation keys never change. Nothing under a project's own source store is moved. A refusal is disclosed, not patched around. A conversion adds no feature to refs; it produces evidence.
+
+## Converted projects
+
+One row per project whose bibliography is an export of the catalog. The row is the regression check's worklist: what to export, with which profile, what renders it, and what it was last verified against.
+
+| Project | refs project | Export target and profile | Consumer and style | Last verified |
+| --- | --- | --- | --- | --- |
+| `/Volumes/Casa/pub/2026-james-harvey-long` | `jhl-report` | `references.json`, csl-json-v1, read by the Quarto report and the site build | Quarto 1.10 with pandoc 3.10, the project's own `ieee.csl` with genre added for documents and web pages; the site build formats its own Sources list from the same file | 2026-09-26, refs 0.7.0, publication commit 2da24c7 and the two follow-ups; 101 entries, report Sources identical to the hand-written baseline, site Sources 101 |
+| `/Volumes/Casa/pub/2026-jose-danvas` | `jose-danvas` | none yet: stopped at the export gate; intended `references.json`, csl-json-v1 for the Quarto paper, and `worktrees/danvas-jose/paper.bib`, portable-bibtex-v1 for JOSE, once the sync script gives up its bibliography half | Quarto with pandoc's default style; JOSE's own pipeline | not yet; the catalog holds the 11 records and the project is cited |
 
 ## Findings by project
 
