@@ -58,10 +58,11 @@
             }
           },
           "fixture_provenance": {
-            "publication_commit": "25257f85cfcd5f077e01845dd02aa94ecfb2f14a",
-            "source": "accepted publication artifact; owner-approved seed",
-            "artifact_sha256": "3946448269bf9bdf91269c9c156865e39a682664a9df6698fb02d58594134916",
-            "fixture_sha256": "a89e0fbf2cad835021771eee94a8a6e3bfbaac827fd6fac6bf58e532b2ea8f7d"
+            "publication_commit": "ee496e1a6839179284e9f3c8c221f801fe08188c",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-27T06:47:12.394017+00:00",
+            "artifact_sha256": "2d9a2c7ed17e25514d2e8767a12bf0fe77ff8543c9ce2523f0c74a55f5da7f9b",
+            "fixture_sha256": "c3b989e89c29544ce9e547a194b6e487434177f7a6b891569afe1004a048d740"
           },
           "style": "Project ieee.csl, including document and webpage genre"
         },
@@ -89,8 +90,9 @@
             }
           },
           "fixture_provenance": {
-            "publication_commit": "25257f85cfcd5f077e01845dd02aa94ecfb2f14a",
-            "source": "accepted publication artifact; owner-approved seed",
+            "publication_commit": "ee496e1a6839179284e9f3c8c221f801fe08188c",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-27T06:47:12.403512+00:00",
             "artifact_sha256": "fc6e38ccb2b618543d771f77fddb527f19f81427aa2daa1fb482b1d2050158b7",
             "fixture_sha256": "4be52f6e6fab1a6cbb1d16ec435b6e24f8d5dee370f954bfd17fb08e2a3a4195"
           },
