@@ -52,7 +52,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | project show [PROJECT] | Project and active cited sources, plus removed-source diagnostics; no argument lists projects. |
 | project cite PROJECT REF | Add active source with cited=true; duplicate is no-op. `--from-import ORIGIN` refuses when a source belongs to more than one import origin. |
 | project uncite PROJECT REF | Delete that association, leave source/other projects/files; absent association is no-op. |
-| export | --project PROJECT; without --output/--profile, export each [[export.targets]] entry in order, or the legacy [export] default. --output PATH and/or --profile select one target. Optional --adopt, --overwrite, --allow-unknown-mappings; complete four-class report per target. |
+| export | --project PROJECT; without --output/--profile, export each [[export.targets]] entry in order, or the legacy [export] default. --output PATH and/or --profile select one target; profiles: portable-bibtex-v1, csl-json-v1, biblatex-v1. Optional --adopt, --overwrite, --allow-unknown-mappings; complete four-class report per target. |
 | remove REF | --if-revision N --execute; tombstone while retaining identity/key/relationships. |
 | reactivate REF | Optional --if-revision N and --execute; restore same identity/key, report retained associations. |
 | backup | --output NEW_DIRECTORY; consistent catalog/config snapshot and external-file inventory. |
@@ -142,7 +142,7 @@ Catalog/staging require agent write access to /Volumes/Casa/refs/cat, and intake
 
 ## Project defaults and policy validation
 
-Discover the nearest .refs.toml between cwd and Git worktree root, recognizing .git files/directories; outside Git inspect cwd only. --project-file selects explicitly; --no-project-config disables discovery. Do not merge ancestors. Allowed keys: project, export.profile, export.output, export.consumers, export.targets (a nonempty list of output/profile pairs). A selected file cannot combine export.targets with export.output or export.profile; outputs in a list must resolve to distinct paths. Each layer selects either the list or legacy form, replacing the lower layer’s target form. Invocation wins over project, then user config, then defaults. Project files cannot change catalog, roots, naming or credentials. Invalid selected config fails before mutation, with path/value/origin. A declared richer profile fails as unsupported; consumer detection never silently chooses one.
+Discover the nearest .refs.toml between cwd and Git worktree root, recognizing .git files/directories; outside Git inspect cwd only. --project-file selects explicitly; --no-project-config disables discovery. Do not merge ancestors. Allowed keys: project, export.profile, export.output, export.consumers, export.targets (a nonempty list of output/profile pairs). A selected file cannot combine export.targets with export.output or export.profile; outputs in a list must resolve to distinct paths. Each layer selects either the list or legacy form, replacing the lower layer’s target form. Invocation wins over project, then user config, then defaults. Project files cannot change catalog, roots, naming or credentials. Invalid selected config fails before mutation, with path/value/origin. Supported profiles are portable-bibtex-v1, csl-json-v1 and biblatex-v1; an unknown profile fails with all three choices listed, and consumer detection never silently chooses one.
 
 A project may configure its consumers together:
 
