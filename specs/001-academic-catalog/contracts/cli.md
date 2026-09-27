@@ -67,7 +67,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | import --format zotero --input DIR --origin TEXT | Apply or preview the [JSON directory](interchange.md); preserve input and persist per-entry accounting. Existing Bib invocation remains supported. |
 | import list | Saved runs newest first: batch ID, origin, date, counts by status, batch revision. |
 | import show BATCH [--status STATUS] | Show the saved run and entries, optionally filtered by applied, unchanged, conflict or invalid. |
-| import reconcile BATCH (--take-incoming or --keep-current) KEY[.field]... [--execute --if-batch-revision N] | Preview or apply the [explicit incoming-value decisions](records.md#identity-and-non-overwriting-import); preview includes batch_revision and current source revisions; execution rechecks both and reports remaining conflicts. |
+| import reconcile BATCH [--take-incoming KEY[.field]] [--keep-current KEY[.field]] [--dismiss KEY] [--execute --if-batch-revision N] | Preview or apply the [explicit incoming-value decisions](records.md#identity-and-non-overwriting-import); preview includes batch_revision and current source revisions; execution rechecks both and reports remaining conflicts. --dismiss KEY records a dismissed decision only for an undecided unbound conflict, using the same preview/execution revision guard; no source or original changes, historical conflict status remains visible in import show, and summary excludes it from open conflicts. |
 | collection list | Show imported hierarchy and membership counts. |
 | list/search --collection PATH | Filter active sources by membership in the selected imported collection; retain existing project filters, sorting and pagination. |
 

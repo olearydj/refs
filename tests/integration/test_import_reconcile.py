@@ -85,3 +85,81 @@ def test_bad_selector_identity_and_missing_revision(initialized, tmp_path):
     incompatible = importing.run(catalog, b"@article{a,title={Another}}", "type.bib")["import_id"]
     with pytest.raises(RefError, match="identity"):
         importing.reconcile(catalog, incompatible, ["a"])
+
+
+def unbound_conflict(catalog):
+    importing.run(catalog, b'@book{a,title={First},year={2020}}', 'original.bib')
+    return importing.run(catalog, b'@article{a,title={Different},year={2020}}', 'type.bib')['import_id']
+
+
+def test_dismiss_unbound_conflict_preserves_source_and_original(initialized, tmp_path, human):
+    catalog = tmp_path / 'cat'
+    batch = unbound_conflict(catalog)
+    source = sources.show(catalog, 'a')
+    with connect(catalog) as db:
+        originals = [tuple(row) for row in db.execute('SELECT * FROM originals ORDER BY id')]
+    before = (catalog / 'catalog.sqlite').read_bytes()
+    shown = initialized('import', 'show', batch)['data']
+    assert shown['entries'][0]['status'] == 'conflict'
+    assert not shown['entries'][0].get('binding', {}).get('bound')
+    assert initialized('summary')['data']['imports']['open_conflicts'] == 1
+    preview = initialized('import', 'reconcile', batch, '--dismiss', 'a')['data']
+    assert preview['dry_run'] and preview['entries'][0]['decisions'] == [{'action': 'dismissed'}]
+    assert (catalog / 'catalog.sqlite').read_bytes() == before
+    result = initialized('import', 'reconcile', batch, '--dismiss', 'a',
+                         '--execute', '--if-batch-revision', preview['batch_revision'])['data']
+    assert result['batch_revision'] != preview['batch_revision']
+    assert sources.show(catalog, 'a') == source
+    with connect(catalog) as db:
+        assert [tuple(row) for row in db.execute('SELECT * FROM originals ORDER BY id')] == originals
+    assert initialized('summary')['data']['imports']['open_conflicts'] == 0
+    saved = initialized('import', 'show', batch)['data']['entries'][0]
+    assert saved['status'] == 'conflict'
+    assert saved['original_ref'] == shown['entries'][0]['original_ref']
+    assert saved['decisions'] == [{'action': 'dismissed'}]
+    assert 'Dismissed' in human('import', 'show', batch)
+    before = (catalog / 'catalog.sqlite').read_bytes()
+    refused = initialized('import', 'reconcile', batch, '--dismiss', 'a',
+                           '--execute', '--if-batch-revision', result['batch_revision'], expected=2)
+    assert refused['errors'][0]['code'] == 'invalid_selection'
+    assert (catalog / 'catalog.sqlite').read_bytes() == before
+
+
+def test_dismiss_bound_conflict_refuses(initialized, tmp_path):
+    catalog = tmp_path / 'cat'
+    batch = conflict(catalog)
+    preview = initialized('import', 'show', batch)['data']
+    before = (catalog / 'catalog.sqlite').read_bytes()
+    refused = initialized('import', 'reconcile', batch, '--dismiss', 'a',
+                           '--execute', '--if-batch-revision', preview['batch_revision'], expected=2)
+    assert refused['errors'][0]['code'] == 'invalid_selection'
+    assert (catalog / 'catalog.sqlite').read_bytes() == before
+    assert initialized('summary')['data']['imports']['open_conflicts'] == 1
+
+
+def test_dismiss_requires_current_batch_revision_and_preserves_identity_refusals(initialized, tmp_path):
+    catalog = tmp_path / 'cat'
+    batch = unbound_conflict(catalog)
+    revision = initialized('import', 'show', batch)['data']['batch_revision']
+    before = (catalog / 'catalog.sqlite').read_bytes()
+    for option in ('--keep-current', '--take-incoming'):
+        result = initialized('import', 'reconcile', batch, option, 'a', expected=3)
+        assert result['errors'][0]['code'] == 'identity_conflict'
+    missing = initialized('import', 'reconcile', batch, '--dismiss', 'a', '--execute', expected=2)
+    assert missing['errors'][0]['code'] == 'revision_required'
+    assert (catalog / 'catalog.sqlite').read_bytes() == before
+    with connect(catalog, write=True) as db:
+        db.execute('UPDATE imports SET revision=revision+1 WHERE id=?', (batch,))
+    before = (catalog / 'catalog.sqlite').read_bytes()
+    stale = initialized('import', 'reconcile', batch, '--dismiss', 'a', '--execute',
+                         '--if-batch-revision', revision, expected=3)
+    assert stale['errors'][0]['code'] == 'stale_revision'
+    assert (catalog / 'catalog.sqlite').read_bytes() == before
+
+
+def test_partial_reconciliation_still_counts_as_open(initialized, tmp_path):
+    batch = conflict(tmp_path / 'cat')
+    preview = initialized('import', 'reconcile', batch, '--keep-current', 'a.metadata.title')['data']
+    initialized('import', 'reconcile', batch, '--keep-current', 'a.metadata.title',
+                '--execute', '--if-batch-revision', preview['batch_revision'])
+    assert initialized('summary')['data']['imports']['open_conflicts'] == 1

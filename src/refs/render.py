@@ -95,6 +95,9 @@ def import_text(command: str, data: dict, terminal: bool, width: int) -> str:
                 detail += '; filled ' + ', '.join(binding['filled'])
             rows.append(['', 'Binding', detail])
         for decision in entry.get('decisions', []):
+            if decision['action'] == 'dismissed':
+                rows.append(['', 'Dismissed', 'Unbound conflict; source unchanged'])
+                continue
             label, value = ('Keep current', decision['current']) if decision['action'] == 'keep_current' else ('Take incoming', decision['incoming'])
             rows.append(['', label + ' ' + decision['path'], json.dumps(value, ensure_ascii=False)])
         for limitation in entry.get('limitations', []):
