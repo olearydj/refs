@@ -1,0 +1,84 @@
+[
+  {
+    "schema_version": "1.0",
+    "citation_key": "jupyter2019nbgrader",
+    "title_protection": {
+      "title": {
+        "protected_terms": [
+          "nbgrader",
+          "Jupyter Notebook"
+        ],
+        "preserve_case": false
+      },
+      "container-title": {
+        "protected_terms": [],
+        "preserve_case": false
+      }
+    },
+    "metadata": {
+      "type": "article-journal",
+      "container-title": "Journal of Open Source Education",
+      "title": "nbgrader: A Tool for Creating and Grading Assignments in the Jupyter Notebook"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "citation_key": "ro2019orgcoursepack",
+    "title_protection": {
+      "title": {
+        "protected_terms": [
+          "Org-Coursepack",
+          "Org-mode"
+        ],
+        "preserve_case": false
+      },
+      "container-title": {
+        "protected_terms": [],
+        "preserve_case": false
+      }
+    },
+    "metadata": {
+      "type": "article-journal",
+      "container-title": "Journal of Open Source Education",
+      "title": "Org-Coursepack: A Modular and Reusable Teaching Materials Template in Org-mode"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "citation_key": "bosk2026canvaslms",
+    "title_protection": {
+      "title": {
+        "protected_terms": [
+          "canvaslms",
+          "CLI",
+          "Canvas LMS",
+          "LMS"
+        ],
+        "preserve_case": false
+      }
+    },
+    "metadata": {
+      "type": "webpage",
+      "title": "canvaslms: A CLI to Canvas LMS"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "citation_key": "weng2026canvascli",
+    "title_protection": {
+      "title": {
+        "protected_terms": [
+          "canvas-cli",
+          "CLI",
+          "Canvas LMS",
+          "LMS"
+        ],
+        "preserve_case": false
+      }
+    },
+    "metadata": {
+      "type": "webpage",
+      "title": "canvas-cli: Agent-Friendly CLI for Canvas LMS"
+    }
+  }
+]
