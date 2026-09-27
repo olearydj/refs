@@ -71,6 +71,8 @@ def normalize(record: dict, policy: dict | None = None, fields: set[str] | None 
     for field, text in metadata.items():
         if 'title' not in field or not isinstance(text, str) or fields is not None and field not in fields:
             continue
+        if policy.get('titles', {}).get('policy') == 'preserve' and field not in protections:
+            continue
         letter_words = re.findall(r'[^\W\d_]+',text)
         shouted = bool(letter_words) and all(word.isupper() for word in letter_words)
         acronyms = [word for word in letter_words if len(word)>=2 and word.isupper()] if not shouted else []

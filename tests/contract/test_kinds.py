@@ -204,3 +204,35 @@ def test_kinds_needs_no_catalog(cli_env,tmp_path):
     assert result.returncode==0, result.stdout+result.stderr
     assert json.loads(result.stdout)['data']['items'][0]['name']=='podcast'
     assert not (tmp_path/'missing').exists()
+
+
+@pytest.mark.parametrize(('canonical', 'announced'), [
+    ('book', False), ('speech', False), ('song', True),
+])
+def test_only_announced_kinds_warn_and_count_as_unassigned(initialized, tmp_path, canonical, announced):
+    path = tmp_path / 'entry.json'
+    path.write_text(json.dumps([{'id': 'example', 'type': canonical, 'title': 'Recorded Work'}]))
+    result = initialized('import', '--format', 'csljson', '--input', path)
+    batch = initialized('import', 'show', result['data']['import_id'])['data']
+    warnings = batch['entries'][0]['warnings']
+    assert any(w['code'] == 'kind_unassigned' for w in warnings) == announced
+    if announced:
+        assert next(w for w in warnings if w['code'] == 'kind_unassigned')['details']['kinds'] == ['podcast']
+    assert initialized('list', '--kind', 'unassigned')['data']['total'] == int(announced)
+    assert initialized('summary')['data']['kinds']['unassigned'] == ({canonical: 1} if announced else {})
+
+
+def test_kinds_prints_announcement_flag(initialized, human):
+    rows = {row['name']: row for row in initialized('kinds')['data']['items']}
+    assert rows['proceedings']['announce'] is False
+    assert rows['talk']['announce'] is False
+    assert rows['podcast']['announce'] is True
+    text = human('kinds')
+    assert 'Announce' in text
+    assert 'podcast\tsong\tmetadata.genre=Audio podcast\ttrue' in text
+    assert 'talk\tspeech\tmetadata.genre=Conference presentation\tfalse' in text
+
+
+def test_announcement_defaults_to_true(monkeypatch):
+    monkeypatch.setitem(REGISTRY, 'kinds', [{'name': 'example', 'type': 'song', 'fields': {'metadata.genre': 'Example'}}])
+    assert kinds.warnings({'metadata': {'type': 'song'}})[0]['details']['kinds'] == ['example']

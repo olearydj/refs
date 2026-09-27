@@ -53,7 +53,7 @@ def overview(settings: Settings) -> dict:
             projects.append(dict(name=project['name'], description=project['description'], cited=cited, targets=targets))
         batches = connection.execute('SELECT count(*) FROM imports').fetchone()[0]
         last = connection.execute('SELECT origin, started_at, applied, unchanged, conflict, invalid FROM imports ORDER BY started_at DESC LIMIT 1').fetchone()
-        open_conflicts = sum(1 for row in connection.execute("SELECT decisions_json FROM import_entries WHERE status='conflict'") if json.loads(row[0] or '[]') == [])
+        open_conflicts = sum(1 for row in connection.execute("SELECT decisions_json FROM import_entries WHERE status='conflict'") if not any(d['action'] == 'dismissed' for d in json.loads(row[0] or '[]')))
         collections = [dict(path=row['path'], count=row[1]) for row in connection.execute(
             "SELECT c.path, (SELECT count(*) FROM source_collections sc JOIN sources s ON s.id=sc.source_id WHERE sc.collection_id=c.id AND s.state='active') FROM collections c ORDER BY c.path")]
     placement = resources.check(settings)['items']

@@ -711,15 +711,20 @@ def show(catalog: Path, batch: str, status=None) -> dict:
         return inspect_batch(connection,batch,status)
 
 
-def select_reconciliation(connection, review: dict, selectors: list[str], keep_current: list[str] | None) -> dict:
+def select_reconciliation(connection, review: dict, selectors: list[str], keep_current: list[str] | None, dismiss: list[str] | None = None) -> dict:
     selected: dict[str, dict[str,str]] = {}
-    choices = [(selector,'take_incoming') for selector in selectors] + [(selector,'keep_current') for selector in keep_current or []]
+    choices = [(selector,'take_incoming') for selector in selectors] + [(selector,'keep_current') for selector in keep_current or []] + [(selector, 'dismissed') for selector in dismiss or []]
     for selector, action in choices:
         exact = [entry for entry in review['entries'] if entry.get('citation_key') == selector]
         candidates = exact or [entry for entry in review['entries'] if entry.get('citation_key') and selector.startswith(entry['citation_key']+'.')]
         if len(candidates) != 1:
             raise RefError('ambiguous_selection', 'Use one unambiguous batch citation key and canonical field path', details={'selector':selector})
         entry = candidates[0]
+        if action == 'dismissed':
+            if not exact or entry['status'] != 'conflict' or entry.get('binding', {}).get('bound') or entry.get('decisions'):
+                raise RefError('invalid_selection', 'Dismiss requires an undecided, unbound conflict selected by exact key', 2, details={'selector': selector})
+            selected[entry['entry_id']] = {'': 'dismissed'}
+            continue
         if not entry.get('source_id') or not entry.get('incoming') or not entry.get('binding',{}).get('bound'):
             raise RefError('identity_conflict', 'Inspect identity or invalid-entry conflicts before accepting metadata', details={'selector':selector})
         current = sources.record(connection,entry['source_id'])
@@ -741,6 +746,19 @@ def apply_reconciliation(connection, batch: str, review: dict, selected: dict, e
     proposals = []
     for entry in review['entries']:
         if entry['entry_id'] not in selected:
+            continue
+        if selected[entry['entry_id']] == {'': 'dismissed'}:
+            decision = {'action': 'dismissed'}
+            proposals.append(dict(citation_key=entry['citation_key'], source_id=entry.get('source_id'),
+                                  decisions=[decision], remaining_conflicts=[]))
+            if execute:
+                from refs import logging as action_log
+                action_log.log_mutation('import.reconcile', {'batch_id': batch, 'entry_id': entry['entry_id']},
+                                        {'decisions': []}, {'decisions': [decision]})
+                connection.execute('UPDATE import_entries SET decisions_json=? WHERE id=?',
+                                   (json.dumps([decision]), entry['entry_id']))
+                connection.execute('UPDATE imports SET revision=revision+1 WHERE id=?', (batch,))
+                changed(connection)
             continue
         current = sources.record(connection,entry['source_id'])
         canonical = editable(current)
@@ -779,15 +797,15 @@ def apply_reconciliation(connection, batch: str, review: dict, selected: dict, e
     return proposals
 
 
-def reconcile(catalog: Path, batch: str, selectors: list[str], *, keep_current=None, execute=False, revision=None) -> dict:
-    if not selectors and not keep_current:
-        raise RefError('invalid_selection', 'Supply --take-incoming or --keep-current KEY[.field]', 2)
+def reconcile(catalog: Path, batch: str, selectors: list[str], *, keep_current=None, dismiss=None, execute=False, revision=None) -> dict:
+    if not selectors and not keep_current and not dismiss:
+        raise RefError('invalid_selection', 'Supply --take-incoming/--keep-current KEY[.field] or --dismiss KEY', 2)
     if execute and revision is None:
         raise RefError('revision_required', 'Preview the batch and supply --if-batch-revision', 2)
     with connect(catalog,write=execute) as connection:
         review = inspect_batch(connection,batch)
         if execute and review['batch_revision'] != revision:
             raise RefError('stale_revision', 'Preview the batch again; its entries or source revisions changed', details={'expected':revision,'actual':review['batch_revision']})
-        selected = select_reconciliation(connection, review, selectors, keep_current)
+        selected = select_reconciliation(connection, review, selectors, keep_current, dismiss)
         proposals = apply_reconciliation(connection, batch, review, selected, execute)
         return dict(import_id=batch,batch_revision=inspect_batch(connection,batch)['batch_revision'],dry_run=not execute,entries=proposals)

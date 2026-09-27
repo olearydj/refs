@@ -95,6 +95,9 @@ def import_text(command: str, data: dict, terminal: bool, width: int) -> str:
                 detail += '; filled ' + ', '.join(binding['filled'])
             rows.append(['', 'Binding', detail])
         for decision in entry.get('decisions', []):
+            if decision['action'] == 'dismissed':
+                rows.append(['', 'Dismissed', 'Unbound conflict; source unchanged'])
+                continue
             label, value = ('Keep current', decision['current']) if decision['action'] == 'keep_current' else ('Take incoming', decision['incoming'])
             rows.append(['', label + ' ' + decision['path'], json.dumps(value, ensure_ascii=False)])
         for limitation in entry.get('limitations', []):
@@ -303,6 +306,8 @@ def report_text(command: str, data: dict, terminal: bool, width: int, warnings: 
     if command == 'reorg':
         return short_rows(command, data, terminal, width)
     if command == 'export':
+        if 'forgotten' in data:
+            return ('Would forget ' if data['dry_run'] else 'Forgot ') + data['output'] + ' (file unchanged)'
         if 'targets' in data:
             return table_rows([[r['output'], r['profile'], r['outcome'], r.get('error', {}).get('message', str(r.get('count', 0)) + ' entries')] for r in data['targets']], terminal=terminal, width=width)
         count = data['count']
@@ -319,7 +324,7 @@ def confirmation(command: str, data: dict, terminal: bool, width: int, warnings:
     if command == 'config show':
         return 'Configuration: ' + str(data['config']) + ''.join(f"\n{name} = {value} ({data['origins'].get(name, 'default')})" for name, value in data['values'].items())
     if command == 'kinds':
-        return table_rows([['Kind', 'Type', 'Defining fields'], *[[item['name'], item['type'], ', '.join(f'{path}={value}' for path, value in item['fields'].items()) or '(type alone)'] for item in data['items']]], terminal=terminal, width=width)
+        return table_rows([['Kind', 'Type', 'Defining fields', 'Announce'], *[[item['name'], item['type'], ', '.join(f'{path}={value}' for path, value in item['fields'].items()) or '(type alone)', str(item.get('announce', True)).lower()] for item in data['items']]], terminal=terminal, width=width)
     if command == 'schema':
         return '\n'.join(data['schemas']) if 'schemas' in data else json.dumps(data, ensure_ascii=False, indent=2)
     if command == 'project show' and 'items' in data:

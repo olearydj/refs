@@ -79,3 +79,26 @@ def test_partial_origin_is_preserved_without_binding(initialized, tmp_path, refe
     assert result["context"][0]["original_ref"] == "upstream-note-7"
     with closing(sqlite3.connect(tmp_path / "cat" / "catalog.sqlite")) as connection, connection:
         assert connection.execute("SELECT count(*) FROM origin_identities").fetchone()[0] == 0
+
+
+@pytest.mark.parametrize('mode', ['link', 'copy', 'move'])
+@pytest.mark.parametrize('label', [None, 'scan'])
+def test_add_file_label_is_stored(initialized, tmp_path, reference_path, mode, label):
+    path = tmp_path / 'scan.pdf'
+    path.write_bytes(b'%PDF captured source')
+    args = ['--label', label] if label else []
+    added = initialized('add', '--format', 'refs', '--input', reference_path,
+                        '--file', path, '--' + mode, *args)['data']
+    resource = initialized('show', added['id'])['data']['resources'][0]
+    assert resource['label'] == label
+    assert added['resources'][0]['label'] == label
+    if mode == 'link':
+        assert resource['path'] == str(path)
+        assert path.read_bytes() == b'%PDF captured source'
+
+
+def test_add_label_without_file_refuses_before_capture(initialized, tmp_path, reference_path):
+    before = (tmp_path / 'cat/catalog.sqlite').read_bytes()
+    result = initialized('add', '--format', 'refs', '--input', reference_path, '--label', 'scan', expected=2)
+    assert result['errors'][0]['code'] == 'invalid_invocation'
+    assert (tmp_path / 'cat/catalog.sqlite').read_bytes() == before

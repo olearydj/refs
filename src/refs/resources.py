@@ -348,7 +348,7 @@ def intake_mode(*, path: Path | None, link: bool = False, copy: bool = False, mo
     return 'link' if link else 'copy' if copy else 'move' if move else default
 
 
-def capture_file(settings: Settings, data: dict, path: Path, *, mode: str, keep_name=False, dry_run=False) -> tuple[dict, dict]:
+def capture_file(settings: Settings, data: dict, path: Path, *, mode: str, keep_name=False, label=None, dry_run=False) -> tuple[dict, dict]:
     linked, moving = mode == 'link', mode == 'move'
     if dry_run:
         source = data.get('record',data) | ({'loc':data['loc']} if data.get('loc') else {})
@@ -357,6 +357,7 @@ def capture_file(settings: Settings, data: dict, path: Path, *, mode: str, keep_
             admit(settings,path)
         proposal = locate(settings,path=path) if linked else plan_copy(settings,source,path,keep_name=keep_name)
         proposal['moved'] = moving
+        proposal['label'] = label
         if moving and not proposal.get('duplicate_resource_id'):
             from refs.moves import preview_move
             proposal.update(moves=[preview_move(None,Path(proposal['path']),Path(proposal['destination']))],unlinked_paths=[])
@@ -369,9 +370,9 @@ def capture_file(settings: Settings, data: dict, path: Path, *, mode: str, keep_
                 return current | dict(outcome=data['outcome'],warnings=data.get('warnings',[])+proposal['warnings']), proposal
         if moving:
             from refs.moves import intake
-            resource = intake(settings,data['id'],path,keep_name=keep_name)
+            resource = intake(settings,data['id'],path,keep_name=keep_name,label=label)
         else:
-            resource = link(settings,data['id'],path=path)
+            resource = link(settings,data['id'],path=path,label=label)
         if not linked and not moving:
             resource = copy(settings,data['id'],path,resource_id=resource['id'],keep_name=keep_name)
         current = inspect_source(settings,data['id'])

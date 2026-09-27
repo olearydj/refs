@@ -107,11 +107,14 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         loc: Annotated[str | None, typer.Option()] = None,
         kind: Annotated[str | None, typer.Option()] = None,
         file: Annotated[Path | None, typer.Option()] = None,
+        label: Annotated[str | None, typer.Option()] = None,
         link: Annotated[bool, typer.Option()] = False,
         copy: Annotated[bool, typer.Option()] = False,
         move: Annotated[bool, typer.Option()] = False,
         keep_name: Annotated[bool, typer.Option()] = False,
         dry_run: Annotated[bool, typer.Option()] = False):
+    if label is not None and file is None:
+        raise RefError('invalid_invocation', '--label requires --file', 2)
     mode = resources.intake_mode(path=file, link=link, copy=copy, move=move, keep_name=keep_name, default='move')
     if format not in ("refs", "csljson", "bib"):
         raise RefError("unsupported_format", "Choose --format refs, csljson or bib", 2)
@@ -127,7 +130,7 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run,policy=settings(ctx).values,loc=loc,kind=kind)
     file_action = None
     if file is not None:
-        data, file_action = resources.capture_file(settings(ctx),data,file,mode=mode,keep_name=keep_name,dry_run=dry_run)
+        data, file_action = resources.capture_file(settings(ctx),data,file,mode=mode,keep_name=keep_name,label=label,dry_run=dry_run)
     report(ctx, 'add', data | ({'file_action': file_action} if file_action else {}))
 
 
@@ -195,8 +198,14 @@ def export_bibliography(ctx: typer.Context, project: Annotated[str | None, typer
                        allow_unknown_mappings: Annotated[bool, typer.Option()] = False,
                        overwrite: Annotated[bool, typer.Option()] = False,
                        adopt: Annotated[bool, typer.Option()] = False,
+                       forget: Annotated[Path | None, typer.Option()] = None,
                        dry_run: Annotated[bool, typer.Option()] = False):
     selected = settings(ctx)
+    if forget is not None:
+        if project is not None or output is not None or profile is not None or adopt or overwrite or allow_unknown_mappings:
+            raise RefError('invalid_invocation', '--forget cannot be combined with export selection or replacement options', 2)
+        report(ctx, 'export', bibliography.forget(selected.catalog_path(), forget, dry_run=dry_run))
+        return
     project, targets, multiple = export_options(selected, project, output, profile)
     results: list[dict] = []
     for destination, target_profile in targets:
@@ -292,7 +301,7 @@ def list_sources(ctx: typer.Context, kind: Annotated[str | None, typer.Option()]
 
 @app.command('kinds')
 def list_kinds(ctx: typer.Context):
-    report(ctx, 'kinds', {'items': kinds.REGISTRY['kinds']})
+    report(ctx, 'kinds', {'items': [dict(row, announce=row.get('announce', True)) for row in kinds.REGISTRY['kinds']]})
 
 
 @app.command('summary')
@@ -492,9 +501,10 @@ def import_show(ctx: typer.Context, batch: str, status: Annotated[str | None, ty
 def import_reconcile(ctx: typer.Context, batch: str,
                      take_incoming: Annotated[list[str] | None, typer.Option()] = None,
                      keep_current: Annotated[list[str] | None, typer.Option()] = None,
+                     dismiss: Annotated[list[str] | None, typer.Option()] = None,
                      execute: Annotated[bool, typer.Option()] = False,
                      if_batch_revision: Annotated[int | None, typer.Option()] = None):
-    report(ctx,'import reconcile',importing.reconcile(settings(ctx).catalog_path(),batch,take_incoming or [],keep_current=keep_current,execute=execute,revision=if_batch_revision))
+    report(ctx,'import reconcile',importing.reconcile(settings(ctx).catalog_path(),batch,take_incoming or [],keep_current=keep_current,dismiss=dismiss,execute=execute,revision=if_batch_revision))
 
 
 collection_app = typer.Typer(no_args_is_help=True)

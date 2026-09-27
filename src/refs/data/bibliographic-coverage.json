@@ -7295,40 +7295,46 @@
         "zotero": [
           "podcast"
         ]
-      }
+      },
+      "announce": true
     },
     {
       "name": "lecture",
       "type": "motion_picture",
       "fields": {
         "metadata.genre": "Lecture recording"
-      }
+      },
+      "announce": true
     },
     {
       "name": "talk",
       "type": "speech",
       "fields": {
         "metadata.genre": "Conference presentation"
-      }
+      },
+      "announce": false
     },
     {
       "name": "proceedings",
       "type": "book",
       "fields": {
         "native_type.value": "proceedings"
-      }
+      },
+      "announce": false
     },
     {
       "name": "dataset",
       "type": "dataset",
-      "fields": {}
+      "fields": {},
+      "announce": true
     },
     {
       "name": "repository",
       "type": "software",
       "fields": {
         "metadata.genre": "Source code repository"
-      }
+      },
+      "announce": true
     }
   ],
   "biblatex_types": {

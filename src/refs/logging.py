@@ -15,7 +15,7 @@ EVENTS = frozenset({
     "command.open", "command.close", "source.create", "source.original", "source.update", "source.key_set",
     "source.remove", "source.reactivate", "resource.link", "resource.unlink",
     "resource.copy", "resource.move", "import.entry", "import.batch_open",
-    "import.batch_close", "import.reconcile", "export.write", "export.adopt",
+    "import.batch_close", "import.reconcile", "export.write", "export.adopt", "export.forget",
     "project.create", "project.cite", "project.uncite", "backup.write",
     "schema.upgrade", "catalog.init", "diagnostic",
 })

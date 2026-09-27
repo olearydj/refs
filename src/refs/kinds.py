@@ -56,7 +56,7 @@ def from_origin(record: dict, route: str, label: str) -> dict:
 
 
 def warnings(record: dict) -> list[dict]:
-    choices = [definition['name'] for definition in REGISTRY['kinds'] if definition['type'] == record['metadata']['type']]
+    choices = [definition['name'] for definition in REGISTRY['kinds'] if definition['type'] == record['metadata']['type'] and definition.get('announce', True)]
     if choices and identify(record) is None:
         return [notice('kind_unassigned', 'Available kinds: ' + ', '.join(choices), details={'kinds': choices})]
     return []
