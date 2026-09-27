@@ -1,12 +1,10 @@
 """One CSL record enters the same authority as refs JSON."""
 
-import html
 import json
 import re
 
 from pydantic import ValidationError
 
-from refs import math_text
 from refs.models import Metadata, SourceCreate, assign_path, deferred_type, portable_url
 from refs.results import RefError
 
@@ -43,9 +41,9 @@ def parse(raw: bytes, *, with_limitations: bool = False):
             spans = list(NOCASE.finditer(value))
             if spans:
                 whole = len(spans) == 1 and spans[0].span() == (0, len(value))
-                terms = [] if whole else list(dict.fromkeys(html.unescape(span[2]) for span in spans))
+                terms = [] if whole else list(dict.fromkeys(span[2] for span in spans))
                 protection[field] = dict(protected_terms=terms, preserve_case=whole)
-            metadata[field] = math_text.transform(NOCASE.sub(r'\2', value), html.unescape)
+            metadata[field] = NOCASE.sub(r'\2', value)
         provenance = {'origin': 'import', 'access': 'unknown'}
         if external_id is not None:
             provenance['source_identity'] = {'namespace': 'csljson', 'item_key': str(external_id)}

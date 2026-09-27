@@ -336,3 +336,20 @@ def test_csl_protection_keeps_jose_names_under_title_casing(tmp_path, pytestconf
     unprotected = run(command, tmp_path)
     for name in ['Canvaslms', 'Nbgrader', 'Org-Mode', 'Canvas-Cli']:
         assert name in unprotected
+
+
+@pytest.mark.slow
+def test_csl_iise_venue_renders_literal_ampersand_under_chicago(tmp_path, pytestconfig):
+    from refs.bibliography import serialize_csl
+
+    records = json.loads((ROOT / 'tests/fixtures/real-trial/minimized/manufacturing-iise-venue.json').read_text())
+    output, _ = serialize_csl(records)
+    assert json.loads(output)[0]['container-title'] == 'Proceedings of the <span class="nocase">IISE</span> Annual Conference & Expo 2025'
+    assert records[0]['metadata']['container-title'] == 'Proceedings of the IISE Annual Conference & Expo 2025'
+    (tmp_path / 'references.json').write_bytes(output)
+    (tmp_path / 'paper.md').write_text('---\nnocite: "@*"\n---\n')
+    # Pandoc's bundled default is Chicago author-date, with title casing.
+    rendered = run([tool('pandoc', pytestconfig), 'paper.md', '--citeproc',
+                    '--bibliography', 'references.json', '-t', 'plain', '--wrap=none'], tmp_path)
+    assert 'Proceedings of the IISE Annual Conference & Expo 2025' in rendered
+    assert '&amp;' not in rendered.lower()

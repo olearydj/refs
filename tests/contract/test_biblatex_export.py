@@ -180,10 +180,11 @@ def test_native_patent_holder_is_a_field_not_a_note():
 
 @pytest.mark.slow
 def test_existing_profiles_match_pre_biblatex_serializer_on_owner_catalog():
+    import html
     import types
     from contextlib import closing
 
-    from refs import sources
+    from refs import math_text, sources
 
     catalog = Path('/Volumes/Casa/refs/cat/catalog.sqlite')
     if not catalog.exists():
@@ -200,4 +201,11 @@ def test_existing_profiles_match_pre_biblatex_serializer_on_owner_catalog():
         for value in values:
             value.update(bibliography.preserved_bib_fields(db, value))
     assert bibliography.serialize(values)[0] == baseline.serialize(values)[0]
-    assert bibliography.serialize_csl(values)[0] == baseline.serialize_csl(values)[0]
+    # The later literal-CSL rule intentionally removes the old HTML escaping.
+    # Keep the historical comparison for every other field and title detail.
+    expected = json.loads(baseline.serialize_csl(values)[0])
+    for entry in expected:
+        for field in ('title', 'container-title'):
+            if field in entry:
+                entry[field] = math_text.transform(entry[field], html.unescape)
+    assert json.loads(bibliography.serialize_csl(values)[0]) == expected

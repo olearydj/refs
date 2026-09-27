@@ -85,8 +85,11 @@ def test_csl_fixed_project_bytes_are_stable_and_metadata_only(initialized, csl_p
         assert connection.execute('SELECT profile_fingerprint, baseline_digest, pending_digest FROM export_targets').fetchone() == (hashlib.sha256(PROFILE.encode()).hexdigest(), first['data']['sha256'], None)
 
 
-def test_importing_csl_export_leaves_every_source_unchanged(initialized, csl_project):
+@pytest.mark.parametrize('titles', [None, {'alpha': 'Café & R&amp;D', 'zulu': 'An <API> interface'}])
+def test_importing_csl_export_leaves_every_source_unchanged(initialized, csl_project, titles):
     catalog, output = csl_project
+    for key, value in (titles or {}).items():
+        initialized('update', key, '--set', 'metadata.title=' + json.dumps(value))
     for key, protection in [('alpha', {'protected_terms': ['Café']}),
                             ('zulu', {'preserve_case': True})]:
         initialized('update', key, '--set', 'title_protection.title=' + json.dumps(protection))
@@ -110,7 +113,7 @@ def test_importing_csl_export_leaves_every_source_unchanged(initialized, csl_pro
      '<span class="nocase">canvas-cli</span> <span class="nocase">canvas</span> canvaslms <span class="nocase">café</span> $x$',
      '{canvas-cli} {canvas} canvaslms {café} $x$'),
     ('the canvas-cli & its <API>', {'preserve_case': True, 'protected_terms': ['canvas-cli']},
-     '<span class="nocase">the canvas-cli &amp; its &lt;API&gt;</span>',
+     '<span class="nocase">the canvas-cli & its <API></span>',
      r'{the canvas-cli \& its <API>}'),
 ])
 def test_csl_protection_preserves_plain_metadata_and_bibtex(field, value, protection, csl_value, bib_value):
@@ -333,3 +336,16 @@ def test_csl_adoption_reports_invalid_import_entries(initialized, csl_project):
     assert result['data']['import_conflicts'][0]['code'] == 'invalid_record'
     assert output.read_bytes() == raw
     assert (catalog / 'catalog.sqlite').read_bytes() == before
+
+
+@pytest.mark.parametrize('field', ['title', 'container-title'])
+def test_csl_nocase_terms_keep_literal_entities(field):
+    value = 'Tools for <API> & R&amp;D'
+    record = {'schema_version': '1.0', 'citation_key': 'literal',
+              'metadata': {'type': 'book', 'title': 'Example', field: value},
+              'title_protection': {field: {'protected_terms': ['R&amp;D']}}}
+    output, _ = bibliography.serialize_csl([record])
+    assert json.loads(output)[0][field] == 'Tools for <API> & <span class="nocase">R&amp;D</span>'
+    restored = csl.parse(output).canonical()
+    assert restored['metadata'][field] == value
+    assert restored['title_protection'][field]['protected_terms'] == ['R&amp;D']

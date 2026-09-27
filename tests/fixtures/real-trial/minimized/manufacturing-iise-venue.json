@@ -1,0 +1,16 @@
+[
+  {
+    "schema_version": "1.0",
+    "citation_key": "oleary2025framework",
+    "metadata": {
+      "type": "paper-conference",
+      "title": "Evaluating the Effectiveness of AR/MR Technologies in Manufacturing Training: A Multi-Modal Assessment Framework",
+      "container-title": "Proceedings of the IISE Annual Conference & Expo 2025",
+      "issued": {"date-parts": [[2025]]}
+    },
+    "title_protection": {
+      "title": {"protected_terms": ["AR/MR"]},
+      "container-title": {"protected_terms": ["IISE"]}
+    }
+  }
+]

@@ -1,6 +1,5 @@
 """Bibliography profiles and explicit, recoverable export."""
 
-import html
 import json
 import re
 import sqlite3
@@ -39,7 +38,7 @@ def tex(value: str) -> str:
 
 
 def title(value: str, protection: dict, *, csl: bool = False) -> str:
-    render = (lambda value: math_text.transform(value, lambda text: html.escape(text, quote=False))) if csl else tex
+    render = (lambda value: value) if csl else tex
     opening, closing = ('<span class="nocase">', '</span>') if csl else ('{', '}')
     value = math_text.transform(value, lambda text: unicodedata.normalize("NFC", text))
     if protection.get("preserve_case"):
