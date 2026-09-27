@@ -12,7 +12,7 @@ uv run --locked refs --help
 uv build --wheel
 ```
 
-A built wheel can be installed into a Python 3.14 environment with `uv pip install --python /path/to/environment/bin/python dist/refs-0.9.0-py3-none-any.whl`. It includes the mapping registry, naming data, migrations and code that supplies all four offline schemas. There is no runtime network lookup.
+A built wheel can be installed into a Python 3.14 environment with `uv pip install --python /path/to/environment/bin/python dist/refs-0.9.1-py3-none-any.whl`. It includes the mapping registry, naming data, migrations and code that supplies all four offline schemas. There is no runtime network lookup.
 
 Use explicit disposable locations to try the tool:
 
