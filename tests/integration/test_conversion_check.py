@@ -144,10 +144,15 @@ def test_real_jose_gate_matches_accepted_fixture(tmp_path, request):
     before = (catalog / 'catalog.sqlite').read_bytes()
     result = subprocess.run([sys.executable, str(HARNESS), '--project', 'jose-danvas',
                              '--work', str(tmp_path / 'real')], text=True, capture_output=True)
-    assert result.returncode == 0, result.stdout + result.stderr
-    consumer = json.loads(result.stdout)['projects'][0]['consumers'][0]
-    assert len(consumer['entries']) == 11
-    assert {e['outcome'] for e in consumer['entries']} == {'identical'}
+    report = json.loads(result.stdout)['projects'][0]
+    assert 'error' not in report, result.stdout + result.stderr
+    consumers = report['consumers']
+    assert result.returncode == int(any(c['fixture_missing'] for c in consumers))
+    for consumer in consumers:
+        assert len(consumer['entries']) == 11
+        assert consumer['fixture_missing'] == (not Path(consumer['fixture']).exists())
+        if not consumer['fixture_missing']:
+            assert {e['outcome'] for e in consumer['entries']} == {'identical'}
     assert (catalog / 'catalog.sqlite').read_bytes() == before
 
 
@@ -175,3 +180,59 @@ def test_failed_consumer_cannot_reuse_stale_artifact_or_record(trial, tmp_path):
     assert 'rendered.json' in json.loads(result.stdout)['projects'][0]['error']
     assert not (work / 'synthetic/project/rendered.json').exists()
     assert fixture.read_bytes() == before
+
+
+def test_explicit_input_copies_only_named_file_from_excluded_worktree(trial, tmp_path):
+    register, project, _ = trial
+    nested = project / 'worktrees/venue'
+    nested.mkdir(parents=True)
+    (nested / 'paper.md').write_text('A manuscript')
+    (nested / '.git').write_text('private Git pointer')
+    (nested / 'other.txt').write_text('unselected')
+    data = json.loads(register.read_text())
+    data['projects'][0]['inputs'] = ['worktrees/venue/paper.md']
+    register.write_text(json.dumps(data))
+    before = digests(project)
+    result, work = invoke(tmp_path, register)
+    assert result.returncode == 1  # existing synthetic missing reference
+    assert 'error' not in json.loads(result.stdout)['projects'][0]
+    copied = work / 'synthetic/project/worktrees/venue'
+    assert [p.name for p in copied.iterdir()] == ['paper.md']
+    assert (copied / 'paper.md').read_text() == 'A manuscript'
+    assert digests(project) == before
+
+
+@pytest.mark.parametrize('item', ['../outside.md', '/tmp/outside.md', 'worktrees/venue/.git', 'references.json'])
+def test_register_refuses_unsafe_explicit_input(trial, item):
+    register, _, _ = trial
+    data = json.loads(register.read_text())
+    data['projects'][0]['inputs'] = [item]
+    register.write_text(json.dumps(data))
+    with pytest.raises(ValueError):
+        harness['load_register'](register)
+
+
+@pytest.mark.parametrize('mode', ['file-symlink', 'directory-symlink', 'missing'])
+def test_explicit_input_refuses_symlinks_and_missing_files_without_changing_source(trial, tmp_path, mode):
+    register, project, _ = trial
+    nested = project / 'worktrees'
+    nested.mkdir()
+    outside = tmp_path / 'outside'
+    outside.mkdir()
+    (outside / 'paper.md').write_text('Do not copy')
+    if mode == 'directory-symlink':
+        (nested / 'venue').symlink_to(outside, target_is_directory=True)
+    else:
+        (nested / 'venue').mkdir()
+        if mode == 'file-symlink':
+            (nested / 'venue/paper.md').symlink_to(outside / 'paper.md')
+    data = json.loads(register.read_text())
+    data['projects'][0]['inputs'] = ['worktrees/venue/paper.md']
+    register.write_text(json.dumps(data))
+    before = digests(project), digests(outside)
+    result, work = invoke(tmp_path, register)
+    assert result.returncode == 1
+    error = json.loads(result.stdout)['projects'][0]['error']
+    assert ('existing file' if mode == 'missing' else 'symlink') in error
+    assert not (work / 'synthetic/project').exists()
+    assert (digests(project), digests(outside)) == before

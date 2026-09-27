@@ -78,6 +78,13 @@ def load_register(path):
                     command(tool['command'])
                     if not isinstance(tool['recorded'], str) or not tool['recorded']:
                         raise ValueError('Fixture tool version is required')
+            inputs = project.get('inputs', [])
+            if not isinstance(inputs, list) or len(set(inputs)) != len(inputs):
+                raise ValueError('Inputs must be a list of distinct relative files')
+            for item in inputs:
+                relative(item)
+                if '.git' in Path(item).parts or item in paths or item in {c['artifact'] for c in project['consumers']}:
+                    raise ValueError('Inputs cannot include Git internals, export targets or artifacts')
             for exclude in project.get('exclude', []):
                 relative(exclude)
         except (KeyError, TypeError, AttributeError, re.error) as exc:
@@ -170,7 +177,18 @@ def copy_project(project, destination):
                 raise ValueError(f'Project copy refuses symlink: {path}')
         return skipped
 
+    inputs = []
+    for item in project.get('inputs', []):
+        path = source / relative(item)
+        if '.git' in Path(item).parts or any(p.is_symlink() for p in [path, *path.parents] if p != source and source in p.parents):
+            raise ValueError(f'Explicit input refuses symlink or Git internals: {path}')
+        if not path.is_file():
+            raise ValueError(f'Explicit input must be an existing file: {path}')
+        inputs.append((path, destination / item))
     shutil.copytree(source, destination, ignore=ignore)
+    for path, target in inputs:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, target)
 
 
 def check_project(project, catalog, work, fixtures):
