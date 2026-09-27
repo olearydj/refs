@@ -6952,6 +6952,13 @@
       "name": "dataset",
       "type": "dataset",
       "fields": {}
+    },
+    {
+      "name": "repository",
+      "type": "software",
+      "fields": {
+        "metadata.genre": "Source code repository"
+      }
     }
   ]
 }

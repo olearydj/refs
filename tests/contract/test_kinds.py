@@ -10,7 +10,8 @@ from refs.adapters import zotero
 from refs.models import REGISTRY
 
 DEFINITIONS = [('podcast','song','Audio podcast'), ('lecture','motion_picture','Lecture recording'),
-               ('talk','speech','Conference presentation'), ('proceedings','book',None), ('dataset','dataset',None)]
+               ('talk','speech','Conference presentation'), ('proceedings','book',None), ('dataset','dataset',None),
+               ('repository','software','Source code repository')]
 
 
 def payload(tmp_path, metadata, **fields):
@@ -88,28 +89,51 @@ def test_kind_list_and_search_filter_before_pagination(initialized, tmp_path):
     assert initialized('list','--kind','made-up',expected=2)['errors'][0]['code'] == 'invalid_invocation'
 
 
+def test_repository_filter_leaves_plain_software_unassigned(initialized, tmp_path):
+    for key, metadata in [('repository', {'type':'software','genre':'Source code repository'}),
+                          ('software', {'type':'software'}), ('document', {'type':'document'})]:
+        result = initialized('add','--format','refs','--input',payload(tmp_path,metadata,citation_key=key))
+        if key == 'software':
+            warning = next(item for item in result['warnings'] if item['code'] == 'kind_unassigned')
+            assert warning['details']['kinds'] == ['repository']
+            assert 'repository' in warning['message']
+    selected = initialized('list','--kind','repository')['data']
+    assert selected['total'] == 1
+    assert [(item['citation_key'], item['kind']) for item in selected['items']] == [('repository', 'repository')]
+    unassigned = initialized('list','--kind','unassigned')['data']
+    assert unassigned['total'] == 1
+    assert [(item['citation_key'], item['kind']) for item in unassigned['items']] == [('software', None)]
+    assert 'genre' not in unassigned['items'][0]['metadata']
+
+
 @pytest.mark.parametrize('route', ['bib','csljson','zotero'])
-def test_import_kind_warning_is_in_preview_and_saved_entry(initialized,tmp_path,route,zotero_fixture):
+@pytest.mark.parametrize('canonical, kind, bib_type, zotero_type', [
+    ('song', 'podcast', 'audio', 'audioRecording'),
+    ('software', 'repository', 'software', 'computerProgram'),
+])
+def test_import_kind_warning_is_in_preview_and_saved_entry(initialized,tmp_path,route,zotero_fixture,canonical,kind,bib_type,zotero_type):
     if route == 'bib':
         path=tmp_path/'entry.bib'
-        path.write_text('@audio{example,title={Recorded Work},author={Example, Ada},year={2020}}')
+        path.write_text('@' + bib_type + '{example,title={Recorded Work},author={Example, Ada},year={2020}}')
     elif route == 'csljson':
         path=tmp_path/'entry.csl.json'
-        path.write_text('[{"type":"song","title":"Recorded Work"}]')
+        path.write_text(json.dumps([{'type':canonical,'title':'Recorded Work'}]))
     else:
         from conftest import extracted
         path=tmp_path/'bundle'
         extracted(zotero_fixture,path)
         for item_path in (path/'items').glob('*.json'):
             item_path.unlink()
-        (path/'items/EXAMPLE1.json').write_text(json.dumps({'key':'EXAMPLE1','data':{'itemType':'audioRecording','title':'Recorded Work'}}))
+        (path/'items/EXAMPLE1.json').write_text(json.dumps({'key':'EXAMPLE1','data':{'itemType':zotero_type,'title':'Recorded Work'}}))
     preview=initialized('import','--format',route,'--input',path,'--dry-run')['data']
     warning=preview['entries'][0]['warnings']
-    assert any(item['code']=='kind_unassigned' and item['details']['kinds']==['podcast'] for item in warning)
+    assert any(item['code']=='kind_unassigned' and item['details']['kinds']==[kind] for item in warning)
     imported=initialized('import','--format',route,'--input',path)['data']
     saved=initialized('import','show',imported['import_id'])['data']['entries'][0]
-    assert any(item['code']=='kind_unassigned' and item['details']['kinds']==['podcast'] for item in saved['warnings'])
+    assert any(item['code']=='kind_unassigned' and item['details']['kinds']==[kind] for item in saved['warnings'])
     assert saved['kind'] is None
+    assert saved['incoming']['metadata']['type'] == canonical
+    assert 'genre' not in saved['incoming']['metadata']
 
 
 def test_zotero_podcast_origin_assigns_kind_without_guessing_other_audio():
@@ -141,6 +165,10 @@ def test_kinds_command_prints_definitions_without_opening_catalog(cli,human,tmp_
     assert result['command']=='kinds'
     assert [(row['name'],row['type']) for row in result['data']['items']]==[(name,canonical) for name,canonical,_ in DEFINITIONS]
     assert 'podcast\tsong\tmetadata.genre=Audio podcast' in human('kinds')
+    repository = next(row for row in result['data']['items'] if row['name'] == 'repository')
+    assert repository['fields'] == {'metadata.genre': 'Source code repository'}
+    assert repository.get('origins', {}) == {}
+    assert 'repository\tsoftware\tmetadata.genre=Source code repository' in human('kinds')
     assert (tmp_path/'cat/catalog.sqlite').read_bytes()==before
 
 
