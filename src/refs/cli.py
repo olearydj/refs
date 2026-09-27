@@ -197,8 +197,25 @@ def export_bibliography(ctx: typer.Context, project: Annotated[str | None, typer
                        adopt: Annotated[bool, typer.Option()] = False,
                        dry_run: Annotated[bool, typer.Option()] = False):
     selected = settings(ctx)
-    project, output, profile = export_options(selected, project, output, profile)
-    data = bibliography.export(selected.catalog_path(), project, output.expanduser(), dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite, adopt=adopt, profile=profile)
+    project, targets, multiple = export_options(selected, project, output, profile)
+    results: list[dict] = []
+    for destination, target_profile in targets:
+        try:
+            data = bibliography.export(selected.catalog_path(), project, destination.expanduser(), dry_run=dry_run, allow_unknown=allow_unknown_mappings, overwrite=overwrite, adopt=adopt, profile=target_profile)
+        except (RefError, OSError, sqlite3.Error) as exc:
+            if not multiple:
+                raise
+            if not isinstance(exc, RefError):
+                exc = RefError('storage_error', str(exc), 5, path=str(destination))
+            results.append(dict(output=str(destination), profile=target_profile, outcome='refused', error=exc.issue, exit_code=exc.exit_code))
+        else:
+            if not multiple:
+                report(ctx, 'export', data)
+                return
+            results.append(data | dict(outcome='preview' if dry_run else 'current' if data.get('unchanged') else 'written'))
+    data = dict(targets=results, warnings=[w for result in results for w in result.get('warnings', [])])
+    if any(result['outcome'] == 'refused' for result in results):
+        raise RefError('export_partial', 'One or more export targets refused; inspect each target result', 4, data=data)
     report(ctx, 'export', data)
 
 

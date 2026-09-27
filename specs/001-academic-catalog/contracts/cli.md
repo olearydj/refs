@@ -52,7 +52,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | project show [PROJECT] | Project and active cited sources, plus removed-source diagnostics; no argument lists projects. |
 | project cite PROJECT REF | Add active source with cited=true; duplicate is no-op. `--from-import ORIGIN` refuses when a source belongs to more than one import origin. |
 | project uncite PROJECT REF | Delete that association, leave source/other projects/files; absent association is no-op. |
-| export | --project PROJECT --output PATH --profile portable-bibtex-v1 or csl-json-v1; optional --adopt, --overwrite, --allow-unknown-mappings. Allowed defaults from config; complete four-class report. |
+| export | --project PROJECT; without --output/--profile, export each [[export.targets]] entry in order, or the legacy [export] default. --output PATH and/or --profile select one target. Optional --adopt, --overwrite, --allow-unknown-mappings; complete four-class report per target. |
 | remove REF | --if-revision N --execute; tombstone while retaining identity/key/relationships. |
 | reactivate REF | Optional --if-revision N and --execute; restore same identity/key, report retained associations. |
 | backup | --output NEW_DIRECTORY; consistent catalog/config snapshot and external-file inventory. |
@@ -142,7 +142,23 @@ Catalog/staging require agent write access to /Volumes/Casa/refs/cat, and intake
 
 ## Project defaults and policy validation
 
-Discover the nearest .refs.toml between cwd and Git worktree root, recognizing .git files/directories; outside Git inspect cwd only. --project-file selects explicitly; --no-project-config disables discovery. Do not merge ancestors. Allowed keys: project, export.profile, export.output, export.consumers. Invocation wins over project, then user config, then defaults. Project files cannot change catalog, roots, naming or credentials. Invalid selected config fails before mutation, with path/value/origin. A declared richer profile fails as unsupported; consumer detection never silently chooses one.
+Discover the nearest .refs.toml between cwd and Git worktree root, recognizing .git files/directories; outside Git inspect cwd only. --project-file selects explicitly; --no-project-config disables discovery. Do not merge ancestors. Allowed keys: project, export.profile, export.output, export.consumers, export.targets (a nonempty list of output/profile pairs). A selected file cannot combine export.targets with export.output or export.profile; outputs in a list must resolve to distinct paths. Each layer selects either the list or legacy form, replacing the lower layer’s target form. Invocation wins over project, then user config, then defaults. Project files cannot change catalog, roots, naming or credentials. Invalid selected config fails before mutation, with path/value/origin. A declared richer profile fails as unsupported; consumer detection never silently chooses one.
+
+A project may configure its consumers together:
+
+```toml
+project = "jose-danvas"
+
+[[export.targets]]
+output = "references.json"
+profile = "csl-json-v1"
+
+[[export.targets]]
+output = "worktrees/danvas-jose/paper.bib"
+profile = "portable-bibtex-v1"
+```
+
+Without invocation selectors, list-form export returns `data.targets` in configuration order, each with output, profile and outcome (`written`, `current`, `preview` or `refused`), plus its normal export result or error and exit_code. Every target retains its own binding and digest guard; refusal leaves that target untouched and does not stop later targets. Any refusal returns `export_partial`, envelope status partial and exit 4; this is not a transaction across files. The legacy single-table form and explicit single-target invocation keep their existing envelopes. `--profile` alone must match exactly one listed target. `--output` alone uses the profile of a matching configured path, otherwise the ordinary default profile; providing both selects one explicit output/profile pair. Paths resolve against the selected configuration file even when they cross into another Git worktree; discovery from inside that worktree still stops at its own Git root.
 
 Key templates allow author/year/title tokens and literal separators only; without_creator excludes author. title_words is 1 or 2; Configured keys.stopwords, titles.minor_words, titles.protected_terms and sorting.ignore_leading_articles add to the built-in lists, with built-ins first and case-insensitive deduplication. config show reports these effective lists with a default+config origin when configured. The built-in entries cannot be removed by configuration. Other nonblank policy lists deduplicate case-insensitively. Corporate aliases map exact NFC literal names to explicit valid tokens. Policy changes affect future generation, never existing keys or explicit corrections. Title Case capitalizes first/last words and words after an explicit subtitle boundary; minor words otherwise stay lowercase. Hyphen parts use their position in the whole title. Protected terms/whole-title flags win. Sort case-insensitively by sort title, numeric edition, year, then binary key; missing numeric values follow present ones. Strip only an initial whole-word article, ignoring opening quotation marks for comparison.
 

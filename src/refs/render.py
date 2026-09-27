@@ -299,6 +299,8 @@ def report_text(command: str, data: dict, terminal: bool, width: int, warnings: 
     if command == 'reorg':
         return short_rows(command, data, terminal, width)
     if command == 'export':
+        if 'targets' in data:
+            return table_rows([[r['output'], r['profile'], r['outcome'], r.get('error', {}).get('message', str(r.get('count', 0)) + ' entries')] for r in data['targets']], terminal=terminal, width=width)
         count = data['count']
         return f"Wrote {data['output']} ({count} entries, {len(warnings or [])} warnings)" if count else f"Wrote {data['output']} (0 entries)"
     if command.startswith('import'):
@@ -391,6 +393,8 @@ def render_error(command: str, issue: dict, data: dict | None = None, *, termina
         lines.append(short_rows('reorg', data, terminal, width))
     if issue['code'] == 'import_partial' and data:
         output = render_text('import', data, [], terminal=terminal, width=width)
+    if issue['code'] == 'export_partial' and data:
+        output = render_text('export', data, data.get('warnings', []), terminal=terminal, width=width)
     if issue['code'] == 'export_blocked':
         lines.append(f"Not written: {issue['path'] or '(destination)'}")
         lines.extend(f"{entry.get('citation_key') or entry.get('details', {}).get('citation_key', '(source)')}: {entry['message']}" for entry in issue['details'].get('entries', []))

@@ -67,14 +67,25 @@ class Settings:
         return dict(config=str(self.config),values=values,origins=origins,paths=self.describe(),diagnostics=[])
 
 
-def export_options(settings: Settings, project: str | None, output: Path | None, profile: str | None) -> tuple[str, Path, str]:
+def export_options(settings: Settings, project: str | None, output: Path | None, profile: str | None) -> tuple[str, list[tuple[Path, str]], bool]:
     project = project if project is not None else settings.values.get('project')
-    configured_output = settings.values.get('export', {}).get('output')
+    export = settings.values['export']
+    targets = export.get('targets')
+    if not project:
+        raise RefError('invalid_invocation', 'Supply export project or configured default', 2)
+    if targets and output is None:
+        selected = [t for t in targets if profile is None or t['profile'] == profile]
+        if profile is not None and len(selected) != 1:
+            raise RefError('invalid_invocation', 'Profile must select exactly one configured target; supply --output', 2)
+        return project, [(Path(t['output']), t['profile']) for t in selected], profile is None
+    if output is not None and profile is None and targets:
+        match = next((t for t in targets if Path(t['output']) == absolute(str(output))), None)
+        profile = match['profile'] if match else None
+    configured_output = export.get('output')
     output = output if output is not None else Path(configured_output) if configured_output else None
-    profile = profile if profile is not None else settings.values['export']['profile']
-    if not project or output is None:
-        raise RefError('invalid_invocation', 'Supply export project and output options or configured defaults', 2)
-    return project, output, profile
+    if output is None:
+        raise RefError('invalid_invocation', 'Supply export output or configured default', 2)
+    return project, [(output, profile if profile is not None else export.get('profile', 'portable-bibtex-v1'))], False
 
 
 def select(config: str | None, catalog: str | None, *, project_file: str | None = None, no_project_config: bool = False) -> Settings:
@@ -159,10 +170,16 @@ class SortingTable(ConfigTable):
     ignore_leading_articles: list[str] = Field(default_factory=list)
 
 
+class ExportTarget(ConfigTable):
+    output: str
+    profile: str
+
+
 class ExportTable(ConfigTable):
     profile: str = ''
     output: str = ''
     consumers: list[str] = Field(default_factory=list)
+    targets: list[ExportTarget] = Field(default_factory=list)
 
 
 class PolicyTables(ConfigTable):
@@ -200,9 +217,30 @@ def policies(user: dict, config: Path, explicit: str | None, disabled: bool) -> 
             if 'resources' in values and set(values['resources'])-{'library_root','roots'}:
                 raise ValueError('Unsupported resource setting')
             values=PolicyTables.model_validate(values).model_dump(exclude_unset=True)
+            export = values.get('export', {})
+            if 'targets' in export:
+                if {'output', 'profile'} & export.keys():
+                    raise ValueError('Choose [export] output/profile or [[export.targets]], not both')
+                if not export['targets']:
+                    raise ValueError('export.targets must contain at least one target')
+                for key in ('output', 'profile'):
+                    effective['export'].pop(key, None)
+                    origins.pop('export.' + key, None)
+            elif {'output', 'profile'} & export.keys():
+                effective['export'].pop('targets', None)
+                origins.pop('export.targets', None)
             for section in ('keys','titles','sorting','export'):
                 for key,value in values.get(section,{}).items():
-                    if key=='corporate_aliases':
+                    if key=='targets':
+                        outputs = set()
+                        for target in value:
+                            if not target['output'].strip() or target['profile'] not in PROFILES:
+                                raise ValueError('Each export target needs a nonblank output and supported profile')
+                            target['output'] = str(absolute(target['output'], path.parent))
+                            if target['output'] in outputs:
+                                raise ValueError('Export targets must have distinct output paths')
+                            outputs.add(target['output'])
+                    elif key=='corporate_aliases':
                         if any(not name.strip() for name in value):
                             raise ValueError('Corporate aliases require nonblank names and string tokens')
                         value={unicodedata.normalize('NFC',name):naming.creator_token(token) for name,token in value.items() if name.strip()}
