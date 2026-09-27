@@ -1,0 +1,497 @@
+{
+  "publication_commit": "46002603b9fecd8971f51f800c5f7a45d3c22d8a",
+  "refs_base": "0abfff9",
+  "acceptance": "not accepted; native news outlet loss",
+  "consumers": [
+    {
+      "consumer": "html",
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "R": "Rscript (R) version 4.5.3 (2026-03-11)"
+      },
+      "entries": [
+        {
+          "entry": "alves2022compa",
+          "outcome": "identical",
+          "before": "{\"key\": \"alves2022compa\", \"text\": \"Alves, João Bernardo, Bernardo Marques, Carlos Ferreira, Paulo Dias, and Beatriz Sousa Santos. 2022. “Comparing Augmented Reality Visualization Methods for Assembly Procedures.” Virtual Reality 26 (1): 235–48. https://doi.org/10.1007/s10055-021-00557-8.\"}",
+          "after": "{\"key\": \"alves2022compa\", \"text\": \"Alves, João Bernardo, Bernardo Marques, Carlos Ferreira, Paulo Dias, and Beatriz Sousa Santos. 2022. “Comparing Augmented Reality Visualization Methods for Assembly Procedures.” Virtual Reality 26 (1): 235–48. https://doi.org/10.1007/s10055-021-00557-8.\"}"
+        },
+        {
+          "entry": "amouzgar2025novel",
+          "outcome": "identical",
+          "before": "{\"key\": \"amouzgar2025novel\", \"text\": \"Amouzgar, Kaveh, and Justus Willebrand. 2025. “A Novel XR-Based Real-Time Machine Interaction System for Industry 4.0: Usability Evaluation in a Learning Factory.” Journal of Manufacturing Systems 82: 254–83. https://doi.org/10.1016/j.jmsy.2025.05.019.\"}",
+          "after": "{\"key\": \"amouzgar2025novel\", \"text\": \"Amouzgar, Kaveh, and Justus Willebrand. 2025. “A Novel XR-Based Real-Time Machine Interaction System for Industry 4.0: Usability Evaluation in a Learning Factory.” Journal of Manufacturing Systems 82: 254–83. https://doi.org/10.1016/j.jmsy.2025.05.019.\"}"
+        },
+        {
+          "entry": "anderson1982acqui",
+          "outcome": "changed",
+          "before": "{\"key\": \"anderson1982acqui\", \"text\": \"Anderson, John R. 1982. “Acquisition of Cognitive Skill.” Psychological Review 89 (4): 369–406. https://doi.org/10.1037/0033-295X.89.4.369.\"}",
+          "after": "{\"key\": \"anderson1982acqui\", \"text\": \"Anderson, John R. 1982. “Acquisition of Cognitive Skill.” Psychological Review 89 (4): 369–406. https://doi.org/10.1037/0033-295x.89.4.369.\"}"
+        },
+        {
+          "entry": "ariansyah2024learnability",
+          "outcome": "identical",
+          "before": "{\"key\": \"ariansyah2024learnability\", \"text\": \"Ariansyah, Dedy, Bens Pardamean, Eddine Barbaro, and John Ahmet Erkoyuncu. 2024. “Augmented Reality Training for Improved Learnability.” CIRP Journal of Manufacturing Science and Technology 48: 19–27. https://doi.org/10.1016/j.cirpj.2023.11.003.\"}",
+          "after": "{\"key\": \"ariansyah2024learnability\", \"text\": \"Ariansyah, Dedy, Bens Pardamean, Eddine Barbaro, and John Ahmet Erkoyuncu. 2024. “Augmented Reality Training for Improved Learnability.” CIRP Journal of Manufacturing Science and Technology 48: 19–27. https://doi.org/10.1016/j.cirpj.2023.11.003.\"}"
+        },
+        {
+          "entry": "auburn2022ge",
+          "outcome": "changed",
+          "before": "{\"key\": \"auburn2022ge\", \"text\": \"Auburn University Samuel Ginn College of Engineering. 2022. Tiger Motors Lab Hosts GE Aviation Training Session. Auburn Engineering News. https://eng.auburn.edu/news/2022/03/tiger-motors-lab-hosts-ge-aviation-training-session.\"}",
+          "after": "{\"key\": \"auburn2022ge\", \"text\": \"Nelson, Carla. 2022. “Tiger Motors Lab Hosts GE Aviation Training Session.” Auburn Engineering News, March 3. https://eng.auburn.edu/news/2022/03/tiger-motors-lab-hosts-ge-aviation-training-session.\"}"
+        },
+        {
+          "entry": "auburn2024hartzell",
+          "outcome": "changed",
+          "before": "{\"key\": \"auburn2024hartzell\", \"text\": \"Auburn University Samuel Ginn College of Engineering. 2024. Hartzell Engine Tech Elevates Manufacturing Practices Through Tiger Motors Training. Auburn Engineering News. https://www.eng.auburn.edu/news/2024/04/hartzell-engine-tech-elevates-manufacturing-practices-through-tiger-motors-training.html.\"}",
+          "after": "{\"key\": \"auburn2024hartzell\", \"text\": \"Nelson, Carla. 2024. “Hartzell Engine Tech Elevates Manufacturing Practices Through Tiger Motors Training.” Auburn Engineering News, April 12. https://www.eng.auburn.edu/news/2024/04/hartzell-engine-tech-elevates-manufacturing-practices-through-tiger-motors-training.html.\"}"
+        },
+        {
+          "entry": "auburn2025honda",
+          "outcome": "changed",
+          "before": "{\"key\": \"auburn2025honda\", \"text\": \"Auburn University Samuel Ginn College of Engineering. 2025. Honda Returns to Auburn for Lean Manufacturing Training. Auburn Engineering News. https://www.eng.auburn.edu/news/2025/05/honda-returns-to-auburn-for-lean-manufacturing-training.html.\"}",
+          "after": "{\"key\": \"auburn2025honda\", \"text\": \"Nelson, Carla. 2025. “Honda Returns to Auburn for Lean Manufacturing Training.” Auburn Engineering News, May 27. https://www.eng.auburn.edu/news/2025/05/honda-returns-to-auburn-for-lean-manufacturing-training.html.\"}"
+        },
+        {
+          "entry": "azuma1994impro",
+          "outcome": "changed",
+          "before": "{\"key\": \"azuma1994impro\", \"text\": \"Azuma, Ronald T., and Gary Bishop. 1994. “Improving Static and Dynamic Registration in an Optical See-through HMD Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques.” SIGGRAPH ’94, 197–204. https://doi.org/10.1145/192161.192199.\"}",
+          "after": "{\"key\": \"azuma1994impro\", \"text\": \"Azuma, Ronald T., and Gary Bishop. 1994. “Improving Static and Dynamic Registration in an Optical See-Through HMD.” SIGGRAPH ’94, 197–204. https://doi.org/10.1145/192161.192199.\"}"
+        },
+        {
+          "entry": "buttner2020augme",
+          "outcome": "changed",
+          "before": "{\"key\": \"buttner2020augme\", \"text\": \"Büttner, Sebastian, Michael Prilla, and Carsten Röcker. 2020. “Augmented Reality Training for Industrial Assembly Work: Are Projection-Based AR Assistive Systems an Appropriate Tool for Assembly Training.” Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems, 1–12. https://doi.org/10.1145/3313831.3376720.\"}",
+          "after": "{\"key\": \"buttner2020augme\", \"text\": \"Büttner, Sebastian, Michael Prilla, and Carsten Röcker. 2020. “Augmented Reality Training for Industrial Assembly Work - Are Projection-Based AR Assistive Systems an Appropriate Tool for Assembly Training.” Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems, 1–12. https://doi.org/10.1145/3313831.3376720.\"}"
+        },
+        {
+          "entry": "caudell1992augmented",
+          "outcome": "changed",
+          "before": "{\"key\": \"caudell1992augmented\", \"text\": \"Caudell, Thomas P., and David W. Mizell. 1992. “Augmented Reality: An Application of Heads-up Display Technology to Manual Manufacturing Processes.” Proceedings of the Twenty-Fifth Hawaii International Conference on System Sciences 2: 659–69. https://doi.org/10.1109/HICSS.1992.183317.\"}",
+          "after": "{\"key\": \"caudell1992augmented\", \"text\": \"Caudell, Thomas P., and David W. Mizell. 1992. “Augmented Reality: An Application of Heads-up Display Technology to Manual Manufacturing Processes.” Proceedings of the Twenty-Fifth Hawaii International Conference on System Sciences 2: 659–69. https://doi.org/10.1109/hicss.1992.183317.\"}"
+        },
+        {
+          "entry": "chu2021experimental",
+          "outcome": "changed",
+          "before": "{\"key\": \"chu2021experimental\", \"text\": \"Chu, Chih-Hsing, and Ching-Hung Ko. 2021. “An Experimental Study on Augmented Reality Assisted Manual Assembly with Occluded Components.” Journal of Manufacturing Systems 61: 685–95. https://doi.org/10.1016/j.jmsy.2021.04.003.\"}",
+          "after": "{\"key\": \"chu2021experimental\", \"text\": \"Chu, Chih-Hsing, and Ching-Hung Ko. 2021. “An Experimental Study on Augmented Reality Assisted Manual Assembly With Occluded Components.” Journal of Manufacturing Systems 61: 685–95. https://doi.org/10.1016/j.jmsy.2021.04.003.\"}"
+        },
+        {
+          "entry": "chu2020compa",
+          "outcome": "changed",
+          "before": "{\"key\": \"chu2020compa\", \"text\": \"Chu, Chih-Hsing, Chien-Jung Liao, and Shu-Chiang Lin. 2020. “Comparing Augmented Reality-Assisted Assembly Functions: A Case Study on Dougong Structure.” Applied Sciences 10 (10): 3383. https://doi.org/10.3390/app10103383.\"}",
+          "after": "{\"key\": \"chu2020compa\", \"text\": \"Chu, Chih-Hsing, Chien-Jung Liao, and Shu-Chiang Lin. 2020. “Comparing Augmented Reality-Assisted Assembly Functions—a Case Study on Dougong Structure.” Applied Sciences 10 (10): 3383. https://doi.org/10.3390/app10103383.\"}"
+        },
+        {
+          "entry": "conover1982analysis",
+          "outcome": "identical",
+          "before": "{\"key\": \"conover1982analysis\", \"text\": \"Conover, W. J., and Ronald L. Iman. 1982. “Analysis of Covariance Using the Rank Transformation.” Biometrics 38 (3): 715–24. https://doi.org/10.2307/2530051.\"}",
+          "after": "{\"key\": \"conover1982analysis\", \"text\": \"Conover, W. J., and Ronald L. Iman. 1982. “Analysis of Covariance Using the Rank Transformation.” Biometrics 38 (3): 715–24. https://doi.org/10.2307/2530051.\"}"
+        },
+        {
+          "entry": "crossman1959theory",
+          "outcome": "identical",
+          "before": "{\"key\": \"crossman1959theory\", \"text\": \"Crossman, E. R. F. W. 1959. “A Theory of the Acquisition of Speed-Skill.” Ergonomics 2 (2): 153–66. https://doi.org/10.1080/00140135908930419.\"}",
+          "after": "{\"key\": \"crossman1959theory\", \"text\": \"Crossman, E. R. F. W. 1959. “A Theory of the Acquisition of Speed-Skill.” Ergonomics 2 (2): 153–66. https://doi.org/10.1080/00140135908930419.\"}"
+        },
+        {
+          "entry": "daling2023assemble",
+          "outcome": "identical",
+          "before": "{\"key\": \"daling2023assemble\", \"text\": \"Daling, Lea M., Marisa Tenbrock, Ingrid Isenhardt, and Sabine J. Schlittmeier. 2023. “Assemble It Like This! – Is AR- or VR-Based Training an Effective Alternative to Video-Based Training in Manual Assembly?” Applied Ergonomics 110: 104021. https://doi.org/10.1016/j.apergo.2023.104021.\"}",
+          "after": "{\"key\": \"daling2023assemble\", \"text\": \"Daling, Lea M., Marisa Tenbrock, Ingrid Isenhardt, and Sabine J. Schlittmeier. 2023. “Assemble It Like This! – Is AR- or VR-Based Training an Effective Alternative to Video-Based Training in Manual Assembly?” Applied Ergonomics 110: 104021. https://doi.org/10.1016/j.apergo.2023.104021.\"}"
+        },
+        {
+          "entry": "fang2023hmd",
+          "outcome": "identical",
+          "before": "{\"key\": \"fang2023hmd\", \"text\": \"Fang, Wei, Lixi Chen, Tienong Zhang, Chengjun Chen, Zhan Teng, and Lihui Wang. 2023. “Head-Mounted Display Augmented Reality in Manufacturing: A Systematic Review.” Robotics and Computer-Integrated Manufacturing 83: 102567. https://doi.org/10.1016/j.rcim.2023.102567.\"}",
+          "after": "{\"key\": \"fang2023hmd\", \"text\": \"Fang, Wei, Lixi Chen, Tienong Zhang, Chengjun Chen, Zhan Teng, and Lihui Wang. 2023. “Head-Mounted Display Augmented Reality in Manufacturing: A Systematic Review.” Robotics and Computer-Integrated Manufacturing 83: 102567. https://doi.org/10.1016/j.rcim.2023.102567.\"}"
+        },
+        {
+          "entry": "funk2016interactive",
+          "outcome": "identical",
+          "before": "{\"key\": \"funk2016interactive\", \"text\": \"Funk, Markus, Thomas Kosch, and Albrecht Schmidt. 2016. “Interactive Worker Assistance: Comparing the Effects of in-Situ Projection, Head-Mounted Displays, Tablet, and Paper Instructions.” Proceedings of the 2016 ACM International Joint Conference on Pervasive and Ubiquitous Computing, 934–39. https://doi.org/10.1145/2971648.2971706.\"}",
+          "after": "{\"key\": \"funk2016interactive\", \"text\": \"Funk, Markus, Thomas Kosch, and Albrecht Schmidt. 2016. “Interactive Worker Assistance: Comparing the Effects of in-Situ Projection, Head-Mounted Displays, Tablet, and Paper Instructions.” Proceedings of the 2016 ACM International Joint Conference on Pervasive and Ubiquitous Computing, 934–39. https://doi.org/10.1145/2971648.2971706.\"}"
+        },
+        {
+          "entry": "degiorgio2022assessing",
+          "outcome": "identical",
+          "before": "{\"key\": \"degiorgio2022assessing\", \"text\": \"Giorgio, Andrea de, Stefania Cacace, Antonio Maffei, et al. 2022. “Assessing the Influence of Expert Video Aid on Assembly Learning Curves.” Journal of Manufacturing Systems 62: 263–69. https://doi.org/10.1016/j.jmsy.2021.11.019.\"}",
+          "after": "{\"key\": \"degiorgio2022assessing\", \"text\": \"Giorgio, Andrea de, Stefania Cacace, Antonio Maffei, et al. 2022. “Assessing the Influence of Expert Video Aid on Assembly Learning Curves.” Journal of Manufacturing Systems 62: 263–69. https://doi.org/10.1016/j.jmsy.2021.11.019.\"}"
+        },
+        {
+          "entry": "degiorgio2023adopting",
+          "outcome": "identical",
+          "before": "{\"key\": \"degiorgio2023adopting\", \"text\": \"Giorgio, Andrea de, Fabio Marco Monetti, Antonio Maffei, Mario Romero, and Lihui Wang. 2023. “Adopting Extended Reality? A Systematic Review of Manufacturing Training and Teaching Applications.” Journal of Manufacturing Systems 71: 645–63. https://doi.org/10.1016/j.jmsy.2023.10.016.\"}",
+          "after": "{\"key\": \"degiorgio2023adopting\", \"text\": \"Giorgio, Andrea de, Fabio Marco Monetti, Antonio Maffei, Mario Romero, and Lihui Wang. 2023. “Adopting Extended Reality? A Systematic Review of Manufacturing Training and Teaching Applications.” Journal of Manufacturing Systems 71: 645–63. https://doi.org/10.1016/j.jmsy.2023.10.016.\"}"
+        },
+        {
+          "entry": "gonzalez-franco2017immer",
+          "outcome": "identical",
+          "before": "{\"key\": \"gonzalez-franco2017immer\", \"text\": \"Gonzalez-Franco, Mar, Rodrigo Pizarro, Julio Cermeron, et al. 2017. “Immersive Mixed Reality for Manufacturing Training.” Frontiers in Robotics and AI 4. https://doi.org/10.3389/frobt.2017.00003.\"}",
+          "after": "{\"key\": \"gonzalez-franco2017immer\", \"text\": \"Gonzalez-Franco, Mar, Rodrigo Pizarro, Julio Cermeron, et al. 2017. “Immersive Mixed Reality for Manufacturing Training.” Frontiers in Robotics and AI 4. https://doi.org/10.3389/frobt.2017.00003.\"}"
+        },
+        {
+          "entry": "havard2021case",
+          "outcome": "identical",
+          "before": "{\"key\": \"havard2021case\", \"text\": \"Havard, Vincent, David Baudry, Benoit Jeanne, Anne Louis, and Xavier Savatier. 2021. “A Use Case Study Comparing Augmented Reality (AR) and Electronic Document-Based Maintenance Instructions Considering Tasks Complexity and Operator Competency Level.” Virtual Reality 25 (4): 999–1014. https://doi.org/10.1007/s10055-020-00493-z.\"}",
+          "after": "{\"key\": \"havard2021case\", \"text\": \"Havard, Vincent, David Baudry, Benoit Jeanne, Anne Louis, and Xavier Savatier. 2021. “A Use Case Study Comparing Augmented Reality (AR) and Electronic Document-Based Maintenance Instructions Considering Tasks Complexity and Operator Competency Level.” Virtual Reality 25 (4): 999–1014. https://doi.org/10.1007/s10055-020-00493-z.\"}"
+        },
+        {
+          "entry": "hoover2020measu",
+          "outcome": "identical",
+          "before": "{\"key\": \"hoover2020measu\", \"text\": \"Hoover, Melynda, Jack Miller, Stephen Gilbert, and Eliot Winer. 2020. “Measuring the Performance Impact of Using the Microsoft HoloLens 1 to Provide Guided Assembly Work Instructions.” Journal of Computing and Information Science in Engineering 20 (6). https://doi.org/10.1115/1.4046006.\"}",
+          "after": "{\"key\": \"hoover2020measu\", \"text\": \"Hoover, Melynda, Jack Miller, Stephen Gilbert, and Eliot Winer. 2020. “Measuring the Performance Impact of Using the Microsoft HoloLens 1 to Provide Guided Assembly Work Instructions.” Journal of Computing and Information Science in Engineering 20 (6). https://doi.org/10.1115/1.4046006.\"}"
+        },
+        {
+          "entry": "kaplan2021effec",
+          "outcome": "changed",
+          "before": "{\"key\": \"kaplan2021effec\", \"text\": \"Kaplan, Alexandra D., Jessica Cruit, Mica Endsley, Suzanne M. Beers, Ben D. Sawyer, and P. A. Hancock. 2021. “The Effects of Virtual Reality, Augmented Reality, and Mixed Reality as Training Enhancement Methods: A Meta-Analysis.” Human Factors 63 (4): 706–26. https://doi.org/10.1177/0018720820904229.\"}",
+          "after": "{\"key\": \"kaplan2021effec\", \"text\": \"Kaplan, Alexandra D., Jessica Cruit, Mica Endsley, Suzanne M. Beers, Ben D. Sawyer, and P. A. Hancock. 2021. “The Effects of Virtual Reality, Augmented Reality, and Mixed Reality as Training Enhancement Methods: A Meta-Analysis.” Human Factors: The Journal of the Human Factors and Ergonomics Society 63 (4): 706–26. https://doi.org/10.1177/0018720820904229.\"}"
+        },
+        {
+          "entry": "kolla2021compa",
+          "outcome": "identical",
+          "before": "{\"key\": \"kolla2021compa\", \"text\": \"Kolla, Sri Sudha Vijay Keshav, Andre Sanchez, and Peter Plapper. 2021. “Comparing Effectiveness of Paper Based and Augmented Reality Instructions for Manual Assembly and Training Tasks.” Proceedings of the 11th Conference on Learning Factories (CLF 2021). https://doi.org/10.2139/ssrn.3859970.\"}",
+          "after": "{\"key\": \"kolla2021compa\", \"text\": \"Kolla, Sri Sudha Vijay Keshav, Andre Sanchez, and Peter Plapper. 2021. “Comparing Effectiveness of Paper Based and Augmented Reality Instructions for Manual Assembly and Training Tasks.” Proceedings of the 11th Conference on Learning Factories (CLF 2021). https://doi.org/10.2139/ssrn.3859970.\"}"
+        },
+        {
+          "entry": "marchand2016pose",
+          "outcome": "changed",
+          "before": "{\"key\": \"marchand2016pose\", \"text\": \"Marchand, Eric, Hideaki Uchiyama, and Fabien Spindler. 2016. “Pose Estimation for Augmented Reality: A Hands-On Survey.” IEEE Transactions on Visualization and Computer Graphics 22 (12): 2633–51. https://doi.org/10.1109/TVCG.2015.2513408.\"}",
+          "after": "{\"key\": \"marchand2016pose\", \"text\": \"Marchand, Eric, Hideaki Uchiyama, and Fabien Spindler. 2016. “Pose Estimation for Augmented Reality: A Hands-on Survey.” IEEE Transactions on Visualization and Computer Graphics 22 (12): 2633–51. https://doi.org/10.1109/tvcg.2015.2513408.\"}"
+        },
+        {
+          "entry": "marino2024assessing",
+          "outcome": "identical",
+          "before": "{\"key\": \"marino2024assessing\", \"text\": \"Marino, Emanuele, Loris Barbieri, Fabio Bruno, and Maurizio Muzzupappa. 2024. “Assessing User Performance in Augmented Reality Assembly Guidance for Industry 4.0 Operators.” Computers in Industry 157–158: 104085. https://doi.org/10.1016/j.compind.2024.104085.\"}",
+          "after": "{\"key\": \"marino2024assessing\", \"text\": \"Marino, Emanuele, Loris Barbieri, Fabio Bruno, and Maurizio Muzzupappa. 2024. “Assessing User Performance in Augmented Reality Assembly Guidance for Industry 4.0 Operators.” Computers in Industry 157–158: 104085. https://doi.org/10.1016/j.compind.2024.104085.\"}"
+        },
+        {
+          "entry": "moro2021virtu",
+          "outcome": "changed",
+          "before": "{\"key\": \"moro2021virtu\", \"text\": \"Moro, Christian, James Birt, Zane Stromberga, et al. 2021. “Virtual and Augmented Reality Enhancements to Medical and Science Student Physiology and Anatomy Test Performance: A Systematic Review and Meta-Analysis.” Anatomical Sciences Education 14 (3): 368–76. https://doi.org/10.1002/ase.2049.\"}",
+          "after": "{\"key\": \"moro2021virtu\", \"text\": \"Moro, Christian, James Birt, Zane Stromberga, et al. 2021. “Virtual and Augmented Reality Enhancements to Medical and Science Student Physiology and Anatomy Test Performance: A Systematic Review and Meta‐Analysis.” Anatomical Sciences Education 14 (3): 368–76. https://doi.org/10.1002/ase.2049.\"}"
+        },
+        {
+          "entry": "moyo2013devel",
+          "outcome": "changed",
+          "before": "{\"key\": \"moyo2013devel\", \"text\": \"Moyo, Yamkelani. 2013. “Developing a Multidisciplinary Best Practice Manufacturing Education and Research Laboratory for 21st Century Competitiveness.” Doctoral dissertation, Auburn University. https://etd.auburn.edu/handle/10415/3972.\"}",
+          "after": "{\"key\": \"moyo2013devel\", \"text\": \"Moyo, Yamkelani. 2013. “Developing a Multidisciplinary Best Practice Manufacturing Education and Research Laboratory for 21st Century Competitiveness.” Dissertation, Auburn University. https://etd.auburn.edu/handle/10415/3972.\"}"
+        },
+        {
+          "entry": "nakajima1988intro",
+          "outcome": "identical",
+          "before": "{\"key\": \"nakajima1988intro\", \"text\": \"Nakajima, Seiichi. 1988. Introduction to TPM: Total Productive Maintenance. Productivity Press.\"}",
+          "after": "{\"key\": \"nakajima1988intro\", \"text\": \"Nakajima, Seiichi. 1988. Introduction to TPM: Total Productive Maintenance. Productivity Press.\"}"
+        },
+        {
+          "entry": "newell1981mecha",
+          "outcome": "identical",
+          "before": "{\"key\": \"newell1981mecha\", \"text\": \"Newell, Allen, and Paul S. Rosenbloom. 1981. “Mechanisms of Skill Acquisition and the Law of Practice.” In Cognitive Skills and Their Acquisition, edited by John R. Anderson. Lawrence Erlbaum Associates.\"}",
+          "after": "{\"key\": \"newell1981mecha\", \"text\": \"Newell, Allen, and Paul S. Rosenbloom. 1981. “Mechanisms of Skill Acquisition and the Law of Practice.” In Cognitive Skills and Their Acquisition, edited by John R. Anderson. Lawrence Erlbaum Associates.\"}"
+        },
+        {
+          "entry": "ngcorrales2020overa",
+          "outcome": "identical",
+          "before": "{\"key\": \"ngcorrales2020overa\", \"text\": \"Ng Corrales, Lisbeth del Carmen, María Pilar Lambán, Mario Enrique Hernandez Korner, and Jesús Royo. 2020. “Overall Equipment Effectiveness: Systematic Literature Review and Overview of Different Approaches.” Applied Sciences 10 (18): 6469. https://doi.org/10.3390/app10186469.\"}",
+          "after": "{\"key\": \"ngcorrales2020overa\", \"text\": \"Ng Corrales, Lisbeth del Carmen, María Pilar Lambán, Mario Enrique Hernandez Korner, and Jesús Royo. 2020. “Overall Equipment Effectiveness: Systematic Literature Review and Overview of Different Approaches.” Applied Sciences 10 (18): 6469. https://doi.org/10.3390/app10186469.\"}"
+        },
+        {
+          "entry": "oleary2024augmented",
+          "outcome": "identical",
+          "before": "{\"key\": \"oleary2024augmented\", \"text\": \"O’Leary, Danny J. 2024. “Augmented Vs. Traditional Instruction in Manufacturing Assembly: An Affordance-Based, Multi-Modal Assessment of Learning, Recall, and Retention.” Doctoral dissertation, Auburn University. https://auetd.auburn.edu/handle/10415/9460.\"}",
+          "after": "{\"key\": \"oleary2024augmented\", \"text\": \"O’Leary, Danny J. 2024. “Augmented Vs. Traditional Instruction in Manufacturing Assembly: An Affordance-Based, Multi-Modal Assessment of Learning, Recall, and Retention.” Doctoral dissertation, Auburn University. https://auetd.auburn.edu/handle/10415/9460.\"}"
+        },
+        {
+          "entry": "oleary2025framework",
+          "outcome": "changed",
+          "before": "{\"key\": \"oleary2025framework\", \"text\": \"O’Leary, Danny J. 2025. “Evaluating the Effectiveness of AR/MR Technologies in Manufacturing Training: A Multi-Modal Assessment Framework.” In Proceedings of the IISE Annual Conference & Expo 2025, edited by E. Gentry, F. Ju, and X. Liu. Institute of Industrial; Systems Engineers.\"}",
+          "after": "{\"key\": \"oleary2025framework\", \"text\": \"O’Leary, Danny J. 2025. “Evaluating the Effectiveness of AR/MR Technologies in Manufacturing Training: A Multi-Modal Assessment Framework.” In Proceedings of the IISE Annual Conference & Expo 2025, edited by E. Gentry, F. Ju, and X. Liu. Institute of Industrial and Systems Engineers.\"}"
+        },
+        {
+          "entry": "sahoo2026laser",
+          "outcome": "identical",
+          "before": "{\"key\": \"sahoo2026laser\", \"text\": \"Sahoo, Praneet, and Francesco N. Biondi. 2026. “On the Effect of Using an Augmented Reality Laser Projection Operator Guidance System on Cognitive Workload and Assembly Task Performance.” Applied Ergonomics 130: 104662. https://doi.org/10.1016/j.apergo.2025.104662.\"}",
+          "after": "{\"key\": \"sahoo2026laser\", \"text\": \"Sahoo, Praneet, and Francesco N. Biondi. 2026. “On the Effect of Using an Augmented Reality Laser Projection Operator Guidance System on Cognitive Workload and Assembly Task Performance.” Applied Ergonomics 130: 104662. https://doi.org/10.1016/j.apergo.2025.104662.\"}"
+        },
+        {
+          "entry": "tang2003compa",
+          "outcome": "identical",
+          "before": "{\"key\": \"tang2003compa\", \"text\": \"Tang, Arthur, Charles Owen, Frank Biocca, and Weimin Mou. 2003. “Comparative Effectiveness of Augmented Reality in Object Assembly.” Proceedings of the Conference on Human Factors in Computing Systems - CHI ’03, 73–80. https://doi.org/10.1145/642611.642626.\"}",
+          "after": "{\"key\": \"tang2003compa\", \"text\": \"Tang, Arthur, Charles Owen, Frank Biocca, and Weimin Mou. 2003. “Comparative Effectiveness of Augmented Reality in Object Assembly.” Proceedings of the Conference on Human Factors in Computing Systems - CHI ’03, 73–80. https://doi.org/10.1145/642611.642626.\"}"
+        },
+        {
+          "entry": "vanneste2020cogni",
+          "outcome": "identical",
+          "before": "{\"key\": \"vanneste2020cogni\", \"text\": \"Vanneste, Pieter, Yi Huang, Jung Yeon Park, Frederik Cornillie, Bart Decloedt, and Wim Van den Noortgate. 2020. “Cognitive Support for Assembly Operations by Means of Augmented Reality: An Exploratory Study.” International Journal of Human-Computer Studies 143: 102480. https://doi.org/10.1016/j.ijhcs.2020.102480.\"}",
+          "after": "{\"key\": \"vanneste2020cogni\", \"text\": \"Vanneste, Pieter, Yi Huang, Jung Yeon Park, Frederik Cornillie, Bart Decloedt, and Wim Van den Noortgate. 2020. “Cognitive Support for Assembly Operations by Means of Augmented Reality: An Exploratory Study.” International Journal of Human-Computer Studies 143: 102480. https://doi.org/10.1016/j.ijhcs.2020.102480.\"}"
+        },
+        {
+          "entry": "wang2024frontier",
+          "outcome": "identical",
+          "before": "{\"key\": \"wang2024frontier\", \"text\": \"Wang, Binbin, Lianyu Zheng, Yiwei Wang, Wei Fang, and Lihui Wang. 2024. “Towards the Industry 5.0 Frontier: Review and Prospect of XR in Product Assembly.” Journal of Manufacturing Systems 74: 777–811. https://doi.org/10.1016/j.jmsy.2024.05.002.\"}",
+          "after": "{\"key\": \"wang2024frontier\", \"text\": \"Wang, Binbin, Lianyu Zheng, Yiwei Wang, Wei Fang, and Lihui Wang. 2024. “Towards the Industry 5.0 Frontier: Review and Prospect of XR in Product Assembly.” Journal of Manufacturing Systems 74: 777–811. https://doi.org/10.1016/j.jmsy.2024.05.002.\"}"
+        },
+        {
+          "entry": "wang2021role",
+          "outcome": "identical",
+          "before": "{\"key\": \"wang2021role\", \"text\": \"Wang, Zhuo, Xiaoliang Bai, Shusheng Zhang, et al. 2021. “The Role of User-Centered AR Instruction in Improving Novice Spatial Cognition in a High-Precision Procedural Task.” Advanced Engineering Informatics 47: 101250. https://doi.org/10.1016/j.aei.2021.101250.\"}",
+          "after": "{\"key\": \"wang2021role\", \"text\": \"Wang, Zhuo, Xiaoliang Bai, Shusheng Zhang, et al. 2021. “The Role of User-Centered AR Instruction in Improving Novice Spatial Cognition in a High-Precision Procedural Task.” Advanced Engineering Informatics 47: 101250. https://doi.org/10.1016/j.aei.2021.101250.\"}"
+        },
+        {
+          "entry": "yang2023industrial",
+          "outcome": "identical",
+          "before": "{\"key\": \"yang2023industrial\", \"text\": \"Yang, Xiaonan, Wanting Mao, Yaoguang Hu, Jingfei Wang, Xuanzhu Wan, and Haonan Fang. 2023. “Does Augmented Reality Help in Industrial Training? A Comprehensive Evaluation Based on Natural Human Behavior and Knowledge Retention.” International Journal of Industrial Ergonomics 98: 103516. https://doi.org/10.1016/j.ergon.2023.103516.\"}",
+          "after": "{\"key\": \"yang2023industrial\", \"text\": \"Yang, Xiaonan, Wanting Mao, Yaoguang Hu, Jingfei Wang, Xuanzhu Wan, and Haonan Fang. 2023. “Does Augmented Reality Help in Industrial Training? A Comprehensive Evaluation Based on Natural Human Behavior and Knowledge Retention.” International Journal of Industrial Ergonomics 98: 103516. https://doi.org/10.1016/j.ergon.2023.103516.\"}"
+        }
+      ]
+    },
+    {
+      "consumer": "elsevier",
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "R": "Rscript (R) version 4.5.3 (2026-03-11)",
+        "bibtex": "BibTeX 0.99e (TeX Live 2026)\nkpathsea version 6.4.2\nCopyright 2026 Oren Patashnik.\nThere is NO warranty.  Redistribution of this software is\ncovered by the terms of both the BibTeX copyright and\nthe Lesser GNU General Public License.\nFor more information about these matters, see the file\nnamed COPYING and the BibTeX source.\nPrimary author of BibTeX: Oren Patashnik.",
+        "pdftotext": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+      },
+      "entries": [
+        {
+          "entry": "1",
+          "outcome": "identical",
+          "before": "[1] A. de Giorgio, F. M. Monetti, A. Maffei, M. Romero, L. Wang, Adopting extended reality? a systematic review of manufacturing training and teaching applications, Journal of Manufacturing Systems 71 (2023) 645–663. doi:10.1016/j.jmsy.2023.10.016.",
+          "after": "[1] A. de Giorgio, F. M. Monetti, A. Maffei, M. Romero, L. Wang, Adopting extended reality? a systematic review of manufacturing training and teaching applications, Journal of Manufacturing Systems 71 (2023) 645–663. doi:10.1016/j.jmsy.2023.10.016."
+        },
+        {
+          "entry": "2",
+          "outcome": "identical",
+          "before": "[2] B. Wang, L. Zheng, Y. Wang, W. Fang, L. Wang, Towards the Industry 5.0 frontier: Review and prospect of XR in product assembly, Journal of Manufacturing Systems 74 (2024) 777–811. doi: 10.1016/j.jmsy.2024.05.002.",
+          "after": "[2] B. Wang, L. Zheng, Y. Wang, W. Fang, L. Wang, Towards the Industry 5.0 frontier: Review and prospect of XR in product assembly, Journal of Manufacturing Systems 74 (2024) 777–811. doi: 10.1016/j.jmsy.2024.05.002."
+        },
+        {
+          "entry": "3",
+          "outcome": "identical",
+          "before": "[3] W. Fang, L. Chen, T. Zhang, C. Chen, Z. Teng, L. Wang, Head-mounted display augmented reality in manufacturing: A systematic review, Robotics and Computer-Integrated Manufacturing 83 (2023) 102567. doi:10.1016/j.rcim.2023.102567.",
+          "after": "[3] W. Fang, L. Chen, T. Zhang, C. Chen, Z. Teng, L. Wang, Head-mounted display augmented reality in manufacturing: A systematic review, Robotics and Computer-Integrated Manufacturing 83 (2023) 102567. doi:10.1016/j.rcim.2023.102567."
+        },
+        {
+          "entry": "4",
+          "outcome": "changed",
+          "before": "[4] A. Tang, C. Owen, F. Biocca, W. Mou, Comparative effectiveness of augmented reality in object assembly, in: Proceedings of the Conference on Human Factors in Computing Systems - CHI ’03, ACM Press, 2003, pp. 73–80. doi:10.1145/642611.642626.",
+          "after": "[4] A. Tang, C. Owen, F. Biocca, W. Mou, Comparative effectiveness of augmented reality in object assembly, in: Proceedings of the Conference on Human Factors in Computing Systems - CHI ’03, ACM Press, 2003, pp. 73–80, event: Proceedings of the Conference on Human Factors in Computing Systems - CHI ’03. doi:10.1145/642611.642626."
+        },
+        {
+          "entry": "5",
+          "outcome": "changed",
+          "before": "[5] C.-H. Chu, C.-J. Liao, S.-C. Lin, Comparing Augmented Reality-Assisted Assembly Functions: A Case Study on Dougong Structure, Applied Sciences 10 (10) (2020) 3383. doi:10.3390/app10103383.",
+          "after": "[5] C.-H. Chu, C.-J. Liao, S.-C. Lin, Comparing Augmented Reality-Assisted Assembly Functions—a case study on Dougong Structure, Applied Sciences 10 (10) (2020) 3383. doi:10.3390/app10103383."
+        },
+        {
+          "entry": "6",
+          "outcome": "identical",
+          "before": "[6] P. Vanneste, Y. Huang, J. Y. Park, F. Cornillie, B. Decloedt, W. Van den Noortgate, Cognitive support for assembly operations by means of augmented reality: An exploratory study, International Journal of Human-Computer Studies 143 (2020) 102480. doi:10.1016/j.ijhcs.2020.102480.",
+          "after": "[6] P. Vanneste, Y. Huang, J. Y. Park, F. Cornillie, B. Decloedt, W. Van den Noortgate, Cognitive support for assembly operations by means of augmented reality: An exploratory study, International Journal of Human-Computer Studies 143 (2020) 102480. doi:10.1016/j.ijhcs.2020.102480."
+        },
+        {
+          "entry": "7",
+          "outcome": "identical",
+          "before": "[7] M. Funk, T. Kosch, A. Schmidt, Interactive worker assistance: Comparing the effects of in-situ projection, head-mounted displays, tablet, and paper instructions, in: Proceedings of the 2016 ACM International Joint Conference on Pervasive and Ubiquitous Computing, ACM, 2016, pp. 934–939. doi:10.1145/2971648.2971706.",
+          "after": "[7] M. Funk, T. Kosch, A. Schmidt, Interactive worker assistance: Comparing the effects of in-situ projection, head-mounted displays, tablet, and paper instructions, in: Proceedings of the 2016 ACM International Joint Conference on Pervasive and Ubiquitous Computing, ACM, 2016, pp. 934–939. doi:10.1145/2971648.2971706."
+        },
+        {
+          "entry": "8",
+          "outcome": "identical",
+          "before": "[8] X. Yang, W. Mao, Y. Hu, J. Wang, X. Wan, H. Fang, Does augmented reality help in industrial training? a comprehensive evaluation based on natural human behavior and knowledge retention, International Journal of Industrial Ergonomics 98 (2023) 103516. doi:10.1016/j.ergon.2023.103516.",
+          "after": "[8] X. Yang, W. Mao, Y. Hu, J. Wang, X. Wan, H. Fang, Does augmented reality help in industrial training? a comprehensive evaluation based on natural human behavior and knowledge retention, International Journal of Industrial Ergonomics 98 (2023) 103516. doi:10.1016/j.ergon.2023.103516."
+        },
+        {
+          "entry": "9",
+          "outcome": "changed",
+          "before": "[9] T. P. Caudell, D. W. Mizell, Augmented reality: An application of heads-up display technology to manual manufacturing processes, in: Proceedings of the Twenty-Fifth Hawaii International Conference on System Sciences, Vol. 2, IEEE, 1992, pp. 659–669. doi:10.1109/HICSS.1992.183317.",
+          "after": "[9] T. P. Caudell, D. W. Mizell, Augmented reality: An application of heads-up display technology to manual manufacturing processes, in: Proceedings of the Twenty-Fifth Hawaii International Conference on System Sciences, Vol. 2, IEEE, 1992, pp. 659–669. doi:10.1109/hicss.1992.183317."
+        },
+        {
+          "entry": "10",
+          "outcome": "changed",
+          "before": "[10] A. D. Kaplan, J. Cruit, M. Endsley, S. M. Beers, B. D. Sawyer, P. A. Hancock, The effects of virtual reality, augmented reality, and mixed reality as training enhancement methods: A meta-analysis, Human Factors 63 (4) (2021) 706–726. doi:10.1177/0018720820904229.",
+          "after": "[10] A. D. Kaplan, J. Cruit, M. Endsley, S. M. Beers, B. D. Sawyer, P. A. Hancock, The effects of virtual reality, augmented reality, and mixed reality as training enhancement methods: A meta-analysis, Human Factors: The Journal of the Human Factors and Ergonomics Society 63 (4) (2021) 706–726. doi:10.1177/0018720820904229."
+        },
+        {
+          "entry": "11",
+          "outcome": "identical",
+          "before": "[11] S. S. V. K. Kolla, A. Sanchez, P. Plapper, Comparing Effectiveness of Paper Based and Augmented Reality Instructions for Manual Assembly and Training Tasks, in: Proceedings of the 11th Conference on Learning Factories (CLF 2021), SSRN, 2021. doi:10.2139/ssrn.3859970.",
+          "after": "[11] S. S. V. K. Kolla, A. Sanchez, P. Plapper, Comparing Effectiveness of Paper Based and Augmented Reality Instructions for Manual Assembly and Training Tasks, in: Proceedings of the 11th Conference on Learning Factories (CLF 2021), SSRN, 2021. doi:10.2139/ssrn.3859970."
+        },
+        {
+          "entry": "12",
+          "outcome": "identical",
+          "before": "[12] M. Gonzalez-Franco, R. Pizarro, J. Cermeron, K. Li, J. Thorn, W. Hutabarat, A. Tiwari, P. Bermell- Garcia, Immersive Mixed Reality for Manufacturing Training, Frontiers in Robotics and AI 4 (2017). doi:10.3389/frobt.2017.00003.",
+          "after": "[12] M. Gonzalez-Franco, R. Pizarro, J. Cermeron, K. Li, J. Thorn, W. Hutabarat, A. Tiwari, P. Bermell- Garcia, Immersive Mixed Reality for Manufacturing Training, Frontiers in Robotics and AI 4 (2017). doi:10.3389/frobt.2017.00003."
+        },
+        {
+          "entry": "13",
+          "outcome": "identical",
+          "before": "[13] M. Hoover, J. Miller, S. Gilbert, E. Winer, Measuring the Performance Impact of Using the Microsoft HoloLens 1 to Provide Guided Assembly Work Instructions, Journal of Computing and Information Science in Engineering 20 (6) (2020). doi:10.1115/1.4046006.",
+          "after": "[13] M. Hoover, J. Miller, S. Gilbert, E. Winer, Measuring the Performance Impact of Using the Microsoft HoloLens 1 to Provide Guided Assembly Work Instructions, Journal of Computing and Information Science in Engineering 20 (6) (2020). doi:10.1115/1.4046006."
+        },
+        {
+          "entry": "14",
+          "outcome": "identical",
+          "before": "[14] J. B. Alves, B. Marques, C. Ferreira, P. Dias, B. S. Santos, Comparing augmented reality visualization methods for assembly procedures, Virtual Reality 26 (1) (2022) 235–248. doi:10.1007/s10055-021- 00557-8.",
+          "after": "[14] J. B. Alves, B. Marques, C. Ferreira, P. Dias, B. S. Santos, Comparing augmented reality visualization methods for assembly procedures, Virtual Reality 26 (1) (2022) 235–248. doi:10.1007/s10055-021- 00557-8."
+        },
+        {
+          "entry": "15",
+          "outcome": "changed",
+          "before": "[15] S. Büttner, M. Prilla, C. Röcker, Augmented reality training for industrial assembly work: Are projection-based AR assistive systems an appropriate tool for assembly training, in: Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems, ACM, 2020, pp. 1–12. doi: 10.1145/3313831.3376720.",
+          "after": "[15] S. Büttner, M. Prilla, C. Röcker, Augmented reality training for industrial assembly work - are projection- based AR assistive systems an appropriate tool for assembly training, in: Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems, ACM, 2020, pp. 1–12, event: Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems. doi:10.1145/3313831.3376720."
+        },
+        {
+          "entry": "16",
+          "outcome": "identical",
+          "before": "[16] Z. Wang, X. Bai, S. Zhang, M. Billinghurst, W. He, Y. Wang, D. Han, G. Chen, J. Li, The role of user-centered AR instruction in improving novice spatial cognition in a high-precision procedural task, Advanced Engineering Informatics 47 (2021) 101250. doi:10.1016/j.aei.2021.101250.",
+          "after": "[16] Z. Wang, X. Bai, S. Zhang, M. Billinghurst, W. He, Y. Wang, D. Han, G. Chen, J. Li, The role of user-centered AR instruction in improving novice spatial cognition in a high-precision procedural task, Advanced Engineering Informatics 47 (2021) 101250. doi:10.1016/j.aei.2021.101250."
+        },
+        {
+          "entry": "17",
+          "outcome": "identical",
+          "before": "[17] E. Marino, L. Barbieri, F. Bruno, M. Muzzupappa, Assessing user performance in augmented reality assembly guidance for Industry 4.0 operators, Computers in Industry 157–158 (2024) 104085. doi: 10.1016/j.compind.2024.104085.",
+          "after": "[17] E. Marino, L. Barbieri, F. Bruno, M. Muzzupappa, Assessing user performance in augmented reality assembly guidance for Industry 4.0 operators, Computers in Industry 157–158 (2024) 104085. doi: 10.1016/j.compind.2024.104085."
+        },
+        {
+          "entry": "18",
+          "outcome": "changed",
+          "before": "[18] C. Moro, J. Birt, Z. Stromberga, C. Phelps, J. Clark, P. Glasziou, A. M. Scott, Virtual and Augmented Reality Enhancements to Medical and Science Student Physiology and Anatomy Test Performance: A Systematic Review and Meta-Analysis, Anatomical Sciences Education 14 (3) (2021) 368–376. doi:10.1002/ase.2049.",
+          "after": "[18] C. Moro, J. Birt, Z. Stromberga, C. Phelps, J. Clark, P. Glasziou, A. M. Scott, Virtual and Augmented Reality Enhancements to Medical and Science Student Physiology and Anatomy Test Performance: A Systematic Review and Meta‐Analysis, Anatomical Sciences Education 14 (3) (2021) 368–376. doi:10.1002/ase.2049."
+        },
+        {
+          "entry": "19",
+          "outcome": "identical",
+          "before": "[19] C.-H. Chu, C.-H. Ko, An experimental study on augmented reality assisted manual assembly with occluded components, Journal of Manufacturing Systems 61 (2021) 685–695. doi:10.1016/j.jmsy.202 1.04.003.",
+          "after": "[19] C.-H. Chu, C.-H. Ko, An experimental study on augmented reality assisted manual assembly with occluded components, Journal of Manufacturing Systems 61 (2021) 685–695. doi:10.1016/j.jmsy.202 1.04.003."
+        },
+        {
+          "entry": "20",
+          "outcome": "identical",
+          "before": "[20] A. de Giorgio, S. Cacace, A. Maffei, F. M. Monetti, M. Roci, M. Onori, L. Wang, Assessing the influence of expert video aid on assembly learning curves, Journal of Manufacturing Systems 62 (2022) 263–269. doi:10.1016/j.jmsy.2021.11.019.",
+          "after": "[20] A. de Giorgio, S. Cacace, A. Maffei, F. M. Monetti, M. Roci, M. Onori, L. Wang, Assessing the influence of expert video aid on assembly learning curves, Journal of Manufacturing Systems 62 (2022) 263–269. doi:10.1016/j.jmsy.2021.11.019."
+        },
+        {
+          "entry": "21",
+          "outcome": "identical",
+          "before": "[21] L. M. Daling, M. Tenbrock, I. Isenhardt, S. J. Schlittmeier, Assemble it like this! – is AR- or VR-based training an effective alternative to video-based training in manual assembly?, Applied Ergonomics 110 (2023) 104021. doi:10.1016/j.apergo.2023.104021.",
+          "after": "[21] L. M. Daling, M. Tenbrock, I. Isenhardt, S. J. Schlittmeier, Assemble it like this! – is AR- or VR-based training an effective alternative to video-based training in manual assembly?, Applied Ergonomics 110 (2023) 104021. doi:10.1016/j.apergo.2023.104021."
+        },
+        {
+          "entry": "22",
+          "outcome": "identical",
+          "before": "[22] D. Ariansyah, B. Pardamean, E. Barbaro, J. A. Erkoyuncu, Augmented reality training for improved learnability, CIRP Journal of Manufacturing Science and Technology 48 (2024) 19–27. doi:10.1016/j. cirpj.2023.11.003.",
+          "after": "[22] D. Ariansyah, B. Pardamean, E. Barbaro, J. A. Erkoyuncu, Augmented reality training for improved learnability, CIRP Journal of Manufacturing Science and Technology 48 (2024) 19–27. doi:10.1016/j. cirpj.2023.11.003."
+        },
+        {
+          "entry": "23",
+          "outcome": "identical",
+          "before": "[23] V. Havard, D. Baudry, B. Jeanne, A. Louis, X. Savatier, A use case study comparing augmented reality (AR) and electronic document-based maintenance instructions considering tasks complexity and operator competency level, Virtual Reality 25 (4) (2021) 999–1014. doi:10.1007/s10055-020-00493-z.",
+          "after": "[23] V. Havard, D. Baudry, B. Jeanne, A. Louis, X. Savatier, A use case study comparing augmented reality (AR) and electronic document-based maintenance instructions considering tasks complexity and operator competency level, Virtual Reality 25 (4) (2021) 999–1014. doi:10.1007/s10055-020-00493-z."
+        },
+        {
+          "entry": "24",
+          "outcome": "changed",
+          "before": "[24] J. R. Anderson, Acquisition of cognitive skill, Psychological Review 89 (4) (1982) 369–406. doi: 10.1037/0033-295X.89.4.369.",
+          "after": "[24] J. R. Anderson, Acquisition of cognitive skill, Psychological Review 89 (4) (1982) 369–406. doi: 10.1037/0033-295x.89.4.369."
+        },
+        {
+          "entry": "25",
+          "outcome": "identical",
+          "before": "[25] A. Newell, P. S. Rosenbloom, Mechanisms of skill acquisition and the law of practice, in: J. R. Anderson (Ed.), Cognitive Skills and Their Acquisition, Lawrence Erlbaum Associates, Hillsdale, NJ, 1981, pp. 1–55.",
+          "after": "[25] A. Newell, P. S. Rosenbloom, Mechanisms of skill acquisition and the law of practice, in: J. R. Anderson (Ed.), Cognitive Skills and Their Acquisition, Lawrence Erlbaum Associates, Hillsdale, NJ, 1981, pp. 1–55."
+        },
+        {
+          "entry": "26",
+          "outcome": "identical",
+          "before": "[26] E. R. F. W. Crossman, A theory of the acquisition of speed-skill, Ergonomics 2 (2) (1959) 153–166. doi:10.1080/00140135908930419.",
+          "after": "[26] E. R. F. W. Crossman, A theory of the acquisition of speed-skill, Ergonomics 2 (2) (1959) 153–166. doi:10.1080/00140135908930419."
+        },
+        {
+          "entry": "27",
+          "outcome": "changed",
+          "before": "[27] Y. Moyo, Developing a multidisciplinary best practice manufacturing education and research laboratory for 21st century competitiveness, Doctoral dissertation, Auburn University (2013). URL https://etd.auburn.edu/handle/10415/3972",
+          "after": "[27] Y. Moyo, Developing a multidisciplinary best practice manufacturing education and research laboratory for 21st century competitiveness, Dissertation, Auburn University (2013). URL https://etd.auburn.edu/handle/10415/3972"
+        },
+        {
+          "entry": "28",
+          "outcome": "identical",
+          "before": "[28] D. J. O’Leary, Augmented vs. traditional instruction in manufacturing assembly: An affordance-based, multi-modal assessment of learning, recall, and retention, Doctoral dissertation, Auburn University (2024). URL https://auetd.auburn.edu/handle/10415/9460",
+          "after": "[28] D. J. O’Leary, Augmented vs. traditional instruction in manufacturing assembly: An affordance-based, multi-modal assessment of learning, recall, and retention, Doctoral dissertation, Auburn University (2024). URL https://auetd.auburn.edu/handle/10415/9460"
+        },
+        {
+          "entry": "29",
+          "outcome": "changed",
+          "before": "[29] Auburn University Samuel Ginn College of Engineering, Honda returns to Auburn for lean manufacturing training, Auburn Engineering News (May 2025). URL https://www.eng.auburn.edu/news/2025/05/honda-returns-to-auburn-for-lean-manufacturing- training.html",
+          "after": "[29] C. Nelson, Honda returns to Auburn for lean manufacturing training, issued: 2025-05-27 (May 2025). URL https://www.eng.auburn.edu/news/2025/05/honda-returns-to-auburn-for-lean-manufacturing- training.html"
+        },
+        {
+          "entry": "30",
+          "outcome": "changed",
+          "before": "[30] Auburn University Samuel Ginn College of Engineering, Tiger Motors lab hosts GE Aviation training session, Auburn Engineering News (Mar. 2022). URL https://eng.auburn.edu/news/2022/03/tiger-motors-lab-hosts-ge-aviation-training-session",
+          "after": "[30] C. Nelson, Tiger Motors lab hosts GE Aviation training session, issued: 2022-03-03 (Mar. 2022). URL https://eng.auburn.edu/news/2022/03/tiger-motors-lab-hosts-ge-aviation-training-session"
+        },
+        {
+          "entry": "31",
+          "outcome": "changed",
+          "before": "[31] Auburn University Samuel Ginn College of Engineering, Hartzell Engine Tech elevates manufacturing practices through Tiger Motors training, Auburn Engineering News (Apr. 2024). URL https://www.eng.auburn.edu/news/2024/04/hartzell-engine-tech-elevates-manufacturing-practices- through-tiger-motors-training.html",
+          "after": "[31] C. Nelson, Hartzell Engine Tech elevates manufacturing practices through Tiger Motors training, issued: 2024-04-12 (Apr. 2024). URL https://www.eng.auburn.edu/news/2024/04/hartzell-engine-tech-elevates-manufacturing-practices- through-tiger-motors-training.html"
+        },
+        {
+          "entry": "32",
+          "outcome": "identical",
+          "before": "[32] K. Amouzgar, J. Willebrand, A novel XR-based real-time machine interaction system for Industry 4.0: Usability evaluation in a learning factory, Journal of Manufacturing Systems 82 (2025) 254–283. doi:10.1016/j.jmsy.2025.05.019.",
+          "after": "[32] K. Amouzgar, J. Willebrand, A novel XR-based real-time machine interaction system for Industry 4.0: Usability evaluation in a learning factory, Journal of Manufacturing Systems 82 (2025) 254–283. doi:10.1016/j.jmsy.2025.05.019."
+        },
+        {
+          "entry": "33",
+          "outcome": "identical",
+          "before": "[33] D. J. O’Leary, Evaluating the effectiveness of AR/MR technologies in manufacturing training: A multi-modal assessment framework, in: E. Gentry, F. Ju, X. Liu (Eds.), Proceedings of the IISE Annual Conference & Expo 2025, Institute of Industrial and Systems Engineers, 2025, pp. 1829–1834.",
+          "after": "[33] D. J. O’Leary, Evaluating the effectiveness of AR/MR technologies in manufacturing training: A multi-modal assessment framework, in: E. Gentry, F. Ju, X. Liu (Eds.), Proceedings of the IISE Annual Conference & Expo 2025, Institute of Industrial and Systems Engineers, 2025, pp. 1829–1834."
+        },
+        {
+          "entry": "34",
+          "outcome": "changed",
+          "before": "[34] R. T. Azuma, G. Bishop, Improving Static and Dynamic Registration in an Optical See-through HMD Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques, in: SIGGRAPH ’94, Association for Computing Machinery, 1994, pp. 197–204. doi:10.1145/192161.192 199.",
+          "after": "[34] R. T. Azuma, G. Bishop, Improving static and dynamic registration in an optical see-through HMD, in: SIGGRAPH ’94, Association for Computing Machinery, 1994, pp. 197–204, event: SIGGRAPH ’94. doi:10.1145/192161.192199."
+        },
+        {
+          "entry": "35",
+          "outcome": "changed",
+          "before": "[35] E. Marchand, H. Uchiyama, F. Spindler, Pose Estimation for Augmented Reality: A Hands-On Survey, IEEE Transactions on Visualization and Computer Graphics 22 (12) (2016) 2633–2651. doi: 10.1109/TVCG.2015.2513408.",
+          "after": "[35] E. Marchand, H. Uchiyama, F. Spindler, Pose Estimation for Augmented Reality: A hands-on survey, IEEE Transactions on Visualization and Computer Graphics 22 (12) (2016) 2633–2651, issued: 2016-12-01. doi:10.1109/tvcg.2015.2513408."
+        },
+        {
+          "entry": "36",
+          "outcome": "identical",
+          "before": "[36] S. Nakajima, Introduction to TPM: Total Productive Maintenance, Productivity Press, 1988.",
+          "after": "[36] S. Nakajima, Introduction to TPM: Total Productive Maintenance, Productivity Press, 1988."
+        },
+        {
+          "entry": "37",
+          "outcome": "changed",
+          "before": "[37] L. d. C. Ng Corrales, M. P. Lambán, M. E. Hernandez Korner, J. Royo, Overall equipment effectiveness: Systematic literature review and overview of different approaches, Applied Sciences 10 (18) (2020) 6469. doi:10.3390/app10186469.",
+          "after": "[37] L. d. C. Ng Corrales, M. P. Lambán, M. E. Hernandez Korner, J. Royo, Overall equipment effectiveness: Systematic literature review and overview of different approaches, Applied Sciences 10 (18) (2020) 6469, issued: 2020-09-17. doi:10.3390/app10186469. URL https://www.mdpi.com/2076-3417/10/18/6469"
+        },
+        {
+          "entry": "38",
+          "outcome": "identical",
+          "before": "[38] W. J. Conover, R. L. Iman, Analysis of covariance using the rank transformation, Biometrics 38 (3) (1982) 715–724. doi:10.2307/2530051.",
+          "after": "[38] W. J. Conover, R. L. Iman, Analysis of covariance using the rank transformation, Biometrics 38 (3) (1982) 715–724. doi:10.2307/2530051."
+        },
+        {
+          "entry": "39",
+          "outcome": "identical",
+          "before": "[39] P. Sahoo, F. N. Biondi, On the effect of using an augmented reality laser projection operator guidance system on cognitive workload and assembly task performance, Applied Ergonomics 130 (2026) 104662. doi:10.1016/j.apergo.2025.104662.",
+          "after": "[39] P. Sahoo, F. N. Biondi, On the effect of using an augmented reality laser projection operator guidance system on cognitive workload and assembly task performance, Applied Ergonomics 130 (2026) 104662. doi:10.1016/j.apergo.2025.104662."
+        }
+      ]
+    }
+  ]
+}

@@ -227,6 +227,148 @@
       "inputs": [
         "worktrees/danvas-jose/paper.md"
       ]
+    },
+    {
+      "name": "manufacturing-training-media-tradeoffs",
+      "path": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs",
+      "refs_project": "manufacturing-training-media-tradeoffs",
+      "exclude": [
+        "_output",
+        "article_files",
+        "renv/library",
+        "renv/staging",
+        "x.md",
+        "docs/sessions"
+      ],
+      "targets": [
+        {
+          "path": "references.json",
+          "profile": "csl-json-v1"
+        },
+        {
+          "path": "references.bib",
+          "profile": "portable-bibtex-v1"
+        }
+      ],
+      "consumers": [
+        {
+          "name": "html",
+          "command": [
+            "env",
+            "RENV_CONFIG_AUTOLOADER_ENABLED=false",
+            "R_LIBS=/Users/djo/Library/Caches/org.R-project.R/R/renv/library/manufacturing-training-media-tradeoffs-3210f0d1/macos/R-4.5/aarch64-apple-darwin20",
+            "python3",
+            "-c",
+            "import subprocess,json\nfrom pathlib import Path\nfrom html.parser import HTMLParser\nsubprocess.run(['quarto','render','article.qmd','--to','html'],check=True)\nclass References(HTMLParser):\n def __init__(self):super().__init__();self.entries=[];self.depth=0;self.key=None;self.text=[]\n def handle_starttag(self,tag,attrs):\n  a=dict(attrs)\n  if tag=='div':\n   if self.depth:self.depth+=1\n   elif a.get('id','').startswith('ref-'):self.key=a['id'][4:];self.depth=1;self.text=[]\n def handle_endtag(self,tag):\n  if tag=='div' and self.depth:\n   self.depth-=1\n   if not self.depth:self.entries.append({'key':self.key,'text':' '.join(''.join(self.text).split())})\n def handle_data(self,data):\n  if self.depth:self.text.append(data)\np=References();p.feed(Path('_output/article.html').read_text());assert p.entries\nPath('_output/references-html.json').write_text(json.dumps(p.entries,ensure_ascii=False))\n"
+          ],
+          "artifact": "_output/references-html.json",
+          "extract": {
+            "kind": "json",
+            "path": [],
+            "key": "key"
+          },
+          "tools": {
+            "quarto": {
+              "command": [
+                "quarto",
+                "--version"
+              ],
+              "recorded": "1.10.18"
+            },
+            "pandoc": {
+              "command": [
+                "quarto",
+                "pandoc",
+                "--version"
+              ],
+              "recorded": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose."
+            },
+            "R": {
+              "command": [
+                "Rscript",
+                "--version"
+              ],
+              "recorded": "Rscript (R) version 4.5.3 (2026-03-11)"
+            }
+          },
+          "style": "Pandoc default Chicago author-date (HTML)",
+          "fixture_provenance": {
+            "publication_commit": "62e7ca9ee22550ad7702d719f4dcd11e54259c58",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-27T07:59:58.646872+00:00",
+            "artifact_sha256": "8bedb3d9d874aef3bb222c45fdb5a535cb1100ad0fb4dcfdfd2baec0a62fbb00",
+            "fixture_sha256": "1681cf88eaed8b66acf980aad01d9880f7311d2dccdb250357c949395e4d41db",
+            "refs_commit": "3f789e4",
+            "accepted_gate": "specs/001-academic-catalog/reviews/2026-09-27-portable-identification-notes-gate.md"
+          }
+        },
+        {
+          "name": "elsevier",
+          "command": [
+            "env",
+            "RENV_CONFIG_AUTOLOADER_ENABLED=false",
+            "R_LIBS=/Users/djo/Library/Caches/org.R-project.R/R/renv/library/manufacturing-training-media-tradeoffs-3210f0d1/macos/R-4.5/aarch64-apple-darwin20",
+            "python3",
+            "-c",
+            "import subprocess\nsubprocess.run(['quarto', 'render', 'article.qmd', '--to', 'elsevier-pdf', '--profile', 'submission', '-M', 'latex-auto-install:false'],check=True)\n"
+          ],
+          "artifact": "_output/submission/article.pdf",
+          "extract": {
+            "kind": "pdf",
+            "heading": "References",
+            "entry_pattern": "^\\s*\\[(?P<entry>\\d+)\\]\\s"
+          },
+          "tools": {
+            "quarto": {
+              "command": [
+                "quarto",
+                "--version"
+              ],
+              "recorded": "1.10.18"
+            },
+            "pandoc": {
+              "command": [
+                "quarto",
+                "pandoc",
+                "--version"
+              ],
+              "recorded": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose."
+            },
+            "R": {
+              "command": [
+                "Rscript",
+                "--version"
+              ],
+              "recorded": "Rscript (R) version 4.5.3 (2026-03-11)"
+            },
+            "bibtex": {
+              "command": [
+                "bibtex",
+                "--version"
+              ],
+              "recorded": "BibTeX 0.99e (TeX Live 2026)\nkpathsea version 6.4.2\nCopyright 2026 Oren Patashnik.\nThere is NO warranty.  Redistribution of this software is\ncovered by the terms of both the BibTeX copyright and\nthe Lesser GNU General Public License.\nFor more information about these matters, see the file\nnamed COPYING and the BibTeX source.\nPrimary author of BibTeX: Oren Patashnik."
+            },
+            "pdftotext": {
+              "command": [
+                "pdftotext",
+                "-v"
+              ],
+              "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+            }
+          },
+          "style": "Elsevier natbib and elsarticle-num.bst; submission profile keeps LaTeX source",
+          "fixture_provenance": {
+            "publication_commit": "62e7ca9ee22550ad7702d719f4dcd11e54259c58",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-27T07:59:58.653331+00:00",
+            "artifact_sha256": "363a9a670780ef26cba486740e19ea28da077917101035ced2f0d8520911be4c",
+            "fixture_sha256": "ccfe1953a0bdc3d8dabb421aa18931ac2f01e341047a6b2337a375585a42bebb",
+            "refs_commit": "3f789e4",
+            "accepted_gate": "specs/001-academic-catalog/reviews/2026-09-27-portable-identification-notes-gate.md"
+          }
+        }
+      ],
+      "proposal_commit": "3a3718b"
     }
   ]
 }
