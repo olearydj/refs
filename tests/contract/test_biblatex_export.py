@@ -179,20 +179,19 @@ def test_native_patent_holder_is_a_field_not_a_note():
 
 
 @pytest.mark.slow
-def test_existing_profiles_match_pre_biblatex_serializer_on_owner_catalog():
-    import html
+def test_other_profiles_and_nonmisc_bytes_match_before_portable_misc_change():
     import types
     from contextlib import closing
 
-    from refs import math_text, sources
+    from refs import sources
 
     catalog = Path('/Volumes/Casa/refs/cat/catalog.sqlite')
     if not catalog.exists():
         pytest.skip('Owner real catalog unavailable')
     root = Path(__file__).parents[2]
-    previous = subprocess.run(['git', 'show', 'e4cff52:src/refs/bibliography.py'], cwd=root, text=True, capture_output=True)
+    previous = subprocess.run(['git', 'show', '0abfff9:src/refs/bibliography.py'], cwd=root, text=True, capture_output=True)
     if previous.returncode:
-        pytest.skip('Pinned pre-profile checkout unavailable')
+        pytest.skip('Pinned pre-misc-projection checkout unavailable')
     baseline = types.ModuleType('pre_biblatex')
     exec(compile(previous.stdout, 'pre-biblatex-bibliography.py', 'exec'), baseline.__dict__)
     with closing(sqlite3.connect(catalog.as_uri() + '?mode=ro', uri=True)) as db:
@@ -200,12 +199,20 @@ def test_existing_profiles_match_pre_biblatex_serializer_on_owner_catalog():
         values = [sources.record(db, row[0]) for row in db.execute("SELECT id FROM sources WHERE state='active' ORDER BY citation_key")]
         for value in values:
             value.update(bibliography.preserved_bib_fields(db, value))
-    assert bibliography.serialize(values)[0] == baseline.serialize(values)[0]
-    # The later literal-CSL rule intentionally removes the old HTML escaping.
-    # Keep the historical comparison for every other field and title detail.
-    expected = json.loads(baseline.serialize_csl(values)[0])
-    for entry in expected:
-        for field in ('title', 'container-title'):
-            if field in entry:
-                entry[field] = math_text.transform(entry[field], html.unescape)
-    assert json.loads(bibliography.serialize_csl(values)[0]) == expected
+    from refs.results import RefError
+
+    def projected(serializer, value, profile):
+        try:
+            return ('bytes', serializer([value], profile=profile)[0])
+        except RefError as exc:
+            # Existing unsupported dates/fields are not output bytes; their
+            # blocking assessments must remain identical too.
+            return ('refusal', exc.issue['code'], [entry for entry in exc.issue['details']['entries']
+                    if entry['class'] in ('blocking', 'structural', 'unknown')])
+
+    for value in values:
+        before = projected(baseline.serialize, value, 'portable-bibtex-v1')
+        if before[0] == 'refusal' or not before[1].startswith(b'@misc{'):
+            assert projected(bibliography.serialize, value, 'portable-bibtex-v1') == before
+        assert projected(bibliography.serialize, value, 'biblatex-v1') == projected(baseline.serialize, value, 'biblatex-v1')
+    assert bibliography.serialize_csl(values)[0] == baseline.serialize_csl(values)[0]

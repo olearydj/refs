@@ -1,0 +1,144 @@
+[
+  {
+    "schema_version": "1.0",
+    "citation_key": "auburn2025honda",
+    "metadata": {
+      "type": "webpage",
+      "author": [
+        {
+          "family": "Nelson",
+          "given": "Carla"
+        }
+      ],
+      "accessed": {
+        "date-parts": [
+          [
+            2026,
+            7,
+            27
+          ]
+        ]
+      },
+      "issued": {
+        "date-parts": [
+          [
+            2025,
+            5,
+            27
+          ]
+        ]
+      },
+      "container-title": "Auburn Engineering News",
+      "title": "Honda Returns to Auburn for Lean Manufacturing Training",
+      "URL": "https://www.eng.auburn.edu/news/2025/05/honda-returns-to-auburn-for-lean-manufacturing-training.html"
+    },
+    "title_protection": {
+      "title": {
+        "protected_terms": [
+          "Honda",
+          "Auburn"
+        ],
+        "preserve_case": false
+      },
+      "container-title": {
+        "protected_terms": [],
+        "preserve_case": false
+      }
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "citation_key": "auburn2024hartzell",
+    "metadata": {
+      "type": "webpage",
+      "author": [
+        {
+          "family": "Nelson",
+          "given": "Carla"
+        }
+      ],
+      "accessed": {
+        "date-parts": [
+          [
+            2026,
+            7,
+            27
+          ]
+        ]
+      },
+      "issued": {
+        "date-parts": [
+          [
+            2024,
+            4,
+            12
+          ]
+        ]
+      },
+      "container-title": "Auburn Engineering News",
+      "title": "Hartzell Engine Tech Elevates Manufacturing Practices Through Tiger Motors Training",
+      "URL": "https://www.eng.auburn.edu/news/2024/04/hartzell-engine-tech-elevates-manufacturing-practices-through-tiger-motors-training.html"
+    },
+    "title_protection": {
+      "title": {
+        "protected_terms": [
+          "Hartzell Engine Tech",
+          "Tiger Motors"
+        ],
+        "preserve_case": false
+      },
+      "container-title": {
+        "protected_terms": [],
+        "preserve_case": false
+      }
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "citation_key": "auburn2022ge",
+    "metadata": {
+      "type": "webpage",
+      "author": [
+        {
+          "family": "Nelson",
+          "given": "Carla"
+        }
+      ],
+      "accessed": {
+        "date-parts": [
+          [
+            2026,
+            7,
+            27
+          ]
+        ]
+      },
+      "issued": {
+        "date-parts": [
+          [
+            2022,
+            3,
+            3
+          ]
+        ]
+      },
+      "container-title": "Auburn Engineering News",
+      "title": "Tiger Motors Lab Hosts GE Aviation Training Session",
+      "URL": "https://eng.auburn.edu/news/2022/03/tiger-motors-lab-hosts-ge-aviation-training-session"
+    },
+    "title_protection": {
+      "title": {
+        "protected_terms": [
+          "Tiger Motors",
+          "GE Aviation",
+          "GE"
+        ],
+        "preserve_case": false
+      },
+      "container-title": {
+        "protected_terms": [],
+        "preserve_case": false
+      }
+    }
+  }
+]

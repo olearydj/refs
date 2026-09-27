@@ -123,8 +123,6 @@ def _project_titles(metadata, kind, entry_type, used, notes, copy, assess, *, bi
     copy('title-short', 'shorttitle')
     if biblatex:
         copy('container-title', 'booktitle' if kind in ('chapter', 'paper-conference', 'entry-encyclopedia') else 'journaltitle')
-    elif entry_type == 'misc':
-        copy('container-title', 'journal')
     elif kind in ('article-journal', 'article-magazine', 'article-newspaper'):
         copy('container-title', 'journal')
         if not metadata.get('container-title'):
@@ -340,7 +338,8 @@ def serialize(records: list[dict], *, allow_unknown: bool = False, profile: str 
     from refs.models import REGISTRY
     biblatex = profile == "biblatex-v1"
     entries, warnings, losses = [], [], []
-    misc_paths = {row['canonical_path'] for row in REGISTRY['rows'] if row['input_format'] == 'bib' and row['source_field'] in ('journal', 'publisher', 'type') and 'misc' in row['type_scope']}
+    misc_fields = ('container-title', 'publisher', 'genre', 'medium', 'version')
+    misc_paths = {'metadata.' + field for field in misc_fields}
     seen = set()
     for record in sorted(records, key=lambda row: row['citation_key']):
         key = record['citation_key']
@@ -399,6 +398,8 @@ def serialize(records: list[dict], *, allow_unknown: bool = False, profile: str 
             if limitation['field'] == 'year' and metadata.get('issued', {}).get('literal'):
                 continue
             assess('unassessed_import', 'documented_fallback', f"{limitation['field']}: {limitation['reason']}", limitation['field'])
+        # Classic styles print note on @misc, not journal/publisher/type.
+        misc_notes = [str(metadata.pop(field)) for field in misc_fields if field in metadata] if entry_type == 'misc' and not biblatex else []
         fields, notes, used = {}, [], {'type'}
         protection = value.get('title_protection', {})
 
@@ -438,7 +439,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False, profile: str 
                 put('csltype', kind)
             _project_note_fields(metadata, used, notes, assess, biblatex=biblatex)
             _project_extensions(metadata, value, record, entry_type, notes, put, assess, biblatex=biblatex, render_names=render_names)
-            _finish_notes(metadata, kind, record, notes, put)
+            _finish_notes(metadata, kind, record, misc_notes + notes, put)
             entry = '@' + entry_type + '{' + key + ',\n'
             for name, text in fields.items():
                 entry += f'  {name} = {text},\n' if name == 'month' and text in {short for short, _ in MONTHS} else f'  {name} = {{{text}}},\n'

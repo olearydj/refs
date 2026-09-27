@@ -11,16 +11,15 @@ ADMITTED = ['periodical','entry-encyclopedia','map','graphic','motion_picture','
 
 
 @pytest.mark.parametrize('kind', ADMITTED)
-def test_new_type_and_genre_survive_portable_round_trip(kind):
+def test_new_type_and_genre_survive_biblatex_with_documented_type_limits(kind):
     source = models.SourceCreate.model_validate({'schema_version':'1.0','citation_key':'example',
         'metadata':{'type':kind,'title':'Recorded Work','genre':'Supplied genre','author':[{'family':'Example'}], 'issued':{'date-parts':[[2020]]}}})
-    output, _ = bibliography.serialize([source.canonical()])
-    assert output.startswith(b'@misc{example,')
+    output, _ = bibliography.serialize([source.canonical()], profile="biblatex-v1")
     assert b'type = {Supplied genre}' in output
     assert b'cslgenre' not in output
     assert b'note =' not in output
     restored = bibtex.parse(bibtex.partition(output)[0]['raw'])['source']
-    assert restored.metadata.type == kind
+    assert restored.metadata.type == {'map': 'graphic', 'broadcast': 'song', 'post': 'webpage'}.get(kind, kind)
     assert restored.metadata.genre == 'Supplied genre'
 
 

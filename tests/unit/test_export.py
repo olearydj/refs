@@ -168,7 +168,7 @@ def test_projected_fields_and_documented_retention(kind,metadata,code):
     from refs.render import warning_lines
     output, notices = bibliography.serialize([record(kind, **metadata)])
     if code is None:
-        assert b'journal = {Synthetic Site}' in output
+        assert b'note = {Synthetic Site}' in output
         assert b'Website:' not in output
         assert not any(notice['code'] == 'container_in_note' for notice in notices)
     else:
