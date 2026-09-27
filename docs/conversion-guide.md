@@ -38,4 +38,10 @@ Prose is never edited for a conversion. Citation keys never change. Nothing unde
 
 ## Findings by project
 
-None yet. The family document's four passes are recorded in its own [pilot report](/Volumes/Casa/pub/2026-james-harvey-long/docs/refs-pilot-report.md) and in the plan's ledger.
+### 2026-jose-danvas — 2026-09-26, stopped at the export gate
+
+All eleven entries are cited in the current prose. One `jose-danvas` batch applied eleven new records, with no existing DOI bindings, conflicts or refusals. The six article PDFs were not found in the searched local stores; the five online records link to the project's shared literature-review note, with loc unset, but have no saved primary pages. Backup and linked-note hashes verified. Intake through both scratch exports took about three minutes; render and catalog verification took another three.
+
+The CSL JSON render changes four protected software names: `canvaslms`, `nbgrader`, `Org-mode` and `canvas-cli`. The catalog retains their protection, but the identity exporter emits metadata without it and reports no warning. The portable BibTeX comparison preserves the rendered facts, with five disclosed webpage-to-misc fallbacks. No workaround was applied. The publication remains unchanged, with no conversion or documentation commit; `references.bib` still feeds both consumers, and the sync script copies it byte for byte to JOSE's `paper.bib`.
+
+Candidates, not feature decisions: carrying case protection through CSL JSON prevents the four observed name changes; transferring ownership of JOSE's second export target prevents the sync script from overwriting a refs export. Multiple explicit destinations already work; the latter needs a script/workflow change and guarded adoption, not a new export engine. The [conversion report](../specs/001-academic-catalog/reviews/2026-09-26-jose-danvas-conversion.md) records every key, the comparisons, hashes and resumption boundary. The family document's earlier four passes remain in its own [pilot report](/Volumes/Casa/pub/2026-james-harvey-long/docs/refs-pilot-report.md) and the plan's ledger.
