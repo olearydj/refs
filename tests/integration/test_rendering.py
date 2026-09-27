@@ -234,7 +234,7 @@ def test_exported_podcast_genre_reaches_pandoc_csl_json(tmp_path, pytestconfig):
     podcast = SourceCreate.model_validate({'schema_version':'1.0', 'citation_key':'podcast',
         'metadata':{'type':'song', 'title':'Recorded Work', 'genre':'Audio podcast',
                     'author':[{'family':'Example'}], 'issued':{'date-parts':[[2020]]}}}).canonical()
-    output, _ = serialize([podcast])
+    output, _ = serialize([podcast], profile="biblatex-v1")
     (tmp_path/'podcast.bib').write_bytes(output)
     rendered = run([tool('pandoc', pytestconfig), 'podcast.bib', '--from=bibtex', '--to=csljson'], tmp_path)
     records = json.loads(rendered)
@@ -263,10 +263,10 @@ def test_exported_pilot_newspaper_type_date_and_place_reach_pandoc(tmp_path, pyt
 @pytest.mark.slow
 def test_pilot_misc_fields_reach_pandoc(tmp_path, pytestconfig):
     records = json.loads((ROOT / 'tests/fixtures/real-trial/minimized/jhl-misc-projection.json').read_text())
-    output, _ = serialize(records)
+    output, _ = serialize(records, profile="biblatex-v1")
     path = tmp_path / 'references.bib'
     path.write_bytes(output)
-    entries = json.loads(run([tool('pandoc', pytestconfig), str(path), '--from=bibtex', '--to=csljson'], tmp_path))
+    entries = json.loads(run([tool('pandoc', pytestconfig), str(path), '--from=biblatex', '--to=csljson'], tmp_path))
     by_key = {entry['id']: entry for entry in entries}
     assert len(by_key) == 5
     assert by_key['so363']['publisher'] == '457th Bomb Group Association'
@@ -353,3 +353,24 @@ def test_csl_iise_venue_renders_literal_ampersand_under_chicago(tmp_path, pytest
                     '--bibliography', 'references.json', '-t', 'plain', '--wrap=none'], tmp_path)
     assert 'Proceedings of the IISE Annual Conference & Expo 2025' in rendered
     assert '&amp;' not in rendered.lower()
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize('style', ['plain', 'elsarticle-num'])
+def test_classic_misc_styles_print_manufacturing_news_outlet(tmp_path, pytestconfig, style):
+    records = json.loads((ROOT / 'tests/fixtures/real-trial/minimized/manufacturing-news.json').read_text())
+    output, _ = serialize(records)
+    assert output.count(b'@misc{') == 3
+    assert b'howpublished =' not in output
+    (tmp_path / 'references.bib').write_bytes(output)
+    if style == 'elsarticle-num':
+        shutil.copyfile(ROOT / 'tests/fixtures/rendering/elsarticle-num.bst', tmp_path / 'elsarticle-num.bst')
+    (tmp_path / 'paper.aux').write_text('\\relax\n\\citation{*}\n\\bibstyle{' + style + '}\n\\bibdata{references}\n')
+    run([tool('bibtex', pytestconfig), 'paper'], tmp_path)
+    bbl = (tmp_path / 'paper.bbl').read_text()
+    # elsarticle lowercases a note's initial letter after the title.
+    outlet = 'auburn Engineering News' if style == 'elsarticle-num' else 'Auburn Engineering News'
+    entries = re.split(r'\\bibitem(?:\[[^\]]*\])?\{[^}]+\}', bbl)[1:]
+    assert len(entries) == 3
+    for entry in entries:
+        assert outlet in ' '.join(entry.split())
