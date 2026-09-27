@@ -4,11 +4,13 @@ import hashlib
 import json
 import sqlite3
 from contextlib import closing
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
 
 from refs import bibliography
+from refs.adapters import csl
 from refs.results import RefError
 
 FIXTURES = Path(__file__).resolve().parents[1] / 'fixtures'
@@ -85,6 +87,9 @@ def test_csl_fixed_project_bytes_are_stable_and_metadata_only(initialized, csl_p
 
 def test_importing_csl_export_leaves_every_source_unchanged(initialized, csl_project):
     catalog, output = csl_project
+    for key, protection in [('alpha', {'protected_terms': ['Café']}),
+                            ('zulu', {'preserve_case': True})]:
+        initialized('update', key, '--set', 'title_protection.title=' + json.dumps(protection))
     export(initialized, output)
     before = {key: initialized('show', key)['data'] for key in ['alpha', 'zulu']}
     imported = initialized('import', '--format', 'csljson', '--input', output)
@@ -96,6 +101,44 @@ def test_importing_csl_export_leaves_every_source_unchanged(initialized, csl_pro
             assert current.get(field) == before[key].get(field)
     with closing(sqlite3.connect(catalog / 'catalog.sqlite')) as connection:
         assert connection.execute('SELECT count(*) FROM sources').fetchone()[0] == 2
+
+
+@pytest.mark.parametrize('field', ['title', 'container-title'])
+@pytest.mark.parametrize('value, protection, csl_value, bib_value', [
+    ('canvas-cli canvas canvaslms café $x$',
+     {'protected_terms': ['canvas', 'canvas-cli', 'cafe\u0301', 'x']},
+     '<span class="nocase">canvas-cli</span> <span class="nocase">canvas</span> canvaslms <span class="nocase">café</span> $x$',
+     '{canvas-cli} {canvas} canvaslms {café} $x$'),
+    ('the canvas-cli & its <API>', {'preserve_case': True, 'protected_terms': ['canvas-cli']},
+     '<span class="nocase">the canvas-cli &amp; its &lt;API&gt;</span>',
+     r'{the canvas-cli \& its <API>}'),
+])
+def test_csl_protection_preserves_plain_metadata_and_bibtex(field, value, protection, csl_value, bib_value):
+    record = {'schema_version': '1.0', 'citation_key': 'protected',
+              'metadata': {'type': 'article-journal', 'title': 'Example', field: value},
+              'title_protection': {field: protection}}
+    before = deepcopy(record)
+    output, warnings = bibliography.serialize_csl([record])
+    entry = json.loads(output)[0]
+    assert entry[field] == csl_value
+    assert warnings == []
+    assert record == before
+    restored = csl.parse(output).canonical()
+    assert restored['metadata'][field] == value
+    recovered = restored['title_protection'][field]
+    if protection.get('preserve_case'):
+        assert recovered['preserve_case'] is True
+    else:
+        assert recovered == {'protected_terms': ['canvas-cli', 'canvas', 'café'], 'preserve_case': False}
+    bib, _ = bibliography.serialize([record])
+    bib_field = 'title' if field == 'title' else 'journal'
+    assert f'  {bib_field} = {{{bib_value}}},\n'.encode() in bib
+
+
+def test_jose_protection_keeps_bibtex_profile_bytes():
+    fixture = FIXTURES / 'real-trial/minimized/jose-title-protection.json'
+    output, _ = bibliography.serialize(json.loads(fixture.read_text()))
+    assert output == fixture.with_suffix('.bib').read_bytes()
 
 
 def test_csl_outside_edit_refuses_and_overwrite_preserves_original(initialized, csl_project):

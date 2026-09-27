@@ -311,3 +311,28 @@ def test_csl_identity_profile_preserves_pilot_fields_for_pandoc(initialized, tmp
     assert newspaper['publisher-place'] == 'Kingsport, Tennessee'
     imported = initialized('import', '--format', 'csljson', '--input', output)
     assert imported['data']['counts'] == dict(applied=0, unchanged=6, conflict=0, invalid=0)
+
+
+@pytest.mark.slow
+def test_csl_protection_keeps_jose_names_under_title_casing(tmp_path, pytestconfig):
+    from refs.bibliography import serialize_csl
+
+    records = json.loads((ROOT / 'tests/fixtures/real-trial/minimized/jose-title-protection.json').read_text())
+    (tmp_path / 'references.json').write_bytes(serialize_csl(records)[0])
+    (tmp_path / 'paper.md').write_text('---\nnocite: "@*"\n---\n')
+    (tmp_path / 'title-case.csl').write_text('''<style xmlns="http://purl.org/net/xbiblio/csl" version="1.0" class="in-text" default-locale="en-US">
+  <info><title>Title protection test</title><id>http://example.org/title-protection</id><updated>2026-09-26T00:00:00Z</updated></info>
+  <citation><layout><text variable="title" text-case="title"/></layout></citation>
+  <bibliography><layout><text variable="title" text-case="title"/></layout></bibliography>
+</style>''')
+    command = [tool('pandoc', pytestconfig), 'paper.md', '--citeproc', '--bibliography',
+               'references.json', '--csl', 'title-case.csl', '-t', 'plain', '--wrap=none']
+    protected = run(command, tmp_path)
+    for name in ['canvaslms', 'nbgrader', 'Org-mode', 'canvas-cli']:
+        assert name in protected
+    # Removing only the protection reproduces the conversion's four name changes.
+    (tmp_path / 'references.json').write_text(json.dumps([
+        record['metadata'] | {'id': record['citation_key']} for record in records]))
+    unprotected = run(command, tmp_path)
+    for name in ['Canvaslms', 'Nbgrader', 'Org-Mode', 'Canvas-Cli']:
+        assert name in unprotected

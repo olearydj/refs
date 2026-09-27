@@ -1,5 +1,6 @@
 """Bibliography profiles and explicit, recoverable export."""
 
+import html
 import json
 import re
 import sqlite3
@@ -37,21 +38,23 @@ def tex(value: str) -> str:
     return math_text.transform(value, lambda text: "".join(TEX_ESCAPES.get(char, char) for char in text))
 
 
-def title(value: str, protection: dict) -> str:
+def title(value: str, protection: dict, *, csl: bool = False) -> str:
+    render = (lambda value: math_text.transform(value, lambda text: html.escape(text, quote=False))) if csl else tex
+    opening, closing = ('<span class="nocase">', '</span>') if csl else ('{', '}')
     value = math_text.transform(value, lambda text: unicodedata.normalize("NFC", text))
     if protection.get("preserve_case"):
-        return "{" + tex(value) + "}"
+        return opening + render(value) + closing
     terms = sorted({unicodedata.normalize("NFC", term) for term in protection.get("protected_terms", [])}, key=lambda term: (-len(term), term))
     if not terms:
-        return tex(value)
+        return render(value)
     pattern = re.compile(r"(?<!\w)(?:" + "|".join(re.escape(term) for term in terms) + r")(?!\w)")
 
     def protected_text(text):
         parts, end = [], 0
         for match in pattern.finditer(text):
-            parts.extend([tex(text[end:match.start()]), "{" + tex(match.group()) + "}"])
+            parts.extend([render(text[end:match.start()]), opening + render(match.group()) + closing])
             end = match.end()
-        return "".join(parts) + tex(text[end:])
+        return "".join(parts) + render(text[end:])
     return math_text.transform(value, protected_text)
 
 
@@ -426,7 +429,11 @@ def serialize_csl(records: list[dict]) -> tuple[bytes, list[dict]]:
             losses.append(dict(citation_key=record['citation_key'], code='unsupported_record',
                                **{'class': 'structural'}, path='', message=str(exc)))
             continue
-        entries.append(record['metadata'] | {'id': record['citation_key']})
+        entry = record['metadata'] | {'id': record['citation_key']}
+        for field in ('title', 'container-title'):
+            if field in entry:
+                entry[field] = title(entry[field], record.get('title_protection', {}).get(field, {}), csl=True)
+        entries.append(entry)
     enforce_losses(losses, allow_unknown=False)
     return (json.dumps(entries, ensure_ascii=False, sort_keys=True, indent=2) + '\n').encode('utf-8'), []
 

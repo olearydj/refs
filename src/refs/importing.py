@@ -390,7 +390,7 @@ def apply_csl_entry(connection, block: dict, locator: str, file_digest: str, *, 
             # Exported CSL ids are catalog keys; unrelated external ids still use normal key allocation.
             canonical['citation_key'] = current['citation_key']
         if current and canonical['metadata'] == current['metadata']:
-            # The identity export excludes casing policy; keep it when the stored metadata is already identical.
+            # Keep the exact casing policy when imported metadata is already identical.
             canonical['title_protection'] = current['title_protection']
             warnings = []
         else:
