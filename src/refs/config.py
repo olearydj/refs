@@ -210,7 +210,7 @@ def policies(user: dict, config: Path, explicit: str | None, disabled: bool) -> 
             raise RefError('invalid_config','Cannot read project configuration; correct the selected file',2,path=str(selected),details={'cause':str(exc)}) from exc
     for values,path,project in layers:
         try:
-            if project and set(values)-{'project','export'}:
+            if project and set(values)-{'project','export','titles'}:
                 raise ValueError('Unsupported configuration section')
             if 'catalog' in values and set(values['catalog'])-{'path'}:
                 raise ValueError('Unsupported catalog setting')
@@ -269,7 +269,7 @@ def policies(user: dict, config: Path, explicit: str | None, disabled: bool) -> 
                             raise ValueError('Templates allow documented tokens and literal separators only')
                     if key=='profile' and value not in PROFILES:
                         raise ValueError(f'Unsupported profile: {value}; choose ' + ', '.join(PROFILES))
-                    if key in ('policy','transliteration_policy') and value!=defaults[section][key]:
+                    if key in ('policy','transliteration_policy') and value not in ({defaults[section][key], 'preserve'} if key == 'policy' else {defaults[section][key]}):
                         raise ValueError(f'Unsupported {key}: {value}')
                     if key=='missing_year' and isinstance(value,str) and re.search(r'[\s,{}()=\\#%"]',value):
                         raise ValueError('missing_year must be a valid citation-key token')

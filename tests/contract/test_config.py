@@ -138,3 +138,29 @@ def test_changed_policy_does_not_rewrite_existing_correction(initialized,tmp_pat
     original=config.read_bytes()
     initialized('init','--library-root',tmp_path/'lib')
     assert config.read_bytes()==original
+
+
+@pytest.mark.parametrize(('policy', 'protection', 'expected'), [
+    ('preserve', None, 'a sentence about training'),
+    (None, None, 'A Sentence About Training'),
+    ('english-title-case-v1', None, 'A Sentence About Training'),
+    ('preserve', {'preserve_case': False, 'protected_terms': []}, 'A Sentence About Training'),
+    ('english-title-case-v1', {'preserve_case': True, 'protected_terms': []}, 'a sentence about training'),
+])
+def test_project_title_policy_and_record_override(initialized, tmp_path, cli_env, policy, protection, expected):
+    import sys
+    project = tmp_path / '.refs.toml'
+    project.write_text('[titles]\npolicy="' + policy + '"\n' if policy else '')
+    record = {'schema_version': '1.0', 'metadata': {'title': 'a sentence about training'}}
+    if protection is not None:
+        record['title_protection'] = {'title': protection}
+    source = tmp_path / 'source.json'
+    source.write_text(json.dumps(record))
+    result = subprocess.run([sys.executable, '-m', 'refs', '--json', '--project-file', str(project),
+                             'add', '--format', 'refs', '--input', str(source)], env=cli_env, text=True, capture_output=True)
+    assert result.returncode == 0, result.stdout + result.stderr
+    added = json.loads(result.stdout)['data']
+    stored = initialized('show', added['citation_key'])['data']
+    assert stored['metadata']['title'] == expected
+    if policy == 'preserve' and protection is None:
+        assert stored['title_protection'] == {}
