@@ -473,6 +473,12 @@ def serialize_csl(records: list[dict]) -> tuple[bytes, list[dict]]:
                 entry[field] = [{'literal': 'others'} if name == {'family': 'others'} else name for name in value]
         if 'event-title' in entry:
             entry.setdefault('event', entry['event-title'])
+        arxiv = record.get('extensions', {}).get('identifiers', {}).get('arxiv')
+        if entry['type'] == 'article' and entry.get('archive', '').casefold() == 'arxiv' and arxiv:
+            entry.setdefault('publisher', 'arXiv')
+            entry.setdefault('number', arxiv)
+            if entry['publisher'].casefold() == entry['archive'].casefold():
+                entry.pop('archive')
         for field in ('title', 'container-title'):
             if field in entry:
                 entry[field] = title(entry[field], record.get('title_protection', {}).get(field, {}), csl=True)

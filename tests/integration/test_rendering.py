@@ -419,3 +419,21 @@ def test_legacy_ieee_style_prints_event_title(tmp_path, pytestconfig):
     (tmp_path/'paper.md').write_text('---\nnocite: "@*"\n---\n')
     text = run([tool('pandoc', pytestconfig), 'paper.md', '--citeproc', '--bibliography', 'refs.json', '--csl', str(EVIDENCE/'csl/ieee.csl'), '-t', 'plain'], tmp_path)
     assert 'Annual Research Meeting' in text
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize('style,expected', [
+    ('ieee', '[1] OpenAI, “GPT-4 Technical Report,” Mar. 27, 2023, arXiv: 2303.08774. doi: 10.48550/arxiv.2303.08774.'),
+    ('chicago', 'OpenAI. 2023. “GPT-4 Technical Report.” 2303.08774. Preprint, arXiv, March 27. https://doi.org/10.48550/arxiv.2303.08774.'),
+])
+def test_csl_arxiv_repository_and_identifier_render_once(style, expected, tmp_path, pytestconfig):
+    record = {'schema_version': '1.0', 'citation_key': 'openai2023gpt4',
+              'metadata': {'type': 'article', 'author': [{'family': 'OpenAI'}],
+                           'title': 'GPT-4 Technical Report', 'archive': 'arXiv',
+                           'issued': {'date-parts': [[2023, 3, 27]]}, 'DOI': '10.48550/arxiv.2303.08774'},
+              'extensions': {'identifiers': {'arxiv': '2303.08774'}}}
+    (tmp_path/'refs.json').write_bytes(serialize_csl([record])[0])
+    (tmp_path/'paper.md').write_text('---\nnocite: "@*"\n---\n')
+    args = ['--csl', str(EVIDENCE/'csl/ieee.csl')] if style == 'ieee' else []
+    text = run([tool('quarto', pytestconfig), 'pandoc', 'paper.md', '--citeproc', '--bibliography', 'refs.json', '-t', 'plain', '--wrap=none', *args], tmp_path)
+    assert text.strip() == expected

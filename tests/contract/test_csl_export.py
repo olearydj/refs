@@ -398,3 +398,45 @@ def test_csl_legacy_event_alias_is_export_only(event):
     else:
         assert 'event' not in entry
     assert record == before
+
+
+@pytest.mark.parametrize('archive', ['arXiv', 'ARXIV'])
+def test_csl_arxiv_repository_projection_preserves_stored_record(archive):
+    record = {'schema_version': '1.0', 'citation_key': 'preprint',
+              'metadata': {'type': 'article', 'title': 'A Preprint', 'archive': archive},
+              'extensions': {'identifiers': {'arxiv': '2303.08774v6'}}}
+    before = deepcopy(record)
+    raw, _ = bibliography.serialize_csl([record])
+    assert json.loads(raw) == [{'id': 'preprint', 'type': 'article', 'title': 'A Preprint',
+                              'publisher': 'arXiv', 'number': '2303.08774v6'}]
+    assert record == before
+
+
+@pytest.mark.parametrize('metadata,identifiers', [
+    ({'type': 'manuscript', 'archive': 'arXiv'}, {'arxiv': '2303.08774'}),
+    ({'type': 'article', 'archive': 'Other Repository'}, {'arxiv': '2303.08774'}),
+    ({'type': 'article'}, {'arxiv': '2303.08774'}),
+    ({'type': 'article', 'archive': 'arXiv'}, {}),
+])
+def test_csl_arxiv_projection_requires_type_repository_and_identifier(metadata, identifiers):
+    metadata = metadata | {'title': 'A Preprint'}
+    record = {'schema_version': '1.0', 'citation_key': 'unchanged', 'metadata': metadata,
+              'extensions': {'identifiers': identifiers}}
+    raw, _ = bibliography.serialize_csl([record])
+    assert json.loads(raw) == [metadata | {'id': 'unchanged'}]
+
+
+@pytest.mark.parametrize('stored,expected', [
+    ({'publisher': 'Other Publisher'}, {'publisher': 'Other Publisher', 'number': '2303.08774', 'archive': 'arXiv'}),
+    ({'number': 'Different Number'}, {'publisher': 'arXiv', 'number': 'Different Number'}),
+    ({'publisher': 'Other Publisher', 'number': 'Different Number'}, {'publisher': 'Other Publisher', 'number': 'Different Number', 'archive': 'arXiv'}),
+    ({'publisher': 'ARXIV'}, {'publisher': 'ARXIV', 'number': '2303.08774'}),
+])
+def test_csl_arxiv_projection_preserves_existing_publisher_and_number(stored, expected):
+    metadata = {'type': 'article', 'title': 'A Preprint', 'archive': 'arXiv'} | stored
+    record = {'schema_version': '1.0', 'citation_key': 'preprint', 'metadata': metadata,
+              'extensions': {'identifiers': {'arxiv': '2303.08774'}}}
+    before = deepcopy(record)
+    raw, _ = bibliography.serialize_csl([record])
+    assert json.loads(raw) == [{'id': 'preprint', 'type': 'article', 'title': 'A Preprint'} | expected]
+    assert record == before
