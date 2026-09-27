@@ -30,7 +30,7 @@ def test_periodical_type_date_page_and_place_round_trip(kind, subtype):
     restored = bibtex.parse(bibtex.partition(output)[0]['raw'])
     metadata = restored['source'].canonical()['metadata']
     assert metadata['type'] == kind
-    assert metadata['issued'] == {'date-parts': [[1942, 10, 30]]}
+    assert metadata['issued'] == {'date-parts': [[1942, 10]]}
     assert metadata['page'] == '1'
     assert metadata['publisher-place'] == 'Kingsport, Tennessee'
     assert restored['source'].native_type.namespace == 'bibtex'
@@ -50,7 +50,8 @@ def test_minimized_pilot_newspaper_before_and_after():
     after = bibtex.parse(bibtex.partition(output)[0]['raw'])['source']
     assert after.citation_key == before.citation_key
     assert after.metadata.title == before.metadata.title
-    assert after.metadata.issued == before.metadata.issued
+    assert after.metadata.issued.date_parts == [[1942, 10]]
+    assert before.metadata.issued.date_parts == [[1942, 10, 30]]
     assert after.metadata.page == before.metadata.page
     assert after.metadata.type == 'article-newspaper'
     assert after.metadata.publisher_place == 'Kingsport, Tennessee'

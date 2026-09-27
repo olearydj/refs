@@ -75,7 +75,8 @@ def test_dates_corporate_names_and_protection():
     data, _ = bibliography.serialize([value])
     assert b'author = {{Research and Development}}' in data
     assert b'{Synthetic} Work' in data
-    assert b'2024-02-29' in data
+    assert b'year = {2024}' in data
+    assert b'2024-02-29' not in data
     assert b'month = feb' in data
 
 
@@ -158,7 +159,6 @@ def test_preserved_import_field_is_documented_omission(field):
 
 
 @pytest.mark.parametrize(('kind','metadata','code'),[
-    ('book', {'issued': {'date-parts': [[2024,3,19]]}}, 'issued_day_in_note'),
     ('book', {'number-of-pages': 168}, 'noncitation_omission'),
     ('book', {'publisher': 'Research and Development'}, 'literal_publisher'),
     ('paper-conference', {'event-title': 'Synthetic Meeting'}, 'field_in_note'),

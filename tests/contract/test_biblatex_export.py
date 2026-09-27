@@ -179,7 +179,7 @@ def test_native_patent_holder_is_a_field_not_a_note():
 
 
 @pytest.mark.slow
-def test_other_profiles_bytes_match_before_portable_note_protection():
+def test_other_profiles_bytes_match_before_identification_only_notes():
     import types
     from contextlib import closing
 
@@ -189,9 +189,9 @@ def test_other_profiles_bytes_match_before_portable_note_protection():
     if not catalog.exists():
         pytest.skip('Owner real catalog unavailable')
     root = Path(__file__).parents[2]
-    previous = subprocess.run(['git', 'show', 'ff5939a:src/refs/bibliography.py'], cwd=root, text=True, capture_output=True)
+    previous = subprocess.run(['git', 'show', 'b9ad60a:src/refs/bibliography.py'], cwd=root, text=True, capture_output=True)
     if previous.returncode:
-        pytest.skip('Pinned pre-note-protection checkout unavailable')
+        pytest.skip('Pinned pre-identification-notes checkout unavailable')
     baseline = types.ModuleType('pre_biblatex')
     exec(compile(previous.stdout, 'pre-biblatex-bibliography.py', 'exec'), baseline.__dict__)
     with closing(sqlite3.connect(catalog.as_uri() + '?mode=ro', uri=True)) as db:

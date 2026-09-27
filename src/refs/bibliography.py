@@ -165,11 +165,10 @@ def _project_dates(metadata, used, notes, put, assess, *, biblatex=False):
             put('month', SEASONS[issued['season']-1])
         elif len(parts) > 1:
             put('month', MONTHS[parts[1]-1][0], literal=True)
-        if len(parts) > 2 or issued.get('season') and len(parts) > 1:
-            iso = '-'.join([str(parts[0]), *[f'{number:02d}' for number in parts[1:]]])
-            put('date', iso)
-            notes.append('Issued: ' + iso)
-            assess('issued_day_in_note', 'info', 'Supplementary date and note retain the day for portable consumers', 'metadata.issued')
+        if issued.get('season') and len(parts) > 1:
+            put('date', f'{parts[0]}-{parts[1]:02d}')
+        if len(parts) > 2:
+            assess('issued_precision_projected', 'documented_fallback', 'Portable year/month omit finer issued precision; the full date remains in the catalog and biblatex-v1', 'metadata.issued')
 
 
 
@@ -401,6 +400,8 @@ def serialize(records: list[dict], *, allow_unknown: bool = False, profile: str 
             if limitation['field'] == 'year' and metadata.get('issued', {}).get('literal'):
                 continue
             assess('unassessed_import', 'documented_fallback', f"{limitation['field']}: {limitation['reason']}", limitation['field'])
+        if not biblatex and metadata.get('event-title') == metadata.get('container-title'):
+            metadata.pop('event-title', None)
         # Classic styles print note on @misc, not journal/publisher/type.
         misc_notes = [str(metadata.pop(field)) for field in misc_fields if field in metadata] if entry_type == 'misc' and not biblatex else []
         fields, notes, used = {}, [], {'type'}
