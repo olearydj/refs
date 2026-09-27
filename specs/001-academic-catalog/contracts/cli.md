@@ -36,7 +36,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | summary | Read-only picture of the catalog: id, schema and revision; sources active and removed, with and without files; managed, linked, unfiled, missing and unrecorded files; counts by type, kind and unassigned kind; loc folders, collections and projects with their cited counts and export targets marked current, pending, outside_edit or missing; import batches and open conflicts. |
 | config show | Inspect effective values, origins and validation diagnostics; replaces config validate. |
 | schema NAME | Exactly source-create, source-patch, source-record, result; packaged, offline. |
-| add | --format refs\|csljson\|bib --input PATH accepts one reference; --kind NAME sets its defining fields. With --file PATH, slice 3 uses the intake flags below. --keep-name preserves the basename. --dry-run shows normalization, key components and the destination. |
+| add | --format refs\|csljson\|bib --input PATH accepts one reference; --kind NAME sets its defining fields. With --file PATH, slice 3 uses the intake flags below; --label TEXT labels the linked or managed resource (null when omitted) and requires --file. --keep-name preserves the basename. --dry-run shows normalization, key components and the destination. |
 | show REF | Canonical record, revision, origins/corrections, context, limitations and resource list/availability. |
 | update REF | --patch PATH or repeated --set PATH=JSON; --kind NAME sets its defining fields; --if-revision N optional. |
 | search QUERY | Exact key/normalized identifier match first, then literal lexical query; --project PROJECT, --kind NAME (or unassigned), --limit N, --offset N; matched fields and source identities. |

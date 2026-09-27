@@ -107,11 +107,14 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         loc: Annotated[str | None, typer.Option()] = None,
         kind: Annotated[str | None, typer.Option()] = None,
         file: Annotated[Path | None, typer.Option()] = None,
+        label: Annotated[str | None, typer.Option()] = None,
         link: Annotated[bool, typer.Option()] = False,
         copy: Annotated[bool, typer.Option()] = False,
         move: Annotated[bool, typer.Option()] = False,
         keep_name: Annotated[bool, typer.Option()] = False,
         dry_run: Annotated[bool, typer.Option()] = False):
+    if label is not None and file is None:
+        raise RefError('invalid_invocation', '--label requires --file', 2)
     mode = resources.intake_mode(path=file, link=link, copy=copy, move=move, keep_name=keep_name, default='move')
     if format not in ("refs", "csljson", "bib"):
         raise RefError("unsupported_format", "Choose --format refs, csljson or bib", 2)
@@ -127,7 +130,7 @@ def add(ctx: typer.Context, format: Annotated[str, typer.Option()],
         data = sources.add(settings(ctx).catalog_path(), raw, locator, format=format, dry_run=dry_run,policy=settings(ctx).values,loc=loc,kind=kind)
     file_action = None
     if file is not None:
-        data, file_action = resources.capture_file(settings(ctx),data,file,mode=mode,keep_name=keep_name,dry_run=dry_run)
+        data, file_action = resources.capture_file(settings(ctx),data,file,mode=mode,keep_name=keep_name,label=label,dry_run=dry_run)
     report(ctx, 'add', data | ({'file_action': file_action} if file_action else {}))
 
 
