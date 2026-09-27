@@ -1,0 +1,13 @@
+{
+  "Bainbridge, Lisanne. 1983.": "Bainbridge, Lisanne. 1983. “Ironies of Automation.” Automatica 19 (6): 775–79. https://doi.org/10.1016/0005- 1098(83)90046-8.",
+  "Bosk, Daniel. 2026.": "Bosk, Daniel. 2026. canvaslms: A CLI to Canvas LMS. Source code repository. V. 6.21. GitHub, released September 17. https://github.com/dbosk/canvaslms.",
+  "Gervedink Nijhuis, G. J., and B. A. Collis. 2003.": "Gervedink Nijhuis, G. J., and B. A. Collis. 2003. “Using a Web-Based Course-Management System: An Evaluation of Management Tasks and Time Implications for the Instructor.” Evaluation and Program Planning 26 (2): 193–201. https://doi.org/10.1016/s0149-7189(03)00005-3.",
+  "Instructure, Inc. 2026.": "Instructure, Inc. 2026. “Canvas LMS REST API and Extensions Documentation.” Canvas LMS REST API Documentation. https://canvas.instructure.com/doc/api/.",
+  "jjuanrivvera. 2026.": "jjuanrivvera. 2026. Canvas CLI. Source code repository. V. 1.15.0. GitHub, released September 25. https: //github.com/jjuanrivvera/canvas-cli.",
+  "Lee, Ji Eun, Mimi M. Recker, Hongkyu Choi, et al. 2015.": "Lee, Ji Eun, Mimi M. Recker, Hongkyu Choi, et al. 2015. “Applying Data Mining Methods to Understand User Interactions Within Learning Management Systems: Approaches and Lessons Learned.” Journal of Educational Technology Development and Exchange 8 (2). https://doi.org/10.18785/jetde.0802.06.",
+  "Project Jupyter, Douglas Blank, David Bourgin, et al. 2019.": "Project Jupyter, Douglas Blank, David Bourgin, et al. 2019. “nbgrader: A Tool for Creating and Grading Assignments in the Jupyter Notebook.” Journal of Open Source Education 2 (11): 32. https://doi.org/10.211 05/jose.00032.",
+  "Ro, Joon, and Jae-Eun Namkoong. 2019.": "Ro, Joon, and Jae-Eun Namkoong. 2019. “Org-Coursepack: A Modular and Reusable Teaching Materials Template in Org-mode.” Journal of Open Source Education 2 (8): 34. https://doi.org/10.21105/jose.00034.",
+  "Sandve, Geir Kjetil, Anton Nekrutenko, James Taylor, and Eivind Hovig. 2013.": "Sandve, Geir Kjetil, Anton Nekrutenko, James Taylor, and Eivind Hovig. 2013. “Ten Simple Rules for Reproducible Computational Research.” PLoS Computational Biology 9 (10): e1003285. https://doi.org/10.1371/journal.pc bi.1003285.",
+  "University of Central Florida Center for Distributed Learning. 2026.": "University of Central Florida Center for Distributed Learning. 2026. CanvasAPI: Python API Wrapper for Instructure’s Canvas LMS. Source code repository. V. 3.6.0. GitHub, released April 16. https://github.com/u cfopen/canvasapi.",
+  "Weng, David. 2026.": "Weng, David. 2026. canvas-cli: Agent-Friendly CLI for Canvas LMS. Source code repository. V. 0.4.1. GitHub, released September 21. https://github.com/thedavidweng/canvas-cli."
+}

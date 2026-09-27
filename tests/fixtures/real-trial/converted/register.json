@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "projects": [
+    {
+      "name": "jhl-report",
+      "path": "/Volumes/Casa/pub/2026-james-harvey-long",
+      "refs_project": "jhl-report",
+      "targets": [
+        {
+          "path": "references.json",
+          "profile": "csl-json-v1"
+        }
+      ],
+      "exclude": [
+        "output",
+        "site/dist"
+      ],
+      "consumers": [
+        {
+          "name": "quarto",
+          "command": [
+            "quarto",
+            "render",
+            "report.qmd",
+            "--to",
+            "pdf",
+            "-M",
+            "latex-auto-install:false"
+          ],
+          "artifact": "output/report.pdf",
+          "extract": {
+            "kind": "pdf",
+            "heading": "Sources",
+            "entry_pattern": "^\\[(?P<entry>\\d+)\\]\\s"
+          },
+          "tools": {
+            "quarto": {
+              "command": [
+                "quarto",
+                "--version"
+              ],
+              "recorded": "1.10.18"
+            },
+            "pandoc": {
+              "command": [
+                "quarto",
+                "pandoc",
+                "--version"
+              ],
+              "recorded": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose."
+            },
+            "pdftotext": {
+              "command": [
+                "pdftotext",
+                "-v"
+              ],
+              "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+            }
+          },
+          "fixture_provenance": {
+            "publication_commit": "25257f85cfcd5f077e01845dd02aa94ecfb2f14a",
+            "source": "accepted publication artifact; owner-approved seed",
+            "artifact_sha256": "3946448269bf9bdf91269c9c156865e39a682664a9df6698fb02d58594134916",
+            "fixture_sha256": "a89e0fbf2cad835021771eee94a8a6e3bfbaac827fd6fac6bf58e532b2ea8f7d"
+          },
+          "style": "Project ieee.csl, including document and webpage genre"
+        },
+        {
+          "name": "site",
+          "command": [
+            "claude-adhoc-python",
+            "site/scripts/build_data.py"
+          ],
+          "artifact": "site/data/site-data.json",
+          "extract": {
+            "kind": "json",
+            "path": [
+              "sources"
+            ],
+            "key": "key"
+          },
+          "tools": {
+            "python": {
+              "command": [
+                "claude-adhoc-python",
+                "--version"
+              ],
+              "recorded": "⚠️  This Python instance is for ad-hoc usage only.\n   If working in a project with its own venv, use that instead.\n\nPython 3.14.2"
+            }
+          },
+          "fixture_provenance": {
+            "publication_commit": "25257f85cfcd5f077e01845dd02aa94ecfb2f14a",
+            "source": "accepted publication artifact; owner-approved seed",
+            "artifact_sha256": "fc6e38ccb2b618543d771f77fddb527f19f81427aa2daa1fb482b1d2050158b7",
+            "fixture_sha256": "4be52f6e6fab1a6cbb1d16ec435b6e24f8d5dee370f954bfd17fb08e2a3a4195"
+          },
+          "style": "site/scripts/build_data.py source_entry formatter"
+        }
+      ]
+    },
+    {
+      "name": "jose-danvas",
+      "path": "/Volumes/Casa/pub/2026-jose-danvas",
+      "refs_project": "jose-danvas",
+      "targets": [
+        {
+          "path": "references.json",
+          "profile": "csl-json-v1"
+        }
+      ],
+      "exclude": [
+        "output"
+      ],
+      "consumers": [
+        {
+          "name": "quarto",
+          "command": [
+            "quarto",
+            "render",
+            "paper.qmd",
+            "-M",
+            "latex-auto-install:false"
+          ],
+          "artifact": "output/pdf/paper.pdf",
+          "extract": {
+            "kind": "pdf",
+            "heading": "References",
+            "entry_pattern": "^(?P<entry>\\S.*?\\. \\d{4}[a-z]?\\.)\\s"
+          },
+          "tools": {
+            "quarto": {
+              "command": [
+                "quarto",
+                "--version"
+              ],
+              "recorded": "1.10.18"
+            },
+            "pandoc": {
+              "command": [
+                "quarto",
+                "pandoc",
+                "--version"
+              ],
+              "recorded": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose."
+            },
+            "pdftotext": {
+              "command": [
+                "pdftotext",
+                "-v"
+              ],
+              "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+            }
+          },
+          "fixture_provenance": {
+            "publication_commit": "257380218a02ce946379a2f21baad246b2df02d8",
+            "source": "accepted publication artifact; owner-approved seed",
+            "artifact_sha256": "5c715b09076a0bfe26925456b4eeda11a74a7c29bd15a6d9cbdb6ad554a31afc",
+            "fixture_sha256": "356b4527e865aedb3d1cc3a8b5042d625008647f44b13816880d40c2e60025d9"
+          },
+          "style": "Bundled Chicago Manual of Style 18th edition (author-date)"
+        }
+      ]
+    }
+  ]
+}
