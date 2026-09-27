@@ -255,7 +255,7 @@ def test_exported_pilot_newspaper_type_date_and_place_reach_pandoc(tmp_path, pyt
     assert len(records) == 1
     assert records[0]['id'] == 'kt-1942-10-30'
     assert records[0]['type'] == 'article-newspaper'
-    assert records[0]['issued'] == {'date-parts': [[1942, 10, 30]]}
+    assert records[0]['issued'] == {'date-parts': [[1942, 10]]}
     assert records[0]['page'] == '1'
     assert records[0]['publisher-place'] == 'Kingsport, Tennessee'
 
@@ -362,6 +362,7 @@ def test_classic_misc_styles_print_manufacturing_news_outlet(tmp_path, pytestcon
     output, _ = serialize(records)
     assert output.count(b'@misc{') == 3
     assert b'howpublished =' not in output
+    assert b'Issued:' not in output and b'  date =' not in output
     (tmp_path / 'references.bib').write_bytes(output)
     if style == 'elsarticle-num':
         shutil.copyfile(ROOT / 'tests/fixtures/rendering/elsarticle-num.bst', tmp_path / 'elsarticle-num.bst')
@@ -374,3 +375,21 @@ def test_classic_misc_styles_print_manufacturing_news_outlet(tmp_path, pytestcon
     assert len(entries) == 3
     for entry in entries:
         assert outlet in ' '.join(entry.split())
+        assert 'Issued' not in entry
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize('event', ['Proceedings of the Test Conference', 'Companion Workshop'])
+def test_elsevier_prints_only_distinct_conference_event(tmp_path, pytestconfig, event):
+    record = {'schema_version': '1.0', 'citation_key': 'conference',
+              'metadata': {'type': 'paper-conference', 'title': 'Example',
+                           'author': [{'family': 'Smith'}], 'issued': {'date-parts': [[2025]]},
+                           'container-title': 'Proceedings of the Test Conference', 'event-title': event}}
+    (tmp_path / 'references.bib').write_bytes(serialize([record])[0])
+    shutil.copyfile(ROOT / 'tests/fixtures/rendering/elsarticle-num.bst', tmp_path / 'elsarticle-num.bst')
+    (tmp_path / 'paper.aux').write_text('\\relax\n\\citation{*}\n\\bibstyle{elsarticle-num}\n\\bibdata{references}\n')
+    run([tool('bibtex', pytestconfig), 'paper'], tmp_path)
+    bbl = ' '.join((tmp_path / 'paper.bbl').read_text().replace('{', '').replace('}', '').split())
+    assert bbl.count('Proceedings of the Test Conference') == 1
+    assert ('Event: Companion Workshop' in bbl) == (event == 'Companion Workshop')
+    assert ('Event:' in bbl) == (event == 'Companion Workshop')

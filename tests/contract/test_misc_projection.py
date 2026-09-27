@@ -112,7 +112,7 @@ def test_portable_misc_plain_facts_lead_note_without_synthetic_howpublished(kind
                            'issued': {'date-parts': [[2025, 5, 27]]}}}
     output, _ = bibliography.serialize([source])
     assert output.startswith(b'@misc{')
-    assert rb'note = {{H}ost \& Outlet; Research and Development; Captured item; scanned copy; 1.2; Existing note; Issued: 2025-05-27}' in output
+    assert rb'note = {{H}ost \& Outlet; Research and Development; Captured item; scanned copy; 1.2; Existing note}' in output
     for field in [b'journal', b'publisher', b'type', b'medium', b'version', b'howpublished']:
         assert b'  ' + field + b' =' not in output
     assert source['metadata']['container-title'] == 'Host & Outlet'
@@ -134,3 +134,37 @@ def test_portable_note_capital_protection_round_trips_as_plain_text(kind, note, 
     restored = bibtex.parse(bibtex.partition(output)[0]['raw'])['source']
     assert restored.metadata.note == note
     assert source['metadata']['note'] == note
+
+
+@pytest.mark.parametrize('entry_type', ['article', 'book'])
+@pytest.mark.parametrize('date', ['2025', '2025-05', '2025-05-27'])
+def test_portable_round_trip_loses_only_documented_day_precision(entry_type, date):
+    raw = ('@' + entry_type + '{dated,author={Smith, Alex},title={Example},date={' + date + '},note={Archive copy}}').encode()
+    before = bibtex.parse(raw)['source'].canonical()
+    output, notices = bibliography.serialize([before])
+    after = bibtex.parse(bibtex.partition(output)[0]['raw'])['source'].canonical()
+    expected = json.loads(json.dumps(before))
+    expected['metadata']['issued']['date-parts'][0] = [int(n) for n in date.split('-')][:2]
+    assert after == expected
+    assert before['metadata']['issued']['date-parts'][0] == [int(n) for n in date.split('-')]
+    assert b'  date =' not in output and b'Issued:' not in output
+    assert not any(n['code'] == 'issued_day_in_note' for n in notices)
+    limits = [n for n in notices if n['code'] == 'issued_precision_projected']
+    assert bool(limits) == (date == '2025-05-27')
+    if limits:
+        assert limits[0]['details']['class'] == 'documented_fallback'
+        assert limits[0]['details']['mapping_id'] == 'metadata.issued'
+
+
+@pytest.mark.parametrize('event', ['Proceedings of the Test Conference', 'Companion Workshop'])
+def test_portable_event_note_only_when_distinct_from_container(event):
+    source = {'schema_version': '1.0', 'citation_key': 'event',
+              'metadata': {'type': 'paper-conference', 'title': 'Example',
+                           'container-title': 'Proceedings of the Test Conference', 'event-title': event}}
+    raw, notices = bibliography.serialize([source])
+    restored = bibtex.parse(bibtex.partition(raw)[0]['raw'])['source']
+    if event == 'Companion Workshop':
+        assert 'Event: Companion Workshop' in restored.metadata.note
+    else:
+        assert 'Event:' not in (restored.metadata.note or '')
+    assert any(n['code'] == 'field_in_note' and n['details']['mapping_id'] == 'metadata.event-title' for n in notices) == (event == 'Companion Workshop')
