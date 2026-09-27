@@ -6,7 +6,7 @@
 
 ## Authority and read order
 
-Explicit owner decisions take precedence. Read [vision](vision.md), [accepted decisions](behavior-decisions.md), the [slice 1 spec](../specs/001-academic-catalog/spec.md), then [plan](../specs/001-academic-catalog/plan.md). The plan links five contracts and the data model. [Right-sizing](right-sizing.md) supplies the budget and preservation floor; [bibliographic model](bibliographic-model.md) explains the selected authority.
+Explicit owner decisions take precedence. Read [vision](vision.md), [accepted decisions](behavior-decisions.md), the [slice 1 spec](../specs/001-academic-catalog/spec.md), then [plan](../specs/001-academic-catalog/plan.md). The plan links five contracts and the data model. [Right-sizing](right-sizing.md) supplies the budget and preservation floor; [bibliographic model](bibliographic-model.md) explains the selected authority. The [conversion guide](conversion-guide.md) is the working order for moving a project's bibliography into the catalog and taking its reference list back as an export, with findings recorded per project.
 
 [Audit §§11–14](../specs/001-academic-catalog/reviews/2026-09-20-independent-design-audit.md#11-addendum-2026-09-21-user-decisions-on-the-open-items) separate literal replies from interpretations. The trim keeps stable identities/keys, originals, revisions, internal boundaries and verified copy/restore, while deferring journals, stored waivers/projections, bulk reconciliation policies and plugin machinery. Projects are cited-only. New copy intake renames by convention unless --keep-name; linked files and later reorganize preserve names.
 
