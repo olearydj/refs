@@ -1,0 +1,2546 @@
+{
+  "backup_manifest": {
+    "format": "refs-backup",
+    "schema_version": 1,
+    "configuration_path": "/Users/djo/.config/refs/config.toml",
+    "catalog_schema_version": 6,
+    "catalog_id": "c03298ee-caee-4e20-aa0c-ddf121aafc0a",
+    "catalog_revision": 4520,
+    "external_contents_included": false,
+    "members": {
+      "catalog.sqlite": {
+        "size": 31047680,
+        "sha256": "bac5943eacbda49072cfb6a00bdbacbccf41e05e49b9d17504d7848b32a337b0"
+      },
+      "config.toml": {
+        "size": 423,
+        "sha256": "61b3093d2ecf1caa6a5dfb3360fac24ac486a5590cdd443e37c54e249a16d0d2"
+      },
+      "resources.jsonl": {
+        "size": 389033,
+        "sha256": "0dc3b6272aa7da5ebbfab58a9746528517c51be084fd0052c7c48c1ab66fcb46"
+      }
+    }
+  },
+  "audit": {
+    "resources": [
+      {
+        "id": "adf1893b-d126-4ecf-9952-dd0d56cfa6eb",
+        "source_id": "6d0a8620-9853-4c5a-bc15-a60187aa3e0e",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/TheClaude3ModelFamilyOpusSonnetHaiku-2024.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/TheClaude3ModelFamilyOpusSonnetHaiku-2024.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "a96214e5d495dec76f6120891233aa97a73386b35b065a6709840b07588ed118",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/anthropic2024claude3.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "anthropic2024claude3",
+        "verified_sha256": "a96214e5d495dec76f6120891233aa97a73386b35b065a6709840b07588ed118",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/TheClaude3ModelFamilyOpusSonnetHaiku-2024.pdf",
+        "size": 28241567
+      },
+      {
+        "id": "064704d5-4b41-4f3e-8156-c97e0b3c8dee",
+        "source_id": "3c3593a9-fc37-4f1e-9ade-92bcd75c4660",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/LanguageModelsAreFewShotLearners-2020.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/LanguageModelsAreFewShotLearners-2020.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "5fb1e3b8062688f5023ee63a9641d39c8c86922f2bca98535dcba084af7f719e",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/brown2020.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "brown2020",
+        "verified_sha256": "5fb1e3b8062688f5023ee63a9641d39c8c86922f2bca98535dcba084af7f719e",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/LanguageModelsAreFewShotLearners-2020.pdf",
+        "size": 1283694
+      },
+      {
+        "id": "2b629735-0436-45a2-be3e-3ace2cad891e",
+        "source_id": "0fa01938-6fff-45af-abf2-309b6cad7e3d",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/FedRAMPConsolidatedRulesFor2026-v2026.09.22.01-2026-capture.json\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/FedRAMPConsolidatedRulesFor2026-v2026.09.22.01-2026-capture.json",
+        "label": "capture",
+        "media_type": null,
+        "digest": "817431e9bf2553c3739357bc197a79f426b54324b437c3f55a1f6241eb6b7443",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/fedramp2024-capture.json\", \"root\": null, \"relative\": null}",
+        "citation_key": "fedramp2024",
+        "verified_sha256": "817431e9bf2553c3739357bc197a79f426b54324b437c3f55a1f6241eb6b7443",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/FedRAMPConsolidatedRulesFor2026-v2026.09.22.01-2026-capture.json",
+        "size": 5507032
+      },
+      {
+        "id": "b32b942b-0922-4f40-a449-399b29b3ca09",
+        "source_id": "7acb6166-79c9-4f1c-8be2-d1ef511f6580",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/OnCalibrationOfModernNeuralNetworks-2017.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/OnCalibrationOfModernNeuralNetworks-2017.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "df7c93f97204f8a3c2b10f6d5bf5265baac25f00c1ae3b473a3e1dbc102dacb2",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/guo2017.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "guo2017",
+        "verified_sha256": "df7c93f97204f8a3c2b10f6d5bf5265baac25f00c1ae3b473a3e1dbc102dacb2",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/OnCalibrationOfModernNeuralNetworks-2017.pdf",
+        "size": 828420
+      },
+      {
+        "id": "01067def-91e2-441e-bb1f-79d4b884eff5",
+        "source_id": "4c5cd6b5-333b-405e-934c-e9c77c27ed95",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/LanguageModelsMostlyKnowWhatTheyKnow-2022.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/LanguageModelsMostlyKnowWhatTheyKnow-2022.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "1d861f7732f65769703cb2731dc085f3c9e69771b1b6196d074646d1473c3fbf",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/kadavath2022.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "kadavath2022",
+        "verified_sha256": "1d861f7732f65769703cb2731dc085f3c9e69771b1b6196d074646d1473c3fbf",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/LanguageModelsMostlyKnowWhatTheyKnow-2022.pdf",
+        "size": 2616253
+      },
+      {
+        "id": "8f459b96-0661-4222-9209-9c698293c9a1",
+        "source_id": "bb47231c-5065-411b-8023-e0057e8d5528",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoSelfImprovingPipelines-2023.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoSelfImprovingPipelines-2023.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "5309836325c3a580b6c176242f49f21ca40e413b0acd514e74b67e16bb1b56bc",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/khattab2023dspy.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "khattab2023dspy",
+        "verified_sha256": "5309836325c3a580b6c176242f49f21ca40e413b0acd514e74b67e16bb1b56bc",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoSelfImprovingPipelines-2023.pdf",
+        "size": 460814
+      },
+      {
+        "id": "57468d32-d99e-4a33-86ca-ec768a1310b5",
+        "source_id": "31ae065f-5d98-42b0-9a95-ee8fbc6a1af5",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoStateOfTheArtPipelines-2024.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoStateOfTheArtPipelines-2024.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "0592d139b3a40ba26c6669012339242b59d88ac1c2ed2bf8250429446b9d487b",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/khattab2024.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "khattab2024",
+        "verified_sha256": "0592d139b3a40ba26c6669012339242b59d88ac1c2ed2bf8250429446b9d487b",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoStateOfTheArtPipelines-2024.pdf",
+        "size": 332117
+      },
+      {
+        "id": "9116e202-a238-42b4-bd6c-6b602a7b1e19",
+        "source_id": "408a786f-79e6-4c29-8e62-4701bd1d07b9",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/MagellanTowardBuildingEntityMatchingManagementSystems-2016.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/MagellanTowardBuildingEntityMatchingManagementSystems-2016.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "c8cd4abd17917e60bcd3bb7b7b968f66b679590c501631cd68105afbf606c959",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/konda2016.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "konda2016",
+        "verified_sha256": "c8cd4abd17917e60bcd3bb7b7b968f66b679590c501631cd68105afbf606c959",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/MagellanTowardBuildingEntityMatchingManagementSystems-2016.pdf",
+        "size": 533392
+      },
+      {
+        "id": "178b1fd1-5cb9-4324-b920-e9b25d2023d7",
+        "source_id": "b502cc23-fcb0-481a-ad08-5b59ee84e4e6",
+        "revision": 1,
+        "locator": "{\"path\": \"/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2023-dissertation.pdf\", \"relative\": null, \"root\": null}",
+        "path": "/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2023-dissertation.pdf",
+        "root": null,
+        "relative": null,
+        "label": null,
+        "media_type": null,
+        "digest": null,
+        "copied_from_json": null,
+        "citation_key": "ledford2023dissertation",
+        "verified_sha256": "3a6bc4a2ca6d59e9f5d196ee445a2f36d496aa89c4c8dfe586684dc31dbc5911",
+        "final_path": "/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2023-dissertation.pdf",
+        "size": 14379366
+      },
+      {
+        "id": "97b54fc0-9db7-42b3-bd69-29fa51af7d34",
+        "source_id": "61370ee9-cb5d-4de9-8db5-6db1a17b25ab",
+        "revision": 1,
+        "locator": "{\"path\": \"/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2023-ieee-digital-thread.pdf\", \"relative\": null, \"root\": null}",
+        "path": "/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2023-ieee-digital-thread.pdf",
+        "root": null,
+        "relative": null,
+        "label": null,
+        "media_type": null,
+        "digest": null,
+        "copied_from_json": null,
+        "citation_key": "ledford2023ieee",
+        "verified_sha256": "ee87f864331b17360d25722fa8ede347956eb3d7819c1252ec12775964841fe8",
+        "final_path": "/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2023-ieee-digital-thread.pdf",
+        "size": 8490047
+      },
+      {
+        "id": "b2be3bed-130f-4b26-8229-de617dc015b2",
+        "source_id": "044976ed-f3b1-4500-9fc9-a512c7c59fa5",
+        "revision": 1,
+        "locator": "{\"path\": \"/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2025-syseng.pdf\", \"relative\": null, \"root\": null}",
+        "path": "/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2025-syseng.pdf",
+        "root": null,
+        "relative": null,
+        "label": null,
+        "media_type": null,
+        "digest": null,
+        "copied_from_json": null,
+        "citation_key": "ledford2025syseng",
+        "verified_sha256": "6883aaebae8248d4936eeb08b1cf2abb5136ae677c0c64ada6aa7c6e0ae1b13d",
+        "final_path": "/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2025-syseng.pdf",
+        "size": 2842602
+      },
+      {
+        "id": "9e59c30c-d71f-4b4e-ab20-d1aa1c2275aa",
+        "source_id": "9f0d6b10-e30f-4a4d-bc5a-b913ce23fd69",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/DeepLearningForEntityMatchingADesignSpaceExploration-2018.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/DeepLearningForEntityMatchingADesignSpaceExploration-2018.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "30c191e5326ccaeee2d6efd01aa36799c806e28e620e9ef74eb6e0bb8410f829",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/mudgal2018.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "mudgal2018",
+        "verified_sha256": "30c191e5326ccaeee2d6efd01aa36799c806e28e620e9ef74eb6e0bb8410f829",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/DeepLearningForEntityMatchingADesignSpaceExploration-2018.pdf",
+        "size": 1687612
+      },
+      {
+        "id": "789a6239-e976-4c0a-b3fe-f782f5c75c5c",
+        "source_id": "954d1b40-5882-40e7-9215-4eeb204ac33b",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/ObtainingWellCalibratedProbabilitiesUsingBayesianBinning-2015.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/ObtainingWellCalibratedProbabilitiesUsingBayesianBinning-2015.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "c1688bddfa3c43d3755e2a43dd68d72c45544211734ee2ff369d78ce22d22acb",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/naeini2015.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "naeini2015",
+        "verified_sha256": "c1688bddfa3c43d3755e2a43dd68d72c45544211734ee2ff369d78ce22d22acb",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/ObtainingWellCalibratedProbabilitiesUsingBayesianBinning-2015.pdf",
+        "size": 699806
+      },
+      {
+        "id": "6080a879-411a-480f-af1f-c093fbf376a2",
+        "source_id": "9a4ef538-9c4d-4c57-a3fa-01a4d4745ebc",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/SecurityAndPrivacyControlsForInformationSystemsAndOrganizations-2020.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/SecurityAndPrivacyControlsForInformationSystemsAndOrganizations-2020.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "fc63bcd61715d0181dd8e85998b1e6201ae3515fc6626102101cab1841e11ec6",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/nist2020sp80053.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "nist2020sp80053",
+        "verified_sha256": "fc63bcd61715d0181dd8e85998b1e6201ae3515fc6626102101cab1841e11ec6",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/SecurityAndPrivacyControlsForInformationSystemsAndOrganizations-2020.pdf",
+        "size": 6073678
+      },
+      {
+        "id": "d7a2da42-5cb8-4a85-bc9c-f2c19ca21da0",
+        "source_id": "37648d5b-2c8a-431f-a216-b00a1f2ac86c",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2024.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2024.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "c82d1ba2fbb03747bc6665821edfd07895cd162dc06cecb067898f33d24380b3",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/nussbaum2024nomic.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "nussbaum2024nomic",
+        "verified_sha256": "c82d1ba2fbb03747bc6665821edfd07895cd162dc06cecb067898f33d24380b3",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2024.pdf",
+        "size": 356769
+      },
+      {
+        "id": "f6b8f063-b80b-479f-92ca-40ddb888fcdc",
+        "source_id": "1838ba66-10ad-487d-99fe-eb26527bcd0d",
+        "revision": 1,
+        "locator": "{\"path\": \"/Volumes/Casa/pub/2025-ai4se-ai-enhanced-dema/AI4SE_AI_Enhanced_DEMA.pdf\", \"relative\": null, \"root\": null}",
+        "path": "/Volumes/Casa/pub/2025-ai4se-ai-enhanced-dema/AI4SE_AI_Enhanced_DEMA.pdf",
+        "root": null,
+        "relative": null,
+        "label": null,
+        "media_type": null,
+        "digest": null,
+        "copied_from_json": null,
+        "citation_key": "oleary2025ai4se",
+        "verified_sha256": "b2ea81187907cd0bed0f6bc4c6790acf001da2a93609e6117f41475cbecdf770",
+        "final_path": "/Volumes/Casa/pub/2025-ai4se-ai-enhanced-dema/AI4SE_AI_Enhanced_DEMA.pdf",
+        "size": 1357689
+      },
+      {
+        "id": "5ce1e5ba-5272-45ea-830d-4dc9fa409ce7",
+        "source_id": "c67972f5-0957-422b-ac42-29f2f1e2ded5",
+        "revision": 1,
+        "locator": "{\"path\": \"/Volumes/Casa/pub/2025-informs-gradebot-poster/poster-oleary-informs25.pptx\", \"relative\": null, \"root\": null}",
+        "path": "/Volumes/Casa/pub/2025-informs-gradebot-poster/poster-oleary-informs25.pptx",
+        "root": null,
+        "relative": null,
+        "label": null,
+        "media_type": null,
+        "digest": null,
+        "copied_from_json": null,
+        "citation_key": "oleary2025binary-classification",
+        "verified_sha256": "e9e3f5fb74e7235a51b8ab7459971a4d9a5a804a9336b30f78e06ee2df0ab35b",
+        "final_path": "/Volumes/Casa/pub/2025-informs-gradebot-poster/poster-oleary-informs25.pptx",
+        "size": 1784904
+      },
+      {
+        "id": "5bec7ab7-34f7-46ef-8961-4582593bb34a",
+        "source_id": "5c903a55-e2f9-4087-80f9-a6572c639263",
+        "revision": 1,
+        "locator": "{\"path\": \"/Volumes/Casa/pub/2026-insight-dema-llm/published/oleary-ledford-2026-insight-dema-llm-version-of-record.pdf\", \"relative\": null, \"root\": null}",
+        "path": "/Volumes/Casa/pub/2026-insight-dema-llm/published/oleary-ledford-2026-insight-dema-llm-version-of-record.pdf",
+        "root": null,
+        "relative": null,
+        "label": null,
+        "media_type": null,
+        "digest": null,
+        "copied_from_json": null,
+        "citation_key": "olearyledford2026insight",
+        "verified_sha256": "02567dceb4916267e82ef5f1b58bafcf340870c2215c38e037903090bc7d9af2",
+        "final_path": "/Volumes/Casa/pub/2026-insight-dema-llm/published/oleary-ledford-2026-insight-dema-llm-version-of-record.pdf",
+        "size": 736615
+      },
+      {
+        "id": "dbb78718-1de0-49c6-9518-1d846095d543",
+        "source_id": "a58111b2-145c-451e-95c3-46f1ba8cc091",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"papers/aiml/GPT4TechnicalReport-2023.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "papers/aiml/GPT4TechnicalReport-2023.pdf",
+        "label": "GPT4TechnicalReport-2023.pdf",
+        "media_type": "application/pdf",
+        "digest": "5269ab4bab5dd064a39ecab221f79e13bbe0901f0000f8dad3416cdb493df8b4",
+        "copied_from_json": "{\"path\": \"/Users/djo/Box Sync/zotero/papers/aiml/GPT4TechnicalReport-2023.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "openai2023gpt4",
+        "verified_sha256": "5269ab4bab5dd064a39ecab221f79e13bbe0901f0000f8dad3416cdb493df8b4",
+        "final_path": "/Volumes/Casa/refs/lib/papers/aiml/GPT4TechnicalReport-2023.pdf",
+        "size": 5309067
+      },
+      {
+        "id": "d74b92cf-48fa-4c8c-9fc2-40eebc5dcac6",
+        "source_id": "e50e1cf9-33e1-4cbe-8626-e35cb9120bcd",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/openai2024embeddings-capture.json\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/openai2024embeddings-capture.json",
+        "label": "capture",
+        "media_type": null,
+        "digest": "19dffcda4fb9341b53b391bddddd6c6bea810a4d28cac1137db746e624eaa3df",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/openai2024embeddings-capture.json\", \"root\": null, \"relative\": null}",
+        "citation_key": "openai2024embeddings",
+        "verified_sha256": "19dffcda4fb9341b53b391bddddd6c6bea810a4d28cac1137db746e624eaa3df",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/openai2024embeddings-capture.json",
+        "size": 770404
+      },
+      {
+        "id": "e80d2caa-056e-427d-9a03-63d879ead58a",
+        "source_id": "6e04fada-59a3-47d7-bbfb-baa3960c6e34",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/PutYourDataFirstOrYourMigrationWillComeLast-2012.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/PutYourDataFirstOrYourMigrationWillComeLast-2012.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "80aab7a9b13085214b05050f0cbb5c4293841f19ef5ab42af2e6a7fc743e12b8",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/oracle2011migration.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "oracle2011migration",
+        "verified_sha256": "80aab7a9b13085214b05050f0cbb5c4293841f19ef5ab42af2e6a7fc743e12b8",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/PutYourDataFirstOrYourMigrationWillComeLast-2012.pdf",
+        "size": 1162134
+      },
+      {
+        "id": "90bc2b46-684e-46ce-b2af-fb948fad816f",
+        "source_id": "2d07c34f-6960-4aa7-b155-2427d0f3c40b",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/SentenceBERTSentenceEmbeddingsUsingSiameseBERTNetworks-2019.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/SentenceBERTSentenceEmbeddingsUsingSiameseBERTNetworks-2019.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "e2703128039850ba7e098bfc6c7d9f3f3e75e6318815c5dd90af71085b1d384e",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/reimers2019.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "reimers2019",
+        "verified_sha256": "e2703128039850ba7e098bfc6c7d9f3f3e75e6318815c5dd90af71085b1d384e",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/SentenceBERTSentenceEmbeddingsUsingSiameseBERTNetworks-2019.pdf",
+        "size": 570263
+      },
+      {
+        "id": "d059a43a-5011-4f8d-839e-13943c105689",
+        "source_id": "2e2e7cf4-1215-44ad-862b-138b75814419",
+        "revision": 1,
+        "locator": "{\"path\": \"/Volumes/Casa/dev/dema-llm/docs/research/references/sequeda2023-llm-text-to-sql.pdf\", \"relative\": null, \"root\": null}",
+        "path": "/Volumes/Casa/dev/dema-llm/docs/research/references/sequeda2023-llm-text-to-sql.pdf",
+        "root": null,
+        "relative": null,
+        "label": null,
+        "media_type": null,
+        "digest": null,
+        "copied_from_json": null,
+        "citation_key": "sequeda2023",
+        "verified_sha256": "1a0cb23795bea7f11c64b7f700d9088d2d08b004f7117951030733c8b0ee45c6",
+        "final_path": "/Volumes/Casa/dev/dema-llm/docs/research/references/sequeda2023-llm-text-to-sql.pdf",
+        "size": 1624130
+      },
+      {
+        "id": "bf5beb80-df59-425e-ba86-985629bb9c5d",
+        "source_id": "686e5b80-27be-4c3a-813f-5561ee27bbbe",
+        "revision": 1,
+        "locator": "{\"path\": \"/Volumes/Casa/dev/dema-llm/docs/research/references/sheetrit2024-rematch.pdf\", \"relative\": null, \"root\": null}",
+        "path": "/Volumes/Casa/dev/dema-llm/docs/research/references/sheetrit2024-rematch.pdf",
+        "root": null,
+        "relative": null,
+        "label": null,
+        "media_type": null,
+        "digest": null,
+        "copied_from_json": null,
+        "citation_key": "sheetrit2024",
+        "verified_sha256": "5504fb5e12ce6c2ab6741850c9e46158e94f913519bf28e6395935823d4bd0dd",
+        "final_path": "/Volumes/Casa/dev/dema-llm/docs/research/references/sheetrit2024-rematch.pdf",
+        "size": 676203
+      },
+      {
+        "id": "a277f5ad-7671-47c8-adad-17d758dcee43",
+        "source_id": "adf0cf53-f7e8-4dfa-8554-3d089f2a4a49",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/Llama2OpenFoundationAndFineTunedChatModels-2023.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/Llama2OpenFoundationAndFineTunedChatModels-2023.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "1df284ce95f783002074bfe8f21d47c646b396ceb1736ea3ec0ea212fc070d91",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/touvron2023llama2.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "touvron2023llama2",
+        "verified_sha256": "1df284ce95f783002074bfe8f21d47c646b396ceb1736ea3ec0ea212fc070d91",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/Llama2OpenFoundationAndFineTunedChatModels-2023.pdf",
+        "size": 13661300
+      },
+      {
+        "id": "c25f0d53-6170-4f77-8be1-f6a5adbd058d",
+        "source_id": "32912ffd-c6f0-4b97-bfe6-154e05009f0e",
+        "revision": 2,
+        "locator": "{\"path\": null, \"relative\": \"unfiled/ChainOfThoughtPromptingElicitsReasoningInLargeLanguageModels-2022.pdf\", \"root\": \"library\"}",
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/ChainOfThoughtPromptingElicitsReasoningInLargeLanguageModels-2022.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "880df0b46e8b4f77248d92a639dca69b96e57cad626e6fad0b4f5d746b930bd5",
+        "copied_from_json": "{\"path\": \"/private/tmp/refs-dema-execution/fetched/wei2022.pdf\", \"root\": null, \"relative\": null}",
+        "citation_key": "wei2022",
+        "verified_sha256": "880df0b46e8b4f77248d92a639dca69b96e57cad626e6fad0b4f5d746b930bd5",
+        "final_path": "/Volumes/Casa/refs/lib/unfiled/ChainOfThoughtPromptingElicitsReasoningInLargeLanguageModels-2022.pdf",
+        "size": 394192
+      }
+    ],
+    "originals": [
+      {
+        "key": "sequeda2023",
+        "id": "6e39dcaa-c90f-4e52-9ee8-9f40f5a0244c",
+        "sha256": "b6dcd6a625f38487c76dea1fd4c242abcff868066f5ff1d7dc9ed1e497ce89c9"
+      },
+      {
+        "key": "sheetrit2024",
+        "id": "1b83a5d9-2562-4c25-8c57-5a50904fc9c4",
+        "sha256": "38a410031684b346143a9d853809662a0fcc17e1eacca70c19c6ac772220028d"
+      },
+      {
+        "key": "ledford2023dissertation",
+        "id": "0763fb54-c268-4922-b175-7d84fa219c6c",
+        "sha256": "bf9e3b40452444aa8623a941d56ac300923798c35d6fcdb681696c57f224ecf1"
+      },
+      {
+        "key": "ledford2023ieee",
+        "id": "cbe328bb-773e-4704-a956-50ec73ace5dc",
+        "sha256": "a86c575c1df4a326ebf39e9c00531f655c1218847ba435a26ce20120543ccfa9"
+      },
+      {
+        "key": "ledford2025syseng",
+        "id": "671e973b-511a-4723-a47a-fdc565cd8899",
+        "sha256": "537306a4fe47bce6ab928d8ddfd5bb2ffd56e8c8d25bbc07d2150aeb7b68be92"
+      },
+      {
+        "key": "oleary2025ai4se",
+        "id": "156e7cac-5ab0-435a-8d4e-ad4f7836997f",
+        "sha256": "8dfe3d665aa8759d2d470b9e4e5cd51129939022c625a1113303fc699b9b1503"
+      },
+      {
+        "key": "howard2007bloor",
+        "id": "5039c834-90ee-47c7-8435-f4dc51d58c2c",
+        "sha256": "002f88110ed62b78a47d62143121bbce90262639f94ce5aa38b89a56cb46d62e"
+      },
+      {
+        "key": "howard2011bloor",
+        "id": "bf146b3d-59a6-4136-ab43-552154067466",
+        "sha256": "c51d9e856cae5f6fd9b36e7a8f8da2cef55e65ad6e35f5eb73ddad825406b063"
+      },
+      {
+        "key": "bernsteinhaas2008",
+        "id": "745f4581-e651-4035-909e-19e7dd719e42",
+        "sha256": "2ae337e5a2ffe50941dd5f56805d96b18ef939cc3e3856578e8c80f7d90e1f5b"
+      },
+      {
+        "key": "oracle2011migration",
+        "id": "b8cb114d-895d-453d-9c4c-113866dbd9c5",
+        "sha256": "ec4ebac1b8f0f4644e9df8a55991d4fcff586255e2fec1b3ae9360c43efda5ef"
+      },
+      {
+        "key": "oleary2025binary-classification",
+        "id": "d95373a8-561b-4bc3-a6e3-82df5350d1a5",
+        "sha256": "b531f6147597d6265e21b4c2a4ad5d18f4353bf7d7270cfcf2ab191a7fb6bbea"
+      },
+      {
+        "key": "olearyledford2026insight",
+        "id": "2cbbbc78-e0a4-49ee-b82d-7c3cb62619c2",
+        "sha256": "61e2d128dbf7b12b007c751d5faf27918e7ffdab97f6dc983dbfb7c6a3332f7e"
+      },
+      {
+        "key": "brown2020",
+        "id": "a0c13e82-2068-4196-9467-edbd9d5a6c8e",
+        "sha256": "d15f0feb4e1a6e2d70e9c8e1b79f04e3829b6ae1c1b00a233b21166d1b3e19e6"
+      },
+      {
+        "key": "wei2022",
+        "id": "0264113a-3236-4685-b07e-064e249535e2",
+        "sha256": "9c5fb4c7f6c89979a7a01674b598a50fc9704eb188db855e9eccac9c350a9476"
+      },
+      {
+        "key": "anthropic2024claude3",
+        "id": "8c73dca0-6569-48ff-84ed-09b4fe4c96f6",
+        "sha256": "f1b49bc3ab3a659dbc1cc2c320a408ac8adb68347fe5de6d3d680e458adda245"
+      },
+      {
+        "key": "touvron2023llama2",
+        "id": "4063fcb7-cddb-495b-ba2c-48fb29ef5962",
+        "sha256": "3e90f0690d40c6ebad4ea8af3d908dcd13c6a70916c22d9b7b89c2c047487ae0"
+      },
+      {
+        "key": "reimers2019",
+        "id": "818a1927-b59e-4791-9f87-f0bbbf2e0d06",
+        "sha256": "430f4dc47460c59914f047d22af7d5e63fd6409142e23fcb089f09f2c4b3c8ae"
+      },
+      {
+        "key": "openai2024embeddings",
+        "id": "c0a12224-ad53-4f68-8a1b-6878534a821f",
+        "sha256": "ce7a6ee47ece6c22d2a086317ad42f5b9791a8e2cc7d9580f55e46e2927c4a75"
+      },
+      {
+        "key": "nussbaum2024nomic",
+        "id": "64be7805-35b3-4ed4-9b32-2da61fb9beec",
+        "sha256": "ee600bc8989b1e920e170e4b587ebae3f505baa4b4d0af94080b9f9c16a278ef"
+      },
+      {
+        "key": "guo2017",
+        "id": "b3e1500c-3367-4238-9cf3-71ff8439e792",
+        "sha256": "04e7d8876999c36842012a34fd1fa8ad2afe466bbe6db18ed0498891644bcd5c"
+      },
+      {
+        "key": "kadavath2022",
+        "id": "d5afa138-8cfb-4c69-82fa-90d2d3a98600",
+        "sha256": "3d663b0ac6667c373265d5cdb58d27791abbf69d8309ec07d6651230f90863ad"
+      },
+      {
+        "key": "naeini2015",
+        "id": "0b89d4d7-28b2-48d9-b84f-e819676f1b76",
+        "sha256": "426dd727d3e26120acb9d513e1429faa34d7277fa4111cb878a31d3fa8b002e2"
+      },
+      {
+        "key": "christophides2021",
+        "id": "2cd1acc5-cc49-498a-9c37-4a914c89e70d",
+        "sha256": "08166b1e7219e4bb2e89d1df30e9c97a3fd5a0410d3f68fc6aa9339179548f36"
+      },
+      {
+        "key": "mudgal2018",
+        "id": "9a06ef91-44e3-4a6f-bdb4-be15fcc34e67",
+        "sha256": "6fa142dde939aa5f0bd19bc4d29eebe05620ae38bc4bd95b9d4a83f9345c4c3f"
+      },
+      {
+        "key": "konda2016",
+        "id": "2f6083b8-6903-436a-8c8d-38babffdd537",
+        "sha256": "7f035e1aaea2a1adb23df8ff685da16859d36318c0fbaded1a56c95117544f74"
+      },
+      {
+        "key": "koutras2021valentine",
+        "id": "677fcae6-446f-48c4-a385-095efb13ce76",
+        "sha256": "96fe2391c2dd2c2254ec777a3412c93d98912b40f0197f4eca6fa0a9570ae480"
+      },
+      {
+        "key": "deb2014",
+        "id": "953678cb-6b02-44fc-953e-8738262e44b2",
+        "sha256": "5cf4ee035227fe16c98eb58ed950d8d7ad0f009db359e3a31a9b08a33bdd11d2"
+      },
+      {
+        "key": "zitzler2003",
+        "id": "c1b58227-2848-40fc-9be7-fa621dce5b9d",
+        "sha256": "7821137c722dd6d8791a44f6339d1f7c74704db913157619dd571a51b645817f"
+      },
+      {
+        "key": "khattab2023dspy",
+        "id": "a7e590b7-960b-434c-8d8b-b456f66a8436",
+        "sha256": "0416f477e8f60eb1b20cc8bfe6e838213b971849ffcd4e14734a1a04bfa67983"
+      },
+      {
+        "key": "zhou2023ape",
+        "id": "dd677d40-1c68-49ef-b659-83d42d6e1ece",
+        "sha256": "d23cb37a951b125b9bff360f6c98751dde0634f39c4738f06c6bc91efe791f70"
+      },
+      {
+        "key": "nist2020sp80053",
+        "id": "bc333de7-cf25-4f5e-a602-806b48f540f2",
+        "sha256": "a3e78e2c79821d9fdb17b15d912461e2ae0b66d2077a9f6f03fb13c304f3a128"
+      },
+      {
+        "key": "fedramp2024",
+        "id": "b9739475-fb07-4568-802f-81eedf01a4e9",
+        "sha256": "6acf23e8770239172713a98ff3d1b0c5b4ef8f52d8fbea298cd402b6d99fc7e9"
+      },
+      {
+        "key": "dod2020cmmc",
+        "id": "2e8e318c-5e75-441c-9eca-f1ba6c064e3c",
+        "sha256": "65ec581f3955ccd9294e7ce0e75088138f0b5a69acf1baa7a4c871ff62aee6e5"
+      }
+    ],
+    "members": [
+      "ledford2025syseng",
+      "zitzler2003",
+      "fedramp2024",
+      "oleary2025ai4se",
+      "reimers2019",
+      "khattab2024",
+      "wei2022",
+      "brown2020",
+      "konda2016",
+      "kadavath2022",
+      "bernsteinhaas2008",
+      "olearyledford2026insight",
+      "ledford2023ieee",
+      "sheetrit2024",
+      "anthropic2024claude3",
+      "oracle2011migration",
+      "zhou2023ape",
+      "guo2017",
+      "dod2020cmmc",
+      "naeini2015",
+      "nist2020sp80053",
+      "mudgal2018",
+      "howard2011bloor",
+      "openai2023gpt4",
+      "howard2007bloor",
+      "touvron2023llama2",
+      "ledford2023dissertation",
+      "christophides2021",
+      "deb2014",
+      "sequeda-2024-benchmarkUnderstand",
+      "koutras2021valentine",
+      "oleary2025binary-classification",
+      "openai2024embeddings",
+      "nussbaum-2025-nomicEmbed"
+    ],
+    "publication_commit": "7599aee94d14a437b94b9f2f4b71de0ebb89125d",
+    "publication_clean": true,
+    "preproposal_hash_difference": [
+      "/Volumes/Casa/dev/dema-llm/docs/README.md"
+    ],
+    "catalog_revision": 4738,
+    "backup_revision": 4520
+  },
+  "import": {
+    "id": "0abd4709-726c-4ea2-bbb7-953bf872c6a8",
+    "file_digest": "b66732b7dae701a364781c2147d5ccf0a0333c4f28d89db68fd43633cda53126",
+    "counts": {
+      "applied": 33,
+      "unchanged": 0,
+      "conflict": 0,
+      "invalid": 0
+    },
+    "entries": [
+      {
+        "key": "sequeda2023",
+        "source_id": "2e2e7cf4-1215-44ad-862b-138b75814419",
+        "outcome": "applied",
+        "warnings": [
+          {
+            "code": "unprotected_capital",
+            "message": "Review unprotected internal capitals",
+            "path": "metadata.container-title",
+            "details": {},
+            "retryable": false
+          }
+        ]
+      },
+      {
+        "key": "sheetrit2024",
+        "source_id": "686e5b80-27be-4c3a-813f-5561ee27bbbe",
+        "outcome": "applied",
+        "warnings": [
+          {
+            "code": "unprotected_capital",
+            "message": "Review unprotected internal capitals",
+            "path": "metadata.title",
+            "details": {},
+            "retryable": false
+          }
+        ]
+      },
+      {
+        "key": "ledford2023dissertation",
+        "source_id": "b502cc23-fcb0-481a-ad08-5b59ee84e4e6",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "ledford2023ieee",
+        "source_id": "61370ee9-cb5d-4de9-8db5-6db1a17b25ab",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "ledford2025syseng",
+        "source_id": "044976ed-f3b1-4500-9fc9-a512c7c59fa5",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "oleary2025ai4se",
+        "source_id": "1838ba66-10ad-487d-99fe-eb26527bcd0d",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "howard2007bloor",
+        "source_id": "aba8885f-4cc8-47c2-a9fc-ee247d296abc",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "howard2011bloor",
+        "source_id": "a00b3024-2164-49c0-9e5e-f91cb9b763bd",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "bernsteinhaas2008",
+        "source_id": "4ffdb9c7-9e14-4a41-b1b5-a803fa22b54c",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "oracle2011migration",
+        "source_id": "6e04fada-59a3-47d7-bbfb-baa3960c6e34",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "oleary2025binary-classification",
+        "source_id": "c67972f5-0957-422b-ac42-29f2f1e2ded5",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "olearyledford2026insight",
+        "source_id": "5c903a55-e2f9-4087-80f9-a6572c639263",
+        "outcome": "applied",
+        "warnings": [
+          {
+            "code": "unprotected_capital",
+            "message": "Review unprotected internal capitals",
+            "path": "metadata.container-title",
+            "details": {},
+            "retryable": false
+          }
+        ]
+      },
+      {
+        "key": "brown2020",
+        "source_id": "3c3593a9-fc37-4f1e-9ade-92bcd75c4660",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "wei2022",
+        "source_id": "32912ffd-c6f0-4b97-bfe6-154e05009f0e",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "anthropic2024claude3",
+        "source_id": "6d0a8620-9853-4c5a-bc15-a60187aa3e0e",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "touvron2023llama2",
+        "source_id": "adf0cf53-f7e8-4dfa-8554-3d089f2a4a49",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "reimers2019",
+        "source_id": "2d07c34f-6960-4aa7-b155-2427d0f3c40b",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "openai2024embeddings",
+        "source_id": "e50e1cf9-33e1-4cbe-8626-e35cb9120bcd",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "nussbaum2024nomic",
+        "source_id": "37648d5b-2c8a-431f-a216-b00a1f2ac86c",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "guo2017",
+        "source_id": "7acb6166-79c9-4f1c-8be2-d1ef511f6580",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "kadavath2022",
+        "source_id": "4c5cd6b5-333b-405e-934c-e9c77c27ed95",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "naeini2015",
+        "source_id": "954d1b40-5882-40e7-9215-4eeb204ac33b",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "christophides2021",
+        "source_id": "b56c58b1-6491-4662-a400-00c79d2cba27",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "mudgal2018",
+        "source_id": "9f0d6b10-e30f-4a4d-bc5a-b913ce23fd69",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "konda2016",
+        "source_id": "408a786f-79e6-4c29-8e62-4701bd1d07b9",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "koutras2021valentine",
+        "source_id": "c0f427f0-03cd-45cf-a1d1-c0514ffabb6b",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "deb2014",
+        "source_id": "b7849bc0-db79-410a-a8f3-4d5192728553",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "zitzler2003",
+        "source_id": "09176a57-4f71-402d-b648-502feb159b69",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "khattab2023dspy",
+        "source_id": "bb47231c-5065-411b-8023-e0057e8d5528",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "zhou2023ape",
+        "source_id": "6e407f61-8c90-48f3-8adf-4844e3c13db6",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "nist2020sp80053",
+        "source_id": "9a4ef538-9c4d-4c57-a3fa-01a4d4745ebc",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "fedramp2024",
+        "source_id": "0fa01938-6fff-45af-abf2-309b6cad7e3d",
+        "outcome": "applied",
+        "warnings": []
+      },
+      {
+        "key": "dod2020cmmc",
+        "source_id": "839f9023-d47e-4a4c-beca-96acc83da6c2",
+        "outcome": "applied",
+        "warnings": []
+      }
+    ]
+  },
+  "fetches": [
+    {
+      "key": "oracle2011migration",
+      "url": "https://www.oracle.com/a/ocom/docs/middleware/data-integration/data-migration-wp.pdf",
+      "accessed_at": "2026-09-27T22:09:37.647907+00:00",
+      "sha256": "80aab7a9b13085214b05050f0cbb5c4293841f19ef5ab42af2e6a7fc743e12b8",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "oracle2011migration",
+        "path": "/private/tmp/refs-dema-execution/fetched/oracle2011migration.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/PutYourDataFirstOrYourMigrationWillComeLast-2012.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/oracle2011migration.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/oracle2011migration.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/PutYourDataFirstOrYourMigrationWillComeLast-2012.pdf",
+            "old_name": "oracle2011migration.pdf",
+            "new_name": "PutYourDataFirstOrYourMigrationWillComeLast-2012.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "e80d2caa-056e-427d-9a03-63d879ead58a",
+        "source_id": "6e04fada-59a3-47d7-bbfb-baa3960c6e34",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/PutYourDataFirstOrYourMigrationWillComeLast-2012.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "80aab7a9b13085214b05050f0cbb5c4293841f19ef5ab42af2e6a7fc743e12b8",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/oracle2011migration.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "oracle2011migration",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/PutYourDataFirstOrYourMigrationWillComeLast-2012.pdf",
+        "moves": [
+          {
+            "operation_id": "ee5b2865-252d-404f-96cb-5994dc658067",
+            "resource_id": "e80d2caa-056e-427d-9a03-63d879ead58a",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/oracle2011migration.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/PutYourDataFirstOrYourMigrationWillComeLast-2012.pdf",
+            "old_name": "oracle2011migration.pdf",
+            "new_name": "PutYourDataFirstOrYourMigrationWillComeLast-2012.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "e80d2caa-056e-427d-9a03-63d879ead58a",
+          "source_id": "6e04fada-59a3-47d7-bbfb-baa3960c6e34",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/PutYourDataFirstOrYourMigrationWillComeLast-2012.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "80aab7a9b13085214b05050f0cbb5c4293841f19ef5ab42af2e6a7fc743e12b8",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/oracle2011migration.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/PutYourDataFirstOrYourMigrationWillComeLast-2012.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": null
+    },
+    {
+      "key": "brown2020",
+      "url": "https://proceedings.neurips.cc/paper/2020/file/1457c0d6bfcb4967418bfb8ac142f64a-Paper.pdf",
+      "accessed_at": "2026-09-27T22:09:37.848411+00:00",
+      "sha256": "5fb1e3b8062688f5023ee63a9641d39c8c86922f2bca98535dcba084af7f719e",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "brown2020",
+        "path": "/private/tmp/refs-dema-execution/fetched/brown2020.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/LanguageModelsAreFewShotLearners-2020.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/brown2020.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/brown2020.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/LanguageModelsAreFewShotLearners-2020.pdf",
+            "old_name": "brown2020.pdf",
+            "new_name": "LanguageModelsAreFewShotLearners-2020.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "064704d5-4b41-4f3e-8156-c97e0b3c8dee",
+        "source_id": "3c3593a9-fc37-4f1e-9ade-92bcd75c4660",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/LanguageModelsAreFewShotLearners-2020.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "5fb1e3b8062688f5023ee63a9641d39c8c86922f2bca98535dcba084af7f719e",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/brown2020.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "brown2020",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/LanguageModelsAreFewShotLearners-2020.pdf",
+        "moves": [
+          {
+            "operation_id": "d4d91fd1-e8a3-4125-852a-e6cda007555f",
+            "resource_id": "064704d5-4b41-4f3e-8156-c97e0b3c8dee",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/brown2020.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/LanguageModelsAreFewShotLearners-2020.pdf",
+            "old_name": "brown2020.pdf",
+            "new_name": "LanguageModelsAreFewShotLearners-2020.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "064704d5-4b41-4f3e-8156-c97e0b3c8dee",
+          "source_id": "3c3593a9-fc37-4f1e-9ade-92bcd75c4660",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/LanguageModelsAreFewShotLearners-2020.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "5fb1e3b8062688f5023ee63a9641d39c8c86922f2bca98535dcba084af7f719e",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/brown2020.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/LanguageModelsAreFewShotLearners-2020.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": null
+    },
+    {
+      "key": "wei2022",
+      "url": "https://proceedings.neurips.cc/paper/2022/file/9d5609613524ecf4f15af0f7b31abca4-Paper-Conference.pdf",
+      "accessed_at": "2026-09-27T22:09:37.715630+00:00",
+      "sha256": "880df0b46e8b4f77248d92a639dca69b96e57cad626e6fad0b4f5d746b930bd5",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "wei2022",
+        "path": "/private/tmp/refs-dema-execution/fetched/wei2022.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/ChainOfThoughtPromptingElicitsReasoningInLargeLanguageModels-2022.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/wei2022.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/wei2022.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/ChainOfThoughtPromptingElicitsReasoningInLargeLanguageModels-2022.pdf",
+            "old_name": "wei2022.pdf",
+            "new_name": "ChainOfThoughtPromptingElicitsReasoningInLargeLanguageModels-2022.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "c25f0d53-6170-4f77-8be1-f6a5adbd058d",
+        "source_id": "32912ffd-c6f0-4b97-bfe6-154e05009f0e",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/ChainOfThoughtPromptingElicitsReasoningInLargeLanguageModels-2022.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "880df0b46e8b4f77248d92a639dca69b96e57cad626e6fad0b4f5d746b930bd5",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/wei2022.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "wei2022",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/ChainOfThoughtPromptingElicitsReasoningInLargeLanguageModels-2022.pdf",
+        "moves": [
+          {
+            "operation_id": "1c609003-bd59-45f9-b149-5108314ab6f7",
+            "resource_id": "c25f0d53-6170-4f77-8be1-f6a5adbd058d",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/wei2022.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/ChainOfThoughtPromptingElicitsReasoningInLargeLanguageModels-2022.pdf",
+            "old_name": "wei2022.pdf",
+            "new_name": "ChainOfThoughtPromptingElicitsReasoningInLargeLanguageModels-2022.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "c25f0d53-6170-4f77-8be1-f6a5adbd058d",
+          "source_id": "32912ffd-c6f0-4b97-bfe6-154e05009f0e",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/ChainOfThoughtPromptingElicitsReasoningInLargeLanguageModels-2022.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "880df0b46e8b4f77248d92a639dca69b96e57cad626e6fad0b4f5d746b930bd5",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/wei2022.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/ChainOfThoughtPromptingElicitsReasoningInLargeLanguageModels-2022.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": null
+    },
+    {
+      "key": "anthropic2024claude3",
+      "url": "https://www-cdn.anthropic.com/de8ba9b01c9ab7cbabf5c33b80b7bbc618857627/Model_Card_Claude_3.pdf",
+      "accessed_at": "2026-09-27T22:09:38.660116+00:00",
+      "sha256": "a96214e5d495dec76f6120891233aa97a73386b35b065a6709840b07588ed118",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "anthropic2024claude3",
+        "path": "/private/tmp/refs-dema-execution/fetched/anthropic2024claude3.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/TheClaude3ModelFamilyOpusSonnetHaiku-2024.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/anthropic2024claude3.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/anthropic2024claude3.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/TheClaude3ModelFamilyOpusSonnetHaiku-2024.pdf",
+            "old_name": "anthropic2024claude3.pdf",
+            "new_name": "TheClaude3ModelFamilyOpusSonnetHaiku-2024.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "adf1893b-d126-4ecf-9952-dd0d56cfa6eb",
+        "source_id": "6d0a8620-9853-4c5a-bc15-a60187aa3e0e",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/TheClaude3ModelFamilyOpusSonnetHaiku-2024.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "a96214e5d495dec76f6120891233aa97a73386b35b065a6709840b07588ed118",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/anthropic2024claude3.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "anthropic2024claude3",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/TheClaude3ModelFamilyOpusSonnetHaiku-2024.pdf",
+        "moves": [
+          {
+            "operation_id": "66cb9fbb-bb30-4a0c-9545-b1825bbec664",
+            "resource_id": "adf1893b-d126-4ecf-9952-dd0d56cfa6eb",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/anthropic2024claude3.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/TheClaude3ModelFamilyOpusSonnetHaiku-2024.pdf",
+            "old_name": "anthropic2024claude3.pdf",
+            "new_name": "TheClaude3ModelFamilyOpusSonnetHaiku-2024.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "adf1893b-d126-4ecf-9952-dd0d56cfa6eb",
+          "source_id": "6d0a8620-9853-4c5a-bc15-a60187aa3e0e",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/TheClaude3ModelFamilyOpusSonnetHaiku-2024.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "a96214e5d495dec76f6120891233aa97a73386b35b065a6709840b07588ed118",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/anthropic2024claude3.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/TheClaude3ModelFamilyOpusSonnetHaiku-2024.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": "March 2024 model card verified by cover and PDF creation/modification metadata 2024-03-04."
+    },
+    {
+      "key": "touvron2023llama2",
+      "url": "https://arxiv.org/pdf/2307.09288",
+      "accessed_at": "2026-09-27T22:09:39.264257+00:00",
+      "sha256": "1df284ce95f783002074bfe8f21d47c646b396ceb1736ea3ec0ea212fc070d91",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "touvron2023llama2",
+        "path": "/private/tmp/refs-dema-execution/fetched/touvron2023llama2.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/Llama2OpenFoundationAndFineTunedChatModels-2023.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/touvron2023llama2.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/touvron2023llama2.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/Llama2OpenFoundationAndFineTunedChatModels-2023.pdf",
+            "old_name": "touvron2023llama2.pdf",
+            "new_name": "Llama2OpenFoundationAndFineTunedChatModels-2023.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "a277f5ad-7671-47c8-adad-17d758dcee43",
+        "source_id": "adf0cf53-f7e8-4dfa-8554-3d089f2a4a49",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/Llama2OpenFoundationAndFineTunedChatModels-2023.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "1df284ce95f783002074bfe8f21d47c646b396ceb1736ea3ec0ea212fc070d91",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/touvron2023llama2.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "touvron2023llama2",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/Llama2OpenFoundationAndFineTunedChatModels-2023.pdf",
+        "moves": [
+          {
+            "operation_id": "ff3ee283-4de7-447a-92a3-38928ddc3947",
+            "resource_id": "a277f5ad-7671-47c8-adad-17d758dcee43",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/touvron2023llama2.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/Llama2OpenFoundationAndFineTunedChatModels-2023.pdf",
+            "old_name": "touvron2023llama2.pdf",
+            "new_name": "Llama2OpenFoundationAndFineTunedChatModels-2023.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "a277f5ad-7671-47c8-adad-17d758dcee43",
+          "source_id": "adf0cf53-f7e8-4dfa-8554-3d089f2a4a49",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/Llama2OpenFoundationAndFineTunedChatModels-2023.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "1df284ce95f783002074bfe8f21d47c646b396ceb1736ea3ec0ea212fc070d91",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/touvron2023llama2.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/Llama2OpenFoundationAndFineTunedChatModels-2023.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": "Attached arXiv revision 2307.09288v2, dated 2023-07-19, verified on PDF."
+    },
+    {
+      "key": "reimers2019",
+      "url": "https://aclanthology.org/D19-1410.pdf",
+      "accessed_at": "2026-09-27T22:09:38.297965+00:00",
+      "sha256": "e2703128039850ba7e098bfc6c7d9f3f3e75e6318815c5dd90af71085b1d384e",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "reimers2019",
+        "path": "/private/tmp/refs-dema-execution/fetched/reimers2019.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/SentenceBERTSentenceEmbeddingsUsingSiameseBERTNetworks-2019.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/reimers2019.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/reimers2019.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/SentenceBERTSentenceEmbeddingsUsingSiameseBERTNetworks-2019.pdf",
+            "old_name": "reimers2019.pdf",
+            "new_name": "SentenceBERTSentenceEmbeddingsUsingSiameseBERTNetworks-2019.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "90bc2b46-684e-46ce-b2af-fb948fad816f",
+        "source_id": "2d07c34f-6960-4aa7-b155-2427d0f3c40b",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/SentenceBERTSentenceEmbeddingsUsingSiameseBERTNetworks-2019.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "e2703128039850ba7e098bfc6c7d9f3f3e75e6318815c5dd90af71085b1d384e",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/reimers2019.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "reimers2019",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/SentenceBERTSentenceEmbeddingsUsingSiameseBERTNetworks-2019.pdf",
+        "moves": [
+          {
+            "operation_id": "308c0078-092d-40b6-91f2-09dd2ae24c36",
+            "resource_id": "90bc2b46-684e-46ce-b2af-fb948fad816f",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/reimers2019.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/SentenceBERTSentenceEmbeddingsUsingSiameseBERTNetworks-2019.pdf",
+            "old_name": "reimers2019.pdf",
+            "new_name": "SentenceBERTSentenceEmbeddingsUsingSiameseBERTNetworks-2019.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "90bc2b46-684e-46ce-b2af-fb948fad816f",
+          "source_id": "2d07c34f-6960-4aa7-b155-2427d0f3c40b",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/SentenceBERTSentenceEmbeddingsUsingSiameseBERTNetworks-2019.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "e2703128039850ba7e098bfc6c7d9f3f3e75e6318815c5dd90af71085b1d384e",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/reimers2019.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/SentenceBERTSentenceEmbeddingsUsingSiameseBERTNetworks-2019.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": null
+    },
+    {
+      "key": "openai2024embeddings",
+      "url": "https://developers.openai.com/api/docs/guides/embeddings",
+      "accessed_at": "2026-09-27T22:09:38.196730+00:00",
+      "sha256": "19dffcda4fb9341b53b391bddddd6c6bea810a4d28cac1137db746e624eaa3df",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "openai2024embeddings",
+        "path": "/private/tmp/refs-dema-execution/fetched/openai2024embeddings-capture.json",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/openai2024embeddings-capture.json",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/openai2024embeddings-capture.json",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/openai2024embeddings-capture.json",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/openai2024embeddings-capture.json",
+            "old_name": "openai2024embeddings-capture.json",
+            "new_name": "openai2024embeddings-capture.json",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "d74b92cf-48fa-4c8c-9fc2-40eebc5dcac6",
+        "source_id": "e50e1cf9-33e1-4cbe-8626-e35cb9120bcd",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/openai2024embeddings-capture.json",
+        "label": "capture",
+        "media_type": null,
+        "digest": "19dffcda4fb9341b53b391bddddd6c6bea810a4d28cac1137db746e624eaa3df",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/openai2024embeddings-capture.json",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "openai2024embeddings",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/openai2024embeddings-capture.json",
+        "moves": [
+          {
+            "operation_id": "42bb4050-e47d-42a3-b9b7-9c8a2252c8d2",
+            "resource_id": "d74b92cf-48fa-4c8c-9fc2-40eebc5dcac6",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/openai2024embeddings-capture.json",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/openai2024embeddings-capture.json",
+            "old_name": "openai2024embeddings-capture.json",
+            "new_name": "openai2024embeddings-capture.json",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "d74b92cf-48fa-4c8c-9fc2-40eebc5dcac6",
+          "source_id": "e50e1cf9-33e1-4cbe-8626-e35cb9120bcd",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/openai2024embeddings-capture.json",
+          "label": "capture",
+          "media_type": null,
+          "digest": "19dffcda4fb9341b53b391bddddd6c6bea810a4d28cac1137db746e624eaa3df",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/openai2024embeddings-capture.json",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/openai2024embeddings-capture.json",
+          "status": "available"
+        }
+      ],
+      "notes": "Single-file JSON capture retains the full HTML response with URL, retrieval timestamp and original response hash; remote assets and linked pages were not crawled."
+    },
+    {
+      "key": "guo2017",
+      "url": "https://proceedings.mlr.press/v70/guo17a/guo17a.pdf",
+      "accessed_at": "2026-09-27T22:09:38.956985+00:00",
+      "sha256": "df7c93f97204f8a3c2b10f6d5bf5265baac25f00c1ae3b473a3e1dbc102dacb2",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "guo2017",
+        "path": "/private/tmp/refs-dema-execution/fetched/guo2017.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/OnCalibrationOfModernNeuralNetworks-2017.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/guo2017.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/guo2017.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/OnCalibrationOfModernNeuralNetworks-2017.pdf",
+            "old_name": "guo2017.pdf",
+            "new_name": "OnCalibrationOfModernNeuralNetworks-2017.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "b32b942b-0922-4f40-a449-399b29b3ca09",
+        "source_id": "7acb6166-79c9-4f1c-8be2-d1ef511f6580",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/OnCalibrationOfModernNeuralNetworks-2017.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "df7c93f97204f8a3c2b10f6d5bf5265baac25f00c1ae3b473a3e1dbc102dacb2",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/guo2017.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "guo2017",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/OnCalibrationOfModernNeuralNetworks-2017.pdf",
+        "moves": [
+          {
+            "operation_id": "78bb6205-75ef-463c-ad0c-ccee5c33b011",
+            "resource_id": "b32b942b-0922-4f40-a449-399b29b3ca09",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/guo2017.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/OnCalibrationOfModernNeuralNetworks-2017.pdf",
+            "old_name": "guo2017.pdf",
+            "new_name": "OnCalibrationOfModernNeuralNetworks-2017.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "b32b942b-0922-4f40-a449-399b29b3ca09",
+          "source_id": "7acb6166-79c9-4f1c-8be2-d1ef511f6580",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/OnCalibrationOfModernNeuralNetworks-2017.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "df7c93f97204f8a3c2b10f6d5bf5265baac25f00c1ae3b473a3e1dbc102dacb2",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/guo2017.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/OnCalibrationOfModernNeuralNetworks-2017.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": null
+    },
+    {
+      "key": "kadavath2022",
+      "url": "https://arxiv.org/pdf/2207.05221",
+      "accessed_at": "2026-09-27T22:09:39.369973+00:00",
+      "sha256": "1d861f7732f65769703cb2731dc085f3c9e69771b1b6196d074646d1473c3fbf",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "kadavath2022",
+        "path": "/private/tmp/refs-dema-execution/fetched/kadavath2022.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/LanguageModelsMostlyKnowWhatTheyKnow-2022.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/kadavath2022.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/kadavath2022.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/LanguageModelsMostlyKnowWhatTheyKnow-2022.pdf",
+            "old_name": "kadavath2022.pdf",
+            "new_name": "LanguageModelsMostlyKnowWhatTheyKnow-2022.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "01067def-91e2-441e-bb1f-79d4b884eff5",
+        "source_id": "4c5cd6b5-333b-405e-934c-e9c77c27ed95",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/LanguageModelsMostlyKnowWhatTheyKnow-2022.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "1d861f7732f65769703cb2731dc085f3c9e69771b1b6196d074646d1473c3fbf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/kadavath2022.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "kadavath2022",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/LanguageModelsMostlyKnowWhatTheyKnow-2022.pdf",
+        "moves": [
+          {
+            "operation_id": "1513b906-57c4-44ba-b8d0-aa02fbbc8c04",
+            "resource_id": "01067def-91e2-441e-bb1f-79d4b884eff5",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/kadavath2022.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/LanguageModelsMostlyKnowWhatTheyKnow-2022.pdf",
+            "old_name": "kadavath2022.pdf",
+            "new_name": "LanguageModelsMostlyKnowWhatTheyKnow-2022.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "01067def-91e2-441e-bb1f-79d4b884eff5",
+          "source_id": "4c5cd6b5-333b-405e-934c-e9c77c27ed95",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/LanguageModelsMostlyKnowWhatTheyKnow-2022.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "1d861f7732f65769703cb2731dc085f3c9e69771b1b6196d074646d1473c3fbf",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/kadavath2022.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/LanguageModelsMostlyKnowWhatTheyKnow-2022.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": "Attached arXiv revision 2207.05221v4, dated 2022-11-21, verified on PDF."
+    },
+    {
+      "key": "naeini2015",
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/download/9602/9461",
+      "accessed_at": "2026-09-27T22:09:41.704117+00:00",
+      "sha256": "c1688bddfa3c43d3755e2a43dd68d72c45544211734ee2ff369d78ce22d22acb",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "naeini2015",
+        "path": "/private/tmp/refs-dema-execution/fetched/naeini2015.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/ObtainingWellCalibratedProbabilitiesUsingBayesianBinning-2015.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/naeini2015.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/naeini2015.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/ObtainingWellCalibratedProbabilitiesUsingBayesianBinning-2015.pdf",
+            "old_name": "naeini2015.pdf",
+            "new_name": "ObtainingWellCalibratedProbabilitiesUsingBayesianBinning-2015.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "789a6239-e976-4c0a-b3fe-f782f5c75c5c",
+        "source_id": "954d1b40-5882-40e7-9215-4eeb204ac33b",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/ObtainingWellCalibratedProbabilitiesUsingBayesianBinning-2015.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "c1688bddfa3c43d3755e2a43dd68d72c45544211734ee2ff369d78ce22d22acb",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/naeini2015.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "naeini2015",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/ObtainingWellCalibratedProbabilitiesUsingBayesianBinning-2015.pdf",
+        "moves": [
+          {
+            "operation_id": "687058de-bc56-4eb7-b0e5-dcbc54de7972",
+            "resource_id": "789a6239-e976-4c0a-b3fe-f782f5c75c5c",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/naeini2015.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/ObtainingWellCalibratedProbabilitiesUsingBayesianBinning-2015.pdf",
+            "old_name": "naeini2015.pdf",
+            "new_name": "ObtainingWellCalibratedProbabilitiesUsingBayesianBinning-2015.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "789a6239-e976-4c0a-b3fe-f782f5c75c5c",
+          "source_id": "954d1b40-5882-40e7-9215-4eeb204ac33b",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/ObtainingWellCalibratedProbabilitiesUsingBayesianBinning-2015.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "c1688bddfa3c43d3755e2a43dd68d72c45544211734ee2ff369d78ce22d22acb",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/naeini2015.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/ObtainingWellCalibratedProbabilitiesUsingBayesianBinning-2015.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": null
+    },
+    {
+      "key": "mudgal2018",
+      "url": "https://pages.cs.wisc.edu/~anhai/papers1/deepmatcher-sigmod18.pdf",
+      "accessed_at": "2026-09-27T22:09:39.368543+00:00",
+      "sha256": "30c191e5326ccaeee2d6efd01aa36799c806e28e620e9ef74eb6e0bb8410f829",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "mudgal2018",
+        "path": "/private/tmp/refs-dema-execution/fetched/mudgal2018.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/DeepLearningForEntityMatchingADesignSpaceExploration-2018.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/mudgal2018.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/mudgal2018.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/DeepLearningForEntityMatchingADesignSpaceExploration-2018.pdf",
+            "old_name": "mudgal2018.pdf",
+            "new_name": "DeepLearningForEntityMatchingADesignSpaceExploration-2018.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "9e59c30c-d71f-4b4e-ab20-d1aa1c2275aa",
+        "source_id": "9f0d6b10-e30f-4a4d-bc5a-b913ce23fd69",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/DeepLearningForEntityMatchingADesignSpaceExploration-2018.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "30c191e5326ccaeee2d6efd01aa36799c806e28e620e9ef74eb6e0bb8410f829",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/mudgal2018.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "mudgal2018",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/DeepLearningForEntityMatchingADesignSpaceExploration-2018.pdf",
+        "moves": [
+          {
+            "operation_id": "9c70702b-1142-4459-a94c-fc36e4da6212",
+            "resource_id": "9e59c30c-d71f-4b4e-ab20-d1aa1c2275aa",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/mudgal2018.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/DeepLearningForEntityMatchingADesignSpaceExploration-2018.pdf",
+            "old_name": "mudgal2018.pdf",
+            "new_name": "DeepLearningForEntityMatchingADesignSpaceExploration-2018.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "9e59c30c-d71f-4b4e-ab20-d1aa1c2275aa",
+          "source_id": "9f0d6b10-e30f-4a4d-bc5a-b913ce23fd69",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/DeepLearningForEntityMatchingADesignSpaceExploration-2018.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "30c191e5326ccaeee2d6efd01aa36799c806e28e620e9ef74eb6e0bb8410f829",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/mudgal2018.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/DeepLearningForEntityMatchingADesignSpaceExploration-2018.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": null
+    },
+    {
+      "key": "konda2016",
+      "url": "https://pages.cs.wisc.edu/~anhai/papers/magellan-vldb16.pdf",
+      "accessed_at": "2026-09-27T22:09:39.537700+00:00",
+      "sha256": "c8cd4abd17917e60bcd3bb7b7b968f66b679590c501631cd68105afbf606c959",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "konda2016",
+        "path": "/private/tmp/refs-dema-execution/fetched/konda2016.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/MagellanTowardBuildingEntityMatchingManagementSystems-2016.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/konda2016.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/konda2016.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/MagellanTowardBuildingEntityMatchingManagementSystems-2016.pdf",
+            "old_name": "konda2016.pdf",
+            "new_name": "MagellanTowardBuildingEntityMatchingManagementSystems-2016.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "9116e202-a238-42b4-bd6c-6b602a7b1e19",
+        "source_id": "408a786f-79e6-4c29-8e62-4701bd1d07b9",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/MagellanTowardBuildingEntityMatchingManagementSystems-2016.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "c8cd4abd17917e60bcd3bb7b7b968f66b679590c501631cd68105afbf606c959",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/konda2016.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "konda2016",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/MagellanTowardBuildingEntityMatchingManagementSystems-2016.pdf",
+        "moves": [
+          {
+            "operation_id": "5a0db36d-ac4b-4061-834d-eef9f6f487bd",
+            "resource_id": "9116e202-a238-42b4-bd6c-6b602a7b1e19",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/konda2016.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/MagellanTowardBuildingEntityMatchingManagementSystems-2016.pdf",
+            "old_name": "konda2016.pdf",
+            "new_name": "MagellanTowardBuildingEntityMatchingManagementSystems-2016.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "9116e202-a238-42b4-bd6c-6b602a7b1e19",
+          "source_id": "408a786f-79e6-4c29-8e62-4701bd1d07b9",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/MagellanTowardBuildingEntityMatchingManagementSystems-2016.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "c8cd4abd17917e60bcd3bb7b7b968f66b679590c501631cd68105afbf606c959",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/konda2016.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/MagellanTowardBuildingEntityMatchingManagementSystems-2016.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": null
+    },
+    {
+      "key": "nist2020sp80053",
+      "url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r5.pdf",
+      "accessed_at": "2026-09-27T22:09:40.174300+00:00",
+      "sha256": "fc63bcd61715d0181dd8e85998b1e6201ae3515fc6626102101cab1841e11ec6",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "nist2020sp80053",
+        "path": "/private/tmp/refs-dema-execution/fetched/nist2020sp80053.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/SecurityAndPrivacyControlsForInformationSystemsAndOrganizations-2020.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/nist2020sp80053.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/nist2020sp80053.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/SecurityAndPrivacyControlsForInformationSystemsAndOrganizations-2020.pdf",
+            "old_name": "nist2020sp80053.pdf",
+            "new_name": "SecurityAndPrivacyControlsForInformationSystemsAndOrganizations-2020.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "6080a879-411a-480f-af1f-c093fbf376a2",
+        "source_id": "9a4ef538-9c4d-4c57-a3fa-01a4d4745ebc",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/SecurityAndPrivacyControlsForInformationSystemsAndOrganizations-2020.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "fc63bcd61715d0181dd8e85998b1e6201ae3515fc6626102101cab1841e11ec6",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/nist2020sp80053.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "nist2020sp80053",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/SecurityAndPrivacyControlsForInformationSystemsAndOrganizations-2020.pdf",
+        "moves": [
+          {
+            "operation_id": "bad03fe8-f7e9-4340-a7fe-7813abada865",
+            "resource_id": "6080a879-411a-480f-af1f-c093fbf376a2",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/nist2020sp80053.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/SecurityAndPrivacyControlsForInformationSystemsAndOrganizations-2020.pdf",
+            "old_name": "nist2020sp80053.pdf",
+            "new_name": "SecurityAndPrivacyControlsForInformationSystemsAndOrganizations-2020.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "6080a879-411a-480f-af1f-c093fbf376a2",
+          "source_id": "9a4ef538-9c4d-4c57-a3fa-01a4d4745ebc",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/SecurityAndPrivacyControlsForInformationSystemsAndOrganizations-2020.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "fc63bcd61715d0181dd8e85998b1e6201ae3515fc6626102101cab1841e11ec6",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/nist2020sp80053.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/SecurityAndPrivacyControlsForInformationSystemsAndOrganizations-2020.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": null
+    },
+    {
+      "key": "fedramp2024",
+      "url": "https://www.fedramp.gov/2026/",
+      "accessed_at": "2026-09-27T22:09:40.197625+00:00",
+      "sha256": "817431e9bf2553c3739357bc197a79f426b54324b437c3f55a1f6241eb6b7443",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "fedramp2024",
+        "path": "/private/tmp/refs-dema-execution/fetched/fedramp2024-capture.json",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/FedRAMPConsolidatedRulesFor2026-v2026.09.22.01-2026-capture.json",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/fedramp2024-capture.json",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/fedramp2024-capture.json",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/FedRAMPConsolidatedRulesFor2026-v2026.09.22.01-2026-capture.json",
+            "old_name": "fedramp2024-capture.json",
+            "new_name": "FedRAMPConsolidatedRulesFor2026-v2026.09.22.01-2026-capture.json",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "2b629735-0436-45a2-be3e-3ace2cad891e",
+        "source_id": "0fa01938-6fff-45af-abf2-309b6cad7e3d",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/FedRAMPConsolidatedRulesFor2026-v2026.09.22.01-2026-capture.json",
+        "label": "capture",
+        "media_type": null,
+        "digest": "817431e9bf2553c3739357bc197a79f426b54324b437c3f55a1f6241eb6b7443",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/fedramp2024-capture.json",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "fedramp2024",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/FedRAMPConsolidatedRulesFor2026-v2026.09.22.01-2026-capture.json",
+        "moves": [
+          {
+            "operation_id": "c4b85198-a0db-4d8a-b6ec-33809f83105c",
+            "resource_id": "2b629735-0436-45a2-be3e-3ace2cad891e",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/fedramp2024-capture.json",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/FedRAMPConsolidatedRulesFor2026-v2026.09.22.01-2026-capture.json",
+            "old_name": "fedramp2024-capture.json",
+            "new_name": "FedRAMPConsolidatedRulesFor2026-v2026.09.22.01-2026-capture.json",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "2b629735-0436-45a2-be3e-3ace2cad891e",
+          "source_id": "0fa01938-6fff-45af-abf2-309b6cad7e3d",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/FedRAMPConsolidatedRulesFor2026-v2026.09.22.01-2026-capture.json",
+          "label": "capture",
+          "media_type": null,
+          "digest": "817431e9bf2553c3739357bc197a79f426b54324b437c3f55a1f6241eb6b7443",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/fedramp2024-capture.json",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/FedRAMPConsolidatedRulesFor2026-v2026.09.22.01-2026-capture.json",
+          "status": "available"
+        }
+      ],
+      "notes": "Single-file JSON capture contains all Markdown and JSON files from the official 2026-markdown and rules repositories at pinned commits. The site changelog identifies content release 2026.09.22.01; its underlying rules data retains version 2026.09.13.02, consistent with the later release being content/build-only. No browser used."
+    },
+    {
+      "key": "khattab2024",
+      "url": "https://proceedings.iclr.cc/paper_files/paper/2024/file/f1cf02ce09757f57c3b93c0db83181e0-Paper-Conference.pdf",
+      "accessed_at": "2026-09-27T22:09:40.765485+00:00",
+      "sha256": "0592d139b3a40ba26c6669012339242b59d88ac1c2ed2bf8250429446b9d487b",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "khattab2024",
+        "path": "/private/tmp/refs-dema-execution/fetched/khattab2024.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoStateOfTheArtPipelines-2024.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/khattab2024.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/khattab2024.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoStateOfTheArtPipelines-2024.pdf",
+            "old_name": "khattab2024.pdf",
+            "new_name": "DSPyCompilingDeclarativeLanguageModelCallsIntoStateOfTheArtPipelines-2024.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "57468d32-d99e-4a33-86ca-ec768a1310b5",
+        "source_id": "31ae065f-5d98-42b0-9a95-ee8fbc6a1af5",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoStateOfTheArtPipelines-2024.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "0592d139b3a40ba26c6669012339242b59d88ac1c2ed2bf8250429446b9d487b",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/khattab2024.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "khattab2024",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoStateOfTheArtPipelines-2024.pdf",
+        "moves": [
+          {
+            "operation_id": "9c3f13e5-c75c-4ccc-a319-370a3d9cbe95",
+            "resource_id": "57468d32-d99e-4a33-86ca-ec768a1310b5",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/khattab2024.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoStateOfTheArtPipelines-2024.pdf",
+            "old_name": "khattab2024.pdf",
+            "new_name": "DSPyCompilingDeclarativeLanguageModelCallsIntoStateOfTheArtPipelines-2024.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "57468d32-d99e-4a33-86ca-ec768a1310b5",
+          "source_id": "31ae065f-5d98-42b0-9a95-ee8fbc6a1af5",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoStateOfTheArtPipelines-2024.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "0592d139b3a40ba26c6669012339242b59d88ac1c2ed2bf8250429446b9d487b",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/khattab2024.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoStateOfTheArtPipelines-2024.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": "Attached PDF linked by the official ICLR 2024 proceedings page, marked Published as a conference paper at ICLR 2024. Its cover says Self-Improving Pipelines although the proceedings page and existing catalog title say State-of-the-Art Pipelines; existing approved catalog metadata is preserved."
+    },
+    {
+      "key": "nussbaum2024nomic",
+      "url": "https://arxiv.org/pdf/2402.01613v1",
+      "accessed_at": "2026-09-27T22:09:40.448522+00:00",
+      "sha256": "c82d1ba2fbb03747bc6665821edfd07895cd162dc06cecb067898f33d24380b3",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "nussbaum2024nomic",
+        "path": "/private/tmp/refs-dema-execution/fetched/nussbaum2024nomic.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2024.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/nussbaum2024nomic.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/nussbaum2024nomic.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2024.pdf",
+            "old_name": "nussbaum2024nomic.pdf",
+            "new_name": "NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2024.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "d7a2da42-5cb8-4a85-bc9c-f2c19ca21da0",
+        "source_id": "37648d5b-2c8a-431f-a216-b00a1f2ac86c",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2024.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "c82d1ba2fbb03747bc6665821edfd07895cd162dc06cecb067898f33d24380b3",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/nussbaum2024nomic.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "nussbaum2024nomic",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2024.pdf",
+        "moves": [
+          {
+            "operation_id": "d31ca846-9908-422e-87ad-f277745f9fac",
+            "resource_id": "d7a2da42-5cb8-4a85-bc9c-f2c19ca21da0",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/nussbaum2024nomic.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2024.pdf",
+            "old_name": "nussbaum2024nomic.pdf",
+            "new_name": "NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2024.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "d7a2da42-5cb8-4a85-bc9c-f2c19ca21da0",
+          "source_id": "37648d5b-2c8a-431f-a216-b00a1f2ac86c",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2024.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "c82d1ba2fbb03747bc6665821edfd07895cd162dc06cecb067898f33d24380b3",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/nussbaum2024nomic.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2024.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": "Attached preprint arXiv 2402.01613v1, dated 2024-02-02, separate from TMLR publication."
+    },
+    {
+      "key": "khattab2023dspy",
+      "url": "https://arxiv.org/pdf/2310.03714v1",
+      "accessed_at": "2026-09-27T22:09:40.460227+00:00",
+      "sha256": "5309836325c3a580b6c176242f49f21ca40e413b0acd514e74b67e16bb1b56bc",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "khattab2023dspy",
+        "path": "/private/tmp/refs-dema-execution/fetched/khattab2023dspy.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoSelfImprovingPipelines-2023.pdf",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/khattab2023dspy.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-dema-execution/fetched/khattab2023dspy.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoSelfImprovingPipelines-2023.pdf",
+            "old_name": "khattab2023dspy.pdf",
+            "new_name": "DSPyCompilingDeclarativeLanguageModelCallsIntoSelfImprovingPipelines-2023.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "8f459b96-0661-4222-9209-9c698293c9a1",
+        "source_id": "bb47231c-5065-411b-8023-e0057e8d5528",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoSelfImprovingPipelines-2023.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "5309836325c3a580b6c176242f49f21ca40e413b0acd514e74b67e16bb1b56bc",
+        "copied_from": {
+          "path": "/private/tmp/refs-dema-execution/fetched/khattab2023dspy.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "khattab2023dspy",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoSelfImprovingPipelines-2023.pdf",
+        "moves": [
+          {
+            "operation_id": "94d8ada7-7188-4c0d-9c0d-f3dab6ab34c6",
+            "resource_id": "8f459b96-0661-4222-9209-9c698293c9a1",
+            "old_path": "/private/tmp/refs-dema-execution/fetched/khattab2023dspy.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoSelfImprovingPipelines-2023.pdf",
+            "old_name": "khattab2023dspy.pdf",
+            "new_name": "DSPyCompilingDeclarativeLanguageModelCallsIntoSelfImprovingPipelines-2023.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resources": [
+        {
+          "id": "8f459b96-0661-4222-9209-9c698293c9a1",
+          "source_id": "bb47231c-5065-411b-8023-e0057e8d5528",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoSelfImprovingPipelines-2023.pdf",
+          "label": null,
+          "media_type": null,
+          "digest": "5309836325c3a580b6c176242f49f21ca40e413b0acd514e74b67e16bb1b56bc",
+          "copied_from": {
+            "path": "/private/tmp/refs-dema-execution/fetched/khattab2023dspy.pdf",
+            "root": null,
+            "relative": null
+          },
+          "resolved_path": "/Volumes/Casa/refs/lib/unfiled/DSPyCompilingDeclarativeLanguageModelCallsIntoSelfImprovingPipelines-2023.pdf",
+          "status": "available"
+        }
+      ],
+      "notes": "Attached preprint arXiv 2310.03714v1, dated 2023-10-05, separate from ICLR publication."
+    }
+  ],
+  "owner_fetch_list": [
+    {
+      "key": "howard2007bloor",
+      "url": "https://www.bloorresearch.com/",
+      "curl_exit": 0,
+      "http": "200",
+      "effective_url": "https://www.bloorresearch.com/",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 29392,
+      "sha256": "f74013f1a56908e5c08af9042f33b9ecf10f5ed73e948585a25942d776c2dab2",
+      "pdf": false,
+      "error": "",
+      "accessed_at": "2026-09-27T22:09:37.703540+00:00"
+    },
+    {
+      "key": "howard2011bloor",
+      "url": "https://www.bloorresearch.com/research/data-migration-2011/",
+      "curl_exit": 0,
+      "http": "404",
+      "effective_url": "https://www.bloorresearch.com/research/data-migration-2011/",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 55207,
+      "sha256": "a50f85e02367d448e2770ccaaf9d0dd665b42fc78418711dfca3b1a8034f7bd7",
+      "pdf": false,
+      "error": "",
+      "accessed_at": "2026-09-27T22:09:37.979058+00:00"
+    },
+    {
+      "key": "bernsteinhaas2008",
+      "url": "https://dl.acm.org/doi/pdf/10.1145/1378727.1378745",
+      "curl_exit": 0,
+      "http": "403",
+      "effective_url": "https://dl.acm.org/doi/pdf/10.1145/1378727.1378745",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 5494,
+      "sha256": "c546447d2780689f097b669e5cc198b2873c2afd1134ea4f89da836c033d667c",
+      "pdf": false,
+      "error": "",
+      "accessed_at": "2026-09-27T22:09:37.025853+00:00"
+    },
+    {
+      "key": "nussbaum-2025-nomicEmbed",
+      "url": "https://openreview.net/pdf?id=IPmzyQSiQE",
+      "curl_exit": 0,
+      "http": "403",
+      "effective_url": "https://openreview.net/pdf?id=IPmzyQSiQE",
+      "content_type": "text/html",
+      "bytes": 12692,
+      "sha256": "a2d811e0d24af89d9bd4b19cc9e8fbc474c67ef3827648550a6560eca2a5e332",
+      "pdf": false,
+      "error": "",
+      "accessed_at": "2026-09-27T22:09:38.189111+00:00"
+    },
+    {
+      "key": "christophides2021",
+      "url": "https://dl.acm.org/doi/pdf/10.1145/3418896",
+      "curl_exit": 0,
+      "http": "403",
+      "effective_url": "https://dl.acm.org/doi/pdf/10.1145/3418896",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 5470,
+      "sha256": "b48874359cf48a8a65509b5600cd20e24029b60e220e6cbb5e81eca867e06482",
+      "pdf": false,
+      "error": "",
+      "accessed_at": "2026-09-27T22:09:38.820554+00:00"
+    },
+    {
+      "key": "koutras2021valentine",
+      "url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9458921",
+      "curl_exit": 0,
+      "http": "418",
+      "effective_url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9458921",
+      "content_type": "text/html",
+      "bytes": 15410,
+      "sha256": "4839aa29458f7bcd2648b32595b1f9266dd97848a3ba17d611d2c3107be4306e",
+      "pdf": false,
+      "error": "",
+      "accessed_at": "2026-09-27T22:09:39.518005+00:00"
+    },
+    {
+      "key": "deb2014",
+      "url": "https://link.springer.com/content/pdf/10.1007/978-1-4614-6940-7_15.pdf",
+      "curl_exit": 0,
+      "http": "200",
+      "effective_url": "https://link.springer.com/chapter/10.1007/978-1-4614-6940-7_15?error=cookies_not_supported&code=a21b2f0f-91fb-42c9-a906-06e065544c14",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 384381,
+      "sha256": "aeb7ba43ea9a67f6fe2a2f02402fbee9788afe6ab48bdba1100b5d7bb6fb149b",
+      "pdf": false,
+      "error": "",
+      "accessed_at": "2026-09-27T22:09:42.630390+00:00"
+    },
+    {
+      "key": "zitzler2003",
+      "url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1197687",
+      "curl_exit": 0,
+      "http": "418",
+      "effective_url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1197687",
+      "content_type": "text/html",
+      "bytes": 15410,
+      "sha256": "377aba1eac466bd4be38dac033d0d83324c8c1506998dc0776c473e2f2e437fe",
+      "pdf": false,
+      "error": "",
+      "accessed_at": "2026-09-27T22:09:39.516777+00:00"
+    },
+    {
+      "key": "zhou2023ape",
+      "url": "https://openreview.net/pdf?id=YdqwNaCLCx",
+      "curl_exit": 0,
+      "http": "403",
+      "effective_url": "https://openreview.net/pdf?id=YdqwNaCLCx",
+      "content_type": "text/html",
+      "bytes": 12692,
+      "sha256": "a2d811e0d24af89d9bd4b19cc9e8fbc474c67ef3827648550a6560eca2a5e332",
+      "pdf": false,
+      "error": "",
+      "accessed_at": "2026-09-27T22:09:39.651105+00:00"
+    },
+    {
+      "key": "dod2020cmmc",
+      "url": "https://dodcio.defense.gov/Portals/0/Documents/CMMC/ModelOverviewv2.pdf",
+      "curl_exit": 0,
+      "http": "403",
+      "effective_url": "https://dodcio.defense.gov/Portals/0/Documents/CMMC/ModelOverviewv2.pdf",
+      "content_type": "text/html",
+      "bytes": 436,
+      "sha256": "d197edbb7ff3bbbd6025e410690bca025e83eaeef1d9a8bf6de9feb82c23a9b3",
+      "pdf": false,
+      "error": "",
+      "accessed_at": "2026-09-27T22:09:39.813209+00:00"
+    },
+    {
+      "key": "sequeda-2024-benchmarkUnderstand",
+      "url": "https://dl.acm.org/doi/pdf/10.1145/3661304.3661901",
+      "curl_exit": 0,
+      "http": "403",
+      "effective_url": "https://dl.acm.org/doi/pdf/10.1145/3661304.3661901",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 5494,
+      "sha256": "285d8e5240a2d10ebbe1accfaa91eb2ca20f284c00e531396b763baa5c951237",
+      "pdf": false,
+      "error": "",
+      "accessed_at": "2026-09-27T22:09:39.970792+00:00"
+    }
+  ],
+  "html_link_summary": {
+    "baseline": {
+      "count": 43,
+      "missing_targets": 0,
+      "number_mismatches": 43
+    },
+    "candidate": {
+      "count": 43,
+      "missing_targets": 0,
+      "number_mismatches": 43
+    }
+  },
+  "artifacts": {
+    "docs/tdd/_book/a6-references.html": {
+      "sha256": "949b8b5130bf6640eaa261ea32841c3d89577c38453333c14bcca706f48aeae7",
+      "bytes": 64387
+    },
+    "docs/tdd/_book/DEMA-LLM-Design-Document.pdf": {
+      "sha256": "4aecc6b93d6a41a9fe8b4692b7f9547f8b8ffa993114c13f58a0b1c3ab4f84bf",
+      "bytes": 830367
+    },
+    "docs/pdd/DEMA-LLM-Overview.docx": {
+      "sha256": "e7d93c666a0521ed92c621d4f99a4f3f10105220af920bad3d28c2d06775e8f4",
+      "bytes": 26894
+    },
+    "docs/pdd/DEMA-LLM-Overview.pdf": {
+      "sha256": "e8a7e01c74cb10f4a783a2c63c30bd7a57e90f66ce790329952506dbc1e0e62b",
+      "bytes": 74186
+    },
+    "docs/references.json": {
+      "sha256": "c871daab1aabc7972377b682d346859d9fee26f3496cafe34b32f3400b0cb508",
+      "bytes": 25611
+    },
+    "docs/csl/ieee.csl": {
+      "sha256": "ef47dd8a98bc4b6fb240ced8e0e8192460f3aa3800b278d6f362a5d5ac91d513",
+      "bytes": 17796
+    }
+  },
+  "scratch_transformations": {
+    "citation_files": [
+      "docs/tdd/a6-references.qmd",
+      "docs/tdd/00-product-overview.qmd",
+      "docs/pdd/DEMA-LLM-Overview.qmd"
+    ],
+    "key_map": {
+      "sequeda2023": "sequeda-2024-benchmarkUnderstand",
+      "nussbaum2024nomic": "nussbaum-2025-nomicEmbed",
+      "khattab2023dspy": "khattab2024",
+      "openai2024gpt4": "openai2023gpt4"
+    },
+    "configurations": [
+      "docs/tdd/_quarto.yml",
+      "docs/pdd/DEMA-LLM-Overview.qmd"
+    ],
+    "style": "docs/csl/ieee.csl"
+  }
+}
