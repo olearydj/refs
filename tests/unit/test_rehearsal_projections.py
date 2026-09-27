@@ -8,7 +8,7 @@ from refs import bibliography
     ('book',{'collection-editor':[{'family':'Series','given':'Alex'}]}, {}, b'editor = {Series, Alex}', 'collection_editor_fallback'),
     ('chapter',{'container-title':'Collected Work','container-author':[{'family':'Book','given':'Alex'}]}, {}, b'bookauthor = {Book, Alex}', 'container_author_omission'),
     ('article-journal',{'container-title':'Journal'}, {'journal_series':'Second Series'}, b'series = {Second Series}', 'journal_series_fallback'),
-    ('patent',{}, {'patent':{'assignees':[{'literal':'Research and Design'},{'family':'Holder','given':'Alex'}]}}, b'Assignee: Research and Design; Alex Holder', 'assignee_in_note'),
+    ('patent',{}, {'patent':{'assignees':[{'literal':'Research and Design'},{'family':'Holder','given':'Alex'}]}}, b'{A}ssignee: Research and Design; Alex Holder', 'assignee_in_note'),
     ('article',{}, {'identifiers':{'arxiv':'arXiv:2407.01502 [cs.AI]','oclc':'123456'}}, b'eprint = {2407.01502}', 'arxiv_fallback'),
 ])
 def test_assessed_rehearsal_projections(kind,metadata,extensions,expected,code):

@@ -106,13 +106,13 @@ def test_identifier_search_and_portable_fallback(initialized, tmp_path):
         assert search.retrieve(tmp_path / "cat", query)["items"][0]["exact_match"]
     output, warnings = bibliography.serialize([record])
     assert b"eprint = {2407.01502}" in output and b"eprinttype = {arxiv}" in output
-    assert b"note = {Supplied; arXiv:2407.01502}" in output
+    assert b"note = {{S}upplied; arXiv:2407.01502}" in output
     assert all(w["details"]["class"] != "unknown" for w in warnings)
     output, _ = bibliography.serialize([record | {"_howpublished": "arXiv:2407.01502"}])
-    assert b"note = {Supplied}" in output and b"howpublished = {arXiv:2407.01502}" in output
+    assert b"note = {{S}upplied}" in output and b"howpublished = {arXiv:2407.01502}" in output
     raw["metadata"]["type"] = "article-journal"
     output, _ = bibliography.serialize([raw])
-    assert b"note = {Supplied}" in output
+    assert b"note = {{S}upplied}" in output
 
 
 def test_incompatible_assigned_key_stays_preserved(initialized,zotero_fixture,tmp_path):

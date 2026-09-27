@@ -179,7 +179,7 @@ def test_native_patent_holder_is_a_field_not_a_note():
 
 
 @pytest.mark.slow
-def test_other_profiles_and_nonmisc_bytes_match_before_portable_misc_change():
+def test_other_profiles_bytes_match_before_portable_note_protection():
     import types
     from contextlib import closing
 
@@ -189,9 +189,9 @@ def test_other_profiles_and_nonmisc_bytes_match_before_portable_misc_change():
     if not catalog.exists():
         pytest.skip('Owner real catalog unavailable')
     root = Path(__file__).parents[2]
-    previous = subprocess.run(['git', 'show', '0abfff9:src/refs/bibliography.py'], cwd=root, text=True, capture_output=True)
+    previous = subprocess.run(['git', 'show', 'ff5939a:src/refs/bibliography.py'], cwd=root, text=True, capture_output=True)
     if previous.returncode:
-        pytest.skip('Pinned pre-misc-projection checkout unavailable')
+        pytest.skip('Pinned pre-note-protection checkout unavailable')
     baseline = types.ModuleType('pre_biblatex')
     exec(compile(previous.stdout, 'pre-biblatex-bibliography.py', 'exec'), baseline.__dict__)
     with closing(sqlite3.connect(catalog.as_uri() + '?mode=ro', uri=True)) as db:
@@ -211,8 +211,5 @@ def test_other_profiles_and_nonmisc_bytes_match_before_portable_misc_change():
                     if entry['class'] in ('blocking', 'structural', 'unknown')])
 
     for value in values:
-        before = projected(baseline.serialize, value, 'portable-bibtex-v1')
-        if before[0] == 'refusal' or not before[1].startswith(b'@misc{'):
-            assert projected(bibliography.serialize, value, 'portable-bibtex-v1') == before
         assert projected(bibliography.serialize, value, 'biblatex-v1') == projected(baseline.serialize, value, 'biblatex-v1')
     assert bibliography.serialize_csl(values)[0] == baseline.serialize_csl(values)[0]

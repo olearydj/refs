@@ -317,11 +317,14 @@ def _project_extensions(metadata, value, record, entry_type, notes, put, assess,
 
 
 
-def _finish_notes(metadata, kind, record, notes, put):
+def _finish_notes(metadata, kind, record, notes, put, *, biblatex=False):
     if record.get('_howpublished'):
         put('howpublished', record['_howpublished'], literal=True)
     if notes:
-        put('note', title('; '.join(notes), {'protected_terms': [str(metadata['number'])] if kind in ('patent', 'standard') and metadata.get('number') else []}), literal=True)
+        rendered = title('; '.join(notes), {'protected_terms': [str(metadata['number'])] if kind in ('patent', 'standard') and metadata.get('number') else []})
+        if not biblatex and rendered[:1].isupper():
+            rendered = '{' + rendered[0] + '}' + rendered[1:]
+        put('note', rendered, literal=True)
 
 
 
@@ -439,7 +442,7 @@ def serialize(records: list[dict], *, allow_unknown: bool = False, profile: str 
                 put('csltype', kind)
             _project_note_fields(metadata, used, notes, assess, biblatex=biblatex)
             _project_extensions(metadata, value, record, entry_type, notes, put, assess, biblatex=biblatex, render_names=render_names)
-            _finish_notes(metadata, kind, record, misc_notes + notes, put)
+            _finish_notes(metadata, kind, record, misc_notes + notes, put, biblatex=biblatex)
             entry = '@' + entry_type + '{' + key + ',\n'
             for name, text in fields.items():
                 entry += f'  {name} = {text},\n' if name == 'month' and text in {short for short, _ in MONTHS} else f'  {name} = {{{text}}},\n'

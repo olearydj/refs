@@ -368,8 +368,8 @@ def test_classic_misc_styles_print_manufacturing_news_outlet(tmp_path, pytestcon
     (tmp_path / 'paper.aux').write_text('\\relax\n\\citation{*}\n\\bibstyle{' + style + '}\n\\bibdata{references}\n')
     run([tool('bibtex', pytestconfig), 'paper'], tmp_path)
     bbl = (tmp_path / 'paper.bbl').read_text()
-    # elsarticle lowercases a note's initial letter after the title.
-    outlet = 'auburn Engineering News' if style == 'elsarticle-num' else 'Auburn Engineering News'
+    # Both styles preserve the braced capital in the generated TeX.
+    outlet = '{A}uburn Engineering News'
     entries = re.split(r'\\bibitem(?:\[[^\]]*\])?\{[^}]+\}', bbl)[1:]
     assert len(entries) == 3
     for entry in entries:

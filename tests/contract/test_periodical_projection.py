@@ -25,7 +25,7 @@ def test_periodical_type_date_page_and_place_round_trip(kind, subtype):
     assert f'entrysubtype = {{{subtype}}}'.encode() in output
     assert b'address = {Kingsport, Tennessee}' in output
     assert b'Published in' not in output
-    assert b'Independent capture fact' in output
+    assert b'{I}ndependent capture fact' in output
     assert not any(w['code'] == 'field_omitted' and w['details']['mapping_id'] == 'metadata.publisher-place' for w in warnings)
     restored = bibtex.parse(bibtex.partition(output)[0]['raw'])
     metadata = restored['source'].canonical()['metadata']
@@ -65,7 +65,7 @@ def test_place_note_is_kept_unless_the_same_place_is_projected(place):
     else:
         payload['metadata']['publisher-place'] = place
     output, _ = bibliography.serialize([SourceCreate.model_validate(payload).canonical()])
-    assert b'Published in Kingsport, Tennessee.' in output
+    assert b'{P}ublished in Kingsport, Tennessee.' in output
 
 
 @pytest.mark.parametrize(('subtype', 'canonical'), [('Newspaper', 'article-newspaper'), ('MAGAZINE', 'article-magazine')])

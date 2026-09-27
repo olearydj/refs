@@ -67,7 +67,7 @@ def test_five_minimized_pilot_exports_before_and_after():
     after_report = next(block['raw'] for block in bibtex.partition(output) if block['kind'] == 'entry' and b'{macr-5804,' in block['raw'])
     portable, _ = bibliography.serialize(records)
     portable_report = next(block['raw'] for block in bibtex.partition(portable) if block['kind'] == 'entry' and b'{macr-5804,' in block['raw'])
-    assert before_report == portable_report
+    assert before_report.replace(b'note = {Medium:', b'note = {{M}edium:') == portable_report
     assert b'institution = {457th Bomb Group Association}' in after_report
     assert b'type = {Missing Air Crew Report}' in after_report
     assert b'Website:' in before and b'Website:' not in output
@@ -112,7 +112,25 @@ def test_portable_misc_plain_facts_lead_note_without_synthetic_howpublished(kind
                            'issued': {'date-parts': [[2025, 5, 27]]}}}
     output, _ = bibliography.serialize([source])
     assert output.startswith(b'@misc{')
-    assert rb'note = {Host \& Outlet; Research and Development; Captured item; scanned copy; 1.2; Existing note; Issued: 2025-05-27}' in output
+    assert rb'note = {{H}ost \& Outlet; Research and Development; Captured item; scanned copy; 1.2; Existing note; Issued: 2025-05-27}' in output
     for field in [b'journal', b'publisher', b'type', b'medium', b'version', b'howpublished']:
         assert b'  ' + field + b' =' not in output
     assert source['metadata']['container-title'] == 'Host & Outlet'
+
+
+@pytest.mark.parametrize('kind', ['document', 'article-journal'])
+@pytest.mark.parametrize('note, rendered', [
+    ('Auburn Engineering News', '{A}uburn Engineering News'),
+    ('École archives', '{É}cole archives'),
+    ('lowercase note', 'lowercase note'),
+    ('2026 release', '2026 release'),
+    ('$X$ observation', '$X$ observation'),
+])
+def test_portable_note_capital_protection_round_trips_as_plain_text(kind, note, rendered):
+    source = {'schema_version': '1.0', 'citation_key': 'note',
+              'metadata': {'type': kind, 'title': 'Example', 'note': note}}
+    output, _ = bibliography.serialize([source])
+    assert ('  note = {' + rendered + '},').encode() in output
+    restored = bibtex.parse(bibtex.partition(output)[0]['raw'])['source']
+    assert restored.metadata.note == note
+    assert source['metadata']['note'] == note
