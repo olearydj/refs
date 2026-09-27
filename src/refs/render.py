@@ -213,7 +213,11 @@ def record_list(command: str, data: dict, terminal: bool, width: int, warnings: 
         occupied = sum(min(max(len(str(row[index])) for row in rows), limits.get(index, width)) for index in range(len(rows[0])) if index != title_index)
         limits[title_index] = max(12, width - occupied - 2 * len(rows[0]) - 2)
     rendered = table_rows(rows, wrap=title_index, styles=styles, limits=limits, fixed=fixed, terminal=terminal, width=width)
-    return rendered + '\n' + styled_line(f"{len(items)} {'source' if len(items) == 1 else 'sources'}", 'dim', terminal, width)
+    shown, total, offset = len(items), data.get('total'), data.get('offset', 0)
+    footer = f"{shown} {'source' if shown == 1 else 'sources'}"
+    if total is not None and total > offset + shown:
+        footer = f"{shown} of {total} sources shown; --offset {offset + shown} for the next page, --limit 1000 for up to 1000 at once"
+    return rendered + '\n' + styled_line(footer, 'dim', terminal, width)
 
 
 def one_record(command: str, data: dict, terminal: bool, width: int, warnings: list[dict] | None = None) -> str:
@@ -349,16 +353,39 @@ def confirmation(command: str, data: dict, terminal: bool, width: int, warnings:
     return templates[command]()
 
 
+def summary_text(command: str, data: dict, terminal: bool, width: int, warnings: list[dict] | None = None) -> str:
+    def section(title, rows):
+        return styled_line(title, 'bold', terminal, width) + '\n' + (table_rows(rows, wrap=None, styles={0: 'dim'}, terminal=terminal, width=width) if rows else '  (none)')
+    catalog, sources, files_, imports = data['catalog'], data['sources'], data['files'], data['imports']
+    parts = [section('Catalog', [
+        ['Path', catalog['path']], ['Schema', str(catalog['schema_version'])], ['Revision', str(catalog['revision'])],
+        ['Sources', f"{sources['active']} active, {sources['removed']} removed; {sources['with_files']} with files, {sources['without_files']} without"],
+        ['Files', f"{files_['managed']} managed ({files_['unfiled']} under unfiled), {files_['linked']} linked, {files_['missing']} missing, {files_['unrecorded']} unrecorded"],
+        ['Imports', (f"{imports['batches']} batches, {imports['open_conflicts']} open conflicts" + (f"; last {imports['last']['origin']} at {imports['last']['started'][:19]}" if imports['last'] else ''))],
+    ])]
+    parts.append(section('Sources by type', [[kind, str(count)] for kind, count in data['types'].items()]))
+    kind_rows = [[name, str(count)] for name, count in data['kinds']['assigned'].items()]
+    kind_rows += [[f'unassigned {kind}', str(count)] for kind, count in data['kinds']['unassigned'].items()]
+    parts.append(section('Kinds', kind_rows))
+    parts.append(section('Locations', [[item['loc'], str(item['count'])] for item in data['locs']]))
+    parts.append(section('Collections', [[item['path'], str(item['count'])] for item in data['collections'] if '/' not in item['path']] + ([[f"({len(data['collections'])} in all)", '']] if data['collections'] else [])))
+    project_rows = []
+    for project in data['projects']:
+        project_rows.append([project['name'], f"{project['cited']} cited", ', '.join(f"{target['destination']} ({target['profile']}, {target['state']})" for target in project['targets']) or '(no export target)'])
+    parts.append(section('Projects', project_rows))
+    return '\n\n'.join(parts)
+
+
 COMMAND_CLASS = {
     'search': 'record_list', 'list': 'record_list', 'project show': 'record_list',
     'show': 'one_record',
     'import list': 'short_rows', 'resource check': 'short_rows', 'collection list': 'short_rows',
     'reorg': 'report', 'import': 'report', 'import show': 'report', 'import reconcile': 'report', 'export': 'report',
-    'open': 'short_rows',
+    'open': 'short_rows', 'summary': 'summary',
 }
 CLASS_RENDERERS = {
     'record_list': record_list, 'one_record': one_record, 'short_rows': short_rows,
-    'report': report_text, 'confirmation': confirmation,
+    'report': report_text, 'confirmation': confirmation, 'summary': summary_text,
 }
 
 

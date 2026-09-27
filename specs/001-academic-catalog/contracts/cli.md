@@ -33,13 +33,14 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | --- | --- |
 | init | --reuse-config creates a catalog at an existing configuration’s catalog path using its configured library only when no ready catalog exists; refuse a ready catalog. Without the flag, behavior is unchanged. Explicit creation using selected config/catalog and optional --library-root PATH; --no-library permits metadata-only use. Private permissions; no overwrite. |
 | paths | Resolve config/catalog/library and origins even before initialization. |
+| summary | Read-only picture of the catalog: id, schema and revision; sources active and removed, with and without files; managed, linked, unfiled, missing and unrecorded files; counts by type, kind and unassigned kind; loc folders, collections and projects with their cited counts and export targets marked current, pending, outside_edit or missing; import batches and open conflicts. |
 | config show | Inspect effective values, origins and validation diagnostics; replaces config validate. |
 | schema NAME | Exactly source-create, source-patch, source-record, result; packaged, offline. |
 | add | --format refs\|csljson\|bib --input PATH accepts one reference; --kind NAME sets its defining fields. With --file PATH, slice 3 uses the intake flags below. --keep-name preserves the basename. --dry-run shows normalization, key components and the destination. |
 | show REF | Canonical record, revision, origins/corrections, context, limitations and resource list/availability. |
 | update REF | --patch PATH or repeated --set PATH=JSON; --kind NAME sets its defining fields; --if-revision N optional. |
 | search QUERY | Exact key/normalized identifier match first, then literal lexical query; --project PROJECT, --kind NAME (or unassigned), --limit N, --offset N; matched fields and source identities. |
-| list | Same filters/pagination, including --kind NAME (or unassigned); --sort title\|key. |
+| list | Same filters/pagination, including --kind NAME (or unassigned); --sort title\|key. When more sources exist than were shown, the human footer says how many of the total were shown and names the next --offset. |
 | kinds | Read-only registry names, canonical types and defining fields. |
 | key set REF | --key TEXT --if-revision N --execute; preview otherwise, warn external citations remain unchanged. |
 | import | --format bib --input PATH --origin TEXT; preview or apply .bib with per-entry report and aggregate run counts. |

@@ -295,6 +295,12 @@ def list_kinds(ctx: typer.Context):
     report(ctx, 'kinds', {'items': kinds.REGISTRY['kinds']})
 
 
+@app.command('summary')
+def catalog_summary(ctx: typer.Context):
+    from refs import summary
+    report(ctx, 'summary', summary.overview(settings(ctx)))
+
+
 @app.command("schema")
 def inspect_schema(ctx: typer.Context, name: Annotated[str | None, typer.Argument()] = None):
     from refs.models import schema
