@@ -1,0 +1,150 @@
+{
+  "verified_on": "2026-09-26",
+  "refs": {
+    "version": "0.7.0",
+    "commit": "6459999",
+    "title_protection_merge": "105803c"
+  },
+  "publication": {
+    "path": "/Volumes/Casa/pub/2026-jose-danvas",
+    "baseline_commit": "379cde3",
+    "export_commit": "ba418b7",
+    "documentation_commit": "af6ce45",
+    "manuscript_sha256": "08b87fcbee2894ba4954e14c46190d615e5dd3548a897ae7ebc770fa9b71f35d",
+    "configuration_sha256": "ad957d19b30bbf7ad05461efd70a5300e63532d543d131ed301abff0f02f0bf3"
+  },
+  "target": {
+    "project": "jose-danvas",
+    "path": "references.json",
+    "profile": "csl-json-v1",
+    "count": 11,
+    "sha256": "6c172d67ddc26b39d31447b4a24f9583a2bc3c16367d6bebdc4e01ffa5fad89f"
+  },
+  "consumer": {
+    "quarto": "1.10.18",
+    "pandoc": "3.10",
+    "style": "Chicago Manual of Style 18th edition (author-date), bundled default",
+    "style_id": "http://www.zotero.org/styles/chicago-author-date",
+    "style_sha256": "42a41c813009fcf5b3450345fda4d67464738a2379f1bb90f65f9cc267502075",
+    "render_command": "quarto render paper.qmd -M latex-auto-install:false",
+    "reference_text_sha256": "5669ae2ea86d9aca04927022c2696025af70eda8f5b5a3645ab49122d6e10da9"
+  },
+  "comparison": {
+    "fact_losses": [],
+    "results": {
+      "quarto": [
+        {
+          "key": "bainbridge1983ironies",
+          "result": "identical"
+        },
+        {
+          "key": "bosk2026canvaslms",
+          "result": "identical"
+        },
+        {
+          "key": "nijhuis2003coursemanagement",
+          "result": "DOI letter case only"
+        },
+        {
+          "key": "instructure2026canvasapi",
+          "result": "identical"
+        },
+        {
+          "key": "jjuanrivvera2026canvascli",
+          "result": "identical"
+        },
+        {
+          "key": "lee2015canvasinteractions",
+          "result": "identical"
+        },
+        {
+          "key": "jupyter2019nbgrader",
+          "result": "identical"
+        },
+        {
+          "key": "ro2019orgcoursepack",
+          "result": "identical"
+        },
+        {
+          "key": "sandve2013reproducible",
+          "result": "identical"
+        },
+        {
+          "key": "ucfopen2026canvasapi",
+          "result": "identical"
+        },
+        {
+          "key": "weng2026canvascli",
+          "result": "identical"
+        }
+      ],
+      "jose": [
+        {
+          "key": "bainbridge1983ironies",
+          "result": "identical"
+        },
+        {
+          "key": "bosk2026canvaslms",
+          "result": "formatting only"
+        },
+        {
+          "key": "nijhuis2003coursemanagement",
+          "result": "DOI letter case only"
+        },
+        {
+          "key": "instructure2026canvasapi",
+          "result": "formatting only"
+        },
+        {
+          "key": "jjuanrivvera2026canvascli",
+          "result": "formatting only"
+        },
+        {
+          "key": "lee2015canvasinteractions",
+          "result": "identical"
+        },
+        {
+          "key": "jupyter2019nbgrader",
+          "result": "identical"
+        },
+        {
+          "key": "ro2019orgcoursepack",
+          "result": "identical"
+        },
+        {
+          "key": "sandve2013reproducible",
+          "result": "identical"
+        },
+        {
+          "key": "ucfopen2026canvasapi",
+          "result": "formatting only"
+        },
+        {
+          "key": "weng2026canvascli",
+          "result": "formatting only"
+        }
+      ]
+    },
+    "paper_full_text_difference": "S0149 → s0149 only",
+    "quarto": "1.10.18",
+    "pandoc": "3.10",
+    "refs_version": "0.7.0",
+    "refs_commit": "6459999",
+    "title_protection_merge": "105803c"
+  },
+  "jose": {
+    "target_adopted": false,
+    "worktree_commit": "2dd2973",
+    "bibliography_sha256": "83abcd481cd937df73fb5b7e581f8d286e9ab020a68205e4d3a7f428593d02b3",
+    "comparison": "Pandoc 3.10 default citeproc comparison only; no Inara rebuild",
+    "scratch_bibtex_sha256": "e4d681a00c8a3f61fd1ef71148264174e1f7acbbc32f9d6327922068589f3791"
+  },
+  "preserved_files": {
+    "paper.qmd": "08b87fcbee2894ba4954e14c46190d615e5dd3548a897ae7ebc770fa9b71f35d",
+    "references.bib": "83abcd481cd937df73fb5b7e581f8d286e9ab020a68205e4d3a7f428593d02b3",
+    "scripts/sync-jose-paper.py": "d13d1dafc6fb49030d450d8b29e26fa6223acf9c2005815fb7f524d2cba0b10b",
+    "worktrees/danvas-jose/paper.bib": "83abcd481cd937df73fb5b7e581f8d286e9ab020a68205e4d3a7f428593d02b3",
+    "worktrees/danvas-jose/paper.md": "f7401473ddc0b72bf424fa99f7e5cc4f8350590fc8a8ce09e764e8540881e5e9",
+    "docs/phase-4-literature-and-related-software.md": "f1e3a77a1d5d2afe0121beeccebe4fd8112fb78fb2e0bdfb9ae215790554f8a9"
+  }
+}

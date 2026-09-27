@@ -1,0 +1,387 @@
+[
+  {
+    "DOI": "10.1016/0005-1098(83)90046-8",
+    "author": [
+      {
+        "family": "Bainbridge",
+        "given": "Lisanne"
+      }
+    ],
+    "container-title": "Automatica",
+    "id": "bainbridge1983ironies",
+    "issue": "6",
+    "issued": {
+      "date-parts": [
+        [
+          1983
+        ]
+      ]
+    },
+    "page": "775–779",
+    "title": "Ironies of Automation",
+    "type": "article-journal",
+    "volume": "19"
+  },
+  {
+    "URL": "https://github.com/dbosk/canvaslms",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          9,
+          1
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Bosk",
+        "given": "Daniel"
+      }
+    ],
+    "id": "bosk2026canvaslms",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "title": "<span class=\"nocase\">canvaslms</span>: A <span class=\"nocase\">CLI</span> to <span class=\"nocase\">Canvas LMS</span>",
+    "type": "webpage"
+  },
+  {
+    "URL": "https://canvas.instructure.com/doc/api/",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          8,
+          30
+        ]
+      ]
+    },
+    "author": [
+      {
+        "literal": "Instructure, Inc."
+      }
+    ],
+    "id": "instructure2026canvasapi",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "title": "<span class=\"nocase\">Canvas LMS</span> <span class=\"nocase\">REST</span> <span class=\"nocase\">API</span> and Extensions Documentation",
+    "type": "webpage"
+  },
+  {
+    "URL": "https://github.com/jjuanrivvera/canvas-cli",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          9,
+          1
+        ]
+      ]
+    },
+    "author": [
+      {
+        "literal": "jjuanrivvera"
+      }
+    ],
+    "id": "jjuanrivvera2026canvascli",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "title": "<span class=\"nocase\">Canvas CLI</span>",
+    "type": "webpage"
+  },
+  {
+    "DOI": "10.21105/jose.00032",
+    "author": [
+      {
+        "literal": "Project Jupyter"
+      },
+      {
+        "family": "Blank",
+        "given": "Douglas"
+      },
+      {
+        "family": "Bourgin",
+        "given": "David"
+      },
+      {
+        "family": "Brown",
+        "given": "Alexander"
+      },
+      {
+        "family": "Bussonnier",
+        "given": "Matthias"
+      },
+      {
+        "family": "Frederic",
+        "given": "Jonathan"
+      },
+      {
+        "family": "Granger",
+        "given": "Brian"
+      },
+      {
+        "family": "Griffiths",
+        "given": "Thomas"
+      },
+      {
+        "family": "Hamrick",
+        "given": "Jessica"
+      },
+      {
+        "family": "Kelley",
+        "given": "Kyle"
+      },
+      {
+        "family": "Pacer",
+        "given": "M"
+      },
+      {
+        "family": "Page",
+        "given": "Logan"
+      },
+      {
+        "family": "Pérez",
+        "given": "Fernando"
+      },
+      {
+        "family": "Ragan-Kelley",
+        "given": "Benjamin"
+      },
+      {
+        "family": "Suchow",
+        "given": "Jordan"
+      },
+      {
+        "family": "Willing",
+        "given": "Carol"
+      }
+    ],
+    "container-title": "Journal of Open Source Education",
+    "id": "jupyter2019nbgrader",
+    "issue": "11",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "page": "32",
+    "title": "<span class=\"nocase\">nbgrader</span>: A Tool for Creating and Grading Assignments in the <span class=\"nocase\">Jupyter Notebook</span>",
+    "type": "article-journal",
+    "volume": "2"
+  },
+  {
+    "DOI": "10.18785/jetde.0802.06",
+    "author": [
+      {
+        "family": "Lee",
+        "given": "Ji Eun"
+      },
+      {
+        "family": "Recker",
+        "given": "Mimi M."
+      },
+      {
+        "family": "Choi",
+        "given": "Hongkyu"
+      },
+      {
+        "family": "Hong",
+        "given": "Won Joon"
+      },
+      {
+        "family": "Kim",
+        "given": "Nam Ju"
+      },
+      {
+        "family": "Lee",
+        "given": "Kyumin"
+      },
+      {
+        "family": "Lefler",
+        "given": "Mason"
+      },
+      {
+        "family": "Louviere",
+        "given": "John"
+      },
+      {
+        "family": "Walker",
+        "given": "Andrew"
+      }
+    ],
+    "container-title": "Journal of Educational Technology Development and Exchange",
+    "id": "lee2015canvasinteractions",
+    "issue": "2",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "title": "Applying Data Mining Methods to Understand User Interactions Within Learning Management Systems: Approaches and Lessons Learned",
+    "type": "article-journal",
+    "volume": "8"
+  },
+  {
+    "DOI": "10.1016/s0149-7189(03)00005-3",
+    "author": [
+      {
+        "family": "Gervedink Nijhuis",
+        "given": "G. J."
+      },
+      {
+        "family": "Collis",
+        "given": "B. A."
+      }
+    ],
+    "container-title": "Evaluation and Program Planning",
+    "id": "nijhuis2003coursemanagement",
+    "issue": "2",
+    "issued": {
+      "date-parts": [
+        [
+          2003
+        ]
+      ]
+    },
+    "page": "193–201",
+    "title": "Using a Web-Based Course-Management System: An Evaluation of Management Tasks and Time Implications for the Instructor",
+    "type": "article-journal",
+    "volume": "26"
+  },
+  {
+    "DOI": "10.21105/jose.00034",
+    "author": [
+      {
+        "family": "Ro",
+        "given": "Joon"
+      },
+      {
+        "family": "Namkoong",
+        "given": "Jae-Eun"
+      }
+    ],
+    "container-title": "Journal of Open Source Education",
+    "id": "ro2019orgcoursepack",
+    "issue": "8",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "page": "34",
+    "title": "<span class=\"nocase\">Org-Coursepack</span>: A Modular and Reusable Teaching Materials Template in <span class=\"nocase\">Org-mode</span>",
+    "type": "article-journal",
+    "volume": "2"
+  },
+  {
+    "DOI": "10.1371/journal.pcbi.1003285",
+    "author": [
+      {
+        "family": "Sandve",
+        "given": "Geir Kjetil"
+      },
+      {
+        "family": "Nekrutenko",
+        "given": "Anton"
+      },
+      {
+        "family": "Taylor",
+        "given": "James"
+      },
+      {
+        "family": "Hovig",
+        "given": "Eivind"
+      }
+    ],
+    "container-title": "PLoS Computational Biology",
+    "id": "sandve2013reproducible",
+    "issue": "10",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "page": "e1003285",
+    "title": "Ten Simple Rules for Reproducible Computational Research",
+    "type": "article-journal",
+    "volume": "9"
+  },
+  {
+    "URL": "https://github.com/ucfopen/canvasapi",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          8,
+          30
+        ]
+      ]
+    },
+    "author": [
+      {
+        "literal": "University of Central Florida Center for Distributed Learning"
+      }
+    ],
+    "id": "ucfopen2026canvasapi",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "title": "<span class=\"nocase\">CanvasAPI</span>: <span class=\"nocase\">Python</span> <span class=\"nocase\">API</span> Wrapper for <span class=\"nocase\">Instructure's</span> <span class=\"nocase\">Canvas LMS</span>",
+    "type": "webpage"
+  },
+  {
+    "URL": "https://github.com/thedavidweng/canvas-cli",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          9,
+          1
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Weng",
+        "given": "David"
+      }
+    ],
+    "id": "weng2026canvascli",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "title": "<span class=\"nocase\">canvas-cli</span>: Agent-Friendly <span class=\"nocase\">CLI</span> for <span class=\"nocase\">Canvas LMS</span>",
+    "type": "webpage"
+  }
+]
