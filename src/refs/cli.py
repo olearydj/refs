@@ -198,8 +198,14 @@ def export_bibliography(ctx: typer.Context, project: Annotated[str | None, typer
                        allow_unknown_mappings: Annotated[bool, typer.Option()] = False,
                        overwrite: Annotated[bool, typer.Option()] = False,
                        adopt: Annotated[bool, typer.Option()] = False,
+                       forget: Annotated[Path | None, typer.Option()] = None,
                        dry_run: Annotated[bool, typer.Option()] = False):
     selected = settings(ctx)
+    if forget is not None:
+        if project is not None or output is not None or profile is not None or adopt or overwrite or allow_unknown_mappings:
+            raise RefError('invalid_invocation', '--forget cannot be combined with export selection or replacement options', 2)
+        report(ctx, 'export', bibliography.forget(selected.catalog_path(), forget, dry_run=dry_run))
+        return
     project, targets, multiple = export_options(selected, project, output, profile)
     results: list[dict] = []
     for destination, target_profile in targets:

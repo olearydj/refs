@@ -552,6 +552,21 @@ def finish_export(catalog: Path, target: Path, digest: str) -> None:
         changed(connection)
 
 
+
+def forget(catalog: Path, output: Path, *, dry_run: bool = False) -> dict:
+    from refs import logging as action_log
+    target = files.destination(output.expanduser())
+    with connect(catalog, write=not dry_run) as connection:
+        row = connection.execute('SELECT * FROM export_targets WHERE destination=?', (str(target),)).fetchone()
+        if row is None:
+            raise RefError('target_missing', 'Destination is not a recorded export target', path=str(target))
+        if not dry_run:
+            action_log.log_mutation('export.forget', {'destination': str(target)}, dict(row), {})
+            connection.execute('DELETE FROM export_targets WHERE destination=?', (str(target),))
+            changed(connection)
+    return dict(output=str(target), forgotten=not dry_run, dry_run=dry_run)
+
+
 def export(catalog: Path, project_ref: str, output: Path, *, dry_run: bool = False, allow_unknown: bool = False, overwrite: bool = False, adopt: bool = False, profile: str = PROFILE) -> dict:
     from refs import importing
     from refs import logging as action_log

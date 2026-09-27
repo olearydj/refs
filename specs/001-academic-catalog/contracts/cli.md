@@ -53,7 +53,7 @@ Ctrl-C exits 130 where the process can handle it; a killed process cannot promis
 | project show [PROJECT] | Project and active cited sources, plus removed-source diagnostics; no argument lists projects. |
 | project cite PROJECT REF | Add active source with cited=true; duplicate is no-op. `--from-import ORIGIN` refuses when a source belongs to more than one import origin. |
 | project uncite PROJECT REF | Delete that association, leave source/other projects/files; absent association is no-op. |
-| export | --project PROJECT; without --output/--profile, export each [[export.targets]] entry in order, or the legacy [export] default. --output PATH and/or --profile select one target; profiles: portable-bibtex-v1, csl-json-v1, biblatex-v1. Optional --adopt, --overwrite, --allow-unknown-mappings; complete four-class report per target. |
+| export | --forget PATH removes only the recorded destination binding (unknown targets refuse), never the file; --dry-run previews, and normal adoption guards still apply to any existing file on re-export. Otherwise --project PROJECT; without --output/--profile, export each [[export.targets]] entry in order, or the legacy [export] default. --output PATH and/or --profile select one target; profiles: portable-bibtex-v1, csl-json-v1, biblatex-v1. Optional --adopt, --overwrite, --allow-unknown-mappings; complete four-class report per target. |
 | remove REF | --if-revision N --execute; tombstone while retaining identity/key/relationships. |
 | reactivate REF | Optional --if-revision N and --execute; restore same identity/key, report retained associations. |
 | backup | --output NEW_DIRECTORY; consistent catalog/config snapshot and external-file inventory. |
