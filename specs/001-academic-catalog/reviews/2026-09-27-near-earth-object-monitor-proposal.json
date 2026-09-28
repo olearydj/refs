@@ -1,0 +1,383 @@
+{
+  "publication_commit": "640b908a440b470c55daba4fd8ba7154a6e612b9",
+  "input_sha256": {
+    "reports/references.bib": "7445ab8c64f34b0b97ae98df006f43f68970a77fe9b96bec0f2bdae28ac9b457",
+    "reports/neo-report-agu.qmd": "9afc41835a10d1fc1e51a9d8b57be4d635cc433711dab995327d2487041391a3",
+    "reports/neo-report.qmd": "4bfb99ae71cf4ec084c19c16a9a67c509a0e6f37c845be48b032b0150ed4844b",
+    ".quarto/_freeze/reports/neo-report/execute-results/tex.json": "a3227d46ec2c7360d295dff825171e7bbd407dd9eb49eb71da25205ff89ff642",
+    ".quarto/_freeze/reports/neo-report-agu/execute-results/tex.json": "af8997507d1e95e18900a29312c831b9bbc413d575ae1604501120033b4269de",
+    ".quarto/_freeze/reports/neo-report/figure-pdf/fig-size-distance-output-1.pdf": "f9b05992bdeb48d7f147011666efc57ad672b66d63e2b8544abea7056bd3b028",
+    ".quarto/_freeze/reports/neo-report-agu/figure-pdf/fig-size-distance-output-1.pdf": "08ed7e293b518c08e3f3d09d801b703fc5145c2eb08e6e4cae9b558169993d24"
+  },
+  "admissions": [
+    {
+      "schema_version": "1.0",
+      "command": "add",
+      "status": "ok",
+      "data": {
+        "dry_run": true,
+        "outcome": "created",
+        "id": null,
+        "citation_key": "nasa-neows",
+        "record": {
+          "schema_version": "1.0",
+          "citation_key": "nasa-neows",
+          "metadata": {
+            "type": "webpage",
+            "author": [
+              {
+                "literal": "National Aeronautics and Space Administration"
+              }
+            ],
+            "accessed": {
+              "date-parts": [
+                [
+                  2026,
+                  7,
+                  23
+                ]
+              ]
+            },
+            "container-title": "NASA Open APIs",
+            "title": "Asteroids NeoWs: Near Earth Object Web Service",
+            "URL": "https://api.nasa.gov/"
+          },
+          "context": [
+            {
+              "text": "Conversion default relayed by session 1 on 2026-09-27: preserve the bibliography accessed date 2026-07-23; record the actual later capture date separately in resource provenance and context.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown"
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "NeoWs"
+              ],
+              "preserve_case": false
+            },
+            "container-title": {
+              "protected_terms": [
+                "NASA",
+                "APIs"
+              ],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "kind": null
+        },
+        "kind": null,
+        "key_provenance": {
+          "origin": "supplied",
+          "policy": null,
+          "table_version": null,
+          "unicode_version": null
+        },
+        "limitations": []
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "schema_version": "1.0",
+      "command": "add",
+      "status": "ok",
+      "data": {
+        "dry_run": true,
+        "outcome": "created",
+        "id": null,
+        "citation_key": "cneos-pha",
+        "record": {
+          "schema_version": "1.0",
+          "citation_key": "cneos-pha",
+          "metadata": {
+            "type": "webpage",
+            "author": [
+              {
+                "literal": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies"
+              }
+            ],
+            "accessed": {
+              "date-parts": [
+                [
+                  2026,
+                  7,
+                  23
+                ]
+              ]
+            },
+            "container-title": "Center for Near Earth Object Studies",
+            "title": "Glossary: Potentially Hazardous Asteroid (PHA)",
+            "URL": "https://cneos.jpl.nasa.gov/glossary/PHA.html"
+          },
+          "context": [
+            {
+              "text": "Conversion default relayed by session 1 on 2026-09-27: preserve the bibliography accessed date 2026-07-23; record the actual later capture date separately in resource provenance and context.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown"
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "PHA"
+              ],
+              "preserve_case": false
+            },
+            "container-title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "kind": null
+        },
+        "kind": null,
+        "key_provenance": {
+          "origin": "supplied",
+          "policy": null,
+          "table_version": null,
+          "unicode_version": null
+        },
+        "limitations": []
+      },
+      "warnings": [],
+      "errors": []
+    }
+  ],
+  "records": [
+    {
+      "schema_version": "1.0",
+      "citation_key": "nasa-neows",
+      "metadata": {
+        "type": "webpage",
+        "author": [
+          {
+            "literal": "National Aeronautics and Space Administration"
+          }
+        ],
+        "accessed": {
+          "date-parts": [
+            [
+              2026,
+              7,
+              23
+            ]
+          ]
+        },
+        "container-title": "NASA Open APIs",
+        "title": "Asteroids NeoWs: Near Earth Object Web Service",
+        "URL": "https://api.nasa.gov/"
+      },
+      "context": [
+        {
+          "text": "Conversion default relayed by session 1 on 2026-09-27: preserve the bibliography accessed date 2026-07-23; record the actual later capture date separately in resource provenance and context.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown"
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "NeoWs"
+          ],
+          "preserve_case": false
+        },
+        "container-title": {
+          "protected_terms": [
+            "NASA",
+            "APIs"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "kind": null
+    },
+    {
+      "schema_version": "1.0",
+      "citation_key": "cneos-pha",
+      "metadata": {
+        "type": "webpage",
+        "author": [
+          {
+            "literal": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies"
+          }
+        ],
+        "accessed": {
+          "date-parts": [
+            [
+              2026,
+              7,
+              23
+            ]
+          ]
+        },
+        "container-title": "Center for Near Earth Object Studies",
+        "title": "Glossary: Potentially Hazardous Asteroid (PHA)",
+        "URL": "https://cneos.jpl.nasa.gov/glossary/PHA.html"
+      },
+      "context": [
+        {
+          "text": "Conversion default relayed by session 1 on 2026-09-27: preserve the bibliography accessed date 2026-07-23; record the actual later capture date separately in resource provenance and context.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown"
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "PHA"
+          ],
+          "preserve_case": false
+        },
+        "container-title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "kind": null
+    }
+  ],
+  "export": [
+    {
+      "URL": "https://cneos.jpl.nasa.gov/glossary/PHA.html",
+      "accessed": {
+        "date-parts": [
+          [
+            2026,
+            7,
+            23
+          ]
+        ]
+      },
+      "author": [
+        {
+          "literal": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies"
+        }
+      ],
+      "container-title": "Center for Near Earth Object Studies",
+      "id": "cneos-pha",
+      "title": "Glossary: Potentially Hazardous Asteroid (<span class=\"nocase\">PHA</span>)",
+      "type": "webpage"
+    },
+    {
+      "URL": "https://api.nasa.gov/",
+      "accessed": {
+        "date-parts": [
+          [
+            2026,
+            7,
+            23
+          ]
+        ]
+      },
+      "author": [
+        {
+          "literal": "National Aeronautics and Space Administration"
+        }
+      ],
+      "container-title": "<span class=\"nocase\">NASA</span> Open <span class=\"nocase\">APIs</span>",
+      "id": "nasa-neows",
+      "title": "Asteroids <span class=\"nocase\">NeoWs</span>: Near Earth Object Web Service",
+      "type": "webpage"
+    }
+  ],
+  "gate": {
+    "neo-report": {
+      "before": {
+        "cneos-pha": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies. n.d. Glossary: Potentially Hazardous Asteroid (PHA). Accessed July 23, 2026. https://cneos.jpl.nasa.gov /glossary/PHA.html.",
+        "nasa-neows": "National Aeronautics and Space Administration. n.d. Asteroids NeoWs: Near Earth Object Web Service. Accessed July 23, 2026. https://api.nasa.gov/."
+      },
+      "after": {
+        "cneos-pha": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies. n.d. “Glossary: Potentially Hazardous Asteroid (PHA).” Center for Near Earth Object Studies. Accessed July 23, 2026. https://cneos.jpl.nasa.gov/glossary/PHA.html.",
+        "nasa-neows": "National Aeronautics and Space Administration. n.d. “Asteroids NeoWs: Near Earth Object Web Service.” NASA Open APIs. Accessed July 23, 2026. https://api.nasa.gov/."
+      },
+      "existing_matches_baseline": true,
+      "citation_occurrences": [
+        "nasa-neows",
+        "cneos-pha",
+        "cneos-pha"
+      ]
+    },
+    "neo-report-agu": {
+      "before": {
+        "cneos-pha": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies. (n.d.). Glossary: Potentially hazardous asteroid (PHA). Retrieved from https       :// cneos.jpl.nasa.gov/glossary/PHA.html",
+        "nasa-neows": "National Aeronautics and Space Administration. (n.d.). Asteroids NeoWs: Near earth object web service. Retrieved from https://api.nasa.gov/"
+      },
+      "after": {
+        "cneos-pha": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies. (n.d.). Glossary: Potentially Hazardous Asteroid (PHA). Retrieved July 23, 2026, from https://cneos.jpl.nasa.gov/glossary/PHA.html",
+        "nasa-neows": "National Aeronautics and Space Administration. (n.d.). Asteroids NeoWs: Near Earth Object Web Service. Retrieved July 23, 2026, from https://api.nasa.gov/"
+      },
+      "existing_matches_baseline": true,
+      "citation_occurrences": [
+        "nasa-neows",
+        "cneos-pha",
+        "cneos-pha"
+      ]
+    }
+  },
+  "inline_citations": {
+    "neo-report": {
+      "baseline": [
+        "(National Aeronautics and Space Adminis- 1 tration, n.d.)",
+        "(NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies, n.d.)",
+        "(NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies, n.d.)"
+      ],
+      "candidate": [
+        "(National Aeronautics and Space Adminis- 1 tration, n.d.)",
+        "(NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies, n.d.)",
+        "(NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies, n.d.)"
+      ]
+    },
+    "neo-report-agu": {
+      "baseline": [
+        "(National Aeronautics and Space Administration, n.d.)",
+        "(NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies, n.d.)",
+        "(NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies, n.d.)"
+      ],
+      "candidate": [
+        "(National Aeronautics and Space Administration, n.d.)",
+        "(NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies, n.d.)",
+        "(NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies, n.d.)"
+      ]
+    }
+  },
+  "render_scope": "Full native Quarto/LuaLaTeX PDFs from existing saved executed Markdown and figures, without reexecuting Jupyter or fetching NASA feed data. Baseline references exactly equal existing PDFs.",
+  "scratch": "/private/tmp/refs-neo-proposal",
+  "export_sha256": "d5e6117bbebe6f7d375c8daeebbab2489a08572ce880a44554fb00d2626ed6fc"
+}
