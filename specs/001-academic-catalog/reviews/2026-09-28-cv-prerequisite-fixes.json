@@ -1,0 +1,154 @@
+{
+  "base": "641d61a",
+  "cv_differences": [
+    {
+      "key": "oleary2025armr-training",
+      "field": "container-title",
+      "before": "Proceedings of the IISE Annual Conference     Expo 2025",
+      "after": "Proceedings of the IISE Annual Conference & Expo 2025",
+      "stored": true
+    },
+    {
+      "key": "oleary2025econ-uncertainty",
+      "field": "title",
+      "before": "Estimating Real-World Uncertainty: Case Studies     Stochastic Models for Graduate Engineering Economy",
+      "after": "Estimating Real-World Uncertainty: Case Studies & Stochastic Models for Graduate Engineering Economy",
+      "stored": true
+    },
+    {
+      "key": "oleary2025econ-uncertainty",
+      "field": "container-title",
+      "before": "Proceedings of the IISE Annual Conference     Expo 2025",
+      "after": "Proceedings of the IISE Annual Conference & Expo 2025",
+      "stored": true
+    },
+    {
+      "key": "oleary2026pipyer-ai4se",
+      "field": "howpublished (decoded original, not modeled metadata)",
+      "before": "Paper-presentation extended abstract submitted to the AI4SE     SE4AI Research and Application Workshop, June 12, 2026; proposed presentation September 22–23, 2026",
+      "after": "Paper-presentation extended abstract submitted to the AI4SE & SE4AI Research and Application Workshop, June 12, 2026; proposed presentation September 22–23, 2026",
+      "stored": false
+    },
+    {
+      "key": "olearyledford2025ai-enhanced-dema",
+      "field": "howpublished (decoded original, not modeled metadata)",
+      "before": "Workshop presentation, AI4SE     SE4AI Research and Application Workshop, George Washington University, September 2025",
+      "after": "Workshop presentation, AI4SE & SE4AI Research and Application Workshop, George Washington University, September 2025",
+      "stored": false
+    },
+    {
+      "key": "olearyficken2025innovation-culture",
+      "field": "howpublished (decoded original, not modeled metadata)",
+      "before": "Conference presentation, IISE Annual Conference     Expo 2025",
+      "after": "Conference presentation, IISE Annual Conference & Expo 2025",
+      "stored": false
+    }
+  ],
+  "disposable_reimport": [
+    {
+      "applied": 0,
+      "unchanged": 0,
+      "conflict": 1,
+      "invalid": 0
+    },
+    {
+      "applied": 0,
+      "unchanged": 0,
+      "conflict": 1,
+      "invalid": 0
+    },
+    {
+      "applied": 0,
+      "unchanged": 1,
+      "conflict": 0,
+      "invalid": 0
+    },
+    {
+      "applied": 0,
+      "unchanged": 1,
+      "conflict": 0,
+      "invalid": 0
+    },
+    {
+      "applied": 0,
+      "unchanged": 1,
+      "conflict": 0,
+      "invalid": 0
+    }
+  ],
+  "conversion_exit_code": 0,
+  "conversion_counts": [
+    {
+      "project": "jhl-report",
+      "consumer": "quarto",
+      "outcome": "identical",
+      "entries": 92
+    },
+    {
+      "project": "jhl-report",
+      "consumer": "site",
+      "outcome": "identical",
+      "entries": 103
+    },
+    {
+      "project": "jose-danvas",
+      "consumer": "quarto",
+      "outcome": "identical",
+      "entries": 11
+    },
+    {
+      "project": "jose-danvas",
+      "consumer": "jose",
+      "outcome": "identical",
+      "entries": 11
+    },
+    {
+      "project": "manufacturing-training-media-tradeoffs",
+      "consumer": "html",
+      "outcome": "identical",
+      "entries": 39
+    },
+    {
+      "project": "manufacturing-training-media-tradeoffs",
+      "consumer": "elsevier",
+      "outcome": "identical",
+      "entries": 39
+    },
+    {
+      "project": "dema-llm",
+      "consumer": "tdd-html",
+      "outcome": "identical",
+      "entries": 34
+    },
+    {
+      "project": "dema-llm",
+      "consumer": "tdd-pdf",
+      "outcome": "identical",
+      "entries": 34
+    },
+    {
+      "project": "dema-llm",
+      "consumer": "pdd-docx",
+      "outcome": "identical",
+      "entries": 6
+    },
+    {
+      "project": "dema-llm",
+      "consumer": "pdd-pdf",
+      "outcome": "identical",
+      "entries": 6
+    },
+    {
+      "project": "near-earth-object-monitor",
+      "consumer": "neo-report",
+      "outcome": "identical",
+      "entries": 2
+    },
+    {
+      "project": "near-earth-object-monitor",
+      "consumer": "neo-report-agu",
+      "outcome": "identical",
+      "entries": 2
+    }
+  ]
+}

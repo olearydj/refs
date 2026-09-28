@@ -6,7 +6,7 @@ import re
 import bibtexparser
 from bibtexparser.model import Entry
 from pydantic import ValidationError
-from pylatexenc.latex2text import LatexNodes2Text
+from pylatexenc.latex2text import LatexNodes2Text, SpecialsTextSpec, get_default_latex_context_db
 
 from refs import math_text
 from refs.models import (
@@ -20,6 +20,10 @@ from refs.models import (
     portable_url,
 )
 from refs.results import RefError
+
+_TEXT_CONTEXT = get_default_latex_context_db()
+# Bibliographic fields are text, not TeX alignment environments.
+_TEXT_CONTEXT.add_context_category('bibtex-text', specials=[SpecialsTextSpec('&', '&')], prepend=True)
 
 # The parser reports malformed blocks through logging before returning failed_blocks.
 # Refs turns those blocks into its own per-entry result instead of leaking a warning
@@ -109,7 +113,7 @@ def decode(value: str) -> str:
     def text_decode(text):
         if any(name not in allowed for name in re.findall(r'\\([A-Za-z]+)', text)):
             raise ValueError('Unsupported TeX command or math; preserve and preprocess explicitly')
-        return LatexNodes2Text().latex_to_text(text)
+        return LatexNodes2Text(latex_context=_TEXT_CONTEXT).latex_to_text(text)
     return math_text.transform(value, text_decode, strict=True).strip()
 
 

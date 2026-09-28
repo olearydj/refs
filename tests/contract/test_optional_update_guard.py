@@ -2,6 +2,34 @@
 
 import json
 
+from refs.bibliography import serialize_csl
+from refs.models import editable
+
+
+def test_retype_preview_clears_native_type_and_exports_like_execution(initialized, tmp_path):
+    entry = tmp_path / 'conference.bib'
+    entry.write_text('@inproceedings{talk,title={Conference talk},author={Smith, Alex},year={2024}}')
+    created = initialized('add', '--format', 'bib', '--input', entry)['data']
+    assert created['metadata']['type'] == 'paper-conference'
+    assert created['native_type'] == {'namespace': 'bibtex', 'value': 'inproceedings'}
+    patch = tmp_path / 'retype.json'
+    patch.write_text(json.dumps({'schema_version': '1.0', 'set': {'metadata.type': 'speech'}, 'clear': ['native_type']}))
+    args = ('update', created['id'], '--patch', patch)
+    before = (tmp_path / 'cat/catalog.sqlite').read_bytes()
+    preview = initialized(*args, '--dry-run')['data']
+    assert (tmp_path / 'cat/catalog.sqlite').read_bytes() == before
+    assert 'native_type' not in preview
+    assert preview['metadata']['type'] == 'speech'
+    preview_bytes, losses = serialize_csl([preview])
+    assert losses == []
+    assert json.loads(preview_bytes)[0]['type'] == 'speech'
+    executed = initialized(*args)['data']
+    stored = initialized('show', created['id'])['data']
+    assert 'native_type' not in stored
+    assert stored['revision'] == created['revision'] + 1
+    assert editable(preview) == editable(executed) == editable(stored)
+    assert serialize_csl([stored]) == (preview_bytes, [])
+
 
 def test_update_without_guard_uses_current_revision_and_reports_new_one(initialized,tmp_path,reference_path):
     created=initialized('add','--format','refs','--input',reference_path)['data']

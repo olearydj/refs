@@ -342,7 +342,8 @@ def update(catalog: Path, reference: str, patch: dict, revision: int | None = No
         kind_paths = set(kinds.row(kind)['fields']) | {'metadata.type'} if kind else set()
         corrections = sorted(set(current['corrected_fields']) | (set(patch_model.set) | set(patch_model.clear) | kind_paths) - {'loc'})
         if dry_run:
-            return current | canonical | dict(kind=kinds.identify(canonical), dry_run=True, corrected_fields=corrections, warnings=warnings)
+            preview = {field: value for field, value in current.items() if field not in SourceCreate.model_fields}
+            return preview | canonical | dict(kind=kinds.identify(canonical), dry_run=True, corrected_fields=corrections, warnings=warnings)
         return store_record(connection, current, canonical, corrections) | {'warnings': warnings}
 
 
