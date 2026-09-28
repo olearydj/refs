@@ -263,7 +263,11 @@ def main(argv=None):
                 report['projects'].append(check_project(project, args.catalog, work, args.register.parent))
             except (ValueError, OSError, KeyError, sqlite3.Error, subprocess.TimeoutExpired) as exc:
                 report['projects'].append(dict(project=project['name'], error=str(exc)))
-        failed = any('error' in p or any(c['fixture_missing'] or any(e['outcome'] == 'missing' for e in c['entries']) for c in p.get('consumers', [])) for p in report['projects'])
+        consumers = [c for p in report['projects'] for c in p.get('consumers', [])]
+        failed = any('error' in p for p in report['projects']) or any(
+            not c['fixture_missing'] and any(e['outcome'] != 'identical' for e in c['entries'])
+            for c in consumers)
+        exit_code = 1 if failed else 3 if any(c['fixture_missing'] for c in consumers) else 0
         # Recording may create a first fixture, but never partially records a failed run.
         if args.record and not any('error' in p for p in report['projects']):
             for project, result in zip(selected, report['projects'], strict=True):
@@ -283,12 +287,12 @@ def main(argv=None):
                         consumer['tools'][name]['recorded'] = version
             args.register.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
             report['recorded'] = True
-        report['exit_code'] = int(failed)
+        report['exit_code'] = exit_code
         (work / 'gate.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
         (work / 'gate.md').write_text(markdown(report))
         print(json.dumps(report, ensure_ascii=False, indent=2))
         print(f'Markdown gate: {work / "gate.md"}', file=sys.stderr)
-        return int(failed)
+        return exit_code
     except (ValueError, OSError, TypeError) as exc:
         print(str(exc), file=sys.stderr)
         return 2

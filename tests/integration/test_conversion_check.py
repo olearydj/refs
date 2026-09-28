@@ -81,15 +81,19 @@ def test_gate_classifies_entries_and_leaves_catalog_project_and_fixture_unchange
     assert (work / 'synthetic/catalog/refs.log').is_file()
 
 
-def test_missing_fixture_fails_then_explicit_record_writes_current_extraction(trial, tmp_path):
-    register, _, fixture = trial
+def test_missing_fixture_exits_three_then_explicit_record_writes_current_extraction(trial, tmp_path):
+    register, project, fixture = trial
     fixture.unlink()
+    before = digests(tmp_path / 'cat'), digests(project), register.read_bytes()
     result, _ = invoke(tmp_path, register)
-    assert result.returncode == 1
+    assert result.returncode == 3, result.stderr
+    assert json.loads(result.stdout)['exit_code'] == 3
     assert json.loads(result.stdout)['projects'][0]['consumers'][0]['fixture_missing']
+    assert before == (digests(tmp_path / 'cat'), digests(project), register.read_bytes())
     assert not fixture.exists()
     recorded, _ = invoke(tmp_path, register, '--record')
-    assert recorded.returncode == 1  # reports the missing baseline even while recording
+    assert recorded.returncode == 3  # reports the absent accepted baseline even while recording
+    assert json.loads(recorded.stdout)['exit_code'] == 3
     assert json.loads(recorded.stdout)['recorded']
     assert json.loads(fixture.read_text()) == {
         'changed': '{"id": "changed", "title": "New Title"}',
@@ -147,7 +151,7 @@ def test_real_jose_gate_matches_accepted_fixture(tmp_path, request):
     report = json.loads(result.stdout)['projects'][0]
     assert 'error' not in report, result.stdout + result.stderr
     consumers = report['consumers']
-    assert result.returncode == int(any(c['fixture_missing'] for c in consumers))
+    assert result.returncode == (3 if any(c['fixture_missing'] for c in consumers) else 0)
     for consumer in consumers:
         assert len(consumer['entries']) == 11
         assert consumer['fixture_missing'] == (not Path(consumer['fixture']).exists())
@@ -156,14 +160,15 @@ def test_real_jose_gate_matches_accepted_fixture(tmp_path, request):
     assert (catalog / 'catalog.sqlite').read_bytes() == before
 
 
-def test_changed_entry_is_reported_without_failing_or_recording(trial, tmp_path):
+def test_changed_entry_fails_without_recording(trial, tmp_path):
     register, _, fixture = trial
     baseline = json.loads(fixture.read_text())
     del baseline['gone']
     fixture.write_text(json.dumps(baseline))
     before = fixture.read_bytes()
     result, _ = invoke(tmp_path, register)
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == 1, result.stderr
+    assert json.loads(result.stdout)['exit_code'] == 1
     entries = json.loads(result.stdout)['projects'][0]['consumers'][0]['entries']
     assert [e['outcome'] for e in entries] == ['identical', 'changed']
     assert fixture.read_bytes() == before
@@ -236,3 +241,39 @@ def test_explicit_input_refuses_symlinks_and_missing_files_without_changing_sour
     assert ('existing file' if mode == 'missing' else 'symlink') in error
     assert not (work / 'synthetic/project').exists()
     assert (digests(project), digests(outside)) == before
+
+
+@pytest.mark.parametrize('finding', ['identical', 'changed', 'missing', 'failed-consumer'])
+def test_absent_fixture_does_not_hide_other_consumer_findings(trial, tmp_path, finding):
+    register, project, fixture = trial
+    data = json.loads(register.read_text())
+    consumer = json.loads(json.dumps(data['projects'][0]['consumers'][0]))
+    consumer['name'] = 'unaccepted'
+    data['projects'][0]['consumers'].insert(0, consumer)
+    baseline = {
+        'same': '{"id": "same", "title": "Same Title"}',
+        'changed': '{"id": "changed", "title": "New Title"}',
+    }
+    if finding == 'changed':
+        baseline['changed'] = '{"id": "changed", "title": "Old Title"}'
+    elif finding == 'missing':
+        baseline['gone'] = '{"id": "gone", "title": "Missing reference"}'
+    elif finding == 'failed-consumer':
+        data['projects'][0]['consumers'][1]['command'] = [sys.executable, '-c', 'raise SystemExit(7)']
+    register.write_text(json.dumps(data))
+    fixture.write_text(json.dumps(baseline))
+    before = digests(tmp_path / 'cat'), digests(project), digests(register.parent)
+    result, work = invoke(tmp_path, register)
+    expected = 3 if finding == 'identical' else 1
+    assert result.returncode == expected, result.stderr
+    gate = json.loads(result.stdout)
+    assert gate['exit_code'] == expected
+    assert json.loads((work / 'gate.json').read_text()) == gate
+    checked = gate['projects'][0]
+    if finding == 'failed-consumer':
+        assert 'Command failed (7)' in checked['error']
+    else:
+        assert checked['consumers'][0]['fixture_missing']
+        assert not checked['consumers'][1]['fixture_missing']
+        assert finding in {e['outcome'] for e in checked['consumers'][1]['entries']}
+    assert before == (digests(tmp_path / 'cat'), digests(project), digests(register.parent))
