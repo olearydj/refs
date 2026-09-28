@@ -521,6 +521,88 @@
         "resolved_path": "/Volumes/Casa/refs/lib/unfiled/ValentineEvaluatingMatchingTechniquesForDatasetDiscovery-2021.pdf",
         "status": "available"
       }
+    },
+    {
+      "key": "zhou2023ape",
+      "path": "/Users/djo/Downloads/5624_large_language_models_are_huma.pdf",
+      "sha256": "88a59940763d7a7cdc2b2b8deb9965d0eb13bdc82cf11c38e33962b43c3b81c7",
+      "size": 3830725,
+      "verification": "Cover explicitly says Published as a conference paper at ICLR 2023; title and seven authors verified. 43 pages; PDF creation date 2023-02-26. Correct publication locator https://openreview.net/forum?id=92gvk82DE- .",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "zhou2023ape",
+        "path": "/Users/djo/Downloads/5624_large_language_models_are_huma.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/LargeLanguageModelsAreHumanLevelPromptEngineers-2023.pdf",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/5624_large_language_models_are_huma.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/Users/djo/Downloads/5624_large_language_models_are_huma.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/LargeLanguageModelsAreHumanLevelPromptEngineers-2023.pdf",
+            "old_name": "5624_large_language_models_are_huma.pdf",
+            "new_name": "LargeLanguageModelsAreHumanLevelPromptEngineers-2023.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "bc64778b-08eb-41cd-bc36-021730602054",
+        "source_id": "6e407f61-8c90-48f3-8adf-4844e3c13db6",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/LargeLanguageModelsAreHumanLevelPromptEngineers-2023.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "88a59940763d7a7cdc2b2b8deb9965d0eb13bdc82cf11c38e33962b43c3b81c7",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/5624_large_language_models_are_huma.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "zhou2023ape",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/LargeLanguageModelsAreHumanLevelPromptEngineers-2023.pdf",
+        "moves": [
+          {
+            "operation_id": "b70e7186-5c76-4d2e-a691-856eb651d936",
+            "resource_id": "bc64778b-08eb-41cd-bc36-021730602054",
+            "old_path": "/Users/djo/Downloads/5624_large_language_models_are_huma.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/LargeLanguageModelsAreHumanLevelPromptEngineers-2023.pdf",
+            "old_name": "5624_large_language_models_are_huma.pdf",
+            "new_name": "LargeLanguageModelsAreHumanLevelPromptEngineers-2023.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resource": {
+        "id": "bc64778b-08eb-41cd-bc36-021730602054",
+        "source_id": "6e407f61-8c90-48f3-8adf-4844e3c13db6",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/LargeLanguageModelsAreHumanLevelPromptEngineers-2023.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "88a59940763d7a7cdc2b2b8deb9965d0eb13bdc82cf11c38e33962b43c3b81c7",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/5624_large_language_models_are_huma.pdf",
+          "root": null,
+          "relative": null
+        },
+        "resolved_path": "/Volumes/Casa/refs/lib/unfiled/LargeLanguageModelsAreHumanLevelPromptEngineers-2023.pdf",
+        "status": "available"
+      }
     }
   ],
   "gap_context": {
@@ -555,7 +637,8 @@
     "key": "zhou2023ape",
     "path": "/Users/djo/Downloads/43_large_language_models_are_huma.pdf",
     "sha256": "74666b291dd75ec6795ef5b00fc5f36e2cea9ac84a8c0968b5d43243abb57e02",
-    "size": 3696250
+    "size": 3696250,
+    "status": "Earlier download left unchanged; verified ICLR edition attached separately."
   },
-  "verification": "33 resources; all 37 approved bibliographic records and three symmetric version relationships verified unchanged except the two previously approved actual access dates."
+  "verification": "34 resources; all 37 approved bibliographic records and three symmetric version relationships verified unchanged except the two previously approved actual access dates."
 }
