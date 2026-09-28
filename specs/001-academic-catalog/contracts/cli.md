@@ -4,7 +4,7 @@
 
 ## Invocation and results
 
-`refs [--config PATH] [--catalog PATH] [--project-file PATH | --no-project-config] [--json] COMMAND`. Human output is default; JSON is one UTF-8 object plus newline on stdout, including usage failures. Progress goes to stderr. Help/version are textual exceptions. No interactive prompts. File payloads accept `-` for stdin. REF is an exact source UUID or citation key; ambiguity fails. Projects use exact names or IDs.
+`refs [--config PATH] [--catalog PATH] [--project-file PATH | --no-project-config] [--json] COMMAND`. Human output is default; JSON is one UTF-8 object plus newline on stdout, including usage failures. Progress goes to stderr. Help/version are textual exceptions. Explicit --help exits 0 without opening the catalog log. Read-only commands tolerate an unwritable log silently; mutations refuse with log_unwritable (exit 5) before an unlogged change. No interactive prompts. File payloads accept `-` for stdin. REF is an exact source UUID or citation key; ambiguity fails. Projects use exact names or IDs.
 
 Unreadable or missing `--input` and `--patch` payloads report `invalid_input` with exit 2 and the selected path; `-` reads stdin through the same payload reader.
 
