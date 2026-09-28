@@ -1,6 +1,6 @@
 # dema-llm conversion execution — 2026-09-27
 
-**Gate accepted and fixtures recorded.** Owner decision relayed in `comms/2026-09-27-185859-s1-dema-llm-gate-accepted.md`: “html ref nums - the change is ok for this doc, tdd is internal”, “html defect - write it up for dema-llm if that is the right place to investigate / fix it”, and “proceed”. The fresh `--record` run at `/private/tmp/refs-dema-record-01` recorded all four fixtures against clean publication `7599aee94d14a437b94b9f2f4b71de0ebb89125d`. All 80 extracted entries are byte-for-byte identical to the accepted gate. The harness reports `recorded: true`; exit 1 reflects its pre-record comparison against four absent fixtures. The register now retains each fixture's publication, tool and recording provenance. Publication adoption and branch merge remain with s1 and the publication session. Owner-download intake follows separately.
+**Gate accepted and fixtures recorded.** Owner decision relayed in `comms/2026-09-27-185859-s1-dema-llm-gate-accepted.md`: “html ref nums - the change is ok for this doc, tdd is internal”, “html defect - write it up for dema-llm if that is the right place to investigate / fix it”, and “proceed”. The fresh `--record` run at `/private/tmp/refs-dema-record-01` recorded all four fixtures against clean publication `7599aee94d14a437b94b9f2f4b71de0ebb89125d`. All 80 extracted entries are byte-for-byte identical to the accepted gate. The harness reports `recorded: true`; exit 1 reflects its pre-record comparison against four absent fixtures. The register now retains each fixture's publication, tool and recording provenance. Publication adoption and branch merge remain with s1 and the publication session. Seven verified owner downloads have since been attached; the APE edition remains unresolved as described below.
 
 ## Backup and scope
 
@@ -37,7 +37,7 @@ The table records every source’s final type and intake outcome. The approved p
 | `oleary2025ai4se` | import + completion | speech | yes | linked in place |
 | `howard2007bloor` | import + completion | report | yes | owner fetch gap |
 | `howard2011bloor` | import + completion | report | yes | owner fetch gap |
-| `bernsteinhaas2008` | import + completion | article-journal | yes | owner fetch gap |
+| `bernsteinhaas2008` | import + completion | article-journal | yes | owner download attached |
 | `oracle2011migration` | import + completion | report | yes | acquired |
 | `oleary2025binary-classification` | import + completion | speech | yes | linked in place |
 | `olearyledford2026insight` | import + completion | article-journal | yes | linked in place |
@@ -51,21 +51,21 @@ The table records every source’s final type and intake outcome. The approved p
 | `guo2017` | import + completion | paper-conference | yes | acquired |
 | `kadavath2022` | import + completion | article | yes | acquired |
 | `naeini2015` | import + completion | paper-conference | yes | acquired |
-| `christophides2021` | import + completion | article-journal | yes | owner fetch gap |
+| `christophides2021` | import + completion | article-journal | yes | owner download attached |
 | `mudgal2018` | import + completion | paper-conference | yes | acquired |
 | `konda2016` | import + completion | article-journal | yes | acquired |
-| `koutras2021valentine` | import + completion | paper-conference | yes | owner fetch gap |
+| `koutras2021valentine` | import + completion | paper-conference | yes | owner download attached |
 | `deb2014` | import + completion | chapter | yes | owner fetch gap |
-| `zitzler2003` | import + completion | article-journal | yes | owner fetch gap |
+| `zitzler2003` | import + completion | article-journal | yes | owner download attached |
 | `khattab2023dspy` | import + completion | article | no; retained preprint | acquired |
 | `zhou2023ape` | import + completion | paper-conference | yes | owner fetch gap |
 | `nist2020sp80053` | import + completion | report | yes | acquired |
 | `fedramp2024` | import + completion | report | yes | acquired |
-| `sequeda-2024-benchmarkUnderstand` | new publication | paper-conference | yes | owner fetch gap |
-| `nussbaum-2025-nomicEmbed` | new publication | article-journal | yes | owner fetch gap |
+| `sequeda-2024-benchmarkUnderstand` | new publication | paper-conference | yes | owner download attached |
+| `nussbaum-2025-nomicEmbed` | new publication | article-journal | yes | owner download attached |
 | `khattab2024` | reuse + context | paper-conference | yes | acquired |
 | `openai2023gpt4` | reuse + context | article | yes | existing PDF |
-| `dod2020cmmc` | import + completion | report | yes | owner fetch gap |
+| `dod2020cmmc` | import + completion | report | yes | owner download attached |
 
 All three unnamed links are visible in both directions: `sequeda2023` ↔ `sequeda-2024-benchmarkUnderstand`, `nussbaum2024nomic` ↔ `nussbaum-2025-nomicEmbed`, and `khattab2023dspy` ↔ `khattab2024`. They remain catalog-only. Retained preprint PDFs belong to the preprint records, not their publications.
 
@@ -77,7 +77,7 @@ The Claude card is the March edition (PDF creation/modification metadata March 4
 
 The embeddings JSON capture contains the full retrieved HTML response, URL, time and hash; remote assets and linked pages were not crawled. FedRAMP’s JSON capture contains the complete official Markdown/JSON sources at `2026-markdown` commit `2f81e380a6615d48927a72c5007df785c038f891` (289 files) and `rules` commit `58487bda77d76d9ce334304ec2e779ece7cc7d54` (11 files), plus commit metadata and archive hashes. Its changelog confirms content release `2026.09.22.01`; underlying rules data remains `2026.09.13.02`, consistent with the later content/build-only update. Both captures carry actual September 27 access dates. No browser automation was used.
 
-Eleven records remain missing their selected source. Refusals were not bypassed. The 2007 Bloor homepage and Springer landing page were not attached as substitutes for the requested report/chapter.
+At the initial gate, eleven records were missing their selected source; seven have since been filled below. Four gaps remain: Deb, both Bloor reports, and the unverified APE edition. Refusals were not bypassed. The 2007 Bloor homepage and Springer landing page were not attached as substitutes for the requested report/chapter.
 
 | Key | Fetch result | Owner locator |
 | --- | --- | --- |
@@ -93,7 +93,27 @@ Eleven records remain missing their selected source. Refusals were not bypassed.
 | `zhou2023ape` | OpenReview PDF refused, HTTP 403 | [Source](https://openreview.net/pdf?id=YdqwNaCLCx) |
 | `zitzler2003` | IEEE refused, HTTP 418 | [Source](https://doi.org/10.1109/TEVC.2003.810758) |
 
-## Attachments with final names and hashes
+## Owner-download follow-up
+
+Authorized by `comms/2026-09-27-190551-s1-dema-llm-owner-fetches.md` and `comms/2026-09-27-192440-s1-bloor-deb-gaps.md`. Seven owner downloads dated September 27 were verified against their selected publication identities and moved through `resource add --move` into managed unfiled placement. Each final file hash matches its input, each moved Downloads input is absent, and each record retains user-attributed provenance naming the original download and hash. The catalog now has 33 attached resources across these 37 records. All 37 approved bibliographic records and the three version links still pass the canonical comparison; no new access dates were added.
+
+The supplied APE file `43_large_language_models_are_huma.pdf` remains untouched in Downloads: it lacks an ICLR 2023 header and has November 3, 2022 PDF dates. The earlier fetch locator `YdqwNaCLCx` appears to identify a 2022 workshop version. The official ICLR PDF at https://openreview.net/pdf?id=92gvk82DE- explicitly identifies ICLR 2023 in its indexed primary text, but direct download returns HTTP 403. A correct-edition download request is pending with s1; the earlier file was not attached as the publication.
+
+Deb and both Bloor records now include import-attributed research notes supplied by the owner/session 1, preserving the owner’s availability statements. The notes distinguish the archived 2011 report listing, secondary statistics not verified against the report, the different September 2007 whitepaper, and the Oracle quotation. No metadata was changed. Deb and Bloor remain acknowledged gaps unless an author request succeeds.
+
+The [owner-download evidence](2026-09-27-dema-llm-owner-downloads.json) retains original and final paths, identity checks, hashes, move results and appended context.
+
+| Key | Managed filename | SHA-256 |
+| --- | --- | --- |
+| `bernsteinhaas2008` | `InformationIntegrationInTheEnterprise-2008.pdf` | `9e136e810b0a933619fd1152c94c15ec2ffa9bddb9f7ba6f8a57682b2613f151` |
+| `christophides2021` | `AnOverviewOfEndToEndEntityResolutionForBigData-2021.pdf` | `dabe687fb9e0f0935572bb45c4954efb8cec69d5fc67b21d7706a9fa4eecf03a` |
+| `sequeda-2024-benchmarkUnderstand` | `ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf` | `cff60b1f9da2950c511bdf6c74871e0d757ddfa8f2f064edf25e48d3c6a84866` |
+| `nussbaum-2025-nomicEmbed` | `NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2025.pdf` | `e7a2ec2906b7b48540e92945c771394017d00f6499a0a9ca1eb1dba50e3813fb` |
+| `dod2020cmmc` | `CybersecurityMaturityModelCertificationCMMCModelOverview-v2.13-2024.pdf` | `3521adb262f431433bc0be3a3f7f717b0b05c61f1e5eb127c38c81d2979f4a00` |
+| `zitzler2003` | `PerformanceAssessmentOfMultiobjectiveOptimizersAnAnalysisAndReview-2003.pdf` | `76d6f579eee9fe7bddffbab999c6541e0bdd12e402fa1ed37350e01210c0f046` |
+| `koutras2021valentine` | `ValentineEvaluatingMatchingTechniquesForDatasetDiscovery-2021.pdf` | `3a7446976f18abecff45cb543c34ccc085f154cd0c38d93b51d03d9b40ef96fd` |
+
+## Initial attachments with final names and hashes
 
 All paths below were rehashed after intake. Linked resources retain their original filenames. Managed resources use the convention under `/Volumes/Casa/refs/lib/unfiled/`. The existing GPT-4 resource is included for completeness.
 
@@ -150,4 +170,4 @@ For refs: no new product feature is proposed by this pass. Preserve the separate
 
 For the guide: full book gates need a check that displayed citation numbers agree with their hyperlink destinations, as bibliography-only previews do not expose that mismatch. Record-order changes can renumber an HTML appendix independently of PDF first-citation order. PDF footer removal must not discard a numeric URL continuation, and bibliography extraction must stop before following callouts. The pre-adoption register helper must be retired when the live publication adopts the switches; its assertions deliberately expect legacy input settings.
 
-**Next:** s1 coordinates publication adoption. Complete the separately authorized owner-download intake and gap context; do not merge this branch or edit the publication.
+**Next:** s1 coordinates publication adoption. Await the correct APE edition and publication-adoption result; do not merge this branch or edit the publication.

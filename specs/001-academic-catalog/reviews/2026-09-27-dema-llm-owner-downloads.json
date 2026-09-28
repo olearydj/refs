@@ -1,0 +1,561 @@
+{
+  "date": "2026-09-27",
+  "attachments": [
+    {
+      "key": "bernsteinhaas2008",
+      "path": "/Users/djo/Downloads/1378727.1378745.pdf",
+      "sha256": "9e136e810b0a933619fd1152c94c15ec2ffa9bddb9f7ba6f8a57682b2613f151",
+      "size": 6770843,
+      "verification": "Title, authors and DOI 10.1145/1378727.1378745 verified.",
+      "preview": null,
+      "result": {
+        "resumed_existing_verified_move": true
+      },
+      "resource": {
+        "id": "5132040c-6c6d-4f26-a0e0-5085c8bb6074",
+        "source_id": "4ffdb9c7-9e14-4a41-b1b5-a803fa22b54c",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/InformationIntegrationInTheEnterprise-2008.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "9e136e810b0a933619fd1152c94c15ec2ffa9bddb9f7ba6f8a57682b2613f151",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/1378727.1378745.pdf",
+          "root": null,
+          "relative": null
+        },
+        "resolved_path": "/Volumes/Casa/refs/lib/unfiled/InformationIntegrationInTheEnterprise-2008.pdf",
+        "status": "available"
+      }
+    },
+    {
+      "key": "christophides2021",
+      "path": "/Users/djo/Downloads/3418896.pdf",
+      "sha256": "dabe687fb9e0f0935572bb45c4954efb8cec69d5fc67b21d7706a9fa4eecf03a",
+      "size": 3422689,
+      "verification": "Title and five authors verified; ACM DOI 10.1145/3418896.",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "christophides2021",
+        "path": "/Users/djo/Downloads/3418896.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/AnOverviewOfEndToEndEntityResolutionForBigData-2021.pdf",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/3418896.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/Users/djo/Downloads/3418896.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/AnOverviewOfEndToEndEntityResolutionForBigData-2021.pdf",
+            "old_name": "3418896.pdf",
+            "new_name": "AnOverviewOfEndToEndEntityResolutionForBigData-2021.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "8a9053e7-9c43-46f1-93fc-fedfcf9e9261",
+        "source_id": "b56c58b1-6491-4662-a400-00c79d2cba27",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/AnOverviewOfEndToEndEntityResolutionForBigData-2021.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "dabe687fb9e0f0935572bb45c4954efb8cec69d5fc67b21d7706a9fa4eecf03a",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/3418896.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "christophides2021",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/AnOverviewOfEndToEndEntityResolutionForBigData-2021.pdf",
+        "moves": [
+          {
+            "operation_id": "87ac85d1-5f86-4bcd-827e-2581692a3c71",
+            "resource_id": "8a9053e7-9c43-46f1-93fc-fedfcf9e9261",
+            "old_path": "/Users/djo/Downloads/3418896.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/AnOverviewOfEndToEndEntityResolutionForBigData-2021.pdf",
+            "old_name": "3418896.pdf",
+            "new_name": "AnOverviewOfEndToEndEntityResolutionForBigData-2021.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resource": {
+        "id": "8a9053e7-9c43-46f1-93fc-fedfcf9e9261",
+        "source_id": "b56c58b1-6491-4662-a400-00c79d2cba27",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/AnOverviewOfEndToEndEntityResolutionForBigData-2021.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "dabe687fb9e0f0935572bb45c4954efb8cec69d5fc67b21d7706a9fa4eecf03a",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/3418896.pdf",
+          "root": null,
+          "relative": null
+        },
+        "resolved_path": "/Volumes/Casa/refs/lib/unfiled/AnOverviewOfEndToEndEntityResolutionForBigData-2021.pdf",
+        "status": "available"
+      }
+    },
+    {
+      "key": "sequeda-2024-benchmarkUnderstand",
+      "path": "/Users/djo/Downloads/3661304.3661901.pdf",
+      "sha256": "cff60b1f9da2950c511bdf6c74871e0d757ddfa8f2f064edf25e48d3c6a84866",
+      "size": 1305686,
+      "verification": "GRADES-NDA 2024 publication, DOI 10.1145/3661304.3661901, verified on cover.",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "sequeda-2024-benchmarkUnderstand",
+        "path": "/Users/djo/Downloads/3661304.3661901.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/3661304.3661901.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/Users/djo/Downloads/3661304.3661901.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+            "old_name": "3661304.3661901.pdf",
+            "new_name": "ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "d12357a5-6ef7-4bc4-b039-790906c3467e",
+        "source_id": "bb06d2cd-bdfc-4aea-b89f-84a59f057c99",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "cff60b1f9da2950c511bdf6c74871e0d757ddfa8f2f064edf25e48d3c6a84866",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/3661304.3661901.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "sequeda-2024-benchmarkUnderstand",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+        "moves": [
+          {
+            "operation_id": "0109830b-417a-478b-b5e6-404ec36eb96d",
+            "resource_id": "d12357a5-6ef7-4bc4-b039-790906c3467e",
+            "old_path": "/Users/djo/Downloads/3661304.3661901.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+            "old_name": "3661304.3661901.pdf",
+            "new_name": "ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resource": {
+        "id": "d12357a5-6ef7-4bc4-b039-790906c3467e",
+        "source_id": "bb06d2cd-bdfc-4aea-b89f-84a59f057c99",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "cff60b1f9da2950c511bdf6c74871e0d757ddfa8f2f064edf25e48d3c6a84866",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/3661304.3661901.pdf",
+          "root": null,
+          "relative": null
+        },
+        "resolved_path": "/Volumes/Casa/refs/lib/unfiled/ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+        "status": "available"
+      }
+    },
+    {
+      "key": "nussbaum-2025-nomicEmbed",
+      "path": "/Users/djo/Downloads/3696_Nomic_Embed_Training_a_Re.pdf",
+      "sha256": "e7a2ec2906b7b48540e92945c771394017d00f6499a0a9ca1eb1dba50e3813fb",
+      "size": 483199,
+      "verification": "Published in Transactions on Machine Learning Research (02/2025), verified on cover.",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "nussbaum-2025-nomicEmbed",
+        "path": "/Users/djo/Downloads/3696_Nomic_Embed_Training_a_Re.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2025.pdf",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/3696_Nomic_Embed_Training_a_Re.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/Users/djo/Downloads/3696_Nomic_Embed_Training_a_Re.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2025.pdf",
+            "old_name": "3696_Nomic_Embed_Training_a_Re.pdf",
+            "new_name": "NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2025.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "20d3f5a9-0bd8-41bd-bdca-d05d8d9b44f2",
+        "source_id": "f471d78e-4dfb-4838-8ff8-6315507bce14",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2025.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "e7a2ec2906b7b48540e92945c771394017d00f6499a0a9ca1eb1dba50e3813fb",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/3696_Nomic_Embed_Training_a_Re.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "nussbaum-2025-nomicEmbed",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2025.pdf",
+        "moves": [
+          {
+            "operation_id": "f5ae3cfe-67cd-4d8b-8c11-67f10b6890c1",
+            "resource_id": "20d3f5a9-0bd8-41bd-bdca-d05d8d9b44f2",
+            "old_path": "/Users/djo/Downloads/3696_Nomic_Embed_Training_a_Re.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2025.pdf",
+            "old_name": "3696_Nomic_Embed_Training_a_Re.pdf",
+            "new_name": "NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2025.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resource": {
+        "id": "20d3f5a9-0bd8-41bd-bdca-d05d8d9b44f2",
+        "source_id": "f471d78e-4dfb-4838-8ff8-6315507bce14",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2025.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "e7a2ec2906b7b48540e92945c771394017d00f6499a0a9ca1eb1dba50e3813fb",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/3696_Nomic_Embed_Training_a_Re.pdf",
+          "root": null,
+          "relative": null
+        },
+        "resolved_path": "/Volumes/Casa/refs/lib/unfiled/NomicEmbedTrainingAReproducibleLongContextTextEmbedder-2025.pdf",
+        "status": "available"
+      }
+    },
+    {
+      "key": "dod2020cmmc",
+      "path": "/Users/djo/Downloads/ModelOverviewv2.pdf",
+      "sha256": "3521adb262f431433bc0be3a3f7f717b0b05c61f1e5eb127c38c81d2979f4a00",
+      "size": 977491,
+      "verification": "Model Overview v2.13, September 2024, DoD-CIO-00001, verified on cover.",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "dod2020cmmc",
+        "path": "/Users/djo/Downloads/ModelOverviewv2.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/CybersecurityMaturityModelCertificationCMMCModelOverview-v2.13-2024.pdf",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/ModelOverviewv2.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/Users/djo/Downloads/ModelOverviewv2.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/CybersecurityMaturityModelCertificationCMMCModelOverview-v2.13-2024.pdf",
+            "old_name": "ModelOverviewv2.pdf",
+            "new_name": "CybersecurityMaturityModelCertificationCMMCModelOverview-v2.13-2024.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "ccb5cc3b-520b-47f3-8c6f-0ce16a92f5dc",
+        "source_id": "839f9023-d47e-4a4c-beca-96acc83da6c2",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/CybersecurityMaturityModelCertificationCMMCModelOverview-v2.13-2024.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "3521adb262f431433bc0be3a3f7f717b0b05c61f1e5eb127c38c81d2979f4a00",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/ModelOverviewv2.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "dod2020cmmc",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/CybersecurityMaturityModelCertificationCMMCModelOverview-v2.13-2024.pdf",
+        "moves": [
+          {
+            "operation_id": "03a10e12-570c-4886-a367-9cd4f8d3ff14",
+            "resource_id": "ccb5cc3b-520b-47f3-8c6f-0ce16a92f5dc",
+            "old_path": "/Users/djo/Downloads/ModelOverviewv2.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/CybersecurityMaturityModelCertificationCMMCModelOverview-v2.13-2024.pdf",
+            "old_name": "ModelOverviewv2.pdf",
+            "new_name": "CybersecurityMaturityModelCertificationCMMCModelOverview-v2.13-2024.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resource": {
+        "id": "ccb5cc3b-520b-47f3-8c6f-0ce16a92f5dc",
+        "source_id": "839f9023-d47e-4a4c-beca-96acc83da6c2",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/CybersecurityMaturityModelCertificationCMMCModelOverview-v2.13-2024.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "3521adb262f431433bc0be3a3f7f717b0b05c61f1e5eb127c38c81d2979f4a00",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/ModelOverviewv2.pdf",
+          "root": null,
+          "relative": null
+        },
+        "resolved_path": "/Volumes/Casa/refs/lib/unfiled/CybersecurityMaturityModelCertificationCMMCModelOverview-v2.13-2024.pdf",
+        "status": "available"
+      }
+    },
+    {
+      "key": "zitzler2003",
+      "path": "/Users/djo/Downloads/Performance_assessment_of_multiobjective_optimizers_an_analysis_and_review.pdf",
+      "sha256": "76d6f579eee9fe7bddffbab999c6541e0bdd12e402fa1ed37350e01210c0f046",
+      "size": 1194076,
+      "verification": "IEEE Transactions on Evolutionary Computation 7(2), April 2003, verified on cover.",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "zitzler2003",
+        "path": "/Users/djo/Downloads/Performance_assessment_of_multiobjective_optimizers_an_analysis_and_review.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/PerformanceAssessmentOfMultiobjectiveOptimizersAnAnalysisAndReview-2003.pdf",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/Performance_assessment_of_multiobjective_optimizers_an_analysis_and_review.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/Users/djo/Downloads/Performance_assessment_of_multiobjective_optimizers_an_analysis_and_review.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/PerformanceAssessmentOfMultiobjectiveOptimizersAnAnalysisAndReview-2003.pdf",
+            "old_name": "Performance_assessment_of_multiobjective_optimizers_an_analysis_and_review.pdf",
+            "new_name": "PerformanceAssessmentOfMultiobjectiveOptimizersAnAnalysisAndReview-2003.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "2fa7e97d-18ca-46b8-a6a2-5b9dd042faeb",
+        "source_id": "09176a57-4f71-402d-b648-502feb159b69",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/PerformanceAssessmentOfMultiobjectiveOptimizersAnAnalysisAndReview-2003.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "76d6f579eee9fe7bddffbab999c6541e0bdd12e402fa1ed37350e01210c0f046",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/Performance_assessment_of_multiobjective_optimizers_an_analysis_and_review.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "zitzler2003",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/PerformanceAssessmentOfMultiobjectiveOptimizersAnAnalysisAndReview-2003.pdf",
+        "moves": [
+          {
+            "operation_id": "67b74170-e2c7-4b9f-ba78-8d4c0ed20bb9",
+            "resource_id": "2fa7e97d-18ca-46b8-a6a2-5b9dd042faeb",
+            "old_path": "/Users/djo/Downloads/Performance_assessment_of_multiobjective_optimizers_an_analysis_and_review.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/PerformanceAssessmentOfMultiobjectiveOptimizersAnAnalysisAndReview-2003.pdf",
+            "old_name": "Performance_assessment_of_multiobjective_optimizers_an_analysis_and_review.pdf",
+            "new_name": "PerformanceAssessmentOfMultiobjectiveOptimizersAnAnalysisAndReview-2003.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resource": {
+        "id": "2fa7e97d-18ca-46b8-a6a2-5b9dd042faeb",
+        "source_id": "09176a57-4f71-402d-b648-502feb159b69",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/PerformanceAssessmentOfMultiobjectiveOptimizersAnAnalysisAndReview-2003.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "76d6f579eee9fe7bddffbab999c6541e0bdd12e402fa1ed37350e01210c0f046",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/Performance_assessment_of_multiobjective_optimizers_an_analysis_and_review.pdf",
+          "root": null,
+          "relative": null
+        },
+        "resolved_path": "/Volumes/Casa/refs/lib/unfiled/PerformanceAssessmentOfMultiobjectiveOptimizersAnAnalysisAndReview-2003.pdf",
+        "status": "available"
+      }
+    },
+    {
+      "key": "koutras2021valentine",
+      "path": "/Users/djo/Downloads/Valentine_Evaluating_Matching_Techniques_for_Dataset_Discovery.pdf",
+      "sha256": "3a7446976f18abecff45cb543c34ccc085f154cd0c38d93b51d03d9b40ef96fd",
+      "size": 1263017,
+      "verification": "ICDE 2021, DOI 10.1109/ICDE51399.2021.00047, verified on cover.",
+      "preview": {
+        "dry_run": true,
+        "citation_key": "koutras2021valentine",
+        "path": "/Users/djo/Downloads/Valentine_Evaluating_Matching_Techniques_for_Dataset_Discovery.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/ValentineEvaluatingMatchingTechniquesForDatasetDiscovery-2021.pdf",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/Valentine_Evaluating_Matching_Techniques_for_Dataset_Discovery.pdf",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/Users/djo/Downloads/Valentine_Evaluating_Matching_Techniques_for_Dataset_Discovery.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/ValentineEvaluatingMatchingTechniquesForDatasetDiscovery-2021.pdf",
+            "old_name": "Valentine_Evaluating_Matching_Techniques_for_Dataset_Discovery.pdf",
+            "new_name": "ValentineEvaluatingMatchingTechniquesForDatasetDiscovery-2021.pdf",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "1dfb6e67-ec0b-4ce5-b5b5-b32962cddcbc",
+        "source_id": "c0f427f0-03cd-45cf-a1d1-c0514ffabb6b",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/ValentineEvaluatingMatchingTechniquesForDatasetDiscovery-2021.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "3a7446976f18abecff45cb543c34ccc085f154cd0c38d93b51d03d9b40ef96fd",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/Valentine_Evaluating_Matching_Techniques_for_Dataset_Discovery.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "koutras2021valentine",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/ValentineEvaluatingMatchingTechniquesForDatasetDiscovery-2021.pdf",
+        "moves": [
+          {
+            "operation_id": "4d9d0b56-8b58-4dff-8045-a865a3ec65b7",
+            "resource_id": "1dfb6e67-ec0b-4ce5-b5b5-b32962cddcbc",
+            "old_path": "/Users/djo/Downloads/Valentine_Evaluating_Matching_Techniques_for_Dataset_Discovery.pdf",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/ValentineEvaluatingMatchingTechniquesForDatasetDiscovery-2021.pdf",
+            "old_name": "Valentine_Evaluating_Matching_Techniques_for_Dataset_Discovery.pdf",
+            "new_name": "ValentineEvaluatingMatchingTechniquesForDatasetDiscovery-2021.pdf",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resource": {
+        "id": "1dfb6e67-ec0b-4ce5-b5b5-b32962cddcbc",
+        "source_id": "c0f427f0-03cd-45cf-a1d1-c0514ffabb6b",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/ValentineEvaluatingMatchingTechniquesForDatasetDiscovery-2021.pdf",
+        "label": null,
+        "media_type": null,
+        "digest": "3a7446976f18abecff45cb543c34ccc085f154cd0c38d93b51d03d9b40ef96fd",
+        "copied_from": {
+          "path": "/Users/djo/Downloads/Valentine_Evaluating_Matching_Techniques_for_Dataset_Discovery.pdf",
+          "root": null,
+          "relative": null
+        },
+        "resolved_path": "/Volumes/Casa/refs/lib/unfiled/ValentineEvaluatingMatchingTechniquesForDatasetDiscovery-2021.pdf",
+        "status": "available"
+      }
+    }
+  ],
+  "gap_context": {
+    "deb2014": [
+      {
+        "text": "Research note supplied by owner/session 1 on 2026-09-27: owner says \u201cDeb 2014 is not available fo free\u201d and may request author full text at https://www.researchgate.net/publication/278697010_Multi-objective_Optimization . No chapter PDF attached; gap remains unless the author request succeeds.",
+        "origin": "import"
+      }
+    ],
+    "howard2007bloor": [
+      {
+        "text": "Survey finding: only 16% of data migration projects delivered on time and on budget",
+        "origin": "import"
+      },
+      {
+        "text": "Research note supplied by owner/session 1 on 2026-09-27; not independently verified against the requested report. Owner says \u201cbloor links are not available\u201d. No public copy located. A related Bloor whitepaper, Data Migration, Philip Howard, September 2007, is a different document and says more than 60% overrun time or budget. The attached Oracle paper quotes Bloor as more than 80% of projects over time or budget, with cost overrun 30% and time overrun 41%. These are attributed secondary/related-document claims, not verified contents of the requested 2007 report. Source gap remains.",
+        "origin": "import"
+      }
+    ],
+    "howard2011bloor": [
+      {
+        "text": "Follow-up survey: 38% of projects on time and on budget; average project cost $875K with average overrun approximately 30% of project cost",
+        "origin": "import"
+      },
+      {
+        "text": "Research note supplied by owner/session 1 on 2026-09-27; not independently verified against the report. Owner says \u201cbloor links are not available\u201d, \u201cyes. for now, same for bloor 2011\u201d, and \u201cI'm trying, no luck so far\u201d. Archived Bloor listing identifies Data Migration Report \u2013 2011, Philip Howard, Bloor Research, 23 August 2011, Research Report, Free Download (subject to terms) after login/registration: https://web.archive.org/web/20250422092008/https://bloorresearch.com/research/data-migration-report-2011/ . Live page returns 404. Secondary https://www.curiositysoftware.ie/blog/too-many-migration-projects-fail cites page 10: 38.3% of projects overran or were aborted; average overrun $268,000 and average cost $875,000. These figures are not verified against the report itself. Source gap remains.",
+        "origin": "import"
+      }
+    ]
+  },
+  "ape_held": {
+    "key": "zhou2023ape",
+    "path": "/Users/djo/Downloads/43_large_language_models_are_huma.pdf",
+    "sha256": "74666b291dd75ec6795ef5b00fc5f36e2cea9ac84a8c0968b5d43243abb57e02",
+    "size": 3696250
+  },
+  "verification": "33 resources; all 37 approved bibliographic records and three symmetric version relationships verified unchanged except the two previously approved actual access dates."
+}
