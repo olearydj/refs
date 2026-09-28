@@ -7,6 +7,7 @@ import sqlite3
 import subprocess
 from pathlib import Path
 
+import pytest
 from conftest import REFS_COMMAND
 
 
@@ -240,7 +241,7 @@ def test_unwritable_log_refuses_mutation_without_database_change(initialized, tm
                                 cwd=tmp_path,capture_output=True,text=True)
         assert result.returncode == 5
         assert json.loads(result.stdout)['errors'][0]['code'] == 'log_unwritable'
-        assert result.stderr.count('could not open log') == 1
+        assert result.stderr == ''
         assert (catalog/'catalog.sqlite').read_bytes() == before
     finally:
         log.chmod(0o600)
@@ -262,3 +263,48 @@ def test_original_input_bytes_never_appear_in_log(initialized, tmp_path):
     path.write_bytes(raw)
     initialized('import','--format','bib','--input',path)
     assert raw not in (tmp_path/'cat/refs.log').read_bytes()
+
+
+@pytest.mark.parametrize('command', [
+    ('show', 'smith-2024-learningPython'), ('list',), ('search', 'Python'),
+    ('summary',), ('kinds',), ('resource', 'check'), ('schema',),
+    ('config', 'show'), ('paths',), ('project', 'show'), ('import', 'list'),
+    ('collection', 'list'),
+])
+def test_read_only_commands_succeed_with_unwritable_log(initialized, tmp_path, reference_path, command):
+    initialized('add', '--format', 'refs', '--input', reference_path)
+    log = tmp_path / 'cat/refs.log'
+    before_log = log.read_bytes()
+    before_db = (tmp_path / 'cat/catalog.sqlite').read_bytes()
+    log.chmod(0o400)
+    try:
+        result = initialized(*command)
+        assert result['errors'] == []
+        assert result['data']
+        assert log.read_bytes() == before_log
+        assert (tmp_path / 'cat/catalog.sqlite').read_bytes() == before_db
+    finally:
+        log.chmod(0o600)
+
+
+@pytest.mark.parametrize('command', [('--help',), ('add', '--help'), ('resource', '--help'), ('resource', 'add', '--help')])
+@pytest.mark.parametrize('log_state', ['absent', 'writable', 'unwritable'])
+def test_help_exits_zero_without_touching_log(initialized, tmp_path, cli_env, cli_cwd, command, log_state):
+    log = tmp_path / 'cat/refs.log'
+    before = log.read_bytes()
+    if log_state == 'absent':
+        log.unlink()
+    elif log_state == 'unwritable':
+        log.chmod(0o400)
+    try:
+        result = subprocess.run([*REFS_COMMAND, *command], env=cli_env, cwd=cli_cwd, capture_output=True, text=True)
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert 'Usage:' in result.stdout
+        assert result.stderr == ''
+        if log_state == 'absent':
+            assert not log.exists()
+        else:
+            assert log.read_bytes() == before
+    finally:
+        if log.exists():
+            log.chmod(0o600)

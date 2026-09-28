@@ -355,7 +355,7 @@ def capture_file(settings: Settings, data: dict, path: Path, *, mode: str, keep_
         if moving:
             from refs.moves import admit
             admit(settings,path)
-        proposal = locate(settings,path=path) if linked else plan_copy(settings,source,path,keep_name=keep_name)
+        proposal = locate(settings,path=path) if linked else plan_copy(settings,source,path,keep_name=keep_name,label=label)
         proposal['moved'] = moving
         proposal['label'] = label
         if moving and not proposal.get('duplicate_resource_id'):
@@ -364,7 +364,7 @@ def capture_file(settings: Settings, data: dict, path: Path, *, mode: str, keep_
         return data | {'resources':[proposal]} | {key:proposal[key] for key in ('moves','unlinked_paths') if key in proposal}, proposal
     try:
         if mode == 'copy':
-            proposal = plan_copy(settings,data,path,keep_name=keep_name)
+            proposal = plan_copy(settings,data,path,keep_name=keep_name,label=label)
             if proposal.get('duplicate_resource_id'):
                 current = inspect_source(settings,data['id'])
                 return current | dict(outcome=data['outcome'],warnings=data.get('warnings',[])+proposal['warnings']), proposal
@@ -374,7 +374,7 @@ def capture_file(settings: Settings, data: dict, path: Path, *, mode: str, keep_
         else:
             resource = link(settings,data['id'],path=path,label=label)
         if not linked and not moving:
-            resource = copy(settings,data['id'],path,resource_id=resource['id'],keep_name=keep_name)
+            resource = copy(settings,data['id'],path,resource_id=resource['id'],keep_name=keep_name,label=label)
         current = inspect_source(settings,data['id'])
         return current | dict(outcome=data['outcome'],warnings=data.get('warnings',[])+resource.get('warnings',[])) | {key:resource[key] for key in ('moves','unlinked_paths') if key in resource}, resource
     except (RefError,OSError) as exc:

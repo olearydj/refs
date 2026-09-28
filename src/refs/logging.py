@@ -3,7 +3,6 @@
 import json
 import logging
 import os
-import sys
 from collections.abc import Callable
 from contextvars import ContextVar
 from datetime import UTC, datetime
@@ -27,7 +26,6 @@ _logger.setLevel(logging.DEBUG)
 _logger.propagate = False
 _file: DurableFileHandler | None = None
 _console: logging.Handler | None = None
-_warned = False
 _opening: Callable[[], None] | None = None
 
 
@@ -67,7 +65,6 @@ class DurableFileHandler(logging.Handler):
         self.addFilter(ContextFilter())
 
     def emit(self, record: logging.LogRecord) -> None:
-        global _warned
         try:
             if record.__dict__["mutation"] and (not os.access(self.path, os.W_OK) or self.path.stat().st_ino != os.fstat(self.stream.fileno()).st_ino):
                 raise OSError("Catalog log was made unwritable or replaced")
@@ -79,9 +76,7 @@ class DurableFileHandler(logging.Handler):
             if record.__dict__["mutation"]:
                 raise RefError("log_unwritable", "Cannot write the catalog log; change refused", 5,
                                path=str(self.path)) from exc
-            if not _warned:
-                print(f"refs: could not write log {self.path}: {exc}", file=sys.stderr)
-                _warned = True
+            # Diagnostic logging is best effort; only mutations require it.
 
     def close(self) -> None:
         try:
@@ -106,7 +101,7 @@ def defer_open(callback: Callable[[], None]) -> None:
 
 
 def setup(catalog: Path, *, verbose: bool = False, mutation: bool = False) -> None:
-    global _file, _console, _warned, _opening
+    global _file, _console, _opening
     bind(_command.get(), catalog)
     path = catalog / "refs.log"
     if _file is None or _file.path != path:
@@ -119,14 +114,11 @@ def setup(catalog: Path, *, verbose: bool = False, mutation: bool = False) -> No
                 raise OSError("Catalog log cannot be a symbolic link")
             _file = DurableFileHandler(path)
             _logger.addHandler(_file)
-            _warned = False
         except OSError as exc:
             if mutation:
                 raise RefError("log_unwritable", "Cannot open the catalog log; change refused", 5,
                                path=str(path)) from exc
-            if not _warned:
-                print(f"refs: could not open log {path}: {exc}", file=sys.stderr)
-                _warned = True
+            # A read-only command must not need write access to its log.
     if verbose and _console is None:
         from rich.console import Console
         from rich.logging import RichHandler

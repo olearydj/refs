@@ -433,9 +433,10 @@ def main() -> None:
         return next((args[index + 1] for index, value in enumerate(args[:-1]) if value == name),
                     next((value.split("=", 1)[1] for value in args if value.startswith(name + "=")), None))
     catalog = None
+    help_requested = "--help" in args
     try:
-        selected = select(option("--config"), option("--catalog"), project_file=option("--project-file"), no_project_config="--no-project-config" in args)
-        catalog = selected.catalog
+        selected = None if help_requested else select(option("--config"), option("--catalog"), project_file=option("--project-file"), no_project_config="--no-project-config" in args)
+        catalog = selected.catalog if selected is not None else None
         if catalog is not None and catalog.is_dir():
             action_log.setup(catalog, verbose="--verbose" in args)
             action_log.event("command.open", argv=args)
@@ -452,7 +453,7 @@ def main() -> None:
         while index<len(args) and args[index].startswith('--'):
             index+=2 if args[index] in ('--config','--catalog','--project-file') else 1
         bare_group=index==len(args) or index==len(args)-1 and args[index] in {'project','key','resource','config','collection'}
-        if bare_group:
+        if bare_group and not help_requested:
             failed_command.set(args[index] if index<len(args) else 'invocation')
             with redirect_stdout(sys.stderr):
                 app(args=[*args,'--help'],standalone_mode=False)

@@ -129,3 +129,30 @@ def test_generated_title_tokens_do_not_remove_stored_or_exported_apostrophes(ini
     after = initialized('show', added['id'])['data']
     assert after['metadata'] == metadata
     assert after['context'] == context
+
+
+@pytest.mark.parametrize('command', ['add', 'resource add'])
+@pytest.mark.parametrize('mode', ['copy', 'move'])
+@pytest.mark.parametrize('label', [None, 'probe label'])
+def test_intake_preview_matches_executed_filename(initialized, tmp_path, reference_path, command, mode, label):
+    path = tmp_path / 'original.pdf'
+    path.write_bytes(b'%PDF preview parity')
+    if command == 'add':
+        args = ['add', '--format', 'refs', '--input', reference_path, '--file', path]
+    else:
+        source = initialized('add', '--format', 'refs', '--input', reference_path)['data']
+        args = ['resource', 'add', source['id'], '--path', path]
+    args += ['--' + mode] + (['--label', label] if label else [])
+    before = (tmp_path / 'cat/catalog.sqlite').read_bytes()
+    preview = initialized(*args, '--dry-run')['data']
+    proposed = preview['file_action'] if command == 'add' else preview
+    expected = tmp_path / 'lib/unfiled' / ('LearningPython-2024' + ('-probelabel' if label else '') + '.pdf')
+    assert proposed['destination'] == str(expected)
+    assert not expected.exists()
+    assert path.read_bytes() == b'%PDF preview parity'
+    assert (tmp_path / 'cat/catalog.sqlite').read_bytes() == before
+    executed = initialized(*args)['data']
+    actual = executed['file_action'] if command == 'add' else executed
+    assert actual['destination'] == proposed['destination']
+    assert expected.read_bytes() == b'%PDF preview parity'
+    assert path.exists() == (mode == 'copy')
