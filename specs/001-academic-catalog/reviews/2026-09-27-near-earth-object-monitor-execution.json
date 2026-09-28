@@ -1,0 +1,592 @@
+{
+  "backup": {
+    "format": "refs-backup",
+    "schema_version": 1,
+    "configuration_path": "/Users/djo/.config/refs/config.toml",
+    "catalog_schema_version": 6,
+    "catalog_id": "c03298ee-caee-4e20-aa0c-ddf121aafc0a",
+    "catalog_revision": 4775,
+    "external_contents_included": false,
+    "members": {
+      "catalog.sqlite": {
+        "size": 31256576,
+        "sha256": "064d4fdaa151dd393207d5cb8ae6166b8bf2d6d47366d3a5e1fb440238456c68"
+      },
+      "config.toml": {
+        "size": 423,
+        "sha256": "61b3093d2ecf1caa6a5dfb3360fac24ac486a5590cdd443e37c54e249a16d0d2"
+      },
+      "resources.jsonl": {
+        "size": 403027,
+        "sha256": "d7e75245e3f87c7339840160a051d53886495d230f72dc3e2db06e6682f285df"
+      }
+    }
+  },
+  "catalog_revision": 4793,
+  "records": [
+    {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "Conversion default relayed by session 1 on 2026-09-27: preserve the bibliography accessed date 2026-07-23; record the actual later capture date separately in resource provenance and context.",
+          "origin": "user"
+        },
+        {
+          "text": "Source-content capture acquired 2026-09-27T21:13:03.159231-05:00 from https://api.nasa.gov/, https://api.nasa.gov/assets/json/apis.json; SHA-256 9915952b20eda44f2dfc870ecb334398c65347359cc9c5e51b054a8ceea2cb0b. Full source response bodies and individual hashes are retained in the single JSON resource. Bibliographic accessed remains 2026-07-23 per the approved conversion; this later capture does not attest to page contents on that historical date. No browser or TLS bypass used.",
+          "origin": "agent"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/dev/near-earth-object-monitor/reports/references.bib",
+            "item_key": "nasa-neows"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "NeoWs"
+          ],
+          "preserve_case": false
+        },
+        "container-title": {
+          "protected_terms": [
+            "NASA",
+            "APIs"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "19c9ef37-360d-40a6-ba2d-ce2dab7f4ca7",
+      "citation_key": "nasa-neows",
+      "state": "active",
+      "revision": 6,
+      "created_at": "2026-09-28T02:12:15.897504+00:00",
+      "updated_at": "2026-09-28T02:13:05.113576+00:00",
+      "loc": "unfiled",
+      "metadata": {
+        "type": "webpage",
+        "author": [
+          {
+            "literal": "National Aeronautics and Space Administration"
+          }
+        ],
+        "accessed": {
+          "date-parts": [
+            [
+              2026,
+              7,
+              23
+            ]
+          ]
+        },
+        "container-title": "NASA Open APIs",
+        "title": "Asteroids NeoWs: Near Earth Object Web Service",
+        "URL": "https://api.nasa.gov/"
+      },
+      "corrected_fields": [
+        "context",
+        "metadata",
+        "native_type",
+        "title_protection"
+      ],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "4503bb59-4b3c-47a9-9441-8a5f0e509559",
+          "sha256": "1d4633b785db37061e1d9996077bd9a29940464ee96f406c9faca0cc7ae8dd7f",
+          "byte_length": 199,
+          "format": "bib",
+          "origin": "add",
+          "locator": "/Volumes/Casa/dev/near-earth-object-monitor/reports/references.bib#bytes=0:199"
+        },
+        {
+          "id": "97db893c-643f-472b-a2e0-7e4f9c765f67",
+          "sha256": "1d4633b785db37061e1d9996077bd9a29940464ee96f406c9faca0cc7ae8dd7f",
+          "byte_length": 199,
+          "format": "bib",
+          "origin": "import-applied",
+          "locator": "/Volumes/Casa/dev/near-earth-object-monitor/reports/references.bib#bytes=0:199"
+        }
+      ],
+      "limitations": [],
+      "resources": [
+        {
+          "id": "de0ea828-2cc9-4e8f-a3e7-118de1310a12",
+          "source_id": "19c9ef37-360d-40a6-ba2d-ce2dab7f4ca7",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/nasa-neows-capture.json",
+          "label": "capture",
+          "media_type": null,
+          "digest": "9915952b20eda44f2dfc870ecb334398c65347359cc9c5e51b054a8ceea2cb0b",
+          "copied_from": {
+            "path": "/private/tmp/refs-neo-execution/nasa-neows-capture.json",
+            "root": null,
+            "relative": null
+          }
+        }
+      ],
+      "projects": [
+        {
+          "id": "94d48cfb-6daa-4388-afc5-9c98be662a5a",
+          "name": "near-earth-object-monitor"
+        }
+      ],
+      "links": []
+    },
+    {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "Conversion default relayed by session 1 on 2026-09-27: preserve the bibliography accessed date 2026-07-23; record the actual later capture date separately in resource provenance and context.",
+          "origin": "user"
+        },
+        {
+          "text": "Source-content capture acquired 2026-09-27T21:13:05.236869-05:00 from https://cneos.jpl.nasa.gov/glossary/PHA.html; SHA-256 eb4e9d3778fe90c89a6ab56bfae90c7b5b0b7b8f68aa44f8b3a808a0a573edc1. Full source response bodies and individual hashes are retained in the single JSON resource. Bibliographic accessed remains 2026-07-23 per the approved conversion; this later capture does not attest to page contents on that historical date. No browser or TLS bypass used.",
+          "origin": "agent"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/dev/near-earth-object-monitor/reports/references.bib",
+            "item_key": "cneos-pha"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "PHA"
+          ],
+          "preserve_case": false
+        },
+        "container-title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "265f5eef-a39c-4e0c-abdc-3aeb36fbaff9",
+      "citation_key": "cneos-pha",
+      "state": "active",
+      "revision": 6,
+      "created_at": "2026-09-28T02:12:15.903680+00:00",
+      "updated_at": "2026-09-28T02:13:06.150123+00:00",
+      "loc": "unfiled",
+      "metadata": {
+        "type": "webpage",
+        "author": [
+          {
+            "literal": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies"
+          }
+        ],
+        "accessed": {
+          "date-parts": [
+            [
+              2026,
+              7,
+              23
+            ]
+          ]
+        },
+        "container-title": "Center for Near Earth Object Studies",
+        "title": "Glossary: Potentially Hazardous Asteroid (PHA)",
+        "URL": "https://cneos.jpl.nasa.gov/glossary/PHA.html"
+      },
+      "corrected_fields": [
+        "context",
+        "metadata",
+        "native_type",
+        "title_protection"
+      ],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "3bed84c8-5bc0-47f7-9075-d085d5c4f79b",
+          "sha256": "b11dc778a95d95c36d6c521c7fbb03b4c2099b880d25a3fd7f603affcf6888bd",
+          "byte_length": 244,
+          "format": "bib",
+          "origin": "add",
+          "locator": "/Volumes/Casa/dev/near-earth-object-monitor/reports/references.bib#bytes=201:445"
+        },
+        {
+          "id": "3f5f3852-cae7-4203-a1ec-3f4b2ca354f9",
+          "sha256": "b11dc778a95d95c36d6c521c7fbb03b4c2099b880d25a3fd7f603affcf6888bd",
+          "byte_length": 244,
+          "format": "bib",
+          "origin": "import-applied",
+          "locator": "/Volumes/Casa/dev/near-earth-object-monitor/reports/references.bib#bytes=201:445"
+        }
+      ],
+      "limitations": [],
+      "resources": [
+        {
+          "id": "03d7eb2a-36ab-492e-8c18-fed1911aba35",
+          "source_id": "265f5eef-a39c-4e0c-abdc-3aeb36fbaff9",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/cneos-pha-capture.json",
+          "label": "capture",
+          "media_type": null,
+          "digest": "eb4e9d3778fe90c89a6ab56bfae90c7b5b0b7b8f68aa44f8b3a808a0a573edc1",
+          "copied_from": {
+            "path": "/private/tmp/refs-neo-execution/cneos-pha-capture.json",
+            "root": null,
+            "relative": null
+          }
+        }
+      ],
+      "projects": [
+        {
+          "id": "94d48cfb-6daa-4388-afc5-9c98be662a5a",
+          "name": "near-earth-object-monitor"
+        }
+      ],
+      "links": []
+    }
+  ],
+  "memberships": [
+    {
+      "citation_key": "cneos-pha",
+      "cited": 1
+    },
+    {
+      "citation_key": "nasa-neows",
+      "cited": 1
+    }
+  ],
+  "originals": [
+    {
+      "key": "nasa-neows",
+      "sha256": "1d4633b785db37061e1d9996077bd9a29940464ee96f406c9faca0cc7ae8dd7f",
+      "byte_length": 199
+    },
+    {
+      "key": "cneos-pha",
+      "sha256": "b11dc778a95d95c36d6c521c7fbb03b4c2099b880d25a3fd7f603affcf6888bd",
+      "byte_length": 244
+    }
+  ],
+  "attachments": [
+    {
+      "key": "nasa-neows",
+      "captured_at": "2026-09-27T21:13:03.159231-05:00",
+      "sha256": "9915952b20eda44f2dfc870ecb334398c65347359cc9c5e51b054a8ceea2cb0b",
+      "members": [
+        {
+          "url": "https://api.nasa.gov/",
+          "retrieved_at_utc": "2026-09-28T02:13:03.653780+00:00",
+          "sha256": "6f632c53dc1ac66334e4be7636dea8704d995b308c814ee30910d0e16cf84886",
+          "byte_length": 4737
+        },
+        {
+          "url": "https://api.nasa.gov/assets/json/apis.json",
+          "retrieved_at_utc": "2026-09-28T02:13:04.480004+00:00",
+          "sha256": "a566191726d33df048c8d8239b022edc08975ed8ac70567fba6ca6ea04e4ca47",
+          "byte_length": 166217
+        }
+      ],
+      "preview": {
+        "dry_run": true,
+        "citation_key": "nasa-neows",
+        "path": "/private/tmp/refs-neo-execution/nasa-neows-capture.json",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/nasa-neows-capture.json",
+        "copied_from": {
+          "path": "/private/tmp/refs-neo-execution/nasa-neows-capture.json",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-neo-execution/nasa-neows-capture.json",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/nasa-neows-capture.json",
+            "old_name": "nasa-neows-capture.json",
+            "new_name": "nasa-neows-capture.json",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "de0ea828-2cc9-4e8f-a3e7-118de1310a12",
+        "source_id": "19c9ef37-360d-40a6-ba2d-ce2dab7f4ca7",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/nasa-neows-capture.json",
+        "label": "capture",
+        "media_type": null,
+        "digest": "9915952b20eda44f2dfc870ecb334398c65347359cc9c5e51b054a8ceea2cb0b",
+        "copied_from": {
+          "path": "/private/tmp/refs-neo-execution/nasa-neows-capture.json",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "nasa-neows",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/nasa-neows-capture.json",
+        "moves": [
+          {
+            "operation_id": "b6eba618-49c7-4bbf-a2e0-c6abea7cbe6e",
+            "resource_id": "de0ea828-2cc9-4e8f-a3e7-118de1310a12",
+            "old_path": "/private/tmp/refs-neo-execution/nasa-neows-capture.json",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/nasa-neows-capture.json",
+            "old_name": "nasa-neows-capture.json",
+            "new_name": "nasa-neows-capture.json",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resource": {
+        "id": "de0ea828-2cc9-4e8f-a3e7-118de1310a12",
+        "source_id": "19c9ef37-360d-40a6-ba2d-ce2dab7f4ca7",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/nasa-neows-capture.json",
+        "label": "capture",
+        "media_type": null,
+        "digest": "9915952b20eda44f2dfc870ecb334398c65347359cc9c5e51b054a8ceea2cb0b",
+        "copied_from": {
+          "path": "/private/tmp/refs-neo-execution/nasa-neows-capture.json",
+          "root": null,
+          "relative": null
+        },
+        "resolved_path": "/Volumes/Casa/refs/lib/unfiled/nasa-neows-capture.json",
+        "status": "available"
+      },
+      "context": {
+        "origin": "agent",
+        "text": "Source-content capture acquired 2026-09-27T21:13:03.159231-05:00 from https://api.nasa.gov/, https://api.nasa.gov/assets/json/apis.json; SHA-256 9915952b20eda44f2dfc870ecb334398c65347359cc9c5e51b054a8ceea2cb0b. Full source response bodies and individual hashes are retained in the single JSON resource. Bibliographic accessed remains 2026-07-23 per the approved conversion; this later capture does not attest to page contents on that historical date. No browser or TLS bypass used."
+      }
+    },
+    {
+      "key": "cneos-pha",
+      "captured_at": "2026-09-27T21:13:05.236869-05:00",
+      "sha256": "eb4e9d3778fe90c89a6ab56bfae90c7b5b0b7b8f68aa44f8b3a808a0a573edc1",
+      "members": [
+        {
+          "url": "https://cneos.jpl.nasa.gov/glossary/PHA.html",
+          "retrieved_at_utc": "2026-09-28T02:13:05.537931+00:00",
+          "sha256": "dba17ebd635147dce17884a4cfcefa07f482f0a8781abc4e5dbf32088e963f28",
+          "byte_length": 19430
+        }
+      ],
+      "preview": {
+        "dry_run": true,
+        "citation_key": "cneos-pha",
+        "path": "/private/tmp/refs-neo-execution/cneos-pha-capture.json",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/cneos-pha-capture.json",
+        "copied_from": {
+          "path": "/private/tmp/refs-neo-execution/cneos-pha-capture.json",
+          "root": null,
+          "relative": null
+        },
+        "moved": true,
+        "moves": [
+          {
+            "operation_id": null,
+            "resource_id": null,
+            "old_path": "/private/tmp/refs-neo-execution/cneos-pha-capture.json",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/cneos-pha-capture.json",
+            "old_name": "cneos-pha-capture.json",
+            "new_name": "cneos-pha-capture.json",
+            "state": "planned",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "result": {
+        "id": "03d7eb2a-36ab-492e-8c18-fed1911aba35",
+        "source_id": "265f5eef-a39c-4e0c-abdc-3aeb36fbaff9",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/cneos-pha-capture.json",
+        "label": "capture",
+        "media_type": null,
+        "digest": "eb4e9d3778fe90c89a6ab56bfae90c7b5b0b7b8f68aa44f8b3a808a0a573edc1",
+        "copied_from": {
+          "path": "/private/tmp/refs-neo-execution/cneos-pha-capture.json",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "cneos-pha",
+        "moved": true,
+        "destination": "/Volumes/Casa/refs/lib/unfiled/cneos-pha-capture.json",
+        "moves": [
+          {
+            "operation_id": "e133002a-ccb0-4f90-b981-8e886cdfbc45",
+            "resource_id": "03d7eb2a-36ab-492e-8c18-fed1911aba35",
+            "old_path": "/private/tmp/refs-neo-execution/cneos-pha-capture.json",
+            "new_path": "/Volumes/Casa/refs/lib/unfiled/cneos-pha-capture.json",
+            "old_name": "cneos-pha-capture.json",
+            "new_name": "cneos-pha-capture.json",
+            "state": "removed",
+            "error": null
+          }
+        ],
+        "unlinked_paths": []
+      },
+      "resource": {
+        "id": "03d7eb2a-36ab-492e-8c18-fed1911aba35",
+        "source_id": "265f5eef-a39c-4e0c-abdc-3aeb36fbaff9",
+        "revision": 2,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/cneos-pha-capture.json",
+        "label": "capture",
+        "media_type": null,
+        "digest": "eb4e9d3778fe90c89a6ab56bfae90c7b5b0b7b8f68aa44f8b3a808a0a573edc1",
+        "copied_from": {
+          "path": "/private/tmp/refs-neo-execution/cneos-pha-capture.json",
+          "root": null,
+          "relative": null
+        },
+        "resolved_path": "/Volumes/Casa/refs/lib/unfiled/cneos-pha-capture.json",
+        "status": "available"
+      },
+      "context": {
+        "origin": "agent",
+        "text": "Source-content capture acquired 2026-09-27T21:13:05.236869-05:00 from https://cneos.jpl.nasa.gov/glossary/PHA.html; SHA-256 eb4e9d3778fe90c89a6ab56bfae90c7b5b0b7b8f68aa44f8b3a808a0a573edc1. Full source response bodies and individual hashes are retained in the single JSON resource. Bibliographic accessed remains 2026-07-23 per the approved conversion; this later capture does not attest to page contents on that historical date. No browser or TLS bypass used."
+      }
+    }
+  ],
+  "gate_entries": [
+    {
+      "consumer": "neo-report",
+      "key": "cneos-pha",
+      "before": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies. n.d. Glossary: Potentially Hazardous Asteroid (PHA). Accessed July 23, 2026. https://cneos.jpl.nasa.gov /glossary/PHA.html.",
+      "predicted": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies. n.d. “Glossary: Potentially Hazardous Asteroid (PHA).” Center for Near Earth Object Studies. Accessed July 23, 2026. https://cneos.jpl.nasa.gov/glossary/PHA.html.",
+      "actual": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies. n.d. “Glossary: Potentially Hazardous Asteroid (PHA).” Center for Near Earth Object Studies. Accessed July 23, 2026. https://cneos.jpl.nasa.gov/glossary/PHA.html.",
+      "expected": true
+    },
+    {
+      "consumer": "neo-report",
+      "key": "nasa-neows",
+      "before": "National Aeronautics and Space Administration. n.d. Asteroids NeoWs: Near Earth Object Web Service. Accessed July 23, 2026. https://api.nasa.gov/.",
+      "predicted": "National Aeronautics and Space Administration. n.d. “Asteroids NeoWs: Near Earth Object Web Service.” NASA Open APIs. Accessed July 23, 2026. https://api.nasa.gov/.",
+      "actual": "National Aeronautics and Space Administration. n.d. “Asteroids NeoWs: Near Earth Object Web Service.” NASA Open APIs. Accessed July 23, 2026. https://api.nasa.gov/.",
+      "expected": true
+    },
+    {
+      "consumer": "neo-report-agu",
+      "key": "cneos-pha",
+      "before": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies. (n.d.). Glossary: Potentially hazardous asteroid (PHA). Retrieved from https       :// cneos.jpl.nasa.gov/glossary/PHA.html",
+      "predicted": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies. (n.d.). Glossary: Potentially Hazardous Asteroid (PHA). Retrieved July 23, 2026, from https://cneos.jpl.nasa.gov/glossary/PHA.html",
+      "actual": "NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies. (n.d.). Glossary: Potentially Hazardous Asteroid (PHA). Retrieved July 23, 2026, from https://cneos.jpl.nasa.gov/glossary/PHA.html",
+      "expected": true
+    },
+    {
+      "consumer": "neo-report-agu",
+      "key": "nasa-neows",
+      "before": "National Aeronautics and Space Administration. (n.d.). Asteroids NeoWs: Near earth object web service. Retrieved from https://api.nasa.gov/",
+      "predicted": "National Aeronautics and Space Administration. (n.d.). Asteroids NeoWs: Near Earth Object Web Service. Retrieved July 23, 2026, from https://api.nasa.gov/",
+      "actual": "National Aeronautics and Space Administration. (n.d.). Asteroids NeoWs: Near Earth Object Web Service. Retrieved July 23, 2026, from https://api.nasa.gov/",
+      "expected": true
+    }
+  ],
+  "gate_exit_code": 3,
+  "publication_commit": "640b908a440b470c55daba4fd8ba7154a6e612b9",
+  "publication_status": "?? .repo-retro/retrospective.md\n?? .repo-retro/retrospective.pdf\n",
+  "export_sha256": "d5e6117bbebe6f7d375c8daeebbab2489a08572ce880a44554fb00d2626ed6fc",
+  "gate_work": "/private/tmp/refs-neo-gate-01",
+  "recording": {
+    "work": "/private/tmp/refs-neo-record-01",
+    "exit_code": 3,
+    "recorded": true,
+    "all_four_entries_identical": true,
+    "local_exclude_added": "/.repo-retro/",
+    "consumers": [
+      {
+        "name": "neo-report",
+        "provenance": {
+          "publication_commit": "640b908a440b470c55daba4fd8ba7154a6e612b9",
+          "source": "owner-accepted scratch render (--record)",
+          "recorded_at": "2026-09-28T02:18:22.627992+00:00",
+          "artifact_sha256": "6126c8a0f68c917d011a631b2a83d5885c2d7756784efa14826d231737ec291e",
+          "fixture_sha256": "be8a784a0fc1ddcecba7594274ee1b31e7f4df970404ae550c97f2d6636c5ec8"
+        }
+      },
+      {
+        "name": "neo-report-agu",
+        "provenance": {
+          "publication_commit": "640b908a440b470c55daba4fd8ba7154a6e612b9",
+          "source": "owner-accepted scratch render (--record)",
+          "recorded_at": "2026-09-28T02:18:22.632659+00:00",
+          "artifact_sha256": "b390df52a870b269c85f5a7476a4b3655101b1b75813fe96a26318587532293b",
+          "fixture_sha256": "bb5fb4ac16597c1b88ff1b0eea6eb84859a84d3f6dc90746eba8c49776146a6f"
+        }
+      }
+    ]
+  },
+  "adoption": {
+    "publication_commit": "e2231a7fe8143dc86a4972e3b6fb42c32a26f4a8",
+    "no_record_work": "/private/tmp/refs-neo-adopted-check-01",
+    "record_work": "/private/tmp/refs-neo-adopted-record-01",
+    "no_record_exit_code": 0,
+    "record_exit_code": 0,
+    "identical_entries": 4,
+    "fixture_text_changed": false,
+    "consumers": [
+      {
+        "name": "neo-report",
+        "provenance": {
+          "publication_commit": "e2231a7fe8143dc86a4972e3b6fb42c32a26f4a8",
+          "source": "owner-accepted scratch render (--record)",
+          "recorded_at": "2026-09-28T02:23:13.021845+00:00",
+          "artifact_sha256": "6126c8a0f68c917d011a631b2a83d5885c2d7756784efa14826d231737ec291e",
+          "fixture_sha256": "be8a784a0fc1ddcecba7594274ee1b31e7f4df970404ae550c97f2d6636c5ec8"
+        }
+      },
+      {
+        "name": "neo-report-agu",
+        "provenance": {
+          "publication_commit": "e2231a7fe8143dc86a4972e3b6fb42c32a26f4a8",
+          "source": "owner-accepted scratch render (--record)",
+          "recorded_at": "2026-09-28T02:23:13.026136+00:00",
+          "artifact_sha256": "b390df52a870b269c85f5a7476a4b3655101b1b75813fe96a26318587532293b",
+          "fixture_sha256": "bb5fb4ac16597c1b88ff1b0eea6eb84859a84d3f6dc90746eba8c49776146a6f"
+        }
+      }
+    ]
+  }
+}

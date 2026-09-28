@@ -1,0 +1,4 @@
+{
+  "cneos-pha": "{\"key\": \"cneos-pha\", \"text\": \"NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies. n.d. “Glossary: Potentially Hazardous Asteroid (PHA).” Center for Near Earth Object Studies. Accessed July 23, 2026. https://cneos.jpl.nasa.gov/glossary/PHA.html.\"}",
+  "nasa-neows": "{\"key\": \"nasa-neows\", \"text\": \"National Aeronautics and Space Administration. n.d. “Asteroids NeoWs: Near Earth Object Web Service.” NASA Open APIs. Accessed July 23, 2026. https://api.nasa.gov/.\"}"
+}
