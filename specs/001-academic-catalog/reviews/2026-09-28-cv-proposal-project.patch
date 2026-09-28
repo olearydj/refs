@@ -42,7 +42,7 @@
 @@ -54,7 +54,18 @@
    return keys
  end
- 
+
 -local nonfirst_author_keys = parse_bib_authorship("refs/all.bib")
 +local nonfirst_author_keys = {}
 +for _, path in ipairs({"refs/proceedings.json", "refs/published.json", "refs/forthcoming.json", "refs/submission.json", "refs/preparation.json", "refs/other-publications.json"}) do
@@ -56,18 +56,18 @@
 +    end
 +  end
 +end
- 
+
  local function is_target_name_start(inlines, index)
    local first = inlines[index]
 @@ -63,7 +74,7 @@
    local fourth = inlines[index + 3]
    local fifth = inlines[index + 4]
- 
+
 -  if not (first and second and third and fourth and fifth) then
 +  if not (first and second and third) then
      return false
    end
- 
+
 @@ -71,10 +82,7 @@
      and (first.text == "O’Leary," or first.text == "O'Leary,")
      and second.t == "Space"
@@ -78,10 +78,10 @@
 -    and (fifth.text == "J." or fifth.text == "J.,")
 +    and (third.text == "D." or third.text == "D.,")
  end
- 
+
  local function underline_target_name(inlines)
 @@ -83,14 +91,12 @@
- 
+
    while i <= #inlines do
      if is_target_name_start(inlines, i) then
 -      table.insert(output, pandoc.Underline({
