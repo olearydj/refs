@@ -1,6 +1,6 @@
 # dema-llm conversion execution — 2026-09-27
 
-**Gate accepted and fixtures recorded.** Owner decision relayed in `comms/2026-09-27-185859-s1-dema-llm-gate-accepted.md`: “html ref nums - the change is ok for this doc, tdd is internal”, “html defect - write it up for dema-llm if that is the right place to investigate / fix it”, and “proceed”. The fresh `--record` run at `/private/tmp/refs-dema-record-01` recorded all four fixtures against clean publication `7599aee94d14a437b94b9f2f4b71de0ebb89125d`. All 80 extracted entries are byte-for-byte identical to the accepted gate. The harness reports `recorded: true`; exit 1 reflects its pre-record comparison against four absent fixtures. The register now retains each fixture's publication, tool and recording provenance. Publication adoption and branch merge remain with s1 and the publication session. All eight verified owner downloads are attached, including the confirmed ICLR 2023 APE edition; only Deb and the two Bloor reports remain gaps.
+**Conversion adopted and verified.** Owner decision relayed in `comms/2026-09-27-185859-s1-dema-llm-gate-accepted.md`: “html ref nums - the change is ok for this doc, tdd is internal”, “html defect - write it up for dema-llm if that is the right place to investigate / fix it”, and “proceed”. The fresh `--record` run at `/private/tmp/refs-dema-record-01` recorded all four fixtures against clean publication `7599aee94d14a437b94b9f2f4b71de0ebb89125d`. All 80 extracted entries are byte-for-byte identical to the accepted gate. The harness reports `recorded: true`; exit 1 reflects its pre-record comparison against four absent fixtures. The register now retains each fixture's publication, tool and recording provenance. Publication adoption is complete at `24053b0`; the final direct-configuration check and provenance refresh below both pass. Branch merge remains the owner’s gate. All eight verified owner downloads are attached, including the confirmed ICLR 2023 APE edition; only Deb and the two Bloor reports remain gaps.
 
 ## Backup and scope
 
@@ -10,7 +10,7 @@ Backup `/Volumes/Casa/refs-backups/2026-09-27-before-dema-llm-conversion` valida
 
 ## Inventory and consumers
 
-One refs project, `dema-llm`, now has 34 cited memberships. The three retained preprints stay in the catalog outside that membership. One scratch export target is `docs/references.json`, profile `csl-json-v1`; all four consumers use the project’s IEEE CSL. The live readers still use their original BibTeX and the PDD PDF still uses biber until adoption.
+One refs project, `dema-llm`, now has 34 cited memberships. The three retained preprints stay in the catalog outside that membership. One scratch export target is `docs/references.json`, profile `csl-json-v1`; all four consumers use the project’s IEEE CSL. The adopted live readers use `docs/references.json`, and the PDD PDF uses citeproc.
 
 | Consumer | Native gate | Entries | Wording | Presentation finding |
 | --- | --- | --- | --- | --- |
@@ -169,6 +169,14 @@ The run began after the 17:04 owner authorization. Verification covers the valid
 
 For refs: no new product feature is proposed by this pass. Preserve the separately approved deferred-regulation ledger note. A source’s publisher landing-page title can differ from its own PDF cover; keeping that evidence in context avoids silently rewriting an approved existing record.
 
-For the guide: full book gates need a check that displayed citation numbers agree with their hyperlink destinations, as bibliography-only previews do not expose that mismatch. Record-order changes can renumber an HTML appendix independently of PDF first-citation order. PDF footer removal must not discard a numeric URL continuation, and bibliography extraction must stop before following callouts. The pre-adoption register helper must be retired when the live publication adopts the switches; its assertions deliberately expect legacy input settings.
+For the guide: full book gates need a check that displayed citation numbers agree with their hyperlink destinations, as bibliography-only previews do not expose that mismatch. Record-order changes can renumber an HTML appendix independently of PDF first-citation order. PDF footer removal must not discard a numeric URL continuation, and bibliography extraction must stop before following callouts. The pre-adoption register preparation was retired after adoption; the remaining helper only renders and extracts references from the project’s own settings.
 
-**Next:** s1 coordinates publication adoption. Await the publication-adoption result; do not merge this branch or edit the publication.
+## Adoption and final verification
+
+Session 1 reported and reviewed publication adoption in `comms/2026-09-27-195848-s1-dema-llm-adopted.md`: `8ce80f0` adopts `.refs.toml`, the JSON bibliography, citation replacements, citeproc settings, speech fallback and refs documentation; `a475e7e` corrects the owner-approved Bloor prose without changing citations; `24053b0` records the pre-existing HTML citation-number defect in `DOCUMENTATION-LOOSE-ENDS.md`. The publication was independently confirmed clean at full commit `24053b0bad703e2acbe3be41f81e2c8f3ffb0b12` before both final harness runs. This session did not edit that publication.
+
+The register now renders the adopted configuration directly. Its temporary `prepare-tdd` branch, four-key rewriting, bibliography and engine switches, speech-style mutation, transformation log and legacy-settings assertions are removed. The render/extraction helper remains scratch-only. A fresh no-record run at `/private/tmp/refs-dema-adopted-check-01` exits 0: all 80 entries (34 HTML, 34 TDD PDF, 6 DOCX and 6 PDD PDF) exactly match the accepted fixtures.
+
+Owner decision in `comms/2026-09-27-200313-s1-adoption-record-approved.md`, answering whether to record at `24053b0` if all 80 entries match: “yes”. After the identical comparison, a fresh `--record` run at `/private/tmp/refs-dema-adopted-record-01` also exits 0 with `recorded: true`. Every fixture’s provenance now names the adoption commit; all four fixture files remain byte-for-byte unchanged. The [final check evidence](2026-09-27-dema-llm-adoption-check.json) records run locations, entry counts and refreshed fixture hashes/provenance. No metadata or source attachments changed during these checks.
+
+**Next:** s1 reviews the completed execution branch and takes its merge to the owner. Deb and both Bloor sources remain acknowledged acquisition gaps; the HTML-number defect is tracked in the publication.

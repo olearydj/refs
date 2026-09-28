@@ -393,7 +393,7 @@
           "command": [
             "python3",
             "-c",
-            "from pathlib import Path\nimport subprocess,sys\np=Path('.refs-gate');p.mkdir(exist_ok=True)\n(p/'consumer.py').write_text('from pathlib import Path\\nimport sys,re,json,subprocess,xml.etree.ElementTree as ET\\nfrom zipfile import ZipFile\\nfrom html.parser import HTMLParser\\nroot=Path.cwd()\\nassert not (root/\\'.git\\').exists(), \\'Conversion helper refuses a live git checkout\\'\\noutput=root/\\'.refs-gate\\';output.mkdir(exist_ok=True)\\nclass References(HTMLParser):\\n def __init__(self):super().__init__();self.depth=0;self.key=None;self.parts=[];self.rows=[]\\n def handle_starttag(self,t,a):\\n  a=dict(a)\\n  if t==\\'div\\':\\n   if self.depth:self.depth+=1\\n   elif a.get(\\'id\\',\\'\\').startswith(\\'ref-\\'):self.key=a[\\'id\\'][4:];self.depth=1;self.parts=[]\\n def handle_endtag(self,t):\\n  if t==\\'div\\' and self.depth:\\n   self.depth-=1\\n   if not self.depth:self.rows.append({\\'key\\':self.key,\\'text\\':\\' \\'.join(\\'\\'.join(self.parts).split())})\\n def handle_data(self,d):\\n  if self.depth:self.parts.append(d)\\ndef write(name,rows):\\n assert rows and len({r[\\'key\\'] for r in rows})==len(rows)\\n (output/(name+\\'.json\\')).write_text(json.dumps(rows,ensure_ascii=False))\\ndef pdf(path,heading,stop_note=False):\\n text=subprocess.check_output([\\'pdftotext\\',\\'-layout\\',str(path),\\'-\\'],text=True).replace(\\'\\\\f\\',\\'\\\\n\\')\\n lines=text.splitlines();starts=[i for i,s in enumerate(lines) if re.fullmatch(heading,s.strip())];assert starts\\n rows=[];parts=[];label=None\\n for line in lines[starts[-1]+1:]:\\n  s=line.strip()\\n  if stop_note and re.fullmatch(r\\'(?:\\\\S+\\\\s+)?Note\\',s):break\\n  if not s or re.fullmatch(r\\'\\\\s{15,}\\\\d+\\\\s*\\',line):continue\\n  m=re.match(r\\'^\\\\[(\\\\d+)\\\\]\\\\s*(.*)\\',s)\\n  if m:\\n   if label:rows.append({\\'key\\':label,\\'text\\':\\' \\'.join(parts)})\\n   label=m[1];parts=[s]\\n  elif label:parts.append(\\' \\'.join(s.split()))\\n  else:raise ValueError(\\'Unexpected reference text:\\'+s)\\n if label:rows.append({\\'key\\':label,\\'text\\':\\' \\'.join(parts)})\\n return rows\\nmode=sys.argv[1]\\nif mode==\\'prepare-tdd\\':\\n replacements={\\'sequeda2023\\':\\'sequeda-2024-benchmarkUnderstand\\',\\'nussbaum2024nomic\\':\\'nussbaum-2025-nomicEmbed\\',\\'khattab2023dspy\\':\\'khattab2024\\',\\'openai2024gpt4\\':\\'openai2023gpt4\\'}\\n changed=[]\\n for p in [*(root/\\'docs/tdd\\').glob(\\'*.qmd\\'),root/\\'docs/pdd/DEMA-LLM-Overview.qmd\\']:\\n  before=p.read_text();after=before\\n  for old,new in replacements.items():after=re.sub(r\\'@\\'+re.escape(old)+r\\'(?![A-Za-z0-9_:-])\\',\\'@\\'+new,after)\\n  if after!=before:p.write_text(after);changed.append(str(p.relative_to(root)))\\n p=root/\\'docs/tdd/_quarto.yml\\';s=p.read_text();assert s.count(\\'bibliography: ../references.bib\\')==1;p.write_text(s.replace(\\'bibliography: ../references.bib\\',\\'bibliography: ../references.json\\'))\\n p=root/\\'docs/pdd/DEMA-LLM-Overview.qmd\\';s=p.read_text();s=s.replace(\\'bibliography: ../references.bib\\',\\'bibliography: ../references.json\\\\ncsl: ../csl/ieee.csl\\');old=\\'    cite-method: biblatex\\\\n    biblatexoptions:\\\\n      - \"style=ieee\"\\\\n      - \"backend=biber\"\\\\n      - \"backref=true\"\\\\n\\';assert old in s;s=s.replace(old,\\'    cite-method: citeproc\\\\n\\');p.write_text(s)\\n p=root/\\'docs/csl/ieee.csl\\';s=p.read_text();start=s.index(\\'  <macro name=\"publisher\">\\');end=s.index(\\'  <macro name=\"event\">\\',start);part=s[start:end]\\n old=\\'          <text variable=\"publisher\"/>\\\\n          <text variable=\"publisher-place\"/>\\'\\n new=\\'          <text variable=\"publisher\"/>\\\\n          <choose>\\\\n            <if variable=\"publisher-place\">\\\\n              <text variable=\"publisher-place\"/>\\\\n            </if>\\\\n            <else-if type=\"speech\">\\\\n              <text variable=\"event-place\"/>\\\\n            </else-if>\\\\n          </choose>\\'\\n assert part.count(old)==1;s=s[:start]+part.replace(old,new)+s[end:];ET.fromstring(s);p.write_text(s)\\n (output/\\'scratch-transformations.json\\').write_text(json.dumps({\\'citation_files\\':changed,\\'key_map\\':replacements,\\'configurations\\':[\\'docs/tdd/_quarto.yml\\',\\'docs/pdd/DEMA-LLM-Overview.qmd\\'],\\'style\\':\\'docs/csl/ieee.csl\\'},indent=2))\\n subprocess.run([\\'quarto\\',\\'render\\',\\'-M\\',\\'latex-auto-install:false\\'],cwd=root/\\'docs/tdd\\',check=True)\\n h=References();h.feed((root/\\'docs/tdd/_book/a6-references.html\\').read_text());assert len(h.rows)==34;write(\\'tdd-html\\',h.rows)\\nelif mode==\\'tdd-pdf\\':\\n rows=pdf(root/\\'docs/tdd/_book/DEMA-LLM-Design-Document.pdf\\',r\\'(?:[A-Z]\\\\.\\\\d+\\\\s+)?Bibliography\\',True);assert len(rows)==34;write(\\'tdd-pdf\\',rows)\\nelif mode==\\'pdd-docx\\':\\n subprocess.run([\\'quarto\\',\\'render\\',\\'docs/pdd/DEMA-LLM-Overview.qmd\\',\\'-M\\',\\'latex-auto-install:false\\'],check=True)\\n with ZipFile(root/\\'docs/pdd/DEMA-LLM-Overview.docx\\') as z:tree=ET.fromstring(z.read(\\'word/document.xml\\'))\\n w=\\'{http://schemas.openxmlformats.org/wordprocessingml/2006/main}\\';rows=[]\\n for p in tree.iter(w+\\'p\\'):\\n  style=p.find(w+\\'pPr/\\'+w+\\'pStyle\\')\\n  if style is not None and style.get(w+\\'val\\')==\\'Bibliography\\':\\n   text=\\'\\'.join(x.text or \\'\\' for x in p.iter(w+\\'t\\'));m=re.match(r\\'^\\\\[(\\\\d+)\\\\]\\',text);assert m;rows.append({\\'key\\':m[1],\\'text\\':\\' \\'.join(text.split())})\\n assert len(rows)==6;write(\\'pdd-docx\\',rows)\\nelif mode==\\'pdd-pdf\\':\\n rows=pdf(root/\\'docs/pdd/DEMA-LLM-Overview.pdf\\',r\\'(?:\\\\d+\\\\s+)?References\\');assert len(rows)==6;write(\\'pdd-pdf\\',rows)\\nelse:raise ValueError(mode)\\n')\nsubprocess.run([sys.executable,str(p/'consumer.py'),'prepare-tdd'],check=True)\n"
+            "from pathlib import Path\nimport subprocess,sys\np=Path('.refs-gate');p.mkdir(exist_ok=True)\n(p/'consumer.py').write_text(\"from pathlib import Path\\nimport sys,re,json,subprocess,xml.etree.ElementTree as ET\\nfrom zipfile import ZipFile\\nfrom html.parser import HTMLParser\\nroot=Path.cwd()\\nassert not (root/'.git').exists(), 'Conversion helper refuses a live git checkout'\\noutput=root/'.refs-gate';output.mkdir(exist_ok=True)\\nclass References(HTMLParser):\\n def __init__(self):super().__init__();self.depth=0;self.key=None;self.parts=[];self.rows=[]\\n def handle_starttag(self,t,a):\\n  a=dict(a)\\n  if t=='div':\\n   if self.depth:self.depth+=1\\n   elif a.get('id','').startswith('ref-'):self.key=a['id'][4:];self.depth=1;self.parts=[]\\n def handle_endtag(self,t):\\n  if t=='div' and self.depth:\\n   self.depth-=1\\n   if not self.depth:self.rows.append({'key':self.key,'text':' '.join(''.join(self.parts).split())})\\n def handle_data(self,d):\\n  if self.depth:self.parts.append(d)\\ndef write(name,rows):\\n assert rows and len({r['key'] for r in rows})==len(rows)\\n (output/(name+'.json')).write_text(json.dumps(rows,ensure_ascii=False))\\ndef pdf(path,heading,stop_note=False):\\n text=subprocess.check_output(['pdftotext','-layout',str(path),'-'],text=True).replace('\\\\f','\\\\n')\\n lines=text.splitlines();starts=[i for i,s in enumerate(lines) if re.fullmatch(heading,s.strip())];assert starts\\n rows=[];parts=[];label=None\\n for line in lines[starts[-1]+1:]:\\n  s=line.strip()\\n  if stop_note and re.fullmatch(r'(?:\\\\S+\\\\s+)?Note',s):break\\n  if not s or re.fullmatch(r'\\\\s{15,}\\\\d+\\\\s*',line):continue\\n  m=re.match(r'^\\\\[(\\\\d+)\\\\]\\\\s*(.*)',s)\\n  if m:\\n   if label:rows.append({'key':label,'text':' '.join(parts)})\\n   label=m[1];parts=[s]\\n  elif label:parts.append(' '.join(s.split()))\\n  else:raise ValueError('Unexpected reference text:'+s)\\n if label:rows.append({'key':label,'text':' '.join(parts)})\\n return rows\\nmode=sys.argv[1]\\nif mode=='tdd-html':\\n subprocess.run(['quarto','render','-M','latex-auto-install:false'],cwd=root/'docs/tdd',check=True)\\n h=References();h.feed((root/'docs/tdd/_book/a6-references.html').read_text());assert len(h.rows)==34;write('tdd-html',h.rows)\\nelif mode=='tdd-pdf':\\n rows=pdf(root/'docs/tdd/_book/DEMA-LLM-Design-Document.pdf',r'(?:[A-Z]\\\\.\\\\d+\\\\s+)?Bibliography',True);assert len(rows)==34;write('tdd-pdf',rows)\\nelif mode=='pdd-docx':\\n subprocess.run(['quarto','render','docs/pdd/DEMA-LLM-Overview.qmd','-M','latex-auto-install:false'],check=True)\\n with ZipFile(root/'docs/pdd/DEMA-LLM-Overview.docx') as z:tree=ET.fromstring(z.read('word/document.xml'))\\n w='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}';rows=[]\\n for p in tree.iter(w+'p'):\\n  style=p.find(w+'pPr/'+w+'pStyle')\\n  if style is not None and style.get(w+'val')=='Bibliography':\\n   text=''.join(x.text or '' for x in p.iter(w+'t'));m=re.match(r'^\\\\[(\\\\d+)\\\\]',text);assert m;rows.append({'key':m[1],'text':' '.join(text.split())})\\n assert len(rows)==6;write('pdd-docx',rows)\\nelif mode=='pdd-pdf':\\n rows=pdf(root/'docs/pdd/DEMA-LLM-Overview.pdf',r'(?:\\\\d+\\\\s+)?References');assert len(rows)==6;write('pdd-pdf',rows)\\nelse:raise ValueError(mode)\\n\")\nsubprocess.run([sys.executable,str(p/'consumer.py'),'tdd-html'],check=True)\n"
           ],
           "artifact": ".refs-gate/tdd-html.json",
           "extract": {
@@ -425,11 +425,11 @@
               "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
             }
           },
-          "style": "Native Quarto IEEE citeproc; approved scratch-only speech fallback and bibliography/key/engine switch; full tdd-html artifact rendered, bibliography extracted to JSON",
+          "style": "Native Quarto IEEE citeproc using adopted project configuration; full tdd-html artifact rendered, bibliography extracted to JSON",
           "fixture_provenance": {
-            "publication_commit": "7599aee94d14a437b94b9f2f4b71de0ebb89125d",
+            "publication_commit": "24053b0bad703e2acbe3be41f81e2c8f3ffb0b12",
             "source": "owner-accepted scratch render (--record)",
-            "recorded_at": "2026-09-28T00:26:53.459803+00:00",
+            "recorded_at": "2026-09-28T01:04:05.004842+00:00",
             "artifact_sha256": "2c3ad5314ce005383e0997c003d237130bb5b639e5d0c97b4786282315fc73fc",
             "fixture_sha256": "7c0d1487aeda64ff09b8e04f750be2d3fd1e18659ff1232df24574de1e4a8ea6"
           }
@@ -471,11 +471,11 @@
               "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
             }
           },
-          "style": "Native Quarto IEEE citeproc; approved scratch-only speech fallback and bibliography/key/engine switch; full tdd-pdf artifact rendered, bibliography extracted to JSON",
+          "style": "Native Quarto IEEE citeproc using adopted project configuration; full tdd-pdf artifact rendered, bibliography extracted to JSON",
           "fixture_provenance": {
-            "publication_commit": "7599aee94d14a437b94b9f2f4b71de0ebb89125d",
+            "publication_commit": "24053b0bad703e2acbe3be41f81e2c8f3ffb0b12",
             "source": "owner-accepted scratch render (--record)",
-            "recorded_at": "2026-09-28T00:26:53.464147+00:00",
+            "recorded_at": "2026-09-28T01:04:05.009694+00:00",
             "artifact_sha256": "a44a0fbe17024be9d83da0d570dbe6ea055b4d49190e6bebf1af051faf65ce82",
             "fixture_sha256": "c6a69552e2c0806b6d21ce047b92fb30fba18c2f08e390d7bf888de9418f27ff"
           }
@@ -517,11 +517,11 @@
               "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
             }
           },
-          "style": "Native Quarto IEEE citeproc; approved scratch-only speech fallback and bibliography/key/engine switch; full pdd-docx artifact rendered, bibliography extracted to JSON",
+          "style": "Native Quarto IEEE citeproc using adopted project configuration; full pdd-docx artifact rendered, bibliography extracted to JSON",
           "fixture_provenance": {
-            "publication_commit": "7599aee94d14a437b94b9f2f4b71de0ebb89125d",
+            "publication_commit": "24053b0bad703e2acbe3be41f81e2c8f3ffb0b12",
             "source": "owner-accepted scratch render (--record)",
-            "recorded_at": "2026-09-28T00:26:53.468167+00:00",
+            "recorded_at": "2026-09-28T01:04:05.014157+00:00",
             "artifact_sha256": "a786bd935d64b58079377a5c9a7f88e0d06e1a29d1402986838d87c5f3951f99",
             "fixture_sha256": "51f8f9196d7b353558a29d868b63898a34e79143abab8b7f4001a41f7437b26a"
           }
@@ -563,19 +563,19 @@
               "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
             }
           },
-          "style": "Native Quarto IEEE citeproc; approved scratch-only speech fallback and bibliography/key/engine switch; full pdd-pdf artifact rendered, bibliography extracted to JSON",
+          "style": "Native Quarto IEEE citeproc using adopted project configuration; full pdd-pdf artifact rendered, bibliography extracted to JSON",
           "fixture_provenance": {
-            "publication_commit": "7599aee94d14a437b94b9f2f4b71de0ebb89125d",
+            "publication_commit": "24053b0bad703e2acbe3be41f81e2c8f3ffb0b12",
             "source": "owner-accepted scratch render (--record)",
-            "recorded_at": "2026-09-28T00:26:53.472196+00:00",
+            "recorded_at": "2026-09-28T01:04:05.018611+00:00",
             "artifact_sha256": "9151d4e22314c6d4ca7da39d8103e62ddcf32236680785d7b8db74f6a4ef7b80",
             "fixture_sha256": "8605eb0b56751c63b23cfb4ae0b07a7c30cc5f974453044ff579e24827df49bb"
           }
         }
       ],
       "proposal_commit": "0eed7d0",
-      "execution_source_commit": "7599aee94d14a437b94b9f2f4b71de0ebb89125d",
-      "notes": "Pre-adoption gate. First consumer prepares the scratch copy and renders both TDD formats; third renders both PDD formats. Ordered consumers extract those native artifacts. Remove preparation after publication adoption; no fixtures accepted yet."
+      "execution_source_commit": "24053b0bad703e2acbe3be41f81e2c8f3ffb0b12",
+      "notes": "Adopted publication configuration. First consumer renders both TDD formats; third renders both PDD formats. Ordered consumers extract the native artifacts. No bibliography, citation, engine or style preparation is applied."
     }
   ]
 }
