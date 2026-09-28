@@ -1,6 +1,6 @@
 # Near-Earth Object Monitor conversion execution — 2026-09-27
 
-**All four entries match the approved proposal exactly.** Both native PDF consumers rendered successfully, and all six in-text author-date citations are identical to the proposal. The no-record gate exits **3**, solely for two absent accepted fixtures. No fixture was recorded and no publication adoption or branch merge occurred.
+**All four entries match the approved proposal exactly.** Both native PDF consumers rendered successfully, and all six in-text author-date citations are identical to the proposal. The no-record gate exits **3**, solely for two absent accepted fixtures. The accepted fixtures were subsequently recorded as described below; no publication adoption or branch merge occurred.
 
 ## Backup and scope
 
@@ -57,7 +57,7 @@ Fresh no-record gate `/private/tmp/refs-neo-gate-01`, Quarto 1.10.18, Pandoc 3.1
 
 ## Commits
 
-Execution is isolated on `s2/neo-monitor-execution`. The publication remains at `640b908a440b470c55daba4fd8ba7154a6e612b9`, with exactly the two original untracked `.repo-retro` files. Bibliography, Quarto sources and selected frozen-input hashes remain unchanged. No local ignore rule was added. This branch contains the register row, this report and [structured execution evidence](2026-09-27-near-earth-object-monitor-execution.json); it contains no accepted fixtures.
+Execution is isolated on `s2/neo-monitor-execution`. The publication remains at `640b908a440b470c55daba4fd8ba7154a6e612b9`, with exactly the two original untracked `.repo-retro` files. Bibliography, Quarto sources and selected frozen-input hashes remain unchanged. The authorized local `/.repo-retro/` exclude was added before recording to satisfy the clean-tree requirement; the owner’s files remain untouched. This branch contains the register row, this report and [structured execution evidence](2026-09-27-near-earth-object-monitor-execution.json); it now also contains both accepted fixtures.
 
 ## Timing
 
@@ -71,4 +71,10 @@ No product defect or new feature request. Exit 3 correctly identifies a successf
 
 The proposed explicit frozen-input render boundary works through both native consumers without live acquisition. NASA’s content response must accompany its HTML shell in the source capture. Keep actual capture timestamps separate from historical bibliography access dates.
 
-**Next:** s1 accepts this matching gate and authorizes recording. Publication adoption remains with s1’s publication session; after adoption the temporary legacy bibliography assertion/switch is retired and the adopted configuration is checked again. No open mismatch or source gap.
+## Accepted fixture recording
+
+Session 1 accepted the exact gate in `comms/2026-09-27-211736-s1-neo-gate-accepted.md`, under the owner’s quoted authorization: “ok, let's see if you and codex can one shot this”. A fresh `--record` run at `/private/tmp/refs-neo-record-01` used clean publication `640b908a440b470c55daba4fd8ba7154a6e612b9`. The clean-tree precheck required the previously authorized local-only `/.repo-retro/` exclude; no tracked publication file or owner retrospective file changed.
+
+Both fixtures were recorded. Every extracted entry and both complete fixture mappings equal the accepted no-record gate exactly. Register provenance records the publication commit, timestamp, tool versions and artifact/fixture hashes. The record command exits 3 with `recorded: true`, correctly describing its pre-record missing-fixture state. No unexpected change occurred.
+
+**Next:** s1’s publication session adopts. Afterward this session checks the adopted configuration and refreshes provenance only under the next decision. No branch merge performed.

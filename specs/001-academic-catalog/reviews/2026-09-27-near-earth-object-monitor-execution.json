@@ -528,5 +528,34 @@
   "publication_commit": "640b908a440b470c55daba4fd8ba7154a6e612b9",
   "publication_status": "?? .repo-retro/retrospective.md\n?? .repo-retro/retrospective.pdf\n",
   "export_sha256": "d5e6117bbebe6f7d375c8daeebbab2489a08572ce880a44554fb00d2626ed6fc",
-  "gate_work": "/private/tmp/refs-neo-gate-01"
+  "gate_work": "/private/tmp/refs-neo-gate-01",
+  "recording": {
+    "work": "/private/tmp/refs-neo-record-01",
+    "exit_code": 3,
+    "recorded": true,
+    "all_four_entries_identical": true,
+    "local_exclude_added": "/.repo-retro/",
+    "consumers": [
+      {
+        "name": "neo-report",
+        "provenance": {
+          "publication_commit": "640b908a440b470c55daba4fd8ba7154a6e612b9",
+          "source": "owner-accepted scratch render (--record)",
+          "recorded_at": "2026-09-28T02:18:22.627992+00:00",
+          "artifact_sha256": "6126c8a0f68c917d011a631b2a83d5885c2d7756784efa14826d231737ec291e",
+          "fixture_sha256": "be8a784a0fc1ddcecba7594274ee1b31e7f4df970404ae550c97f2d6636c5ec8"
+        }
+      },
+      {
+        "name": "neo-report-agu",
+        "provenance": {
+          "publication_commit": "640b908a440b470c55daba4fd8ba7154a6e612b9",
+          "source": "owner-accepted scratch render (--record)",
+          "recorded_at": "2026-09-28T02:18:22.632659+00:00",
+          "artifact_sha256": "b390df52a870b269c85f5a7476a4b3655101b1b75813fe96a26318587532293b",
+          "fixture_sha256": "bb5fb4ac16597c1b88ff1b0eea6eb84859a84d3f6dc90746eba8c49776146a6f"
+        }
+      }
+    ]
+  }
 }
