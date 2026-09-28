@@ -102,6 +102,13 @@ def short_title(record: dict) -> str:
     return record['metadata'].get('title-short') or record.get('title_parts', {}).get('main_title') or record['metadata'].get('title', '')
 
 
+def title_tokens(text: str) -> list[str]:
+    # U+02BC is a Unicode letter, but is punctuation here unless between letters.
+    joined = re.sub(r"(?<=[^\W_ʼ])['’ʼ](?=[^\W_ʼ])",
+                    lambda match: '' if text[match.start()-1].isalpha() and text[match.end()].isalpha() else ' ', text)
+    return re.findall(r'[^\W_ʼ]+', joined)
+
+
 def sort_title(record: dict, policy: dict | None = None) -> str:
     override = record.get('overrides', {}).get('sort_title')
     if override:
@@ -119,7 +126,7 @@ def issued_year(record: dict) -> str:
 def key(record: dict, policy: dict | None = None, *, warnings: list[dict] | None = None) -> str:
     settings=(policy or {}).get('keys',{})
     stopwords={word.casefold() for word in settings.get('stopwords',STOPWORDS)}
-    words = [word for word in re.findall(r'[^\W_]+', short_title(record)) if word.lower() not in stopwords][:settings.get('title_words',2)]
+    words = [word for word in title_tokens(short_title(record)) if word.lower() not in stopwords][:settings.get('title_words',2)]
     if not words:
         raise RefError('citation_key_required', 'Supply a citation key when no title tokens are usable', 2)
     title_token = words[0].lower() + ''.join(word[0].upper() + word[1:] for word in words[1:])
@@ -160,7 +167,7 @@ def provenance(policy: dict | None = None) -> dict:
 
 def filename(record: dict, original: str, label: str | None = None, *, report_fallback: bool = False):
     year = issued_year(record)
-    words = re.findall(r'[^\W_]+', short_title(record))
+    words = title_tokens(short_title(record))
     if year == 'ND' or not words:
         return (original, True) if report_fallback else original
     name = ''.join(word[0].upper() + word[1:] for word in words)

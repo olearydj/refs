@@ -102,3 +102,30 @@ def test_add_label_without_file_refuses_before_capture(initialized, tmp_path, re
     result = initialized('add', '--format', 'refs', '--input', reference_path, '--label', 'scan', expected=2)
     assert result['errors'][0]['code'] == 'invalid_invocation'
     assert (tmp_path / 'cat/catalog.sqlite').read_bytes() == before
+
+
+@pytest.mark.parametrize('apostrophe', ["'", '’', 'ʼ'])
+def test_generated_title_tokens_do_not_remove_stored_or_exported_apostrophes(initialized, tmp_path, apostrophe):
+    title = f'Developer{apostrophe}s Playbook'
+    metadata = {'type': 'book', 'title': title, 'title-short': title,
+                'author': [{'family': 'Wilson'}], 'issued': {'date-parts': [[2024]]}}
+    context = [{'origin': 'user', 'text': f'Owner{apostrophe}s Copy'}]
+    payload = tmp_path / 'apostrophe.json'
+    payload.write_text(json.dumps({'schema_version': '1.0', 'metadata': metadata, 'context': context}))
+    added = initialized('add', '--format', 'refs', '--input', payload)['data']
+    assert added['citation_key'] == 'wilson-2024-developersPlaybook'
+    shown = initialized('show', added['id'])['data']
+    assert shown['metadata'] == metadata
+    assert shown['context'] == context
+    initialized('project', 'create', 'apostrophe')
+    initialized('project', 'cite', 'apostrophe', added['id'])
+    for profile in ('csl-json-v1', 'portable-bibtex-v1', 'biblatex-v1'):
+        output = tmp_path / (profile + '.txt')
+        initialized('export', '--project', 'apostrophe', '--profile', profile, '--output', output)
+        if profile == 'csl-json-v1':
+            assert json.loads(output.read_text())[0]['title'] == title
+        else:
+            assert 'title = {' + title + '}' in output.read_text()
+    after = initialized('show', added['id'])['data']
+    assert after['metadata'] == metadata
+    assert after['context'] == context
