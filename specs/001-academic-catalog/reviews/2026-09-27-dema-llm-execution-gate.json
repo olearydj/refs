@@ -1,0 +1,1703 @@
+{
+  "publication_commit": "7599aee94d14a437b94b9f2f4b71de0ebb89125d",
+  "refs_commit": "ded1eb8",
+  "harness_exit": 1,
+  "missing_fixtures": [
+    "tdd-html",
+    "tdd-pdf",
+    "pdd-docx",
+    "pdd-pdf"
+  ],
+  "capture_date_changes": {
+    "openai2024embeddings": {
+      "approved": "OpenAI, “Vector Embeddings.” [Online]. Available: https://developers.openai.com/api/docs/guides/embeddings",
+      "actual": "OpenAI, “Vector Embeddings.” Accessed: Sep. 27, 2026. [Online]. Available: https://developers.openai.com/api/docs/guides/embeddings"
+    },
+    "fedramp2024": {
+      "approved": "U.S. General Services Administration, “FedRAMP Consolidated Rules for 2026,” U.S. General Services Administration, Release 2026.09.22.01, Sep. 2026. Available: https://www.fedramp.gov/2026/",
+      "actual": "U.S. General Services Administration, “FedRAMP Consolidated Rules for 2026,” U.S. General Services Administration, Release 2026.09.22.01, Sep. 2026. Accessed: Sep. 27, 2026. [Online]. Available: https://www.fedramp.gov/2026/"
+    }
+  },
+  "consumers": {
+    "tdd-html": [
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "anthropic2024claude3",
+        "label": "anthropic2024claude3",
+        "before": "[16] Anthropic, “Claude 3 model card.” 2024. Available: https://www.anthropic.com/news/claude-3-family",
+        "after": "[1] Anthropic, “The Claude 3 Model Family: Opus, Sonnet, Haiku,” Anthropic, Model card, Mar. 2024. Available: https://www-cdn.anthropic.com/de8ba9b01c9ab7cbabf5c33b80b7bbc618857627/Model_Card_Claude_3.pdf",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "Anthropic, “The Claude 3 Model Family: Opus, Sonnet, Haiku,” Anthropic, Model card, Mar. 2024. Available: https://www-cdn.anthropic.com/de8ba9b01c9ab7cbabf5c33b80b7bbc618857627/Model_Card_Claude_3.pdf"
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "bernsteinhaas2008",
+        "label": "bernsteinhaas2008",
+        "before": "[9] P. A. Bernstein and L. M. Haas, “Information integration in the enterprise,” Communications of the ACM, vol. 51, no. 9, pp. 72–79, 2008, doi: 10.1145/1378727.1378745.",
+        "after": "[2] P. A. Bernstein and L. M. Haas, “Information Integration in the Enterprise,” Communications of the ACM, vol. 51, no. 9, pp. 72–79, 2008, doi: 10.1145/1378727.1378745.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "P. A. Bernstein and L. M. Haas, “Information Integration in the Enterprise,” Communications of the ACM, vol. 51, no. 9, pp. 72–79, 2008, doi: 10.1145/1378727.1378745."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "brown2020",
+        "label": "brown2020",
+        "before": "[13] T. Brown et al., “Language models are few-shot learners,” Advances in Neural Information Processing Systems, vol. 33, pp. 1877–1901, 2020.",
+        "after": "[3] T. Brown et al., “Language Models Are Few-Shot Learners,” in Advances in Neural Information Processing Systems, 2020, pp. 1877–1901.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "T. Brown et al., “Language Models Are Few-Shot Learners,” in Advances in Neural Information Processing Systems, 2020, pp. 1877–1901."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "christophides2021",
+        "label": "christophides2021",
+        "before": "[24] V. Christophides, V. Efthymiou, T. Palpanas, G. Papadakis, and K. Stefanidis, “An overview of end-to-end entity resolution for big data,” ACM Computing Surveys, vol. 53, no. 6, pp. 1–42, 2021, doi: 10.1145/3418896.",
+        "after": "[4] V. Christophides, V. Efthymiou, T. Palpanas, G. Papadakis, and K. Stefanidis, “An Overview of End-to-End Entity Resolution for Big Data,” ACM Computing Surveys, vol. 53, no. 6, pp. 1–42, 2021, doi: 10.1145/3418896.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "V. Christophides, V. Efthymiou, T. Palpanas, G. Papadakis, and K. Stefanidis, “An Overview of End-to-End Entity Resolution for Big Data,” ACM Computing Surveys, vol. 53, no. 6, pp. 1–42, 2021, doi: 10.1145/3418896."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "deb2014",
+        "label": "deb2014",
+        "before": "[28] K. Deb, “Multi-objective optimization,” in Search methodologies: Introductory tutorials in optimization and decision support techniques, Springer, 2014, pp. 403–449.",
+        "after": "[5] K. Deb, “Multi-Objective Optimization,” in Search Methodologies: Introductory Tutorials in Optimization and Decision Support Techniques, Springer, 2014, pp. 403–449.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "K. Deb, “Multi-Objective Optimization,” in Search Methodologies: Introductory Tutorials in Optimization and Decision Support Techniques, Springer, 2014, pp. 403–449."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "dod2020cmmc",
+        "label": "dod2020cmmc",
+        "before": "[34] Department of Defense, “Cybersecurity maturity model certification (CMMC) framework.” 2020.",
+        "after": "[6] Department of Defense Chief Information Officer, “Cybersecurity Maturity Model Certification (CMMC) Model Overview,” Department of Defense Chief Information Officer, DoD-CIO-00001, Sep. 2024. Available: https://dodcio.defense.gov/Portals/0/Documents/CMMC/ModelOverviewv2.pdf",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "Department of Defense Chief Information Officer, “Cybersecurity Maturity Model Certification (CMMC) Model Overview,” Department of Defense Chief Information Officer, DoD-CIO-00001, Sep. 2024. Available: https://dodcio.defense.gov/Portals/0/Documents/CMMC/ModelOverviewv2.pdf"
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "fedramp2024",
+        "label": "fedramp2024",
+        "before": "[33] Federal Risk and Authorization Management Program (FedRAMP), “FedRAMP security assessment framework.” 2024. Available: https://www.fedramp.gov/",
+        "after": "[7] U.S. General Services Administration, “FedRAMP Consolidated Rules for 2026,” U.S. General Services Administration, Release 2026.09.22.01, Sep. 2026. Accessed: Sep. 27, 2026. [Online]. Available: https://www.fedramp.gov/2026/",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "U.S. General Services Administration, “FedRAMP Consolidated Rules for 2026,” U.S. General Services Administration, Release 2026.09.22.01, Sep. 2026. Accessed: Sep. 27, 2026. [Online]. Available: https://www.fedramp.gov/2026/"
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "guo2017",
+        "label": "guo2017",
+        "before": "[21] C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, “On calibration of modern neural networks,” in Proceedings of the 34th international conference on machine learning, 2017, pp. 1321–1330.",
+        "after": "[8] C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, “On Calibration of Modern Neural Networks,” in Proceedings of the 34th International Conference on Machine Learning, 2017, pp. 1321–1330.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, “On Calibration of Modern Neural Networks,” in Proceedings of the 34th International Conference on Machine Learning, 2017, pp. 1321–1330."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "howard2007bloor",
+        "label": "howard2007bloor",
+        "before": "[7] P. Howard and C. Potter, “Data migration in the global 2000: Research, forecasts and survey results,” Bloor Research, Sep. 2007.",
+        "after": "[9] P. Howard and C. Potter, “Data Migration in the Global 2000: Research, Forecasts and Survey Results,” Bloor Research, Sep. 2007.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "P. Howard and C. Potter, “Data Migration in the Global 2000: Research, Forecasts and Survey Results,” Bloor Research, Sep. 2007."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "howard2011bloor",
+        "label": "howard2011bloor",
+        "before": "[8] P. Howard, “Data migration,” Bloor Research, Research report, 2011. Available: https://www.bloorresearch.com/research/data-migration-2011/",
+        "after": "[10] P. Howard, “Data Migration,” Bloor Research, Research report, 2011. Available: https://www.bloorresearch.com/research/data-migration-2011/",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "P. Howard, “Data Migration,” Bloor Research, Research report, 2011. Available: https://www.bloorresearch.com/research/data-migration-2011/"
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "kadavath2022",
+        "label": "kadavath2022",
+        "before": "[22] S. Kadavath, T. Conerly, A. Askell, et al., “Language models (mostly) know what they know.” arXiv:2207.05221, 2022. Available: https://arxiv.org/abs/2207.05221",
+        "after": "[11] S. Kadavath, T. Conerly, A. Askell, et al., “Language Models (Mostly) Know What They Know,” 2022, arXiv: 2207.05221. Available: https://arxiv.org/abs/2207.05221",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "S. Kadavath, T. Conerly, A. Askell, et al., “Language Models (Mostly) Know What They Know,” 2022, arXiv: 2207.05221. Available: https://arxiv.org/abs/2207.05221"
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "khattab2024",
+        "label": "khattab2024",
+        "before": "[30] O. Khattab et al., “DSPy: Compiling declarative language model calls into self-improving pipelines.” arXiv:2310.03714, 2023. Available: https://arxiv.org/abs/2310.03714",
+        "after": "[12] O. Khattab et al., “DSPy: Compiling Declarative Language Model Calls Into State-of-the-Art Pipelines,” in International Conference on Learning Representations, 2024. Available: https://proceedings.iclr.cc/paper_files/paper/2024/hash/f1cf02ce09757f57c3b93c0db83181e0-Abstract-Conference.html",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "O. Khattab et al., “DSPy: Compiling Declarative Language Model Calls Into State-of-the-Art Pipelines,” in International Conference on Learning Representations, 2024. Available: https://proceedings.iclr.cc/paper_files/paper/2024/hash/f1cf02ce09757f57c3b93c0db83181e0-Abstract-Conference.html"
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "konda2016",
+        "label": "konda2016",
+        "before": "[26] P. Konda, S. Das, A. Doan, et al., “Magellan: Toward building entity matching management systems,” Proceedings of the VLDB Endowment, vol. 9, no. 12, pp. 1197–1208, 2016.",
+        "after": "[13] P. Konda, S. Das, A. Doan, et al., “Magellan: Toward Building Entity Matching Management Systems,” Proceedings of the VLDB Endowment, vol. 9, no. 12, pp. 1197–1208, 2016.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "P. Konda, S. Das, A. Doan, et al., “Magellan: Toward Building Entity Matching Management Systems,” Proceedings of the VLDB Endowment, vol. 9, no. 12, pp. 1197–1208, 2016."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "koutras2021valentine",
+        "label": "koutras2021valentine",
+        "before": "[27] C. Koutras et al., “Valentine: Evaluating matching techniques for dataset discovery,” in Proceedings of the 2021 IEEE 37th international conference on data engineering (ICDE), 2021, pp. 468–479.",
+        "after": "[14] C. Koutras et al., “Valentine: Evaluating Matching Techniques for Dataset Discovery,” in Proceedings of the 2021 IEEE 37th International Conference on Data Engineering (ICDE), 2021, pp. 468–479.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "C. Koutras et al., “Valentine: Evaluating Matching Techniques for Dataset Discovery,” in Proceedings of the 2021 IEEE 37th International Conference on Data Engineering (ICDE), 2021, pp. 468–479."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "ledford2023dissertation",
+        "label": "ledford2023dissertation",
+        "before": "[3] A. B. Ledford, “A data element mapping and analysis (DEMA) approach for implementing a complete digital thread,” Ph.D. Dissertation, Auburn University, Auburn, AL, 2023. Available: http://etd.auburn.edu/xmlui/handle/10415/8918",
+        "after": "[15] A. B. Ledford, “A Data Element Mapping and Analysis (DEMA) Approach for Implementing a Complete Digital Thread,” Ph.D. Dissertation, Auburn University, Auburn, AL, 2023. Available: http://etd.auburn.edu/xmlui/handle/10415/8918",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "A. B. Ledford, “A Data Element Mapping and Analysis (DEMA) Approach for Implementing a Complete Digital Thread,” Ph.D. Dissertation, Auburn University, Auburn, AL, 2023. Available: http://etd.auburn.edu/xmlui/handle/10415/8918"
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "ledford2023ieee",
+        "label": "ledford2023ieee",
+        "before": "[4] A. B. Ledford, G. Harris, and G. Purdy, “Implementing a complete digital thread: The need for data element mapping and analysis,” IEEE Open Journal of Systems Engineering, vol. 1, pp. 139–152, 2023, doi: 10.1109/OJSE.2023.3325189.",
+        "after": "[16] A. B. Ledford, G. Harris, and G. Purdy, “Implementing a Complete Digital Thread: The Need for Data Element Mapping and Analysis,” IEEE Open Journal of Systems Engineering, vol. 1, pp. 139–152, 2023, doi: 10.1109/ojse.2023.3325189.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "A. B. Ledford, G. Harris, and G. Purdy, “Implementing a Complete Digital Thread: The Need for Data Element Mapping and Analysis,” IEEE Open Journal of Systems Engineering, vol. 1, pp. 139–152, 2023, doi: 10.1109/ojse.2023.3325189."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "ledford2025syseng",
+        "label": "ledford2025syseng",
+        "before": "[5] A. Ledford, G. Harris, S. Askew, and G. Purdy, “Application of data element mapping and analysis for system definition to enable model-based systems engineering,” Systems Engineering, vol. 28, no. 1, pp. 15–28, 2025, doi: 10.1002/sys.21776.",
+        "after": "[17] A. Ledford, G. Harris, S. Askew, and G. Purdy, “Application of Data Element Mapping and Analysis for System Definition to Enable Model-Based Systems Engineering,” Systems Engineering, vol. 28, no. 1, pp. 15–28, 2025, doi: 10.1002/sys.21776.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "A. Ledford, G. Harris, S. Askew, and G. Purdy, “Application of Data Element Mapping and Analysis for System Definition to Enable Model-Based Systems Engineering,” Systems Engineering, vol. 28, no. 1, pp. 15–28, 2025, doi: 10.1002/sys.21776."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "mudgal2018",
+        "label": "mudgal2018",
+        "before": "[25] S. Mudgal et al., “Deep learning for entity matching: A design space exploration,” in Proceedings of the 2018 international conference on management of data (SIGMOD), 2018, pp. 19–34.",
+        "after": "[18] S. Mudgal et al., “Deep Learning for Entity Matching: A Design Space Exploration,” in Proceedings of the 2018 International Conference on Management of Data (SIGMOD), 2018, pp. 19–34.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "S. Mudgal et al., “Deep Learning for Entity Matching: A Design Space Exploration,” in Proceedings of the 2018 International Conference on Management of Data (SIGMOD), 2018, pp. 19–34."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "naeini2015",
+        "label": "naeini2015",
+        "before": "[23] M. P. Naeini, G. F. Cooper, and M. Hauskrecht, “Obtaining well calibrated probabilities using bayesian binning,” in Proceedings of the twenty-ninth AAAI conference on artificial intelligence, 2015, pp. 2901–2907.",
+        "after": "[19] M. P. Naeini, G. F. Cooper, and M. Hauskrecht, “Obtaining Well Calibrated Probabilities Using Bayesian Binning,” in Proceedings of the Twenty-Ninth AAAI Conference on Artificial Intelligence, 2015, pp. 2901–2907.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "M. P. Naeini, G. F. Cooper, and M. Hauskrecht, “Obtaining Well Calibrated Probabilities Using Bayesian Binning,” in Proceedings of the Twenty-Ninth AAAI Conference on Artificial Intelligence, 2015, pp. 2901–2907."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "nist2020sp80053",
+        "label": "nist2020sp80053",
+        "before": "[32] National Institute of Standards and Technology, “Security and privacy controls for information systems and organizations,” National Institute of Standards; Technology, NIST Special Publication 800-53, Revision 5, 2020. doi: 10.6028/NIST.SP.800-53r5.",
+        "after": "[20] National Institute of Standards and Technology, “Security and Privacy Controls for Information Systems and Organizations,” National Institute of Standards and Technology, NIST Special Publication 800-53, Revision 5, 2020. doi: 10.6028/nist.sp.800-53r5.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "National Institute of Standards and Technology, “Security and Privacy Controls for Information Systems and Organizations,” National Institute of Standards and Technology, NIST Special Publication 800-53, Revision 5, 2020. doi: 10.6028/nist.sp.800-53r5."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "nussbaum-2025-nomicEmbed",
+        "label": "nussbaum-2025-nomicEmbed",
+        "before": "[20] Z. Nussbaum, J. X. Morris, B. Duderstadt, and A. Mulyar, “Nomic embed: Training a reproducible long context text embedder.” arXiv:2402.01613, 2024. Available: https://arxiv.org/abs/2402.01613",
+        "after": "[21] Z. Nussbaum, J. X. Morris, B. Duderstadt, and A. Mulyar, “Nomic Embed: Training a Reproducible Long Context Text Embedder,” Transactions on Machine Learning Research, Feb. 2025, Available: https://openreview.net/forum?id=IPmzyQSiQE",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "Z. Nussbaum, J. X. Morris, B. Duderstadt, and A. Mulyar, “Nomic Embed: Training a Reproducible Long Context Text Embedder,” Transactions on Machine Learning Research, Feb. 2025, Available: https://openreview.net/forum?id=IPmzyQSiQE"
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "oleary2025ai4se",
+        "label": "oleary2025ai4se",
+        "before": "[6] D. J. O’Leary and A. N. Ledford, “AI-enhanced DEMA: Transforming implicit system knowledge into intelligent, compliant, and documented processes.” The George Washington University; Workshop Presentation, AI4SE & SE4AI Research and Application Workshop, Sep. 2025.",
+        "after": "[22] D. J. O’Leary and A. B. Ledford, “AI-Enhanced DEMA: Transforming Implicit System Knowledge Into Intelligent, Compliant, and Documented Processes,” presented at the AI4SE & SE4AI Research and Application Workshop, Washington, DC, USA, Sep. 2025.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "D. J. O’Leary and A. B. Ledford, “AI-Enhanced DEMA: Transforming Implicit System Knowledge Into Intelligent, Compliant, and Documented Processes,” presented at the AI4SE & SE4AI Research and Application Workshop, Washington, DC, USA, Sep. 2025."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "oleary2025binary-classification",
+        "label": "oleary2025binary-classification",
+        "before": "[11] D. J. O’Leary, “Beyond binary classification: A comprehensive multi-criteria assessment system for programming assignments.” Poster presentation, INFORMS Annual Meeting, October 2025, Oct. 2025.",
+        "after": "[23] D. J. O’Leary, “Beyond Binary Classification: A Comprehensive Multi-Criteria Assessment System for Programming Assignments,” presented at the INFORMS Annual Meeting, Atlanta, GA, USA, Oct. 28, 2025.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "D. J. O’Leary, “Beyond Binary Classification: A Comprehensive Multi-Criteria Assessment System for Programming Assignments,” presented at the INFORMS Annual Meeting, Atlanta, GA, USA, Oct. 28, 2025."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "olearyledford2026insight",
+        "label": "olearyledford2026insight",
+        "before": "[12] D. J. O’Leary and A. B. Ledford, “Trustworthy LLM-augmented data reconciliation for deployment-constrained environments,” INSIGHT, 2026.",
+        "after": "[24] D. J. O’Leary and A. B. Ledford, “Trustworthy LLM-Augmented Data Reconciliation for Deployment-Constrained Environments,” INSIGHT, vol. 29, no. 3, pp. 37–42, 2026, doi: 10.1002/inst.70055.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "D. J. O’Leary and A. B. Ledford, “Trustworthy LLM-Augmented Data Reconciliation for Deployment-Constrained Environments,” INSIGHT, vol. 29, no. 3, pp. 37–42, 2026, doi: 10.1002/inst.70055."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "openai2023gpt4",
+        "label": "openai2023gpt4",
+        "before": "[15] OpenAI, “GPT-4 technical report.” arXiv:2303.08774v6, 2024. Available: https://arxiv.org/abs/2303.08774",
+        "after": "[25] OpenAI, “GPT-4 Technical Report,” Mar. 27, 2023, arXiv: 2303.08774. doi: 10.48550/arxiv.2303.08774.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "OpenAI, “GPT-4 Technical Report,” Mar. 27, 2023, arXiv: 2303.08774. doi: 10.48550/arxiv.2303.08774."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "openai2024embeddings",
+        "label": "openai2024embeddings",
+        "before": "[19] OpenAI, “Text embedding models.” 2024. Available: https://platform.openai.com/docs/guides/embeddings",
+        "after": "[26] OpenAI, “Vector Embeddings.” Accessed: Sep. 27, 2026. [Online]. Available: https://developers.openai.com/api/docs/guides/embeddings",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "OpenAI, “Vector Embeddings.” Accessed: Sep. 27, 2026. [Online]. Available: https://developers.openai.com/api/docs/guides/embeddings"
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "oracle2011migration",
+        "label": "oracle2011migration",
+        "before": "[10] Oracle, “Put your data first or your migration will come last.” White paper, 2012. Available: https://www.oracle.com/a/ocom/docs/middleware/data-integration/data-migration-wp.pdf",
+        "after": "[27] Oracle, “Put Your Data First or Your Migration Will Come Last,” Oracle, White paper, 2012. Available: https://www.oracle.com/a/ocom/docs/middleware/data-integration/data-migration-wp.pdf",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "Oracle, “Put Your Data First or Your Migration Will Come Last,” Oracle, White paper, 2012. Available: https://www.oracle.com/a/ocom/docs/middleware/data-integration/data-migration-wp.pdf"
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "reimers2019",
+        "label": "reimers2019",
+        "before": "[18] N. Reimers and I. Gurevych, “Sentence-BERT: Sentence embeddings using siamese BERT-networks,” in Proceedings of the 2019 conference on empirical methods in natural language processing and the 9th international joint conference on natural language processing (EMNLP-IJCNLP), 2019, pp. 3982–3992.",
+        "after": "[28] N. Reimers and I. Gurevych, “Sentence-BERT: Sentence Embeddings Using Siamese BERT-Networks,” in Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP), 2019, pp. 3982–3992.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "N. Reimers and I. Gurevych, “Sentence-BERT: Sentence Embeddings Using Siamese BERT-Networks,” in Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP), 2019, pp. 3982–3992."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "sequeda-2024-benchmarkUnderstand",
+        "label": "sequeda-2024-benchmarkUnderstand",
+        "before": "[1] J. Sequeda, D. Briggs, and D. P. Miranker, “Benchmarking the text-to-SQL capability of large language models: A comprehensive evaluation,” arXiv preprint arXiv:2311.07509, 2023, Available: https://arxiv.org/abs/2311.07509",
+        "after": "[29] J. Sequeda, D. Allemang, and B. Jacob, “A Benchmark to Understand the Role of Knowledge Graphs on Large Language Model’s Accuracy for Question Answering on Enterprise SQL Databases,” in Proceedings of the 7th Joint Workshop on Graph Data Management Experiences & Systems (GRADES) and Network Data Analytics (NDA), ACM, Jun. 2024, pp. 1–12. doi: 10.1145/3661304.3661901.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "J. Sequeda, D. Allemang, and B. Jacob, “A Benchmark to Understand the Role of Knowledge Graphs on Large Language Model’s Accuracy for Question Answering on Enterprise SQL Databases,” in Proceedings of the 7th Joint Workshop on Graph Data Management Experiences & Systems (GRADES) and Network Data Analytics (NDA), ACM, Jun. 2024, pp. 1–12. doi: 10.1145/3661304.3661901."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "sheetrit2024",
+        "label": "sheetrit2024",
+        "before": "[2] E. Sheetrit, S. Nevo, T. Mazor, N. Nadler, F. Fournier, and A. Anaby-Tavor, “ReMatch: Retrieval enhanced schema matching with LLMs,” in Proceedings of the 2024 ACM SIGMOD international conference on management of data, ACM, 2024. Available: https://arxiv.org/abs/2403.01567",
+        "after": "[30] E. Sheetrit, M. Brief, M. Mishaeli, and O. Elisha, “ReMatch: Retrieval Enhanced Schema Matching With LLMs,” 2024, arXiv: 2403.01567v2. Available: https://arxiv.org/abs/2403.01567",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "E. Sheetrit, M. Brief, M. Mishaeli, and O. Elisha, “ReMatch: Retrieval Enhanced Schema Matching With LLMs,” 2024, arXiv: 2403.01567v2. Available: https://arxiv.org/abs/2403.01567"
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "touvron2023llama2",
+        "label": "touvron2023llama2",
+        "before": "[17] H. Touvron, L. Martin, K. Stone, et al., “Llama 2: Open foundation and fine-tuned chat models.” arXiv:2307.09288, 2023. Available: https://arxiv.org/abs/2307.09288",
+        "after": "[31] H. Touvron, L. Martin, K. Stone, et al., “Llama 2: Open Foundation and Fine-Tuned Chat Models,” 2023, arXiv: 2307.09288. Available: https://arxiv.org/abs/2307.09288",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "H. Touvron, L. Martin, K. Stone, et al., “Llama 2: Open Foundation and Fine-Tuned Chat Models,” 2023, arXiv: 2307.09288. Available: https://arxiv.org/abs/2307.09288"
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "wei2022",
+        "label": "wei2022",
+        "before": "[14] J. Wei et al., “Chain-of-thought prompting elicits reasoning in large language models,” Advances in Neural Information Processing Systems, vol. 35, pp. 24824–24837, 2022.",
+        "after": "[32] J. Wei et al., “Chain-of-Thought Prompting Elicits Reasoning in Large Language Models,” in Advances in Neural Information Processing Systems, 2022, pp. 24824–24837.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "J. Wei et al., “Chain-of-Thought Prompting Elicits Reasoning in Large Language Models,” in Advances in Neural Information Processing Systems, 2022, pp. 24824–24837."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "zhou2023ape",
+        "label": "zhou2023ape",
+        "before": "[31] Y. Zhou et al., “Large language models are human-level prompt engineers,” in Proceedings of the eleventh international conference on learning representations (ICLR), 2023.",
+        "after": "[33] Y. Zhou et al., “Large Language Models Are Human-Level Prompt Engineers,” in Proceedings of the Eleventh International Conference on Learning Representations (ICLR), 2023.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "Y. Zhou et al., “Large Language Models Are Human-Level Prompt Engineers,” in Proceedings of the Eleventh International Conference on Learning Representations (ICLR), 2023."
+      },
+      {
+        "renumbered": true,
+        "wording_expected": true,
+        "key": "zitzler2003",
+        "label": "zitzler2003",
+        "before": "[29] E. Zitzler, L. Thiele, M. Laumanns, C. M. Fonseca, and V. G. Da Fonseca, “Performance assessment of multiobjective optimizers: An analysis and review,” IEEE Transactions on Evolutionary Computation, vol. 7, no. 2, pp. 117–132, 2003.",
+        "after": "[34] E. Zitzler, L. Thiele, M. Laumanns, C. M. Fonseca, and V. G. Da Fonseca, “Performance Assessment of Multiobjective Optimizers: An Analysis and Review,” IEEE Transactions on Evolutionary Computation, vol. 7, no. 2, pp. 117–132, 2003.",
+        "outcome": "changed",
+        "expected": false,
+        "prediction": "E. Zitzler, L. Thiele, M. Laumanns, C. M. Fonseca, and V. G. Da Fonseca, “Performance Assessment of Multiobjective Optimizers: An Analysis and Review,” IEEE Transactions on Evolutionary Computation, vol. 7, no. 2, pp. 117–132, 2003."
+      }
+    ],
+    "tdd-pdf": [
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "howard2007bloor",
+        "label": "1",
+        "before": "[1]      P. Howard and C. Potter, “Data migration in the global 2000: Research, forecasts and survey results,” Bloor Research, Sep. 2007.",
+        "after": "[1]       P. Howard and C. Potter, “Data Migration in the Global 2000: Research, Forecasts and Survey Results,” Bloor Research, Sep. 2007.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "P. Howard and C. Potter, “Data Migration in the Global 2000: Research, Forecasts and Survey Results,” Bloor Research, Sep. 2007."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "howard2011bloor",
+        "label": "2",
+        "before": "[2]      P. Howard, “Data migration,” Bloor Research, Research report, 2011. Available: h t t p s://www.bloorresearch.com/research/data-migration-2011/",
+        "after": "[2]       P. Howard, “Data Migration,” Bloor Research, Research report, 2011. Available: http s://www.bloorresearch.com/research/data-migration-2011/",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "P. Howard, “Data Migration,” Bloor Research, Research report, 2011. Available: https://www.bloorresearch.com/research/data-migration-2011/"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "oracle2011migration",
+        "label": "3",
+        "before": "[3]      Oracle, “Put your data first or your migration will come last.” White paper, 2012. Available: https://www.oracle.com/a/ocom/docs/middleware/data-integration/data- migration-wp.pdf",
+        "after": "[3]       Oracle, “Put Your Data First or Your Migration Will Come Last,” Oracle, White paper, 2012. Available: https://www.oracle.com/a/ocom/docs/middleware/data- integration/data-migration-wp.pdf",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "Oracle, “Put Your Data First or Your Migration Will Come Last,” Oracle, White paper, 2012. Available: https://www.oracle.com/a/ocom/docs/middleware/data-integration/data-migration-wp.pdf"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "bernsteinhaas2008",
+        "label": "4",
+        "before": "[4]      P. A. Bernstein and L. M. Haas, “Information integration in the enterprise,” Commu- nications of the ACM, vol. 51, no. 9, pp. 72–79, 2008, doi: 10.1145/1378727.1378745.",
+        "after": "[4]    P. A. Bernstein and L. M. Haas, “Information Integration in the Enter- prise,” Communications of the ACM, vol. 51, no. 9, pp. 72–79, 2008, doi: 10.1145/1378727.1378745.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "P. A. Bernstein and L. M. Haas, “Information Integration in the Enterprise,” Communications of the ACM, vol. 51, no. 9, pp. 72–79, 2008, doi: 10.1145/1378727.1378745."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "ledford2023dissertation",
+        "label": "5",
+        "before": "[5]    A. B. Ledford, “A data element mapping and analysis (DEMA) approach for imple- menting a complete digital thread,” Ph.D. Dissertation, Auburn University, Auburn, AL, 2023. Available: http://etd.auburn.edu/xmlui/handle/10415/8918",
+        "after": "[5]    A. B. Ledford, “A Data Element Mapping and Analysis (DEMA) Approach for Imple- menting a Complete Digital Thread,” Ph.D. Dissertation, Auburn University, Auburn, AL, 2023. Available: http://etd.auburn.edu/xmlui/handle/10415/8918",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "A. B. Ledford, “A Data Element Mapping and Analysis (DEMA) Approach for Implementing a Complete Digital Thread,” Ph.D. Dissertation, Auburn University, Auburn, AL, 2023. Available: http://etd.auburn.edu/xmlui/handle/10415/8918"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "ledford2023ieee",
+        "label": "6",
+        "before": "[6]    A. B. Ledford, G. Harris, and G. Purdy, “Implementing a complete digital thread: The need for data element mapping and analysis,” IEEE Open Journal of Systems Engineering, vol. 1, pp. 139–152, 2023, doi: 10.1109/OJSE.2023.3325189.",
+        "after": "[6]    A. B. Ledford, G. Harris, and G. Purdy, “Implementing a Complete Digital Thread: The Need for Data Element Mapping and Analysis,” IEEE Open Journal of Systems Engineering, vol. 1, pp. 139–152, 2023, doi: 10.1109/ojse.2023.3325189.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "A. B. Ledford, G. Harris, and G. Purdy, “Implementing a Complete Digital Thread: The Need for Data Element Mapping and Analysis,” IEEE Open Journal of Systems Engineering, vol. 1, pp. 139–152, 2023, doi: 10.1109/ojse.2023.3325189."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "ledford2025syseng",
+        "label": "7",
+        "before": "[7]    A. Ledford, G. Harris, S. Askew, and G. Purdy, “Application of data element map- ping and analysis for system definition to enable model-based systems engineering,” Systems Engineering, vol. 28, no. 1, pp. 15–28, 2025, doi: 10.1002/sys.21776.",
+        "after": "[7]    A. Ledford, G. Harris, S. Askew, and G. Purdy, “Application of Data Element Map- ping and Analysis for System Definition to Enable Model-Based Systems Engineer- ing,” Systems Engineering, vol. 28, no. 1, pp. 15–28, 2025, doi: 10.1002/sys.21776.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "A. Ledford, G. Harris, S. Askew, and G. Purdy, “Application of Data Element Mapping and Analysis for System Definition to Enable Model-Based Systems Engineering,” Systems Engineering, vol. 28, no. 1, pp. 15–28, 2025, doi: 10.1002/sys.21776."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "sequeda-2024-benchmarkUnderstand",
+        "label": "8",
+        "before": "[8]    J. Sequeda, D. Briggs, and D. P. Miranker, “Benchmarking the text-to-SQL ca- pability of large language models: A comprehensive evaluation,” arXiv preprint arXiv:2311.07509, 2023, Available: https://arxiv.org/abs/2311.07509",
+        "after": "[8]    J. Sequeda, D. Allemang, and B. Jacob, “A Benchmark to Understand the Role of Knowledge Graphs on Large Language Model’s Accuracy for Question Answering on Enterprise SQL Databases,” in Proceedings of the 7th Joint Workshop on Graph Data Management Experiences & Systems (GRADES) and Network Data Analytics (NDA), ACM, Jun. 2024, pp. 1–12. doi: 10.1145/3661304.3661901.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "J. Sequeda, D. Allemang, and B. Jacob, “A Benchmark to Understand the Role of Knowledge Graphs on Large Language Model’s Accuracy for Question Answering on Enterprise SQL Databases,” in Proceedings of the 7th Joint Workshop on Graph Data Management Experiences & Systems (GRADES) and Network Data Analytics (NDA), ACM, Jun. 2024, pp. 1–12. doi: 10.1145/3661304.3661901."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "sheetrit2024",
+        "label": "9",
+        "before": "[9]    E. Sheetrit, S. Nevo, T. Mazor, N. Nadler, F. Fournier, and A. Anaby-Tavor, “Re- Match: Retrieval enhanced schema matching with LLMs,” in Proceedings of the 2024 ACM SIGMOD international conference on management of data, ACM, 2024. Avail- able: https://arxiv.org/abs/2403.01567",
+        "after": "[9]    E. Sheetrit, M. Brief, M. Mishaeli, and O. Elisha, “ReMatch: Retrieval En- hanced Schema Matching With LLMs,” 2024, arXiv: 2403.01567v2. Available: https://arxiv.org/abs/2403.01567",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "E. Sheetrit, M. Brief, M. Mishaeli, and O. Elisha, “ReMatch: Retrieval Enhanced Schema Matching With LLMs,” 2024, arXiv: 2403.01567v2. Available: https://arxiv.org/abs/2403.01567"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "oleary2025binary-classification",
+        "label": "10",
+        "before": "[10]   D. J. O’Leary, “Beyond binary classification: A comprehensive multi-criteria assess- ment system for programming assignments.” Poster presentation, INFORMS Annual Meeting, October 2025, Oct. 2025.",
+        "after": "[10]   D. J. O’Leary, “Beyond Binary Classification: A Comprehensive Multi-Criteria As- sessment System for Programming Assignments,” presented at the INFORMS Annual Meeting, Atlanta, GA, USA, Oct. 28, 2025.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "D. J. O’Leary, “Beyond Binary Classification: A Comprehensive Multi-Criteria Assessment System for Programming Assignments,” presented at the INFORMS Annual Meeting, Atlanta, GA, USA, Oct. 28, 2025."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "koutras2021valentine",
+        "label": "11",
+        "before": "[11]   C. Koutras et al., “Valentine: Evaluating matching techniques for dataset discovery,” in Proceedings of the 2021 IEEE 37th international conference on data engineering (ICDE), 2021, pp. 468–479.",
+        "after": "[11]   C. Koutras et al., “Valentine: Evaluating Matching Techniques for Dataset Discov- ery,” in Proceedings of the 2021 IEEE 37th International Conference on Data Engi- neering (ICDE), 2021, pp. 468–479.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "C. Koutras et al., “Valentine: Evaluating Matching Techniques for Dataset Discovery,” in Proceedings of the 2021 IEEE 37th International Conference on Data Engineering (ICDE), 2021, pp. 468–479."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "oleary2025ai4se",
+        "label": "12",
+        "before": "[12]   D. J. O’Leary and A. N. Ledford, “AI-enhanced DEMA: Transforming implicit sys- tem knowledge into intelligent, compliant, and documented processes.” The George Washington University; Workshop Presentation, AI4SE & SE4AI Research and Appli- cation Workshop, Sep. 2025.",
+        "after": "[12]   D. J. O’Leary and A. B. Ledford, “AI-Enhanced DEMA: Transforming Implicit Sys- tem Knowledge Into Intelligent, Compliant, and Documented Processes,” presented at the AI4SE & SE4AI Research and Application Workshop, Washington, DC, USA, Sep. 2025.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "D. J. O’Leary and A. B. Ledford, “AI-Enhanced DEMA: Transforming Implicit System Knowledge Into Intelligent, Compliant, and Documented Processes,” presented at the AI4SE & SE4AI Research and Application Workshop, Washington, DC, USA, Sep. 2025."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "olearyledford2026insight",
+        "label": "13",
+        "before": "[13]   D. J. O’Leary and A. B. Ledford, “Trustworthy LLM-augmented data reconciliation for deployment-constrained environments,” INSIGHT, 2026.",
+        "after": "[13]   D. J. O’Leary and A. B. Ledford, “Trustworthy LLM-Augmented Data Reconciliation for Deployment-Constrained Environments,” INSIGHT, vol. 29, no. 3, pp. 37–42, 2026, doi: 10.1002/inst.70055.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "D. J. O’Leary and A. B. Ledford, “Trustworthy LLM-Augmented Data Reconciliation for Deployment-Constrained Environments,” INSIGHT, vol. 29, no. 3, pp. 37–42, 2026, doi: 10.1002/inst.70055."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "brown2020",
+        "label": "14",
+        "before": "[14]   T. Brown et al., “Language models are few-shot learners,” Advances in Neural Infor- mation Processing Systems, vol. 33, pp. 1877–1901, 2020.",
+        "after": "[14]   T. Brown et al., “Language Models Are Few-Shot Learners,” in Advances in Neural Information Processing Systems, 2020, pp. 1877–1901.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "T. Brown et al., “Language Models Are Few-Shot Learners,” in Advances in Neural Information Processing Systems, 2020, pp. 1877–1901."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "wei2022",
+        "label": "15",
+        "before": "[15]   J. Wei et al., “Chain-of-thought prompting elicits reasoning in large language mod- els,” Advances in Neural Information Processing Systems, vol. 35, pp. 24824–24837, 2022.",
+        "after": "[15]   J. Wei et al., “Chain-of-Thought Prompting Elicits Reasoning in Large Language Models,” in Advances in Neural Information Processing Systems, 2022, pp. 24824– 24837.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "J. Wei et al., “Chain-of-Thought Prompting Elicits Reasoning in Large Language Models,” in Advances in Neural Information Processing Systems, 2022, pp. 24824–24837."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "openai2023gpt4",
+        "label": "16",
+        "before": "[16]   OpenAI, “GPT-4 technical report.” arXiv:2303.08774v6, 2024. Available: https://arxi v.org/abs/2303.08774",
+        "after": "[16]   OpenAI, “GPT-4 Technical Report,” Mar. 27, 2023, arXiv: 2303.08774. doi: 10.48550/arxiv.2303.08774.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "OpenAI, “GPT-4 Technical Report,” Mar. 27, 2023, arXiv: 2303.08774. doi: 10.48550/arxiv.2303.08774."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "anthropic2024claude3",
+        "label": "17",
+        "before": "[17]   Anthropic, “Claude 3 model card.” 2024. Available: https://www.anthropic.com/ne ws/claude-3-family",
+        "after": "[17]   Anthropic, “The Claude 3 Model Family: Opus, Sonnet, Haiku,” Anthropic, Model card, Mar. 2024. Available: https://www-cdn.anthropic.com/de8ba9b01c9ab7cbabf5 c33b80b7bbc618857627/Model_Card_Claude_3.pdf",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "Anthropic, “The Claude 3 Model Family: Opus, Sonnet, Haiku,” Anthropic, Model card, Mar. 2024. Available: https://www-cdn.anthropic.com/de8ba9b01c9ab7cbabf5c33b80b7bbc618857627/Model_Card_Claude_3.pdf"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "touvron2023llama2",
+        "label": "18",
+        "before": "[18]   H. Touvron, L. Martin, K. Stone, et al., “Llama 2: Open foundation and fine-tuned chat models.” arXiv:2307.09288, 2023. Available: https://arxiv.org/abs/2307.09288",
+        "after": "[18]   H. Touvron, L. Martin, K. Stone, et al., “Llama 2: Open Foundation and Fine-Tuned Chat Models,” 2023, arXiv: 2307.09288. Available: https://arxiv.org/abs/2307.09288",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "H. Touvron, L. Martin, K. Stone, et al., “Llama 2: Open Foundation and Fine-Tuned Chat Models,” 2023, arXiv: 2307.09288. Available: https://arxiv.org/abs/2307.09288"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "reimers2019",
+        "label": "19",
+        "before": "[19]   N. Reimers and I. Gurevych, “Sentence-BERT: Sentence embeddings using siamese BERT-networks,” in Proceedings of the 2019 conference on empirical methods in natural language processing and the 9th international joint conference on natural language processing (EMNLP-IJCNLP), 2019, pp. 3982–3992.",
+        "after": "[19]   N. Reimers and I. Gurevych, “Sentence-BERT: Sentence Embeddings Using Siamese BERT-Networks,” in Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP), 2019, pp. 3982–3992.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "N. Reimers and I. Gurevych, “Sentence-BERT: Sentence Embeddings Using Siamese BERT-Networks,” in Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP), 2019, pp. 3982–3992."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "openai2024embeddings",
+        "label": "20",
+        "before": "[20]   OpenAI, “Text embedding models.” 2024. Available: https://platform.openai.com/do cs/guides/embeddings",
+        "after": "[20]   OpenAI, “Vector Embeddings.” Accessed: Sep. 27, 2026. [Online]. Available: https:// developers.openai.com/api/docs/guides/embeddings",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "OpenAI, “Vector Embeddings.” Accessed: Sep. 27, 2026. [Online]. Available: https://developers.openai.com/api/docs/guides/embeddings"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "nussbaum-2025-nomicEmbed",
+        "label": "21",
+        "before": "[21]   Z. Nussbaum, J. X. Morris, B. Duderstadt, and A. Mulyar, “Nomic embed: Train- ing a reproducible long context text embedder.” arXiv:2402.01613, 2024. Available: https://arxiv.org/abs/2402.01613",
+        "after": "[21]   Z. Nussbaum, J. X. Morris, B. Duderstadt, and A. Mulyar, “Nomic Embed: Training a Reproducible Long Context Text Embedder,” Transactions on Machine Learning Research, Feb. 2025, Available: https://openreview.net/forum?id=IPmzyQSiQE",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "Z. Nussbaum, J. X. Morris, B. Duderstadt, and A. Mulyar, “Nomic Embed: Training a Reproducible Long Context Text Embedder,” Transactions on Machine Learning Research, Feb. 2025, Available: https://openreview.net/forum?id=IPmzyQSiQE"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "guo2017",
+        "label": "22",
+        "before": "[22]   C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, “On calibration of modern neural networks,” in Proceedings of the 34th international conference on machine learning, 2017, pp. 1321–1330.",
+        "after": "[22]   C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, “On Calibration of Modern Neural Networks,” in Proceedings of the 34th International Conference on Machine Learning, 2017, pp. 1321–1330.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, “On Calibration of Modern Neural Networks,” in Proceedings of the 34th International Conference on Machine Learning, 2017, pp. 1321–1330."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "kadavath2022",
+        "label": "23",
+        "before": "[23]   S. Kadavath, T. Conerly, A. Askell, et al., “Language models (mostly) know what they know.” arXiv:2207.05221, 2022. Available: https://arxiv.org/abs/2207.05221",
+        "after": "[23]   S. Kadavath, T. Conerly, A. Askell, et al., “Language Models (Mostly) Know What They Know,” 2022, arXiv: 2207.05221. Available: https://arxiv.org/abs/2207.05221",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "S. Kadavath, T. Conerly, A. Askell, et al., “Language Models (Mostly) Know What They Know,” 2022, arXiv: 2207.05221. Available: https://arxiv.org/abs/2207.05221"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "naeini2015",
+        "label": "24",
+        "before": "[24]   M. P. Naeini, G. F. Cooper, and M. Hauskrecht, “Obtaining well calibrated probabil- ities using bayesian binning,” in Proceedings of the twenty-ninth AAAI conference on artificial intelligence, 2015, pp. 2901–2907.",
+        "after": "[24]   M. P. Naeini, G. F. Cooper, and M. Hauskrecht, “Obtaining Well Calibrated Proba- bilities Using Bayesian Binning,” in Proceedings of the Twenty-Ninth AAAI Confer- ence on Artificial Intelligence, 2015, pp. 2901–2907.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "M. P. Naeini, G. F. Cooper, and M. Hauskrecht, “Obtaining Well Calibrated Probabilities Using Bayesian Binning,” in Proceedings of the Twenty-Ninth AAAI Conference on Artificial Intelligence, 2015, pp. 2901–2907."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "christophides2021",
+        "label": "25",
+        "before": "[25]   V. Christophides, V. Efthymiou, T. Palpanas, G. Papadakis, and K. Stefanidis, “An overview of end-to-end entity resolution for big data,” ACM Computing Surveys, vol. 53, no. 6, pp. 1–42, 2021, doi: 10.1145/3418896.",
+        "after": "[25]   V. Christophides, V. Efthymiou, T. Palpanas, G. Papadakis, and K. Stefanidis, “An Overview of End-to-End Entity Resolution for Big Data,” ACM Computing Surveys, vol. 53, no. 6, pp. 1–42, 2021, doi: 10.1145/3418896.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "V. Christophides, V. Efthymiou, T. Palpanas, G. Papadakis, and K. Stefanidis, “An Overview of End-to-End Entity Resolution for Big Data,” ACM Computing Surveys, vol. 53, no. 6, pp. 1–42, 2021, doi: 10.1145/3418896."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "mudgal2018",
+        "label": "26",
+        "before": "[26]   S. Mudgal et al., “Deep learning for entity matching: A design space exploration,” in Proceedings of the 2018 international conference on management of data (SIGMOD), 2018, pp. 19–34.",
+        "after": "[26]   S. Mudgal et al., “Deep Learning for Entity Matching: A Design Space Exploration,” in Proceedings of the 2018 International Conference on Management of Data (SIG- MOD), 2018, pp. 19–34.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "S. Mudgal et al., “Deep Learning for Entity Matching: A Design Space Exploration,” in Proceedings of the 2018 International Conference on Management of Data (SIGMOD), 2018, pp. 19–34."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "konda2016",
+        "label": "27",
+        "before": "[27]   P. Konda, S. Das, A. Doan, et al., “Magellan: Toward building entity matching management systems,” Proceedings of the VLDB Endowment, vol. 9, no. 12, pp. 1197–1208, 2016.",
+        "after": "[27]   P. Konda, S. Das, A. Doan, et al., “Magellan: Toward Building Entity Matching Management Systems,” Proceedings of the VLDB Endowment, vol. 9, no. 12, pp. 1197–1208, 2016.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "P. Konda, S. Das, A. Doan, et al., “Magellan: Toward Building Entity Matching Management Systems,” Proceedings of the VLDB Endowment, vol. 9, no. 12, pp. 1197–1208, 2016."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "deb2014",
+        "label": "28",
+        "before": "[28]   K. Deb, “Multi-objective optimization,” in Search methodologies: Introductory tutori- als in optimization and decision support techniques, Springer, 2014, pp. 403–449.",
+        "after": "[28]   K. Deb, “Multi-Objective Optimization,” in Search Methodologies: Introductory Tuto- rials in Optimization and Decision Support Techniques, Springer, 2014, pp. 403–449.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "K. Deb, “Multi-Objective Optimization,” in Search Methodologies: Introductory Tutorials in Optimization and Decision Support Techniques, Springer, 2014, pp. 403–449."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "zitzler2003",
+        "label": "29",
+        "before": "[29]   E. Zitzler, L. Thiele, M. Laumanns, C. M. Fonseca, and V. G. Da Fonseca, “Per- formance assessment of multiobjective optimizers: An analysis and review,” IEEE Transactions on Evolutionary Computation, vol. 7, no. 2, pp. 117–132, 2003.",
+        "after": "[29]   E. Zitzler, L. Thiele, M. Laumanns, C. M. Fonseca, and V. G. Da Fonseca, “Perfor- mance Assessment of Multiobjective Optimizers: An Analysis and Review,” IEEE Transactions on Evolutionary Computation, vol. 7, no. 2, pp. 117–132, 2003.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "E. Zitzler, L. Thiele, M. Laumanns, C. M. Fonseca, and V. G. Da Fonseca, “Performance Assessment of Multiobjective Optimizers: An Analysis and Review,” IEEE Transactions on Evolutionary Computation, vol. 7, no. 2, pp. 117–132, 2003."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "khattab2024",
+        "label": "30",
+        "before": "[30]   O. Khattab et al., “DSPy: Compiling declarative language model calls into self- improving pipelines.” arXiv:2310.03714, 2023. Available: https://arxiv.org/abs/2310.0 3714",
+        "after": "[30]   O. Khattab et al., “DSPy: Compiling Declarative Language Model Calls Into State- of-the-Art Pipelines,” in International Conference on Learning Representations, 2024. Available: https://proceedings.iclr.cc/paper_files/paper/2024/hash/f1cf02ce09757f57 c3b93c0db83181e0-Abstract-Conference.html",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "O. Khattab et al., “DSPy: Compiling Declarative Language Model Calls Into State-of-the-Art Pipelines,” in International Conference on Learning Representations, 2024. Available: https://proceedings.iclr.cc/paper_files/paper/2024/hash/f1cf02ce09757f57c3b93c0db83181e0-Abstract-Conference.html"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "zhou2023ape",
+        "label": "31",
+        "before": "[31]   Y. Zhou et al., “Large language models are human-level prompt engineers,” in Pro- ceedings of the eleventh international conference on learning representations (ICLR), 2023.",
+        "after": "[31]   Y. Zhou et al., “Large Language Models Are Human-Level Prompt Engineers,” in Proceedings of the Eleventh International Conference on Learning Representations (ICLR), 2023.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "Y. Zhou et al., “Large Language Models Are Human-Level Prompt Engineers,” in Proceedings of the Eleventh International Conference on Learning Representations (ICLR), 2023."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "nist2020sp80053",
+        "label": "32",
+        "before": "[32]   National Institute of Standards and Technology, “Security and privacy controls for information systems and organizations,” National Institute of Standards; Technology, NIST Special Publication 800-53, Revision 5, 2020. doi: 10.6028/NIST.SP.800-53r5.",
+        "after": "[32]   National Institute of Standards and Technology, “Security and Privacy Controls for Information Systems and Organizations,” National Institute of Standards and Tech- nology, NIST Special Publication 800-53, Revision 5, 2020. doi: 10.6028/nist.sp.800- 53r5.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "National Institute of Standards and Technology, “Security and Privacy Controls for Information Systems and Organizations,” National Institute of Standards and Technology, NIST Special Publication 800-53, Revision 5, 2020. doi: 10.6028/nist.sp.800-53r5."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "fedramp2024",
+        "label": "33",
+        "before": "[33]   Federal Risk and Authorization Management Program (FedRAMP), “FedRAMP security assessment framework.” 2024. Available: https://www.fedramp.gov/",
+        "after": "[33]   U.S. General Services Administration, “FedRAMP Consolidated Rules for 2026,” U.S. General Services Administration, Release 2026.09.22.01, Sep. 2026. Accessed: Sep. 27, 2026. [Online]. Available: https://www.fedramp.gov/2026/",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "U.S. General Services Administration, “FedRAMP Consolidated Rules for 2026,” U.S. General Services Administration, Release 2026.09.22.01, Sep. 2026. Accessed: Sep. 27, 2026. [Online]. Available: https://www.fedramp.gov/2026/"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "dod2020cmmc",
+        "label": "34",
+        "before": "[34]   Department of Defense, “Cybersecurity maturity model certification (CMMC) frame- work.” 2020.",
+        "after": "[34]   Department of Defense Chief Information Oﬀicer, “Cybersecurity Maturity Model Certification (CMMC) Model Overview,” Department of Defense Chief Information Oﬀicer, DoD-CIO-00001, Sep. 2024. Available: https://dodcio.defense.gov/Portals/0 /Documents/CMMC/ModelOverviewv2.pdf",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "Department of Defense Chief Information Officer, “Cybersecurity Maturity Model Certification (CMMC) Model Overview,” Department of Defense Chief Information Officer, DoD-CIO-00001, Sep. 2024. Available: https://dodcio.defense.gov/Portals/0/Documents/CMMC/ModelOverviewv2.pdf"
+      }
+    ],
+    "pdd-docx": [
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "ledford2025syseng",
+        "label": "1",
+        "before": "[1] A. Ledford, G. Harris, S. Askew, and G. Purdy, “Application of data element mapping and analysis for system definition to enable model-based systems engineering,” Systems Engineering, vol. 28, no. 1, pp. 15–28, 2025, doi: 10.1002/sys.21776.",
+        "after": "[1] A. Ledford, G. Harris, S. Askew, and G. Purdy, “Application of Data Element Mapping and Analysis for System Definition to Enable Model-Based Systems Engineering,” Systems Engineering, vol. 28, no. 1, pp. 15–28, 2025, doi: 10.1002/sys.21776.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "A. Ledford, G. Harris, S. Askew, and G. Purdy, “Application of Data Element Mapping and Analysis for System Definition to Enable Model-Based Systems Engineering,” Systems Engineering, vol. 28, no. 1, pp. 15–28, 2025, doi: 10.1002/sys.21776."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "ledford2023dissertation",
+        "label": "2",
+        "before": "[2] A. B. Ledford, “A data element mapping and analysis (DEMA) approach for implementing a complete digital thread,” Ph.D. Dissertation, Auburn University, Auburn, AL, 2023. Available: http://etd.auburn.edu/xmlui/handle/10415/8918",
+        "after": "[2] A. B. Ledford, “A Data Element Mapping and Analysis (DEMA) Approach for Implementing a Complete Digital Thread,” Ph.D. Dissertation, Auburn University, Auburn, AL, 2023. Available: http://etd.auburn.edu/xmlui/handle/10415/8918",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "A. B. Ledford, “A Data Element Mapping and Analysis (DEMA) Approach for Implementing a Complete Digital Thread,” Ph.D. Dissertation, Auburn University, Auburn, AL, 2023. Available: http://etd.auburn.edu/xmlui/handle/10415/8918"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "ledford2023ieee",
+        "label": "3",
+        "before": "[3] A. B. Ledford, G. Harris, and G. Purdy, “Implementing a complete digital thread: The need for data element mapping and analysis,” IEEE Open Journal of Systems Engineering, vol. 1, pp. 139–152, 2023, doi: 10.1109/OJSE.2023.3325189.",
+        "after": "[3] A. B. Ledford, G. Harris, and G. Purdy, “Implementing a Complete Digital Thread: The Need for Data Element Mapping and Analysis,” IEEE Open Journal of Systems Engineering, vol. 1, pp. 139–152, 2023, doi: 10.1109/ojse.2023.3325189.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "A. B. Ledford, G. Harris, and G. Purdy, “Implementing a Complete Digital Thread: The Need for Data Element Mapping and Analysis,” IEEE Open Journal of Systems Engineering, vol. 1, pp. 139–152, 2023, doi: 10.1109/ojse.2023.3325189."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "sequeda-2024-benchmarkUnderstand",
+        "label": "4",
+        "before": "[4] J. Sequeda, D. Briggs, and D. P. Miranker, “Benchmarking the text-to-SQL capability of large language models: A comprehensive evaluation,” arXiv preprint arXiv:2311.07509, 2023, Available: https://arxiv.org/abs/2311.07509",
+        "after": "[4] J. Sequeda, D. Allemang, and B. Jacob, “A Benchmark to Understand the Role of Knowledge Graphs on Large Language Model’s Accuracy for Question Answering on Enterprise SQL Databases,” in Proceedings of the 7th Joint Workshop on Graph Data Management Experiences & Systems (GRADES) and Network Data Analytics (NDA), ACM, Jun. 2024, pp. 1–12. doi: 10.1145/3661304.3661901.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "J. Sequeda, D. Allemang, and B. Jacob, “A Benchmark to Understand the Role of Knowledge Graphs on Large Language Model’s Accuracy for Question Answering on Enterprise SQL Databases,” in Proceedings of the 7th Joint Workshop on Graph Data Management Experiences & Systems (GRADES) and Network Data Analytics (NDA), ACM, Jun. 2024, pp. 1–12. doi: 10.1145/3661304.3661901."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "sheetrit2024",
+        "label": "5",
+        "before": "[5] E. Sheetrit, S. Nevo, T. Mazor, N. Nadler, F. Fournier, and A. Anaby-Tavor, “ReMatch: Retrieval enhanced schema matching with LLMs,” in Proceedings of the 2024 ACM SIGMOD international conference on management of data, ACM, 2024. Available: https://arxiv.org/abs/2403.01567",
+        "after": "[5] E. Sheetrit, M. Brief, M. Mishaeli, and O. Elisha, “ReMatch: Retrieval Enhanced Schema Matching With LLMs,” 2024, arXiv: 2403.01567v2. Available: https://arxiv.org/abs/2403.01567",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "E. Sheetrit, M. Brief, M. Mishaeli, and O. Elisha, “ReMatch: Retrieval Enhanced Schema Matching With LLMs,” 2024, arXiv: 2403.01567v2. Available: https://arxiv.org/abs/2403.01567"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "oleary2025ai4se",
+        "label": "6",
+        "before": "[6] D. J. O’Leary and A. N. Ledford, “AI-enhanced DEMA: Transforming implicit system knowledge into intelligent, compliant, and documented processes.” The George Washington University; Workshop Presentation, AI4SE & SE4AI Research and Application Workshop, Sep. 2025.",
+        "after": "[6] D. J. O’Leary and A. B. Ledford, “AI-Enhanced DEMA: Transforming Implicit System Knowledge Into Intelligent, Compliant, and Documented Processes,” presented at the AI4SE & SE4AI Research and Application Workshop, Washington, DC, USA, Sep. 2025.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "D. J. O’Leary and A. B. Ledford, “AI-Enhanced DEMA: Transforming Implicit System Knowledge Into Intelligent, Compliant, and Documented Processes,” presented at the AI4SE & SE4AI Research and Application Workshop, Washington, DC, USA, Sep. 2025."
+      }
+    ],
+    "pdd-pdf": [
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "ledford2025syseng",
+        "label": "1",
+        "before": "[1] A. Ledford, G. Harris, S. Askew, and G. Purdy, “Application of data element mapping and analysis for system definition to enable model-based systems engineering,” Systems Engineering, vol. 28, no. 1, pp. 15–28, 2025, Demonstrates DEMA application: 1600 ves- sel occurrences across 79 functions in 23 storage locations. doi: 10 . 1002 / sys . 21776 [Online]. Available: https : / / incose . onlinelibrary . wiley . com / doi / 10 . 1002 / sys . 21776 (cit. on p. 2).",
+        "after": "[1]       A. Ledford, G. Harris, S. Askew, and G. Purdy, “Application of Data Element Map- ping and Analysis for System Definition to Enable Model-Based Systems Engineer- ing,” Systems Engineering, vol. 28, no. 1, pp. 15–28, 2025, doi: 10.1002/sys.21776.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "A. Ledford, G. Harris, S. Askew, and G. Purdy, “Application of Data Element Mapping and Analysis for System Definition to Enable Model-Based Systems Engineering,” Systems Engineering, vol. 28, no. 1, pp. 15–28, 2025, doi: 10.1002/sys.21776."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "ledford2023dissertation",
+        "label": "2",
+        "before": "[2] A. B. Ledford, “A data element mapping and analysis (dema) approach for implement- ing a complete digital thread,” Establishes DEMA as a technology-agnostic methodol- ogy for systematic data element capture and mapping, Ph.D. Dissertation, Auburn Uni- versity, Auburn, AL, 2023. [Online]. Available: http://etd.auburn.edu/xmlui/handle/ 10415/8918 (cit. on p. 2).",
+        "after": "[2]       A. B. Ledford, “A Data Element Mapping and Analysis (DEMA) Approach for Imple- menting a Complete Digital Thread,” Ph.D. Dissertation, Auburn University, Auburn, AL, 2023. Available: http://etd.auburn.edu/xmlui/handle/10415/8918",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "A. B. Ledford, “A Data Element Mapping and Analysis (DEMA) Approach for Implementing a Complete Digital Thread,” Ph.D. Dissertation, Auburn University, Auburn, AL, 2023. Available: http://etd.auburn.edu/xmlui/handle/10415/8918"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "ledford2023ieee",
+        "label": "3",
+        "before": "[3] A. B. Ledford, G. Harris, and G. Purdy, “Implementing a complete digital thread: The need for data element mapping and analysis,” IEEE Open Journal of Systems Engineer- ing, vol. 1, pp. 139–152, 2023, Proposes DEMA as tool for identifying data elements at granularity necessary to connect digital threads. doi: 10 . 1109 / OJSE . 2023 . 3325189 [Online]. Available: https://ieeexplore.ieee.org/document/10286971/ (cit. on p. 3).",
+        "after": "[3]       A. B. Ledford, G. Harris, and G. Purdy, “Implementing a Complete Digital Thread: The Need for Data Element Mapping and Analysis,” IEEE Open Journal of Systems Engineering, vol. 1, pp. 139–152, 2023, doi: 10.1109/ojse.2023.3325189.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "A. B. Ledford, G. Harris, and G. Purdy, “Implementing a Complete Digital Thread: The Need for Data Element Mapping and Analysis,” IEEE Open Journal of Systems Engineering, vol. 1, pp. 139–152, 2023, doi: 10.1109/ojse.2023.3325189."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "sequeda-2024-benchmarkUnderstand",
+        "label": "4",
+        "before": "[4] J. Sequeda, D. Briggs, and D. P. Miranker, “Benchmarking the text-to-sql capability of large language models: A comprehensive evaluation,” arXiv preprint arXiv:2311.07509, 2023, Key finding: GPT-4 achieves 16% accuracy zero-shot, 54% with Knowledge Graph context. [Online]. Available: https://arxiv.org/abs/2311.07509 (cit. on p. 4).",
+        "after": "[4]   J. Sequeda, D. Allemang, and B. Jacob, “A Benchmark to Understand the Role of Knowledge Graphs on Large Language Model’s Accuracy for Question Answering on Enterprise SQL Databases,” in Proceedings of the 7th Joint Workshop on Graph Data Management Experiences & Systems (GRADES) and Network Data Analytics (NDA), ACM, Jun. 2024, pp. 1–12. doi: 10.1145/3661304.3661901.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "J. Sequeda, D. Allemang, and B. Jacob, “A Benchmark to Understand the Role of Knowledge Graphs on Large Language Model’s Accuracy for Question Answering on Enterprise SQL Databases,” in Proceedings of the 7th Joint Workshop on Graph Data Management Experiences & Systems (GRADES) and Network Data Analytics (NDA), ACM, Jun. 2024, pp. 1–12. doi: 10.1145/3661304.3661901."
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "sheetrit2024",
+        "label": "5",
+        "before": "[5] E. Sheetrit, S. Nevo, T. Mazor, N. Nadler, F. Fournier, and A. Anaby-Tavor, “Rematch: Retrieval enhanced schema matching with llms,” in Proceedings of the 2024 ACM SIG- MOD International Conference on Management of Data, State-of-the-art LLM schema matching achieving 42-73% accuracy, ACM, 2024. [Online]. Available: https://arxiv.org/ abs/2403.01567 (cit. on p. 4).",
+        "after": "[5]   E. Sheetrit, M. Brief, M. Mishaeli, and O. Elisha, “ReMatch: Retrieval En- hanced Schema Matching With LLMs,” 2024, arXiv: 2403.01567v2. Available: https://arxiv.org/abs/2403.01567",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "E. Sheetrit, M. Brief, M. Mishaeli, and O. Elisha, “ReMatch: Retrieval Enhanced Schema Matching With LLMs,” 2024, arXiv: 2403.01567v2. Available: https://arxiv.org/abs/2403.01567"
+      },
+      {
+        "renumbered": false,
+        "wording_expected": true,
+        "key": "oleary2025ai4se",
+        "label": "6",
+        "before": "[6] D. J. O’Leary and A. N. Ledford, Ai-enhanced DEMA: Transforming implicit system knowledge into intelligent, compliant, and documented processes, Workshop Presenta- tion, AI4SE & SE4AI Research and Application Workshop, The George Washington University, Sep. 2025 (cit. on p. 12).",
+        "after": "[6]   D. J. O’Leary and A. B. Ledford, “AI-Enhanced DEMA: Transforming Implicit Sys- tem Knowledge Into Intelligent, Compliant, and Documented Processes,” presented at the AI4SE & SE4AI Research and Application Workshop, Washington, DC, USA, Sep. 2025.",
+        "outcome": "changed",
+        "expected": true,
+        "prediction": "D. J. O’Leary and A. B. Ledford, “AI-Enhanced DEMA: Transforming Implicit System Knowledge Into Intelligent, Compliant, and Documented Processes,” presented at the AI4SE & SE4AI Research and Application Workshop, Washington, DC, USA, Sep. 2025."
+      }
+    ]
+  },
+  "mismatches": [],
+  "html_link_check": {
+    "baseline": {
+      "count": 43,
+      "missing_targets": 0,
+      "number_mismatches": 43,
+      "rows": [
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-howard2007bloor",
+          "key": "howard2007bloor",
+          "citation": "[1]",
+          "target_number": "7",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-howard2011bloor",
+          "key": "howard2011bloor",
+          "citation": "[2]",
+          "target_number": "8",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-oracle2011migration",
+          "key": "oracle2011migration",
+          "citation": "[3]",
+          "target_number": "10",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-bernsteinhaas2008",
+          "key": "bernsteinhaas2008",
+          "citation": "[4]",
+          "target_number": "9",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-ledford2023dissertation",
+          "key": "ledford2023dissertation",
+          "citation": "[5]",
+          "target_number": "3",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-ledford2023ieee",
+          "key": "ledford2023ieee",
+          "citation": "[6]",
+          "target_number": "4",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-ledford2025syseng",
+          "key": "ledford2025syseng",
+          "citation": "[7]",
+          "target_number": "5",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-sequeda2023",
+          "key": "sequeda2023",
+          "citation": "[8]",
+          "target_number": "1",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-sheetrit2024",
+          "key": "sheetrit2024",
+          "citation": "[9]",
+          "target_number": "2",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-oleary2025binary-classification",
+          "key": "oleary2025binary-classification",
+          "citation": "[10]",
+          "target_number": "11",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "12-research-plan.html",
+          "href": "a6-references.html#ref-koutras2021valentine",
+          "key": "koutras2021valentine",
+          "citation": "[1]",
+          "target_number": "27",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-ledford2023dissertation",
+          "key": "ledford2023dissertation",
+          "citation": "[1]",
+          "target_number": "3",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-ledford2023ieee",
+          "key": "ledford2023ieee",
+          "citation": "[2]",
+          "target_number": "4",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-ledford2025syseng",
+          "key": "ledford2025syseng",
+          "citation": "[3]",
+          "target_number": "5",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-oleary2025ai4se",
+          "key": "oleary2025ai4se",
+          "citation": "[4]",
+          "target_number": "6",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-oleary2025binary-classification",
+          "key": "oleary2025binary-classification",
+          "citation": "[5]",
+          "target_number": "11",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-olearyledford2026insight",
+          "key": "olearyledford2026insight",
+          "citation": "[6]",
+          "target_number": "12",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-brown2020",
+          "key": "brown2020",
+          "citation": "[7]",
+          "target_number": "13",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-wei2022",
+          "key": "wei2022",
+          "citation": "[8]",
+          "target_number": "14",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-openai2024gpt4",
+          "key": "openai2024gpt4",
+          "citation": "[9]",
+          "target_number": "15",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-anthropic2024claude3",
+          "key": "anthropic2024claude3",
+          "citation": "[10]",
+          "target_number": "16",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-touvron2023llama2",
+          "key": "touvron2023llama2",
+          "citation": "[11]",
+          "target_number": "17",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-reimers2019",
+          "key": "reimers2019",
+          "citation": "[12]",
+          "target_number": "18",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-openai2024embeddings",
+          "key": "openai2024embeddings",
+          "citation": "[13]",
+          "target_number": "19",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-nussbaum2024nomic",
+          "key": "nussbaum2024nomic",
+          "citation": "[14]",
+          "target_number": "20",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-guo2017",
+          "key": "guo2017",
+          "citation": "[15]",
+          "target_number": "21",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-kadavath2022",
+          "key": "kadavath2022",
+          "citation": "[16]",
+          "target_number": "22",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-naeini2015",
+          "key": "naeini2015",
+          "citation": "[17]",
+          "target_number": "23",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-christophides2021",
+          "key": "christophides2021",
+          "citation": "[18]",
+          "target_number": "24",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-mudgal2018",
+          "key": "mudgal2018",
+          "citation": "[19]",
+          "target_number": "25",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-konda2016",
+          "key": "konda2016",
+          "citation": "[20]",
+          "target_number": "26",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-koutras2021valentine",
+          "key": "koutras2021valentine",
+          "citation": "[21]",
+          "target_number": "27",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-deb2014",
+          "key": "deb2014",
+          "citation": "[22]",
+          "target_number": "28",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-zitzler2003",
+          "key": "zitzler2003",
+          "citation": "[23]",
+          "target_number": "29",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-khattab2023dspy",
+          "key": "khattab2023dspy",
+          "citation": "[24]",
+          "target_number": "30",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-zhou2023ape",
+          "key": "zhou2023ape",
+          "citation": "[25]",
+          "target_number": "31",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-nist2020sp80053",
+          "key": "nist2020sp80053",
+          "citation": "[26]",
+          "target_number": "32",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-fedramp2024",
+          "key": "fedramp2024",
+          "citation": "[27]",
+          "target_number": "33",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-dod2020cmmc",
+          "key": "dod2020cmmc",
+          "citation": "[28]",
+          "target_number": "34",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-howard2007bloor",
+          "key": "howard2007bloor",
+          "citation": "[29]",
+          "target_number": "7",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-howard2011bloor",
+          "key": "howard2011bloor",
+          "citation": "[30]",
+          "target_number": "8",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-bernsteinhaas2008",
+          "key": "bernsteinhaas2008",
+          "citation": "[31]",
+          "target_number": "9",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-oracle2011migration",
+          "key": "oracle2011migration",
+          "citation": "[32]",
+          "target_number": "10",
+          "target_exists": true,
+          "number_matches": false
+        }
+      ]
+    },
+    "candidate": {
+      "count": 43,
+      "missing_targets": 0,
+      "number_mismatches": 43,
+      "rows": [
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-howard2007bloor",
+          "key": "howard2007bloor",
+          "citation": "[1]",
+          "target_number": "9",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-howard2011bloor",
+          "key": "howard2011bloor",
+          "citation": "[2]",
+          "target_number": "10",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-oracle2011migration",
+          "key": "oracle2011migration",
+          "citation": "[3]",
+          "target_number": "27",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-bernsteinhaas2008",
+          "key": "bernsteinhaas2008",
+          "citation": "[4]",
+          "target_number": "2",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-ledford2023dissertation",
+          "key": "ledford2023dissertation",
+          "citation": "[5]",
+          "target_number": "15",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-ledford2023ieee",
+          "key": "ledford2023ieee",
+          "citation": "[6]",
+          "target_number": "16",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-ledford2025syseng",
+          "key": "ledford2025syseng",
+          "citation": "[7]",
+          "target_number": "17",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-sequeda-2024-benchmarkUnderstand",
+          "key": "sequeda-2024-benchmarkUnderstand",
+          "citation": "[8]",
+          "target_number": "29",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-sheetrit2024",
+          "key": "sheetrit2024",
+          "citation": "[9]",
+          "target_number": "30",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "00-product-overview.html",
+          "href": "a6-references.html#ref-oleary2025binary-classification",
+          "key": "oleary2025binary-classification",
+          "citation": "[10]",
+          "target_number": "23",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "12-research-plan.html",
+          "href": "a6-references.html#ref-koutras2021valentine",
+          "key": "koutras2021valentine",
+          "citation": "[1]",
+          "target_number": "14",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-ledford2023dissertation",
+          "key": "ledford2023dissertation",
+          "citation": "[1]",
+          "target_number": "15",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-ledford2023ieee",
+          "key": "ledford2023ieee",
+          "citation": "[2]",
+          "target_number": "16",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-ledford2025syseng",
+          "key": "ledford2025syseng",
+          "citation": "[3]",
+          "target_number": "17",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-oleary2025ai4se",
+          "key": "oleary2025ai4se",
+          "citation": "[4]",
+          "target_number": "22",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-oleary2025binary-classification",
+          "key": "oleary2025binary-classification",
+          "citation": "[5]",
+          "target_number": "23",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-olearyledford2026insight",
+          "key": "olearyledford2026insight",
+          "citation": "[6]",
+          "target_number": "24",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-brown2020",
+          "key": "brown2020",
+          "citation": "[7]",
+          "target_number": "3",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-wei2022",
+          "key": "wei2022",
+          "citation": "[8]",
+          "target_number": "32",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-openai2023gpt4",
+          "key": "openai2023gpt4",
+          "citation": "[9]",
+          "target_number": "25",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-anthropic2024claude3",
+          "key": "anthropic2024claude3",
+          "citation": "[10]",
+          "target_number": "1",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-touvron2023llama2",
+          "key": "touvron2023llama2",
+          "citation": "[11]",
+          "target_number": "31",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-reimers2019",
+          "key": "reimers2019",
+          "citation": "[12]",
+          "target_number": "28",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-openai2024embeddings",
+          "key": "openai2024embeddings",
+          "citation": "[13]",
+          "target_number": "26",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-nussbaum-2025-nomicEmbed",
+          "key": "nussbaum-2025-nomicEmbed",
+          "citation": "[14]",
+          "target_number": "21",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-guo2017",
+          "key": "guo2017",
+          "citation": "[15]",
+          "target_number": "8",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-kadavath2022",
+          "key": "kadavath2022",
+          "citation": "[16]",
+          "target_number": "11",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-naeini2015",
+          "key": "naeini2015",
+          "citation": "[17]",
+          "target_number": "19",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-christophides2021",
+          "key": "christophides2021",
+          "citation": "[18]",
+          "target_number": "4",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-mudgal2018",
+          "key": "mudgal2018",
+          "citation": "[19]",
+          "target_number": "18",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-konda2016",
+          "key": "konda2016",
+          "citation": "[20]",
+          "target_number": "13",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-koutras2021valentine",
+          "key": "koutras2021valentine",
+          "citation": "[21]",
+          "target_number": "14",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-deb2014",
+          "key": "deb2014",
+          "citation": "[22]",
+          "target_number": "5",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-zitzler2003",
+          "key": "zitzler2003",
+          "citation": "[23]",
+          "target_number": "34",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-khattab2024",
+          "key": "khattab2024",
+          "citation": "[24]",
+          "target_number": "12",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-zhou2023ape",
+          "key": "zhou2023ape",
+          "citation": "[25]",
+          "target_number": "33",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-nist2020sp80053",
+          "key": "nist2020sp80053",
+          "citation": "[26]",
+          "target_number": "20",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-fedramp2024",
+          "key": "fedramp2024",
+          "citation": "[27]",
+          "target_number": "7",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-dod2020cmmc",
+          "key": "dod2020cmmc",
+          "citation": "[28]",
+          "target_number": "6",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-howard2007bloor",
+          "key": "howard2007bloor",
+          "citation": "[29]",
+          "target_number": "9",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-howard2011bloor",
+          "key": "howard2011bloor",
+          "citation": "[30]",
+          "target_number": "10",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-bernsteinhaas2008",
+          "key": "bernsteinhaas2008",
+          "citation": "[31]",
+          "target_number": "2",
+          "target_exists": true,
+          "number_matches": false
+        },
+        {
+          "file": "a6-references.html",
+          "href": "a6-references.html#ref-oracle2011migration",
+          "key": "oracle2011migration",
+          "citation": "[32]",
+          "target_number": "27",
+          "target_exists": true,
+          "number_matches": false
+        }
+      ]
+    }
+  },
+  "artifact_gate_directory": "/private/tmp/refs-dema-gate-03"
+}

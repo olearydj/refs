@@ -1,0 +1,56 @@
+{
+  "publication_commit": "24053b0bad703e2acbe3be41f81e2c8f3ffb0b12",
+  "no_record_work": "/private/tmp/refs-dema-adopted-check-01",
+  "record_work": "/private/tmp/refs-dema-adopted-record-01",
+  "no_record_exit_code": 0,
+  "record_exit_code": 0,
+  "recorded": true,
+  "identical_entries": 80,
+  "fixture_text_changed": false,
+  "consumers": [
+    {
+      "name": "tdd-html",
+      "entries": 34,
+      "fixture_provenance": {
+        "publication_commit": "24053b0bad703e2acbe3be41f81e2c8f3ffb0b12",
+        "source": "owner-accepted scratch render (--record)",
+        "recorded_at": "2026-09-28T01:04:05.004842+00:00",
+        "artifact_sha256": "2c3ad5314ce005383e0997c003d237130bb5b639e5d0c97b4786282315fc73fc",
+        "fixture_sha256": "7c0d1487aeda64ff09b8e04f750be2d3fd1e18659ff1232df24574de1e4a8ea6"
+      }
+    },
+    {
+      "name": "tdd-pdf",
+      "entries": 34,
+      "fixture_provenance": {
+        "publication_commit": "24053b0bad703e2acbe3be41f81e2c8f3ffb0b12",
+        "source": "owner-accepted scratch render (--record)",
+        "recorded_at": "2026-09-28T01:04:05.009694+00:00",
+        "artifact_sha256": "a44a0fbe17024be9d83da0d570dbe6ea055b4d49190e6bebf1af051faf65ce82",
+        "fixture_sha256": "c6a69552e2c0806b6d21ce047b92fb30fba18c2f08e390d7bf888de9418f27ff"
+      }
+    },
+    {
+      "name": "pdd-docx",
+      "entries": 6,
+      "fixture_provenance": {
+        "publication_commit": "24053b0bad703e2acbe3be41f81e2c8f3ffb0b12",
+        "source": "owner-accepted scratch render (--record)",
+        "recorded_at": "2026-09-28T01:04:05.014157+00:00",
+        "artifact_sha256": "a786bd935d64b58079377a5c9a7f88e0d06e1a29d1402986838d87c5f3951f99",
+        "fixture_sha256": "51f8f9196d7b353558a29d868b63898a34e79143abab8b7f4001a41f7437b26a"
+      }
+    },
+    {
+      "name": "pdd-pdf",
+      "entries": 6,
+      "fixture_provenance": {
+        "publication_commit": "24053b0bad703e2acbe3be41f81e2c8f3ffb0b12",
+        "source": "owner-accepted scratch render (--record)",
+        "recorded_at": "2026-09-28T01:04:05.018611+00:00",
+        "artifact_sha256": "9151d4e22314c6d4ca7da39d8103e62ddcf32236680785d7b8db74f6a4ef7b80",
+        "fixture_sha256": "8605eb0b56751c63b23cfb4ae0b07a7c30cc5f974453044ff579e24827df49bb"
+      }
+    }
+  ]
+}
