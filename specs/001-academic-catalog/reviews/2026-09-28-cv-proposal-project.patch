@@ -1,0 +1,152 @@
+--- a/cv-master.qmd
++++ b/cv-master.qmd
+@@ -5,12 +5,12 @@
+ jupyter: cv-data-importer
+ csl: styles/apa-cv.csl
+ suppress-bibliography: true
+-bibliography_proceedings: refs/proceedings.bib
+-bibliography_published: refs/published.bib
+-bibliography_forthcoming: refs/forthcoming.bib
+-bibliography_submission: refs/submission.bib
+-bibliography_preparation: refs/preparation.bib
+-bibliography_otherpublications: refs/other-publications.bib
++bibliography_proceedings: refs/proceedings.json
++bibliography_published: refs/published.json
++bibliography_forthcoming: refs/forthcoming.json
++bibliography_submission: refs/submission.json
++bibliography_preparation: refs/preparation.json
++bibliography_otherpublications: refs/other-publications.json
+ filters:
+   - citetools
+   - filters/highlight-djo.lua
+--- a/styles/apa-cv.csl
++++ b/styles/apa-cv.csl
+@@ -1959,6 +1959,7 @@
+             </group>
+             <text macro="source-DOI-URL"/>
+             <text macro="publication-history"/>
++            <choose><if type="manuscript book" match="any"><text variable="note" prefix=" " suffix="."/></if></choose>
+           </else>
+         </choose>
+       </group>
+@@ -1997,6 +1998,7 @@
+             </group>
+             <text macro="source-DOI-URL"/>
+             <text macro="publication-history"/>
++            <choose><if type="manuscript book" match="any"><text variable="note" prefix=" " suffix="."/></if></choose>
+           </else>
+         </choose>
+       </group>
+--- a/filters/highlight-djo.lua
++++ b/filters/highlight-djo.lua
+@@ -54,7 +54,18 @@
+   return keys
+ end
+ 
+-local nonfirst_author_keys = parse_bib_authorship("refs/all.bib")
++local nonfirst_author_keys = {}
++for _, path in ipairs({"refs/proceedings.json", "refs/published.json", "refs/forthcoming.json", "refs/submission.json", "refs/preparation.json", "refs/other-publications.json"}) do
++  local handle = assert(io.open(path, "r"))
++  local records = pandoc.json.decode(handle:read("*a"))
++  handle:close()
++  for _, record in ipairs(records) do
++    for index, author in ipairs(record.author or {}) do
++      local family = (author.family or ""):lower():gsub("’", "'")
++      if family == target_surname and index > 1 then nonfirst_author_keys[record.id] = true end
++    end
++  end
++end
+ 
+ local function is_target_name_start(inlines, index)
+   local first = inlines[index]
+@@ -63,7 +74,7 @@
+   local fourth = inlines[index + 3]
+   local fifth = inlines[index + 4]
+ 
+-  if not (first and second and third and fourth and fifth) then
++  if not (first and second and third) then
+     return false
+   end
+ 
+@@ -71,10 +82,7 @@
+     and (first.text == "O’Leary," or first.text == "O'Leary,")
+     and second.t == "Space"
+     and third.t == "Str"
+-    and third.text == "D."
+-    and fourth.t == "Space"
+-    and fifth.t == "Str"
+-    and (fifth.text == "J." or fifth.text == "J.,")
++    and (third.text == "D." or third.text == "D.,")
+ end
+ 
+ local function underline_target_name(inlines)
+@@ -83,14 +91,12 @@
+ 
+   while i <= #inlines do
+     if is_target_name_start(inlines, i) then
+-      table.insert(output, pandoc.Underline({
+-        inlines[i],
+-        inlines[i + 1],
+-        inlines[i + 2],
+-        inlines[i + 3],
+-        inlines[i + 4],
+-      }))
+-      i = i + 5
++      local count = 3
++      if inlines[i + 3] and inlines[i + 4] and inlines[i + 3].t == "Space" and inlines[i + 4].t == "Str" and (inlines[i + 4].text == "J." or inlines[i + 4].text == "J.,") then count = 5 end
++      local name = {}
++      for offset = 0, count - 1 do table.insert(name, inlines[i + offset]) end
++      table.insert(output, pandoc.Underline(name))
++      i = i + count
+     else
+       table.insert(output, inlines[i])
+       i = i + 1
+--- /dev/null
++++ b/cv-sections.json
+@@ -0,0 +1,24 @@
++{
++  "proceedings": [
++    "oleary2025econ-uncertainty",
++    "oleary2025framework"
++  ],
++  "published": [
++    "madachyolearymcdermott2026genai-se-tips",
++    "olearyledford2026insight"
++  ],
++  "forthcoming": [],
++  "submission": [
++    "hossain2024lean-industry40"
++  ],
++  "preparation": [
++    "oleary2026affordance-bundles",
++    "oleary2026danvas-jose",
++    "oleary2026instructional-media-tradeoffs",
++    "oleary2026user-fit-friction",
++    "oleary2026xr-evaluation-methods"
++  ],
++  "other-publications": [
++    "elliott1996inside-3d-studio-max"
++  ]
++}
+--- /dev/null
++++ b/scripts/prepare_cv_bibliographies.py
+@@ -0,0 +1,19 @@
++"""Proposal prototype: project-local section selection from one refs export."""
++import json
++from pathlib import Path
++
++root = Path(__file__).resolve().parents[1]
++records = json.loads((root / 'refs/cv.json').read_text())
++by_key = {record['id']: record for record in records}
++if len(by_key) != len(records):
++    raise ValueError('Duplicate exported key')
++sections = json.loads((root / 'cv-sections.json').read_text())
++seen = set()
++for name, keys in sections.items():
++    if name not in {'proceedings', 'published', 'forthcoming', 'submission', 'preparation', 'other-publications'}:
++        raise ValueError('Unknown CV section')
++    if len(set(keys)) != len(keys) or seen.intersection(keys):
++        raise ValueError('Duplicate section membership')
++    seen.update(keys)
++    selected = [by_key[key] for key in keys]  # Missing keys fail before rendering.
++    (root / 'refs' / (name + '.json')).write_text(json.dumps(selected, ensure_ascii=False, sort_keys=True, indent=2) + '\n')
