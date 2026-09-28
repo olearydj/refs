@@ -210,11 +210,15 @@ def test_other_profiles_bytes_match_before_identification_only_notes():
             return ('refusal', exc.issue['code'], [entry for entry in exc.issue['details']['entries']
                     if entry['class'] in ('blocking', 'structural', 'unknown')])
 
-    for value in values:
+    # 0.9.1's intentional truncation projections have their own contract and consumer tests.
+    untruncated = [value for value in values if not any(
+        name in ({'family': 'others'}, {'literal': 'others'})
+        for names in value['metadata'].values() if isinstance(names, list) for name in names)]
+    for value in untruncated:
         assert projected(bibliography.serialize, value, 'biblatex-v1') == projected(baseline.serialize, value, 'biblatex-v1')
     # arXiv CSL output now has an intentional repository projection, covered
     # by its own contract and consumer tests rather than this old byte oracle.
-    unchanged_csl = [value for value in values if not value.get('extensions', {}).get('identifiers', {}).get('arxiv')]
+    unchanged_csl = [value for value in untruncated if not value.get('extensions', {}).get('identifiers', {}).get('arxiv')]
     current = json.loads(bibliography.serialize_csl(unchanged_csl)[0])
     # The legacy-event alias is the only allowed change in the remaining set.
     for entry in current:
