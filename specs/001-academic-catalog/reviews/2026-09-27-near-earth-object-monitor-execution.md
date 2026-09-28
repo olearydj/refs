@@ -1,6 +1,6 @@
 # Near-Earth Object Monitor conversion execution — 2026-09-27
 
-**All four entries match the approved proposal exactly.** Both native PDF consumers rendered successfully, and all six in-text author-date citations are identical to the proposal. The no-record gate exits **3**, solely for two absent accepted fixtures. The accepted fixtures were subsequently recorded as described below; no publication adoption or branch merge occurred.
+**All four entries match the approved proposal exactly.** Both native PDF consumers rendered successfully, and all six in-text author-date citations are identical to the proposal. The no-record gate exits **3**, solely for two absent accepted fixtures. The accepted fixtures were recorded, the publication was adopted at `e2231a7`, and both post-adoption checks pass as described below. No refs branch merge has occurred.
 
 ## Backup and scope
 
@@ -12,7 +12,7 @@ Backup `/Volumes/Casa/refs-backups/2026-09-27-before-near-earth-object-monitor-c
 
 One refs project, `near-earth-object-monitor`, has exactly two cited members. Both PDFs cite `nasa-neows` once and `cneos-pha` twice. One planned target, `reports/references.json` using `csl-json-v1`, serves both native consumers: ordinary Quarto PDF with default Chicago author-date, and `agu-pdf` with the bundled AGU CSL and class. Both use citeproc and LuaLaTeX; no engine or style change is needed.
 
-The register selects the existing saved July 20–26 executed Markdown and figures from `.quarto/_freeze` explicitly. Its named scratch preparation checks citation keys, substitutes the JSON bibliography only in the scratch documents, and renders without executing Jupyter. It excludes `.env`, `.repo-retro`, live data/logs, caches and generated artifacts. The whole native publication layout renders; fresh NASA feed acquisition is outside this bibliography gate. This is the same approved boundary used for the proposal.
+The register selects the existing saved July 20–26 executed Markdown and figures from `.quarto/_freeze` explicitly. At the initial gate its scratch preparation checked citation keys, substituted the JSON bibliography in the scratch documents, and rendered without executing Jupyter. After adoption it retains the current source front matter with the saved computed body; no bibliography rewriting remains. It excludes `.env`, `.repo-retro`, live data/logs, caches and generated artifacts. The whole native publication layout renders; fresh NASA feed acquisition is outside this bibliography gate. This is the same approved boundary used for the proposal.
 
 ## Import outcomes by key
 
@@ -57,7 +57,7 @@ Fresh no-record gate `/private/tmp/refs-neo-gate-01`, Quarto 1.10.18, Pandoc 3.1
 
 ## Commits
 
-Execution is isolated on `s2/neo-monitor-execution`. The publication remains at `640b908a440b470c55daba4fd8ba7154a6e612b9`, with exactly the two original untracked `.repo-retro` files. Bibliography, Quarto sources and selected frozen-input hashes remain unchanged. The authorized local `/.repo-retro/` exclude was added before recording to satisfy the clean-tree requirement; the owner’s files remain untouched. This branch contains the register row, this report and [structured execution evidence](2026-09-27-near-earth-object-monitor-execution.json); it now also contains both accepted fixtures.
+Execution is isolated on `s2/neo-monitor-execution`. Before adoption the publication remained at `640b908a440b470c55daba4fd8ba7154a6e612b9`, with the two original `.repo-retro` files left alone. Bibliography, Quarto sources and selected frozen-input hashes remain unchanged. The authorized local `/.repo-retro/` exclude was added before recording to satisfy the clean-tree requirement; the owner’s files remain untouched. This branch contains the register row, this report and [structured execution evidence](2026-09-27-near-earth-object-monitor-execution.json); it now also contains both accepted fixtures.
 
 ## Timing
 
@@ -77,4 +77,12 @@ Session 1 accepted the exact gate in `comms/2026-09-27-211736-s1-neo-gate-accept
 
 Both fixtures were recorded. Every extracted entry and both complete fixture mappings equal the accepted no-record gate exactly. Register provenance records the publication commit, timestamp, tool versions and artifact/fixture hashes. The record command exits 3 with `recorded: true`, correctly describing its pre-record missing-fixture state. No unexpected change occurred.
 
-**Next:** s1’s publication session adopts. Afterward this session checks the adopted configuration and refreshes provenance only under the next decision. No branch merge performed.
+## Adoption and final verification
+
+Session 1’s publication subagent adopted at `e2231a7fe8143dc86a4972e3b6fb42c32a26f4a8`: one `.refs.toml` target, `reports/references.json`, both consumers switched to that export, the hand-kept `.bib` retired, and `docs/refs.md` linked from README and tracked AGENTS instructions. Session 1 reviewed and authorized the conditional final record in `comms/2026-09-27-212159-s1-neo-adopted.md`, quoting the owner: “ok, let's see if you and codex can one shot this”.
+
+The register’s temporary bibliography switch and legacy assertion are removed. The helper combines the current report’s front matter with its saved computed body and selected figures, checks citation keys, and renders both native formats without Jupyter/NASA execution. Thus the project owns its bibliography setting; the previously accepted computational boundary remains explicit.
+
+The no-record run at `/private/tmp/refs-neo-adopted-check-01` exits 0 with all four entries identical to the accepted fixtures. Only after that comparison, the authorized fresh record at `/private/tmp/refs-neo-adopted-record-01` exits 0 with `recorded: true`. Both fixture files remain byte-for-byte unchanged, and their provenance now names adoption commit `e2231a7`. The publication was clean before and after these runs. No source or catalog edits were made during this final check.
+
+**Next:** s1 reviews the completed execution branch and handles its merge gate and guide/ledger updates. No source gap, unexpected reference change or open decision remains.

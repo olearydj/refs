@@ -557,5 +557,36 @@
         }
       }
     ]
+  },
+  "adoption": {
+    "publication_commit": "e2231a7fe8143dc86a4972e3b6fb42c32a26f4a8",
+    "no_record_work": "/private/tmp/refs-neo-adopted-check-01",
+    "record_work": "/private/tmp/refs-neo-adopted-record-01",
+    "no_record_exit_code": 0,
+    "record_exit_code": 0,
+    "identical_entries": 4,
+    "fixture_text_changed": false,
+    "consumers": [
+      {
+        "name": "neo-report",
+        "provenance": {
+          "publication_commit": "e2231a7fe8143dc86a4972e3b6fb42c32a26f4a8",
+          "source": "owner-accepted scratch render (--record)",
+          "recorded_at": "2026-09-28T02:23:13.021845+00:00",
+          "artifact_sha256": "6126c8a0f68c917d011a631b2a83d5885c2d7756784efa14826d231737ec291e",
+          "fixture_sha256": "be8a784a0fc1ddcecba7594274ee1b31e7f4df970404ae550c97f2d6636c5ec8"
+        }
+      },
+      {
+        "name": "neo-report-agu",
+        "provenance": {
+          "publication_commit": "e2231a7fe8143dc86a4972e3b6fb42c32a26f4a8",
+          "source": "owner-accepted scratch render (--record)",
+          "recorded_at": "2026-09-28T02:23:13.026136+00:00",
+          "artifact_sha256": "b390df52a870b269c85f5a7476a4b3655101b1b75813fe96a26318587532293b",
+          "fixture_sha256": "bb5fb4ac16597c1b88ff1b0eea6eb84859a84d3f6dc90746eba8c49776146a6f"
+        }
+      }
+    ]
   }
 }

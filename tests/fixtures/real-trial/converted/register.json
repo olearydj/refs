@@ -620,7 +620,7 @@
           "command": [
             "python3",
             "-c",
-            "from pathlib import Path\nimport subprocess,sys\np=Path('.refs-gate');p.mkdir(exist_ok=True)\n(p/'consumer.py').write_text(\"from pathlib import Path\\nimport json,re,shutil,subprocess,sys\\nroot=Path.cwd()\\nassert not (root/'.git').exists(), 'Render helper refuses a live checkout'\\nname=sys.argv[1]\\nassert name in ('neo-report','neo-report-agu')\\nsource=root/f'reports/{name}.qmd'\\nfrozen=root/f'.quarto/_freeze/reports/{name}'\\nmarkdown=json.loads((frozen/'execute-results/tex.json').read_text())['result']['markdown']\\ndef citations(text):\\n text=re.sub(r'^```.*?^```\\\\s*$','',text,flags=re.M|re.S)\\n return re.findall(r'@(nasa-neows|cneos-pha)\\\\b',text)\\nassert citations(source.read_text())==citations(markdown)==['nasa-neows','cneos-pha','cneos-pha']\\n# Temporary pre-adoption preparation: only the copied report points at the export.\\nassert 'bibliography: references.bib' in source.read_text()\\nmarkdown=markdown.replace('bibliography: references.bib','bibliography: references.json').replace('jupyter: python3\\\\n','')\\nsource.write_text(markdown)\\nfigures=root/f'reports/{name}_files/figure-pdf'\\nfigures.parent.mkdir(parents=True,exist_ok=True)\\nshutil.copytree(frozen/'figure-pdf',figures)\\nsubprocess.run(['quarto','render',str(source.relative_to(root)),'--to','agu-pdf' if name.endswith('agu') else 'pdf','--no-execute','-M','latex-auto-install:false'],check=True)\\npdf=root/f'reports/{name}.pdf'\\ntext=subprocess.check_output(['pdftotext','-layout',str(pdf),'-'],text=True)\\nif name.endswith('agu'):\\n text='\\\\n'.join(re.sub(r'^\\\\s*\\\\d+\\\\s+','',line) for line in text.splitlines())\\nassert 'References' in text\\nlines=[x.strip() for x in text.rsplit('References',1)[1].splitlines() if x.strip() and not re.fullmatch(r'[–—-]?\\\\d+[–—-]?',x.strip())]\\nrows={};key=None\\nfor line in lines:\\n if line.startswith('NASA Jet'):key='cneos-pha';rows[key]=line\\n elif line.startswith('National Aeronautics'):key='nasa-neows';rows[key]=line\\n else:\\n  assert key,line\\n  rows[key]+=' '+line\\nassert set(rows)=={'nasa-neows','cneos-pha'}\\noutput=root/'.refs-gate';output.mkdir(exist_ok=True)\\n(output/(name+'.json')).write_text(json.dumps([{'key':k,'text':v} for k,v in rows.items()],ensure_ascii=False))\\nbody=' '.join(text.rsplit('References',1)[0].split())\\ncites=re.findall(r'\\\\((?:National Aeronautics|NASA Jet)[^)]*\\\\)',body)\\nassert len(cites)==3\\n(output/(name+'-citations.json')).write_text(json.dumps(cites))\\n\")\nsubprocess.run([sys.executable,str(p/'consumer.py'),'neo-report'],check=True)\n"
+            "from pathlib import Path\nimport subprocess,sys\np=Path('.refs-gate');p.mkdir(exist_ok=True)\n(p/'consumer.py').write_text(\"from pathlib import Path\\nimport json,re,shutil,subprocess,sys\\nroot=Path.cwd()\\nassert not (root/'.git').exists(), 'Render helper refuses a live checkout'\\nname=sys.argv[1]\\nassert name in ('neo-report','neo-report-agu')\\nsource=root/f'reports/{name}.qmd'\\nfrozen=root/f'.quarto/_freeze/reports/{name}'\\nmarkdown=json.loads((frozen/'execute-results/tex.json').read_text())['result']['markdown']\\ndef citations(text):\\n text=re.sub(r'^```.*?^```\\\\s*$','',text,flags=re.M|re.S)\\n return re.findall(r'@(nasa-neows|cneos-pha)\\\\b',text)\\nassert citations(source.read_text())==citations(markdown)==['nasa-neows','cneos-pha','cneos-pha']\\n# Use current document metadata with its saved computed body; do not rewrite bibliography settings.\\nfrontmatter=source.read_text().split('---',2)\\nsaved=markdown.split('---',2)\\nassert len(frontmatter)==len(saved)==3\\nmarkdown='---'+frontmatter[1]+'---'+saved[2]\\nmarkdown=markdown.replace('jupyter: python3\\\\n','')\\nsource.write_text(markdown)\\nfigures=root/f'reports/{name}_files/figure-pdf'\\nfigures.parent.mkdir(parents=True,exist_ok=True)\\nshutil.copytree(frozen/'figure-pdf',figures)\\nsubprocess.run(['quarto','render',str(source.relative_to(root)),'--to','agu-pdf' if name.endswith('agu') else 'pdf','--no-execute','-M','latex-auto-install:false'],check=True)\\npdf=root/f'reports/{name}.pdf'\\ntext=subprocess.check_output(['pdftotext','-layout',str(pdf),'-'],text=True)\\nif name.endswith('agu'):\\n text='\\\\n'.join(re.sub(r'^\\\\s*\\\\d+\\\\s+','',line) for line in text.splitlines())\\nassert 'References' in text\\nlines=[x.strip() for x in text.rsplit('References',1)[1].splitlines() if x.strip() and not re.fullmatch(r'[–—-]?\\\\d+[–—-]?',x.strip())]\\nrows={};key=None\\nfor line in lines:\\n if line.startswith('NASA Jet'):key='cneos-pha';rows[key]=line\\n elif line.startswith('National Aeronautics'):key='nasa-neows';rows[key]=line\\n else:\\n  assert key,line\\n  rows[key]+=' '+line\\nassert set(rows)=={'nasa-neows','cneos-pha'}\\noutput=root/'.refs-gate';output.mkdir(exist_ok=True)\\n(output/(name+'.json')).write_text(json.dumps([{'key':k,'text':v} for k,v in rows.items()],ensure_ascii=False))\\nbody=' '.join(text.rsplit('References',1)[0].split())\\ncites=re.findall(r'\\\\((?:National Aeronautics|NASA Jet)[^)]*\\\\)',body)\\nassert len(cites)==3\\n(output/(name+'-citations.json')).write_text(json.dumps(cites))\\n\")\nsubprocess.run([sys.executable,str(p/'consumer.py'),'neo-report'],check=True)\n"
           ],
           "artifact": ".refs-gate/neo-report.json",
           "extract": {
@@ -654,9 +654,9 @@
           },
           "style": "Native Quarto default Chicago author-date PDF; citeproc/LuaLaTeX, saved executed Markdown and figures, no fresh NASA API acquisition",
           "fixture_provenance": {
-            "publication_commit": "640b908a440b470c55daba4fd8ba7154a6e612b9",
+            "publication_commit": "e2231a7fe8143dc86a4972e3b6fb42c32a26f4a8",
             "source": "owner-accepted scratch render (--record)",
-            "recorded_at": "2026-09-28T02:18:22.627992+00:00",
+            "recorded_at": "2026-09-28T02:23:13.021845+00:00",
             "artifact_sha256": "6126c8a0f68c917d011a631b2a83d5885c2d7756784efa14826d231737ec291e",
             "fixture_sha256": "be8a784a0fc1ddcecba7594274ee1b31e7f4df970404ae550c97f2d6636c5ec8"
           }
@@ -700,17 +700,17 @@
           },
           "style": "Native agu-pdf layout and bundled American Geophysical Union CSL; citeproc/LuaLaTeX, saved executed Markdown and figures, no fresh NASA API acquisition",
           "fixture_provenance": {
-            "publication_commit": "640b908a440b470c55daba4fd8ba7154a6e612b9",
+            "publication_commit": "e2231a7fe8143dc86a4972e3b6fb42c32a26f4a8",
             "source": "owner-accepted scratch render (--record)",
-            "recorded_at": "2026-09-28T02:18:22.632659+00:00",
+            "recorded_at": "2026-09-28T02:23:13.026136+00:00",
             "artifact_sha256": "b390df52a870b269c85f5a7476a4b3655101b1b75813fe96a26318587532293b",
             "fixture_sha256": "bb5fb4ac16597c1b88ff1b0eea6eb84859a84d3f6dc90746eba8c49776146a6f"
           }
         }
       ],
       "proposal_commit": "4a69c29",
-      "execution_source_commit": "640b908a440b470c55daba4fd8ba7154a6e612b9",
-      "notes": "Pre-adoption preparation uses the explicitly selected saved July 20–26 computed Markdown and figures, checks cited keys against each current source, switches only scratch bibliography settings and disables Jupyter execution. Retire the legacy bibliography assertion/switch after adoption; retain the documented saved-computation render boundary."
+      "execution_source_commit": "e2231a7fe8143dc86a4972e3b6fb42c32a26f4a8",
+      "notes": "Adopted configuration. Each full native PDF uses current report front matter with explicitly selected saved computed Markdown body and figures, checks citation keys against the current source, and disables fresh Jupyter/NASA execution. No bibliography switch or legacy assertion remains."
     }
   ]
 }
