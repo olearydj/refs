@@ -177,6 +177,8 @@ def filename(record: dict, original: str, label: str | None = None, *, report_fa
         name += f'-{edition}E'
     elif version:
         name += '-v' + re.sub(r'[^\w.-]', '', version.removeprefix('v'))
-    slug = ''.join(char for char in label or '' if char.isalpha() or char.isdigit() or char in '.-')
+    spaced = re.sub(r'\s', '-', label or '')
+    slug = ''.join(char for char in spaced if char.isalpha() or char.isdigit() or char in '.-')
+    slug = re.sub(r'-+', '-', slug).strip('-')
     result = f'{name}-{year}' + (f'-{slug}' if slug else '') + Path(original).suffix
     return (result, False) if report_fallback else result

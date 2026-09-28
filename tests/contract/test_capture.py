@@ -146,7 +146,7 @@ def test_intake_preview_matches_executed_filename(initialized, tmp_path, referen
     before = (tmp_path / 'cat/catalog.sqlite').read_bytes()
     preview = initialized(*args, '--dry-run')['data']
     proposed = preview['file_action'] if command == 'add' else preview
-    expected = tmp_path / 'lib/unfiled' / ('LearningPython-2024' + ('-probelabel' if label else '') + '.pdf')
+    expected = tmp_path / 'lib/unfiled' / ('LearningPython-2024' + ('-probe-label' if label else '') + '.pdf')
     assert proposed['destination'] == str(expected)
     assert not expected.exists()
     assert path.read_bytes() == b'%PDF preview parity'
@@ -156,3 +156,31 @@ def test_intake_preview_matches_executed_filename(initialized, tmp_path, referen
     assert actual['destination'] == proposed['destination']
     assert expected.read_bytes() == b'%PDF preview parity'
     assert path.exists() == (mode == 'copy')
+    source_id = executed['id'] if command == 'add' else source['id']
+    saved = initialized('show', source_id)['data']['resources'][0]
+    assert saved['label'] == label
+    assert saved['relative'] == str(expected.relative_to(tmp_path / 'lib'))
+
+
+@pytest.mark.parametrize('command', [('add',), ('resource', 'add')])
+def test_label_help_describes_short_tags(human, command):
+    output = human(*command, '--help')
+    for text in ('Short tag', 'one or two words', 'hyphenated', 'scan', 'capture', 'r2023-06-03'):
+        assert text in output
+
+
+def test_existing_filename_and_stored_label_survive_new_intake(initialized, tmp_path, reference_path):
+    source = initialized('add', '--format', 'refs', '--input', reference_path)['data']
+    legacy = tmp_path / 'LearningPython-2024-probelabel.pdf'
+    legacy.write_bytes(b'%PDF existing spelling')
+    old = initialized('resource', 'add', source['id'], '--path', legacy,
+                      '--copy', '--keep-name', '--label', 'probe label')['data']
+    fresh = tmp_path / 'new.pdf'
+    fresh.write_bytes(b'%PDF new content')
+    initialized('resource', 'add', source['id'], '--path', fresh, '--copy', '--label', 'probe label')
+    saved = initialized('show', source['id'])['data']['resources']
+    prior = next(item for item in saved if item['id'] == old['id'])
+    assert prior['relative'] == 'unfiled/LearningPython-2024-probelabel.pdf'
+    assert prior['label'] == 'probe label'
+    assert (tmp_path / 'lib' / prior['relative']).read_bytes() == b'%PDF existing spelling'
+    assert (tmp_path / 'lib/unfiled/LearningPython-2024-probe-label.pdf').read_bytes() == b'%PDF new content'

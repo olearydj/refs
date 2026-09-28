@@ -97,3 +97,27 @@ def test_other_title_punctuation_still_separates_words(separator):
     value = record(title='Model' + separator + 'based Guide')
     assert naming.key(value) == 'smith-2024-modelBased'
     assert naming.filename(value, 'download.pdf') == 'ModelBasedGuide-2024.pdf'
+
+
+@pytest.mark.parametrize('label', [
+    'transcription', 'scan', 'capture', 'PDF', 'r2023-06-03', 'mobile', 'figure-ruby-photo-1',
+])
+def test_single_token_label_filename_is_unchanged(label):
+    assert naming.filename(record(), 'download.pdf', label) == f'TheTuringTrap-2024-{label}.pdf'
+
+
+@pytest.mark.parametrize(('label', 'segment'), [
+    ('Author-hosted full text (journal article)', 'Author-hosted-full-text-journal-article'),
+    ('  scan\t\n copy\u00a0 text  ', 'scan-copy-text'),
+    ('--scan--- - copy--', 'scan-copy'),
+    ('scan-()-copy', 'scan-copy'),
+    ('r2023.06.03 PDF', 'r2023.06.03-PDF'),
+    ('café 日本語', 'café-日本語'),
+    ('!!! / () _', ''),
+    ('---', ''),
+    ('', ''),
+    (None, ''),
+])
+def test_label_filename_segment_normalizes_whitespace_and_hyphens(label, segment):
+    expected = 'TheTuringTrap-2024' + ('-' + segment if segment else '') + '.pdf'
+    assert naming.filename(record(), 'download.pdf', label) == expected
