@@ -56,7 +56,7 @@ A software record's version is the release current on the record's accessed date
 
 ## After conversion: adding a source
 
-A converted project adds sources through the catalog, never by editing the export. The sequence is the conversion's execution half in small: backup named for the change; the record added as refs JSON with the project's case policy, its file linked or copied and labelled as the project does, and its capture note in context; the key cited in the project; `refs export` with no arguments; the gate run without recording; its diff read, expecting only the new entries and any renumbering; then the record run from a clean tree at a commit, committed on a branch for the review session to merge. A project's own `docs/refs.md` points here and adds only what is particular to that project.
+A converted project adds sources through the catalog, never by editing the export. The sequence is the conversion's execution half in small, without a backup for a single added source (owner, 2026-09-28: "I don't think one-offs need backups at this point"): the record added as refs JSON with the project's case policy, its file linked or copied and labelled as the project does, and its capture note in context; the key cited in the project; `refs export` with no arguments; the gate run without recording; its diff read, expecting only the new entries and any renumbering; then the record run from a clean tree at a commit, committed on a branch for the review session to merge. A project's own `docs/refs.md` points here and adds only what is particular to that project.
 
 ## Report template
 
