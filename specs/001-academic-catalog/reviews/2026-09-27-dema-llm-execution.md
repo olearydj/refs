@@ -1,6 +1,6 @@
 # dema-llm conversion execution — 2026-09-27
 
-**Stopped at the export gate.** All four native consumers rendered and all 80 reference wordings match the [approved proposal](2026-09-27-dema-llm-proposal.md), including its planned access-date additions. No reference is missing. TDD HTML has an unpredicted renumbering of all 34 bibliography entries; its 43 in-text links also retain a pre-existing displayed-number mismatch. Those findings need owner review. No `--record`, live publication export, adoption, publication commit or branch merge has occurred.
+**Gate accepted and fixtures recorded.** Owner decision relayed in `comms/2026-09-27-185859-s1-dema-llm-gate-accepted.md`: “html ref nums - the change is ok for this doc, tdd is internal”, “html defect - write it up for dema-llm if that is the right place to investigate / fix it”, and “proceed”. The fresh `--record` run at `/private/tmp/refs-dema-record-01` recorded all four fixtures against clean publication `7599aee94d14a437b94b9f2f4b71de0ebb89125d`. All 80 extracted entries are byte-for-byte identical to the accepted gate. The harness reports `recorded: true`; exit 1 reflects its pre-record comparison against four absent fixtures. The register now retains each fixture's publication, tool and recording provenance. Publication adoption and branch merge remain with s1 and the publication session. Owner-download intake follows separately.
 
 ## Backup and scope
 
@@ -140,7 +140,7 @@ Two extraction checks caught and corrected a following-callout leak and a wrappe
 
 ## Commits, timing and verification
 
-Execution work is isolated on `s2/dema-llm-execution`, based on `ded1eb8`; the register, this report and its evidence are the branch changes. The proposal worktree remains separate. Main’s untracked `worktrees/` is local workspace state, not a claim of a clean main tree. The publication remains clean at `7599aee`; no source, style, configuration, generated artifact, delivered PDD, `pre-pipyer` state or filename was changed there. No fixture was written and no export targeted the publication.
+Execution work is isolated on `s2/dema-llm-execution`, based on `ded1eb8`; the register, this report and its evidence are the branch changes. The proposal worktree remains separate. Main’s untracked `worktrees/` is local workspace state, not a claim of a clean main tree. The publication remains clean at `7599aee`; no source, style, configuration, generated artifact, delivered PDD, `pre-pipyer` state or filename was changed there. Four accepted fixtures were subsequently recorded as described above; no export targeted the publication.
 
 The run began after the 17:04 owner authorization. Verification covers the validated backup, 33 exact imported originals, 37 approved canonical records, 34 memberships, three symmetric links, 26 final file hashes and all four native artifact gates. Quarto 1.10.18, Pandoc 3.10, XeLaTeX/TeX Live 2026 and Poppler 26.09.0 were used. The original PDD is the existing biber artifact; its bibliography-only baseline extraction also remains in the prior proposal evidence. No product code changed, so verification uses the actual conversion rather than an unrelated full product suite.
 
@@ -150,4 +150,4 @@ For refs: no new product feature is proposed by this pass. Preserve the separate
 
 For the guide: full book gates need a check that displayed citation numbers agree with their hyperlink destinations, as bibliography-only previews do not expose that mismatch. Record-order changes can renumber an HTML appendix independently of PDF first-citation order. PDF footer removal must not discard a numeric URL continuation, and bibliography extraction must stop before following callouts. The pre-adoption register helper must be retired when the live publication adopts the switches; its assertions deliberately expect legacy input settings.
 
-**Stop:** s1/owner review the gate, the HTML findings and eleven disclosed fetch gaps. Recording fixtures, adoption and branch merge remain separate owner gates.
+**Next:** s1 coordinates publication adoption. Complete the separately authorized owner-download intake and gap context; do not merge this branch or edit the publication.

@@ -425,7 +425,14 @@
               "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
             }
           },
-          "style": "Native Quarto IEEE citeproc; approved scratch-only speech fallback and bibliography/key/engine switch; full tdd-html artifact rendered, bibliography extracted to JSON"
+          "style": "Native Quarto IEEE citeproc; approved scratch-only speech fallback and bibliography/key/engine switch; full tdd-html artifact rendered, bibliography extracted to JSON",
+          "fixture_provenance": {
+            "publication_commit": "7599aee94d14a437b94b9f2f4b71de0ebb89125d",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-28T00:26:53.459803+00:00",
+            "artifact_sha256": "2c3ad5314ce005383e0997c003d237130bb5b639e5d0c97b4786282315fc73fc",
+            "fixture_sha256": "7c0d1487aeda64ff09b8e04f750be2d3fd1e18659ff1232df24574de1e4a8ea6"
+          }
         },
         {
           "name": "tdd-pdf",
@@ -464,7 +471,14 @@
               "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
             }
           },
-          "style": "Native Quarto IEEE citeproc; approved scratch-only speech fallback and bibliography/key/engine switch; full tdd-pdf artifact rendered, bibliography extracted to JSON"
+          "style": "Native Quarto IEEE citeproc; approved scratch-only speech fallback and bibliography/key/engine switch; full tdd-pdf artifact rendered, bibliography extracted to JSON",
+          "fixture_provenance": {
+            "publication_commit": "7599aee94d14a437b94b9f2f4b71de0ebb89125d",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-28T00:26:53.464147+00:00",
+            "artifact_sha256": "a44a0fbe17024be9d83da0d570dbe6ea055b4d49190e6bebf1af051faf65ce82",
+            "fixture_sha256": "c6a69552e2c0806b6d21ce047b92fb30fba18c2f08e390d7bf888de9418f27ff"
+          }
         },
         {
           "name": "pdd-docx",
@@ -503,7 +517,14 @@
               "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
             }
           },
-          "style": "Native Quarto IEEE citeproc; approved scratch-only speech fallback and bibliography/key/engine switch; full pdd-docx artifact rendered, bibliography extracted to JSON"
+          "style": "Native Quarto IEEE citeproc; approved scratch-only speech fallback and bibliography/key/engine switch; full pdd-docx artifact rendered, bibliography extracted to JSON",
+          "fixture_provenance": {
+            "publication_commit": "7599aee94d14a437b94b9f2f4b71de0ebb89125d",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-28T00:26:53.468167+00:00",
+            "artifact_sha256": "a786bd935d64b58079377a5c9a7f88e0d06e1a29d1402986838d87c5f3951f99",
+            "fixture_sha256": "51f8f9196d7b353558a29d868b63898a34e79143abab8b7f4001a41f7437b26a"
+          }
         },
         {
           "name": "pdd-pdf",
@@ -542,7 +563,14 @@
               "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
             }
           },
-          "style": "Native Quarto IEEE citeproc; approved scratch-only speech fallback and bibliography/key/engine switch; full pdd-pdf artifact rendered, bibliography extracted to JSON"
+          "style": "Native Quarto IEEE citeproc; approved scratch-only speech fallback and bibliography/key/engine switch; full pdd-pdf artifact rendered, bibliography extracted to JSON",
+          "fixture_provenance": {
+            "publication_commit": "7599aee94d14a437b94b9f2f4b71de0ebb89125d",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-28T00:26:53.472196+00:00",
+            "artifact_sha256": "9151d4e22314c6d4ca7da39d8103e62ddcf32236680785d7b8db74f6a4ef7b80",
+            "fixture_sha256": "8605eb0b56751c63b23cfb4ae0b07a7c30cc5f974453044ff579e24827df49bb"
+          }
         }
       ],
       "proposal_commit": "0eed7d0",
