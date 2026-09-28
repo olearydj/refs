@@ -74,3 +74,26 @@ def test_title_language_warning_requires_unknown_nonascii_letters(text, language
 def test_subtitles_and_hyphenated_words(raw, expected):
     from refs.naming import title_case
     assert title_case(raw, {}) == expected
+
+
+@pytest.mark.parametrize('apostrophe', ["'", '’', 'ʼ'])
+@pytest.mark.parametrize(('title', 'key_title', 'file_title'), [
+    ("The Developer{a}s Playbook", 'developersPlaybook', 'TheDevelopersPlaybook'),
+    ("Model{a}s Accuracy", 'modelsAccuracy', 'ModelsAccuracy'),
+    ("O{a}Reilly Guide", 'oreillyGuide', 'OReillyGuide'),
+    ("{a}Quoted{a} Words", 'quotedWords', 'QuotedWords'),
+    ("Developer{a} s Guide", 'developerS', 'DeveloperSGuide'),
+    ("Model{a}2 Guide", 'model2', 'Model2Guide'),
+    ("Model²{a}s Guide", 'model²S', 'Model²SGuide'),
+])
+def test_title_apostrophes_join_only_between_letters(apostrophe, title, key_title, file_title):
+    value = record(title=title.format(a=apostrophe))
+    assert naming.key(value) == 'smith-2024-' + key_title
+    assert naming.filename(value, 'download.pdf') == file_title + '-2024.pdf'
+
+
+@pytest.mark.parametrize('separator', ['-', '.', '/', '_', ' '])
+def test_other_title_punctuation_still_separates_words(separator):
+    value = record(title='Model' + separator + 'based Guide')
+    assert naming.key(value) == 'smith-2024-modelBased'
+    assert naming.filename(value, 'download.pdf') == 'ModelBasedGuide-2024.pdf'

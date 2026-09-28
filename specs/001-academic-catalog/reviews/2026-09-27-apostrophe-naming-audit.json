@@ -1,0 +1,307 @@
+{
+  "baseline_commit": "072cdd5",
+  "catalog": "/Volumes/Casa/refs/cat/catalog.sqlite",
+  "catalog_meta": {
+    "singleton": 1,
+    "catalog_id": "c03298ee-caee-4e20-aa0c-ddf121aafc0a",
+    "schema_version": 6,
+    "revision": 4840
+  },
+  "catalog_sha256_before_and_after": "17df94f940200bd5b437a8e8c6c0486e71e2b5c0344443a0d5461b99175a21d7",
+  "source_count": 760,
+  "resource_count": 762,
+  "scope": "All catalog sources, including removed, and all registered managed/linked resources. Compare old/new naming on current canonical metadata; generated keys use saved naming settings when available, otherwise current owner settings. Candidates are unsuffixed; no assigned key/path is changed. Imported/manual names may differ from both conventional candidates.",
+  "key_changes": [
+    {
+      "id": "09138c4e-80c6-4542-8902-971508b48b37",
+      "stored_key": "burt2014motor",
+      "state": "active",
+      "title": "The ‘Motorcycle’ Innovator’s Dilemma",
+      "key_origin": "supplied",
+      "policy": "current owner settings",
+      "old_generated": "burt-2014-motorcycleInnovator",
+      "new_generated": "burt-2014-motorcycleInnovators",
+      "stored_matches_old": false,
+      "new_key_already_present": false,
+      "cited_projects": [
+        "zotero-library"
+      ]
+    },
+    {
+      "id": "7610c45d-2df2-4430-b281-3155aa0dd344",
+      "stored_key": "larson-2024-engineeringExecutive",
+      "state": "active",
+      "title": "The Engineering Executive's Primer",
+      "key_origin": "generated",
+      "policy": "saved generation settings",
+      "old_generated": "larson-2024-engineeringExecutive",
+      "new_generated": "larson-2024-engineeringExecutives",
+      "stored_matches_old": true,
+      "new_key_already_present": false,
+      "cited_projects": []
+    },
+    {
+      "id": "3bd1db85-5dc9-460c-9c01-2b6c1927b3d4",
+      "stored_key": "sarkar2023shado",
+      "state": "active",
+      "title": "Shadows Don't Lie and Lines Can't Bend! Generative Models Don't Know Projective Geometry...for Now",
+      "key_origin": "supplied",
+      "policy": "current owner settings",
+      "old_generated": "sarkar-2023-shadowsDon",
+      "new_generated": "sarkar-2023-shadowsDont",
+      "stored_matches_old": false,
+      "new_key_already_present": false,
+      "cited_projects": [
+        "zotero-library"
+      ]
+    },
+    {
+      "id": "6fd93b5a-20a0-46d6-98fe-0b59dcc7ed64",
+      "stored_key": "wilson-2024-developerS",
+      "state": "active",
+      "title": "The Developer's Playbook for Large Language Model Security",
+      "key_origin": "generated",
+      "policy": "saved generation settings",
+      "old_generated": "wilson-2024-developerS",
+      "new_generated": "wilson-2024-developersPlaybook",
+      "stored_matches_old": true,
+      "new_key_already_present": false,
+      "cited_projects": []
+    }
+  ],
+  "filename_changes": [
+    {
+      "key": "bix2020wider",
+      "state": "active",
+      "resource_id": "56af0e48-d8b8-47af-ba14-c9d822be596a",
+      "mode": "managed",
+      "current_path": "/Volumes/Casa/refs/lib/iise2025/engineering-econ/Bix - 2020 - The Wider Context of Samuelson’s MIT Textbook—Depr.pdf",
+      "current_name": "Bix - 2020 - The Wider Context of Samuelson’s MIT Textbook—Depr.pdf",
+      "old_conventional": "TheWiderContextOfSamuelsonSMITTextbookDepressionEraDiscussionsAboutTheValueOfEconomicsEducationForAmericanEngineers-2020-Bix-2020-TheWiderContextofSamuelsonsMITTextbookDepr.pdf.pdf",
+      "new_conventional": "TheWiderContextOfSamuelsonsMITTextbookDepressionEraDiscussionsAboutTheValueOfEconomicsEducationForAmericanEngineers-2020-Bix-2020-TheWiderContextofSamuelsonsMITTextbookDepr.pdf.pdf",
+      "current_matches_old": false,
+      "candidate_path": "/Volumes/Casa/refs/lib/iise2025/engineering-econ/TheWiderContextOfSamuelsonsMITTextbookDepressionEraDiscussionsAboutTheValueOfEconomicsEducationForAmericanEngineers-2020-Bix-2020-TheWiderContextofSamuelsonsMITTextbookDepr.pdf.pdf",
+      "candidate_path_exists": false,
+      "candidate_is_current_file": false,
+      "cited_projects": [
+        "zotero-library"
+      ]
+    },
+    {
+      "key": "bix2020wider",
+      "state": "active",
+      "resource_id": "7bbad051-6184-482d-8815-b9786c5b329f",
+      "mode": "managed",
+      "current_path": "/Volumes/Casa/refs/lib/iise2025/engineering-econ/The-Wider-Context-of-Samuelson-s-MIT-Textbook.html",
+      "current_name": "The-Wider-Context-of-Samuelson-s-MIT-Textbook.html",
+      "old_conventional": "TheWiderContextOfSamuelsonSMITTextbookDepressionEraDiscussionsAboutTheValueOfEconomicsEducationForAmericanEngineers-2020-Snapshot.html",
+      "new_conventional": "TheWiderContextOfSamuelsonsMITTextbookDepressionEraDiscussionsAboutTheValueOfEconomicsEducationForAmericanEngineers-2020-Snapshot.html",
+      "current_matches_old": false,
+      "candidate_path": "/Volumes/Casa/refs/lib/iise2025/engineering-econ/TheWiderContextOfSamuelsonsMITTextbookDepressionEraDiscussionsAboutTheValueOfEconomicsEducationForAmericanEngineers-2020-Snapshot.html",
+      "candidate_path_exists": false,
+      "candidate_is_current_file": false,
+      "cited_projects": [
+        "zotero-library"
+      ]
+    },
+    {
+      "key": "burt2014motor",
+      "state": "active",
+      "resource_id": "18c955ca-ba6f-4bdf-9f51-fa18f5e53ffd",
+      "mode": "managed",
+      "current_path": "/Volumes/Casa/refs/lib/web/pd/the-motorcycle-innovators-dilemma.html",
+      "current_name": "the-motorcycle-innovators-dilemma.html",
+      "old_conventional": "TheMotorcycleInnovatorSDilemma-2014-Snapshot.html",
+      "new_conventional": "TheMotorcycleInnovatorsDilemma-2014-Snapshot.html",
+      "current_matches_old": false,
+      "candidate_path": "/Volumes/Casa/refs/lib/web/pd/TheMotorcycleInnovatorsDilemma-2014-Snapshot.html",
+      "candidate_path_exists": false,
+      "candidate_is_current_file": false,
+      "cited_projects": [
+        "zotero-library"
+      ]
+    },
+    {
+      "key": "burt2014motor",
+      "state": "active",
+      "resource_id": "330e2533-08b2-4b82-b4c4-2999aa324a02",
+      "mode": "managed",
+      "current_path": "/Volumes/Casa/refs/lib/web/pd/Burt - 2014 - The ‘Motorcycle’ Innovator’s Dilemma.pdf",
+      "current_name": "Burt - 2014 - The ‘Motorcycle’ Innovator’s Dilemma.pdf",
+      "old_conventional": "TheMotorcycleInnovatorSDilemma-2014-Burt-2014-TheMotorcycleInnovatorsDilemma.pdf.pdf",
+      "new_conventional": "TheMotorcycleInnovatorsDilemma-2014-Burt-2014-TheMotorcycleInnovatorsDilemma.pdf.pdf",
+      "current_matches_old": false,
+      "candidate_path": "/Volumes/Casa/refs/lib/web/pd/TheMotorcycleInnovatorsDilemma-2014-Burt-2014-TheMotorcycleInnovatorsDilemma.pdf.pdf",
+      "candidate_path_exists": false,
+      "candidate_is_current_file": false,
+      "cited_projects": [
+        "zotero-library"
+      ]
+    },
+    {
+      "key": "larson-2024-engineeringExecutive",
+      "state": "active",
+      "resource_id": "920b7c99-afde-4066-a289-257b10d6e881",
+      "mode": "managed",
+      "current_path": "/Volumes/Casa/refs/lib/unfiled/TheEngineeringExecutiveSPrimer-2024.pdf",
+      "current_name": "TheEngineeringExecutiveSPrimer-2024.pdf",
+      "old_conventional": "TheEngineeringExecutiveSPrimer-2024.pdf",
+      "new_conventional": "TheEngineeringExecutivesPrimer-2024.pdf",
+      "current_matches_old": true,
+      "candidate_path": "/Volumes/Casa/refs/lib/unfiled/TheEngineeringExecutivesPrimer-2024.pdf",
+      "candidate_path_exists": true,
+      "candidate_is_current_file": true,
+      "cited_projects": []
+    },
+    {
+      "key": "rico2023gener",
+      "state": "active",
+      "resource_id": "5a8a00b7-66b3-4894-8d3e-1c7cd5102e9a",
+      "mode": "managed",
+      "current_path": "/Volumes/Casa/refs/lib/web/Rico - 2023 - Generative Models Aren't Databases.pdf",
+      "current_name": "Rico - 2023 - Generative Models Aren't Databases.pdf",
+      "old_conventional": "GenerativeModelsArenTDatabases-2023-Rico-2023-GenerativeModelsArentDatabases.pdf.pdf",
+      "new_conventional": "GenerativeModelsArentDatabases-2023-Rico-2023-GenerativeModelsArentDatabases.pdf.pdf",
+      "current_matches_old": false,
+      "candidate_path": "/Volumes/Casa/refs/lib/web/GenerativeModelsArentDatabases-2023-Rico-2023-GenerativeModelsArentDatabases.pdf.pdf",
+      "candidate_path_exists": false,
+      "candidate_is_current_file": false,
+      "cited_projects": [
+        "zotero-library"
+      ]
+    },
+    {
+      "key": "rico2023gener",
+      "state": "active",
+      "resource_id": "fff78de1-81fa-480f-8c6a-626c336acbde",
+      "mode": "managed",
+      "current_path": "/Volumes/Casa/refs/lib/web/generative-models-arent-databases.html",
+      "current_name": "generative-models-arent-databases.html",
+      "old_conventional": "GenerativeModelsArenTDatabases-2023-Snapshot.html",
+      "new_conventional": "GenerativeModelsArentDatabases-2023-Snapshot.html",
+      "current_matches_old": false,
+      "candidate_path": "/Volumes/Casa/refs/lib/web/GenerativeModelsArentDatabases-2023-Snapshot.html",
+      "candidate_path_exists": false,
+      "candidate_is_current_file": false,
+      "cited_projects": [
+        "zotero-library"
+      ]
+    },
+    {
+      "key": "sarkar2023shado",
+      "state": "active",
+      "resource_id": "a2a4401d-ff13-445e-828c-20648b341886",
+      "mode": "managed",
+      "current_path": "/Volumes/Casa/refs/lib/papers/aiml/2311-c.html",
+      "current_name": "2311-c.html",
+      "old_conventional": "ShadowsDonTLieAndLinesCanTBendGenerativeModelsDonTKnowProjectiveGeometryForNow-2023-arXiv.orgSnapshot.html",
+      "new_conventional": "ShadowsDontLieAndLinesCantBendGenerativeModelsDontKnowProjectiveGeometryForNow-2023-arXiv.orgSnapshot.html",
+      "current_matches_old": false,
+      "candidate_path": "/Volumes/Casa/refs/lib/papers/aiml/ShadowsDontLieAndLinesCantBendGenerativeModelsDontKnowProjectiveGeometryForNow-2023-arXiv.orgSnapshot.html",
+      "candidate_path_exists": false,
+      "candidate_is_current_file": false,
+      "cited_projects": [
+        "zotero-library"
+      ]
+    },
+    {
+      "key": "sarkar2023shado",
+      "state": "active",
+      "resource_id": "ee7df5b7-56a4-4886-986b-2cf7be92cb86",
+      "mode": "managed",
+      "current_path": "/Volumes/Casa/refs/lib/papers/aiml/Sarkar et al. - 2023 - Shadows Don't Lie and Lines Can't Bend! Generative.pdf",
+      "current_name": "Sarkar et al. - 2023 - Shadows Don't Lie and Lines Can't Bend! Generative.pdf",
+      "old_conventional": "ShadowsDonTLieAndLinesCanTBendGenerativeModelsDonTKnowProjectiveGeometryForNow-2023-Sarkaretal.-2023-ShadowsDontLieandLinesCantBendGenerative.pdf.pdf",
+      "new_conventional": "ShadowsDontLieAndLinesCantBendGenerativeModelsDontKnowProjectiveGeometryForNow-2023-Sarkaretal.-2023-ShadowsDontLieandLinesCantBendGenerative.pdf.pdf",
+      "current_matches_old": false,
+      "candidate_path": "/Volumes/Casa/refs/lib/papers/aiml/ShadowsDontLieAndLinesCantBendGenerativeModelsDontKnowProjectiveGeometryForNow-2023-Sarkaretal.-2023-ShadowsDontLieandLinesCantBendGenerative.pdf.pdf",
+      "candidate_path_exists": false,
+      "candidate_is_current_file": false,
+      "cited_projects": [
+        "zotero-library"
+      ]
+    },
+    {
+      "key": "sequeda-2024-benchmarkUnderstand",
+      "state": "active",
+      "resource_id": "d12357a5-6ef7-4bc4-b039-790906c3467e",
+      "mode": "managed",
+      "current_path": "/Volumes/Casa/refs/lib/unfiled/ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+      "current_name": "ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+      "old_conventional": "ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+      "new_conventional": "ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelsAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+      "current_matches_old": true,
+      "candidate_path": "/Volumes/Casa/refs/lib/unfiled/ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelsAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2024.pdf",
+      "candidate_path_exists": true,
+      "candidate_is_current_file": true,
+      "cited_projects": [
+        "dema-llm"
+      ]
+    },
+    {
+      "key": "sequeda2023",
+      "state": "active",
+      "resource_id": "d059a43a-5011-4f8d-839e-13943c105689",
+      "mode": "linked",
+      "current_path": "/Volumes/Casa/dev/dema-llm/docs/research/references/sequeda2023-llm-text-to-sql.pdf",
+      "current_name": "sequeda2023-llm-text-to-sql.pdf",
+      "old_conventional": "ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelSAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2023.pdf",
+      "new_conventional": "ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelsAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2023.pdf",
+      "current_matches_old": false,
+      "candidate_path": "/Volumes/Casa/dev/dema-llm/docs/research/references/ABenchmarkToUnderstandTheRoleOfKnowledgeGraphsOnLargeLanguageModelsAccuracyForQuestionAnsweringOnEnterpriseSQLDatabases-2023.pdf",
+      "candidate_path_exists": false,
+      "candidate_is_current_file": false,
+      "cited_projects": []
+    },
+    {
+      "key": "skarbez2021revis",
+      "state": "active",
+      "resource_id": "51d54bf7-f35e-45dc-8a82-fb5c965159c5",
+      "mode": "managed",
+      "current_path": "/Volumes/Casa/refs/lib/papers/xr/Skarbez et al. - 2021 - Revisiting Milgram and Kishino's Reality-Virtualit.pdf",
+      "current_name": "Skarbez et al. - 2021 - Revisiting Milgram and Kishino's Reality-Virtualit.pdf",
+      "old_conventional": "RevisitingMilgramAndKishinoSRealityVirtualityContinuum-2021-Skarbezetal.-2021-RevisitingMilgramandKishinosReality-Virtualit.pdf.pdf",
+      "new_conventional": "RevisitingMilgramAndKishinosRealityVirtualityContinuum-2021-Skarbezetal.-2021-RevisitingMilgramandKishinosReality-Virtualit.pdf.pdf",
+      "current_matches_old": false,
+      "candidate_path": "/Volumes/Casa/refs/lib/papers/xr/RevisitingMilgramAndKishinosRealityVirtualityContinuum-2021-Skarbezetal.-2021-RevisitingMilgramandKishinosReality-Virtualit.pdf.pdf",
+      "candidate_path_exists": false,
+      "candidate_is_current_file": false,
+      "cited_projects": [
+        "zotero-library"
+      ]
+    },
+    {
+      "key": "ucfopen2026canvasapi",
+      "state": "active",
+      "resource_id": "a523607c-b801-4a59-867f-ec54e4e53d9f",
+      "mode": "managed",
+      "current_path": "/Volumes/Casa/refs/lib/unfiled/CanvasAPIPythonAPIWrapperForInstructureSCanvasLMS-2026-capture.json",
+      "current_name": "CanvasAPIPythonAPIWrapperForInstructureSCanvasLMS-2026-capture.json",
+      "old_conventional": "CanvasAPIPythonAPIWrapperForInstructureSCanvasLMS-v3.6.0-2026-capture.json",
+      "new_conventional": "CanvasAPIPythonAPIWrapperForInstructuresCanvasLMS-v3.6.0-2026-capture.json",
+      "current_matches_old": false,
+      "candidate_path": "/Volumes/Casa/refs/lib/unfiled/CanvasAPIPythonAPIWrapperForInstructuresCanvasLMS-v3.6.0-2026-capture.json",
+      "candidate_path_exists": false,
+      "candidate_is_current_file": false,
+      "cited_projects": [
+        "jose-danvas"
+      ]
+    },
+    {
+      "key": "wilson-2024-developerS",
+      "state": "active",
+      "resource_id": "fd3fa3ee-1449-4add-a3a0-426f770bbf70",
+      "mode": "managed",
+      "current_path": "/Volumes/Casa/refs/lib/unfiled/TheDeveloperSPlaybookForLargeLanguageModelSecurity-2024.pdf",
+      "current_name": "TheDeveloperSPlaybookForLargeLanguageModelSecurity-2024.pdf",
+      "old_conventional": "TheDeveloperSPlaybookForLargeLanguageModelSecurity-2024.pdf",
+      "new_conventional": "TheDevelopersPlaybookForLargeLanguageModelSecurity-2024.pdf",
+      "current_matches_old": true,
+      "candidate_path": "/Volumes/Casa/refs/lib/unfiled/TheDevelopersPlaybookForLargeLanguageModelSecurity-2024.pdf",
+      "candidate_path_exists": true,
+      "candidate_is_current_file": true,
+      "cited_projects": []
+    }
+  ],
+  "unusable_key_candidates": []
+}
