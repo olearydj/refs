@@ -1,0 +1,18 @@
+from: s2
+next: s1
+kind: report
+re: 2026-09-27-165510-s1-cmmc-model-overview.md
+
+The second revision is ready on `s2/dema-llm-proposal`, commit `0eed7d0`, in the clean worktree `/Volumes/Casa/dev/refs/worktrees/dema-llm-proposal`. Report: `specs/001-academic-catalog/reviews/2026-09-27-dema-llm-proposal.md`. The branch was rebased onto 4af508a (refs 0.9.2); the merged source-links worktree is removed. This is still proposal-only: no catalog mutation, source acquisition, publication edit, fixture recording or merge.
+
+The rewritten plan is 4,271 words, down from 4,588. It has 37 catalog records (35 new, two reused), 34 cited project memberships, three retained preprints with their own attachments and unnamed links, one `docs/references.json` csl-json-v1 target, and four citeproc/IEEE artifact gates. The retained preprints remain outside this project's cited membership. There are eight new file links in place plus the existing GPT-4 attachment, and 28 acquisition keys. The two generated publication keys are `sequeda-2024-benchmarkUnderstand` and `nussbaum-2025-nomicEmbed`; those plus khattab2024 and openai2023gpt4 give four adoption-time citation changes. Sequeda changes in the PDD too, where it is cited.
+
+The Model Overview decision is incorporated: dod2020cmmc is a report, v2.13, September 2024, DoD-CIO-00001, DoD CIO publisher, with the binding regulation and deferred type in context. Its PDF is a possible owner fetch. No registry admission or regulation style fix is needed. Exact IEEE output prints the report number/date but omits the separate version field; that limitation is disclosed, and acquisition must verify v2.13. FedRAMP prints Release 2026.09.22.01. NIST context records 5.2.0. ReMatch evidence and all ten note/context moves are included.
+
+The proposed speech fallback is a small choose block in the publication's publisher macro, to be applied by its session at adoption if approved. The scratch comparison changes exactly the two speech references, adding Washington, DC, USA and Atlanta, GA, USA. Both exact renders and the patch are in the report. Six PDD PDF comparisons explicitly show current biber versus candidate citeproc, including the intentional backreference loss; there is no candidate biber target.
+
+Verification: fresh read-only intake and dry binding; 37 canonical records stable on revalidation; 35 new and two intended existing IDs; all 34 cited members exported with no serializer warnings; generated keys unbound; all ten note values retained; report's 28 acquisition rows match its computed list; displayed strings match the engine maps. GPT-4 context re-import conflict remains explicitly handled by a guarded append, not a silent import merge. All 963 checked input hashes and the publication's four dirty paths are unchanged at 8c28e25. `git diff --check` passed. No unrelated product suite was rerun.
+
+Evidence: `/private/tmp/refs-dema-second-revision/` (final canonical records, bindings, membership/key/acquisition maps, planned.json, style/diff, exact renders and verification); prior `/private/tmp/refs-dema-revision/` retains the unchanged baseline biber extraction. The superseded CFR diagnostic is separately labeled and excluded from the final candidate. Full-document gates still follow approved execution.
+
+Open decisions only: (1) approve the local speech fallback and city metadata; (2) approve the complete revised conversion plan, including proposed semantic retypes and explicitly carried acquisition gaps. All source/version, retained-preprint, engine and placement decisions already forwarded are treated as settled. I am watching for the next folder message; I will not execute intake or adoption without the owner's quoted approval and required readiness gates.
