@@ -765,7 +765,14 @@
               "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
             }
           },
-          "style": "Native CV APA style, owner-approved sentence casing; full HTML and Typst PDF rendered, actual references extracted"
+          "style": "Native CV APA style, owner-approved sentence casing; full HTML and Typst PDF rendered, actual references extracted",
+          "fixture_provenance": {
+            "publication_commit": "07d3b2b948d265879edbd35a22fc47a445f37cbd",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-29T05:07:08.212371+00:00",
+            "artifact_sha256": "e9c4064e959509547f95e84c76a0c19c5f0c201fb1bfc8c10a784b61985a9116",
+            "fixture_sha256": "862d849e3be70f51a2759ed4c80f7e1b586c3fb2d919f3d2dad359a40fb06523"
+          }
         },
         {
           "name": "pdf",
@@ -804,10 +811,18 @@
               "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
             }
           },
-          "style": "Native CV APA style, owner-approved sentence casing; full HTML and Typst PDF rendered, actual references extracted"
+          "style": "Native CV APA style, owner-approved sentence casing; full HTML and Typst PDF rendered, actual references extracted",
+          "fixture_provenance": {
+            "publication_commit": "07d3b2b948d265879edbd35a22fc47a445f37cbd",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-29T05:07:08.216710+00:00",
+            "artifact_sha256": "52bf9b4edb400d3eb23de8d8d1fec125c1d01d527316ab5824ac9a17ae2f37b5",
+            "fixture_sha256": "38c320ca27b268694a6993b3385879ccf960b2d728e9e176b3c1a9d5a31e1ec4"
+          }
         }
       ],
-      "notes": "Pre-adoption: first consumer applies the approved CV patch in scratch (manifest, selector, local style/highlighter, activity YAML and split sections), then renders both native formats. Second consumer extracts PDF text using HTML identities and verifies every complete entry in the PDF. Remove adoption patch preparation after Session 1 adopts; retain native extraction. No accepted fixtures yet; no --record authorized."
+      "notes": "Pre-adoption: first consumer applies the approved CV patch in scratch (manifest, selector, local style/highlighter, activity YAML and split sections), then renders both native formats. Second consumer extracts PDF text using HTML identities and verifies every complete entry in the PDF. Remove adoption patch preparation after Session 1 adopts; retain native extraction. Fixtures recorded after owner acceptance (\"looks great\"), communicated in 2026-09-29-000627-s1-cv-gate-accepted.md; both native extractions exactly match the accepted execution gate.",
+      "execution_source_commit": "4ca205e7e788d8b9b548c3889f33b44ff482a3b2"
     }
   ]
 }
