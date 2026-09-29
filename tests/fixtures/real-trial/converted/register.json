@@ -767,9 +767,9 @@
           },
           "style": "Native CV APA style, owner-approved sentence casing; full HTML and Typst PDF rendered, actual references extracted",
           "fixture_provenance": {
-            "publication_commit": "07d3b2b948d265879edbd35a22fc47a445f37cbd",
+            "publication_commit": "84ad8ab0192988ea0e59dfc6fb99815261a289f9",
             "source": "owner-accepted scratch render (--record)",
-            "recorded_at": "2026-09-29T05:07:08.212371+00:00",
+            "recorded_at": "2026-09-29T05:26:10.455082+00:00",
             "artifact_sha256": "e9c4064e959509547f95e84c76a0c19c5f0c201fb1bfc8c10a784b61985a9116",
             "fixture_sha256": "862d849e3be70f51a2759ed4c80f7e1b586c3fb2d919f3d2dad359a40fb06523"
           }
@@ -813,15 +813,15 @@
           },
           "style": "Native CV APA style, owner-approved sentence casing; full HTML and Typst PDF rendered, actual references extracted",
           "fixture_provenance": {
-            "publication_commit": "07d3b2b948d265879edbd35a22fc47a445f37cbd",
+            "publication_commit": "84ad8ab0192988ea0e59dfc6fb99815261a289f9",
             "source": "owner-accepted scratch render (--record)",
-            "recorded_at": "2026-09-29T05:07:08.216710+00:00",
+            "recorded_at": "2026-09-29T05:26:10.459515+00:00",
             "artifact_sha256": "52bf9b4edb400d3eb23de8d8d1fec125c1d01d527316ab5824ac9a17ae2f37b5",
             "fixture_sha256": "38c320ca27b268694a6993b3385879ccf960b2d728e9e176b3c1a9d5a31e1ec4"
           }
         }
       ],
-      "notes": "Adopted configuration. The project carries its section manifest, pre-render selector, local style/highlighter and activity YAML. The first consumer renders both native formats; the second extracts PDF text using HTML identities and verifies every complete entry in the PDF. Fixtures remain the owner-accepted pre-adoption render; recording provenance at the adoption commit awaits owner authorization.",
+      "notes": "Adopted configuration. The project carries its section manifest, pre-render selector, local style/highlighter and activity YAML. The first consumer renders both native formats; the second extracts PDF text using HTML identities and verifies every complete entry in the PDF. Fixtures re-recorded at adopted CV commit 84ad8ab after the owner's conditional \"yes\" (2026-09-29-002457-s1-cv-rerecord-approved.md), with all 44 CV and 379 other entries identical. Fixture bytes are unchanged from the accepted pre-adoption render.",
       "execution_source_commit": "84ad8ab0192988ea0e59dfc6fb99815261a289f9"
     }
   ]
