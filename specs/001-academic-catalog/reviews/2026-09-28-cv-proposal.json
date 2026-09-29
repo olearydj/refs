@@ -1,0 +1,3879 @@
+{
+  "base": "416757e",
+  "publication_commit": "07d3b2b948d265879edbd35a22fc47a445f37cbd",
+  "sections": {
+    "proceedings": [
+      "oleary2025econ-uncertainty",
+      "oleary2025framework"
+    ],
+    "published": [
+      "madachyolearymcdermott2026genai-se-tips",
+      "olearyledford2026insight"
+    ],
+    "forthcoming": [],
+    "submission": [
+      "hossain2024lean-industry40"
+    ],
+    "preparation": [
+      "oleary2026instructional-media-tradeoffs",
+      "oleary-2026-instructionalInformation",
+      "oleary-2026-pipyerEvidence",
+      "oleary2026danvas-jose"
+    ],
+    "other-publications": [
+      "kreitzman-1997-animatingControllers",
+      "oleary-1997-animatingExpressions",
+      "oleary-1997-animatingMultiple"
+    ],
+    "presentations": [
+      "ganesh2026ai-driven-dema",
+      "ganesh2026ai-enhanced-dema",
+      "gadzey2026dema-digital-thread",
+      "oleary-2026-judgmentEconomy",
+      "oleary2025binary-classification",
+      "oleary2025ai4se",
+      "olearyficken2025innovation-culture",
+      "ballard2024role",
+      "ficken2023blending",
+      "oleary-2013-independentGame"
+    ],
+    "patents": [
+      "oleary2009time-dilation"
+    ]
+  },
+  "records": {
+    "oleary2025armr-training": {
+      "schema_version": "1.0",
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/references.bib",
+            "item_key": "oleary2025framework"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "AR/MR",
+            "AR",
+            "MR"
+          ],
+          "preserve_case": false
+        },
+        "container-title": {
+          "protected_terms": [
+            "IISE"
+          ],
+          "preserve_case": false
+        }
+      },
+      "native_type": {
+        "namespace": "bibtex",
+        "value": "inproceedings"
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "6fa9e382-6621-4a6b-9a74-0625221b1a19",
+      "citation_key": "oleary2025framework",
+      "state": "active",
+      "revision": 3,
+      "created_at": "2026-09-27T06:56:14.756176+00:00",
+      "updated_at": "2026-09-29T04:27:53.143109+00:00",
+      "metadata": {
+        "type": "paper-conference",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          }
+        ],
+        "editor": [
+          {
+            "family": "Gentry",
+            "given": "E."
+          },
+          {
+            "family": "Ju",
+            "given": "F."
+          },
+          {
+            "family": "Liu",
+            "given": "X."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025
+            ]
+          ]
+        },
+        "container-title": "Proceedings of the IISE Annual Conference & Expo 2025",
+        "ISBN": "979-8-3313-2546-6",
+        "page": "1829–1834",
+        "publisher": "Institute of Industrial and Systems Engineers",
+        "title": "Evaluating the Effectiveness of AR/MR Technologies in Manufacturing Training: A Multi-Modal Assessment Framework"
+      },
+      "corrected_fields": [
+        "context",
+        "extensions",
+        "legacy_tags",
+        "metadata",
+        "native_type",
+        "overrides",
+        "provenance",
+        "title_parts",
+        "title_protection"
+      ],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "0111c43c-4a8c-4564-9b01-2192f87105d0",
+          "sha256": "0ca4d441f87fd018387f5ec3125b97968b4d9692feb713203f3c8795045887cd",
+          "byte_length": 450,
+          "format": "bib",
+          "origin": "import-applied",
+          "locator": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/references.bib#bytes=1555:2005"
+        },
+        {
+          "id": "7b34d95e-2bd1-43b5-8130-c0489310c31f",
+          "sha256": "0ca4d441f87fd018387f5ec3125b97968b4d9692feb713203f3c8795045887cd",
+          "byte_length": 450,
+          "format": "bib",
+          "origin": "add",
+          "locator": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/references.bib#bytes=1555:2005"
+        }
+      ],
+      "limitations": [],
+      "resources": [
+        {
+          "id": "b1858470-70d6-4073-8a75-f3a4a90abed6",
+          "source_id": "6fa9e382-6621-4a6b-9a74-0625221b1a19",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/_output/submission/related-paper-iise-2025.pdf",
+          "root": null,
+          "relative": null,
+          "label": "PDF",
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "projects": [
+        {
+          "id": "dd8a33bc-2667-43bb-81d3-bdd0fdf659c5",
+          "name": "manufacturing-training-media-tradeoffs"
+        }
+      ],
+      "links": [],
+      "warnings": []
+    },
+    "oleary2025econ-uncertainty": {
+      "schema_version": "1.0",
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown"
+        }
+      ],
+      "title_protection": {
+        "container-title": {
+          "protected_terms": [
+            "IISE"
+          ],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [
+        "proceedings"
+      ],
+      "id": "46c63b32-fc9b-4390-9d6b-92d303a55930",
+      "citation_key": "oleary2025econ-uncertainty",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.148577+00:00",
+      "updated_at": "2026-09-29T04:27:53.148577+00:00",
+      "metadata": {
+        "type": "paper-conference",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Evans",
+            "given": "John L."
+          },
+          {
+            "family": "Park",
+            "given": "Chan"
+          }
+        ],
+        "editor": [
+          {
+            "family": "Gentry",
+            "given": "E."
+          },
+          {
+            "family": "Ju",
+            "given": "F."
+          },
+          {
+            "family": "Liu",
+            "given": "X."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025
+            ]
+          ]
+        },
+        "container-title": "Proceedings of the IISE Annual Conference & Expo 2025",
+        "ISBN": "979-8-3313-2546-6",
+        "page": "1847–1849",
+        "publisher": "Institute of Industrial and Systems Engineers",
+        "title": "Estimating Real-World Uncertainty: Case Studies & Stochastic Models for Graduate Engineering Economy"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "040ec63b-433c-46ad-966d-dc68818f6edc",
+          "sha256": "976ce372a1c8b3680f589a7650d2d8c9e939503cd15a00f7b5946f20b1829617",
+          "byte_length": 1037,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
+    },
+    "olearyledford2026insight": {
+      "schema_version": "1.0",
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+            "item_key": "olearyledford2026insight"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "LLM"
+          ],
+          "preserve_case": false
+        },
+        "container-title": {
+          "protected_terms": [
+            "INSIGHT"
+          ],
+          "preserve_case": false
+        }
+      },
+      "native_type": {
+        "namespace": "bibtex",
+        "value": "article"
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "5c903a55-e2f9-4087-80f9-a6572c639263",
+      "citation_key": "olearyledford2026insight",
+      "state": "active",
+      "revision": 4,
+      "created_at": "2026-09-27T22:07:42.157139+00:00",
+      "updated_at": "2026-09-29T04:27:53.151758+00:00",
+      "metadata": {
+        "type": "article-journal",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Ledford",
+            "given": "Allison B."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026
+            ]
+          ]
+        },
+        "container-title": "INSIGHT",
+        "DOI": "10.1002/inst.70055",
+        "issue": "3",
+        "page": "37–42",
+        "publisher": "International Council on Systems Engineering (INCOSE)",
+        "title": "Trustworthy LLM-Augmented Data Reconciliation for Deployment-Constrained Environments",
+        "volume": "29"
+      },
+      "corrected_fields": [
+        "context",
+        "extensions",
+        "legacy_tags",
+        "metadata",
+        "native_type",
+        "overrides",
+        "provenance",
+        "title_parts",
+        "title_protection"
+      ],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "08ffc04a-ae0b-46d3-8047-9b53628fcc1c",
+          "sha256": "61e2d128dbf7b12b007c751d5faf27918e7ffdab97f6dc983dbfb7c6a3332f7e",
+          "byte_length": 435,
+          "format": "bib",
+          "origin": "add",
+          "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=4757:5192"
+        },
+        {
+          "id": "2cbbbc78-e0a4-49ee-b82d-7c3cb62619c2",
+          "sha256": "61e2d128dbf7b12b007c751d5faf27918e7ffdab97f6dc983dbfb7c6a3332f7e",
+          "byte_length": 435,
+          "format": "bib",
+          "origin": "import-applied",
+          "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=4757:5192"
+        }
+      ],
+      "limitations": [],
+      "resources": [
+        {
+          "id": "5bec7ab7-34f7-46ef-8961-4582593bb34a",
+          "source_id": "5c903a55-e2f9-4087-80f9-a6572c639263",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2026-insight-dema-llm/published/oleary-ledford-2026-insight-dema-llm-version-of-record.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "projects": [
+        {
+          "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+          "name": "dema-llm"
+        }
+      ],
+      "links": [],
+      "warnings": [
+        {
+          "code": "unprotected_capital",
+          "message": "Review unprotected internal capitals",
+          "path": "metadata.container-title",
+          "details": {},
+          "retryable": false
+        }
+      ]
+    },
+    "madachyolearymcdermott2026genai-se-tips": {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "Printed byline names the owner Dan O’Leary.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown"
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "AI"
+          ],
+          "preserve_case": false
+        },
+        "container-title": {
+          "protected_terms": [
+            "INSIGHT"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [
+        "published"
+      ],
+      "id": "e8932e25-8fae-4806-ba42-93f86ee129da",
+      "citation_key": "madachyolearymcdermott2026genai-se-tips",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.156938+00:00",
+      "updated_at": "2026-09-29T04:27:53.156938+00:00",
+      "metadata": {
+        "type": "article-journal",
+        "language": "en",
+        "author": [
+          {
+            "family": "Madachy",
+            "given": "Ray"
+          },
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "McDermott",
+            "given": "Tom"
+          },
+          {
+            "family": "Bank",
+            "given": "Sinan"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026
+            ]
+          ]
+        },
+        "container-title": "INSIGHT",
+        "DOI": "10.1002/inst.70053",
+        "issue": "3",
+        "page": "29–31",
+        "publisher": "International Council on Systems Engineering (INCOSE)",
+        "title": "Twenty Tips for Using Generative AI in Systems Engineering",
+        "volume": "29"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "6d367b88-3f00-4cd8-830d-4f137843c183",
+          "sha256": "66e6541bff15137a5a088ea46e67bff669cd9171c5d3de6935177fccd5238604",
+          "byte_length": 1002,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": [
+        {
+          "code": "unprotected_capital",
+          "message": "Review unprotected internal capitals",
+          "path": "metadata.container-title",
+          "details": {},
+          "retryable": false
+        }
+      ]
+    },
+    "hossain2024lean-industry40": {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "The manuscript system credits the owner as Dan O’Leary.",
+          "origin": "user"
+        },
+        {
+          "text": "Revision R6 was submitted September 10, 2026.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown"
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "Lean",
+            "Industry 4.0"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [
+        "submission"
+      ],
+      "id": "6d60bb8e-4493-470b-8a49-b2a338ad87d7",
+      "citation_key": "hossain2024lean-industry40",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.160149+00:00",
+      "updated_at": "2026-09-29T04:27:53.160149+00:00",
+      "metadata": {
+        "type": "manuscript",
+        "language": "en",
+        "author": [
+          {
+            "family": "Hossain",
+            "given": "Md Monir"
+          },
+          {
+            "family": "Ballard",
+            "given": "Victoria"
+          },
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Purdy",
+            "given": "Gregory"
+          },
+          {
+            "family": "Sesek",
+            "given": "Rich"
+          },
+          {
+            "family": "Harris",
+            "given": "Gregory"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026
+            ]
+          ]
+        },
+        "note": "Revised manuscript under consideration at the International Journal of Lean Six Sigma; IJLSS-08-2025-0243.R6; awaiting referee reply",
+        "title": "Quantifying the Integration Impact of Lean and Industry 4.0 on Operational Efficiency: Insights From an Experimental Case Study"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "498c28a4-54a7-496a-9132-ccafa9cab277",
+          "sha256": "8151f3a314f41e2c361d5f342e3858e0882b3d5776a0c2f4a557671d0b2f4aa7",
+          "byte_length": 1138,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
+    },
+    "ganesh2026ai-enhanced-dema": {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "Submitted byline names the owner Dan O’Leary.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown"
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "AI",
+            "DEMA"
+          ],
+          "preserve_case": false
+        },
+        "event-title": {
+          "protected_terms": [
+            "MBSE2026"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [
+        "presentation",
+        "conference"
+      ],
+      "id": "7bf8c2a8-8b97-4f7b-9920-2742960560b5",
+      "citation_key": "ganesh2026ai-enhanced-dema",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.163475+00:00",
+      "updated_at": "2026-09-29T04:27:53.163475+00:00",
+      "metadata": {
+        "type": "speech",
+        "language": "en",
+        "author": [
+          {
+            "family": "Ganesh",
+            "given": "Parishruthi"
+          },
+          {
+            "family": "Gadzey",
+            "given": "Selom"
+          },
+          {
+            "family": "Bigonah",
+            "given": "Maryam"
+          },
+          {
+            "family": "Arslan",
+            "given": "Berke"
+          },
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Ledford",
+            "given": "Allison"
+          },
+          {
+            "family": "Dozier",
+            "given": "Gerry"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026,
+              6,
+              8
+            ],
+            [
+              2026,
+              6,
+              10
+            ]
+          ]
+        },
+        "event-title": "MBSE2026",
+        "genre": "Poster presentation",
+        "title": "AI-Enhanced DEMA for Streamlined Data Mapping and Efficient Model-Based Systems Engineering"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "cfd3dca9-5ae0-495c-82ad-b148757cd66a",
+          "sha256": "5005c9f757a09b570751f1a87683f713f794b84d07718cd4f41ebaf783c4951f",
+          "byte_length": 1069,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": [
+        {
+          "code": "unprotected_capital",
+          "message": "Review unprotected internal capitals",
+          "path": "metadata.event-title",
+          "details": {},
+          "retryable": false
+        }
+      ]
+    },
+    "oleary2026instructional-media-tradeoffs": {
+      "schema_version": "1.0",
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown"
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [
+        "preparation"
+      ],
+      "id": "8982f160-9034-4a32-88c9-114241fe5be4",
+      "citation_key": "oleary2026instructional-media-tradeoffs",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.166451+00:00",
+      "updated_at": "2026-09-29T04:27:53.166451+00:00",
+      "metadata": {
+        "type": "manuscript",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026
+            ]
+          ]
+        },
+        "note": "Manuscript nearing completion; target journal: Journal of Manufacturing Systems",
+        "title": "Instructional Media and Speed-Quality Tradeoffs in Manufacturing Assembly Training"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "74db848a-bf19-415f-8d27-36a28a4fecdf",
+          "sha256": "cb811862e32a1427abae8e86c8ae52cde8db12e2b85f390384470444812b662b",
+          "byte_length": 656,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
+    },
+    "oleary2009time-dilation": {
+      "schema_version": "1.0",
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown"
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [
+        "patent"
+      ],
+      "id": "94049e1d-7b38-4558-895e-646c3cea98e6",
+      "citation_key": "oleary2009time-dilation",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.169355+00:00",
+      "updated_at": "2026-09-29T04:27:53.169355+00:00",
+      "metadata": {
+        "type": "patent",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Newman",
+            "given": "Theodore"
+          },
+          {
+            "family": "Smith",
+            "given": "Adam L. M."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2009,
+              3,
+              3
+            ]
+          ]
+        },
+        "note": "Inventor",
+        "number": "US7497779B2",
+        "title": "Video Game Including Time Dilation Effect and a Storage Medium Storing Software for the Video Game",
+        "URL": "https://patents.google.com/patent/US7497779B2/en"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "14d0d89c-08c1-4a05-9ce6-05c355cde059",
+          "sha256": "17fb8079b0930d65867861336be07f700e347d1a4476149b10a6f3b1af126620",
+          "byte_length": 753,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
+    },
+    "ganesh2026ai-driven-dema": {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "Printed byline names the owner Dan O’Leary.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown"
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "AI",
+            "DEMA"
+          ],
+          "preserve_case": false
+        },
+        "event-title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [
+        "presentation",
+        "conference"
+      ],
+      "id": "98f319a5-37d4-4fe1-9cee-da7e48edb590",
+      "citation_key": "ganesh2026ai-driven-dema",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.172223+00:00",
+      "updated_at": "2026-09-29T04:27:53.172223+00:00",
+      "metadata": {
+        "type": "speech",
+        "language": "en",
+        "author": [
+          {
+            "family": "Ganesh",
+            "given": "Parishruthi"
+          },
+          {
+            "family": "Gadzey",
+            "given": "Selom"
+          },
+          {
+            "family": "Bigonah",
+            "given": "Maryam"
+          },
+          {
+            "family": "Arslan",
+            "given": "Berke"
+          },
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Ledford",
+            "given": "Allison"
+          },
+          {
+            "family": "Dozier",
+            "given": "Gerry"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026,
+              8,
+              26
+            ],
+            [
+              2026,
+              8,
+              27
+            ]
+          ]
+        },
+        "event-title": "2026 Outreach and Engaged Scholarship Symposium",
+        "event-place": "Auburn University",
+        "genre": "Poster presentation",
+        "title": "AI-Driven DEMA Framework for Data Mapping and Model-Based Systems Engineering"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "1f0a331f-08e3-425c-9965-f3deebe68ae7",
+          "sha256": "acf367fd5721ba981f525b56e4039235055404aa5dfc6ade38585eef087d0b52",
+          "byte_length": 1117,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
+    },
+    "gadzey2026dema-digital-thread": {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "Printed byline names the owner Dan O’Leary.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown"
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "DEMA"
+          ],
+          "preserve_case": false
+        },
+        "event-title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [
+        "presentation",
+        "conference"
+      ],
+      "id": "cbc74b42-e61b-4ccf-ac15-4ddb556326bc",
+      "citation_key": "gadzey2026dema-digital-thread",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.175257+00:00",
+      "updated_at": "2026-09-29T04:27:53.175257+00:00",
+      "metadata": {
+        "type": "speech",
+        "language": "en",
+        "author": [
+          {
+            "family": "Gadzey",
+            "given": "Selom"
+          },
+          {
+            "family": "Ganesh",
+            "given": "Parishruthi"
+          },
+          {
+            "family": "Bigonah",
+            "given": "Maryam"
+          },
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Dozier",
+            "given": "Gerry"
+          },
+          {
+            "family": "Ledford",
+            "given": "Allison B."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026,
+              3,
+              3
+            ],
+            [
+              2026,
+              3,
+              4
+            ]
+          ]
+        },
+        "event-title": "Defense Industrial Base Digital Engineering Summit",
+        "event-place": "Auburn University",
+        "genre": "Poster presentation",
+        "title": "A Data Element Mapping and Analysis (DEMA) Approach for Implementing a Complete Digital Thread"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "2db07c4b-9551-41b8-bd6e-f6fb70eeb62c",
+          "sha256": "3ef43f1c630e1e47d318786f5823d90c6f69cb785dab68c94d2ed79aff896e05",
+          "byte_length": 1097,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": [
+        {
+          "code": "likely_match",
+          "message": "Similar title found; created separately because title alone is not identity",
+          "path": null,
+          "details": {
+            "candidates": [
+              {
+                "id": "b502cc23-fcb0-481a-ad08-5b59ee84e4e6",
+                "citation_key": "ledford2023dissertation"
+              }
+            ]
+          },
+          "retryable": false
+        }
+      ]
+    },
+    "oleary2026danvas-jose": {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "The EdArXiv deposit was declined before public posting; this was not a JOSE submission or rejection.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown"
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "danvas",
+            "Canvas"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [
+        "preparation"
+      ],
+      "id": "592c0ff2-02ec-42f3-ad47-875330bb5b0f",
+      "citation_key": "oleary2026danvas-jose",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.178514+00:00",
+      "updated_at": "2026-09-29T04:27:53.178514+00:00",
+      "metadata": {
+        "type": "manuscript",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026
+            ]
+          ]
+        },
+        "note": "Manuscript complete; awaiting the Journal of Open Source Education reopening submissions",
+        "title": "danvas: Command-Line Course Operations for Canvas Instructors"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "90a7e171-1762-4617-98a7-171f954913c1",
+          "sha256": "68b9946c0368840ec6a711e51199ac857ac43bb9cbf9c3a34c549f21985c6a66",
+          "byte_length": 774,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
+    },
+    "oleary2025binary-classification": {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "The printed poster omits “Comprehensive”; the record uses the accepted program title.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+            "item_key": "oleary2025binary-classification"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        },
+        "event-title": {
+          "protected_terms": [
+            "INFORMS"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "c67972f5-0957-422b-ac42-29f2f1e2ded5",
+      "citation_key": "oleary2025binary-classification",
+      "state": "active",
+      "revision": 4,
+      "created_at": "2026-09-27T22:07:42.152860+00:00",
+      "updated_at": "2026-09-29T04:27:53.181490+00:00",
+      "metadata": {
+        "type": "speech",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025,
+              10,
+              28
+            ]
+          ]
+        },
+        "event-title": "INFORMS Annual Meeting",
+        "event-place": "Atlanta, GA, USA",
+        "genre": "Poster presentation",
+        "title": "Beyond Binary Classification: A Comprehensive Multi-Criteria Assessment System for Programming Assignments"
+      },
+      "corrected_fields": [
+        "context",
+        "extensions",
+        "legacy_tags",
+        "metadata",
+        "native_type",
+        "overrides",
+        "provenance",
+        "title_parts",
+        "title_protection"
+      ],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "a906b461-37d8-48ef-8106-25155bd439e6",
+          "sha256": "b531f6147597d6265e21b4c2a4ad5d18f4353bf7d7270cfcf2ab191a7fb6bbea",
+          "byte_length": 303,
+          "format": "bib",
+          "origin": "add",
+          "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=4452:4755"
+        },
+        {
+          "id": "d95373a8-561b-4bc3-a6e3-82df5350d1a5",
+          "sha256": "b531f6147597d6265e21b4c2a4ad5d18f4353bf7d7270cfcf2ab191a7fb6bbea",
+          "byte_length": 303,
+          "format": "bib",
+          "origin": "import-applied",
+          "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=4452:4755"
+        }
+      ],
+      "limitations": [
+        {
+          "field": "howpublished",
+          "reason": "Preserved from import: howpublished"
+        }
+      ],
+      "resources": [
+        {
+          "id": "5ce1e5ba-5272-45ea-830d-4dc9fa409ce7",
+          "source_id": "c67972f5-0957-422b-ac42-29f2f1e2ded5",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2025-informs-gradebot-poster/poster-oleary-informs25.pptx",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "projects": [
+        {
+          "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+          "name": "dema-llm"
+        }
+      ],
+      "links": [],
+      "warnings": []
+    },
+    "olearyledford2025ai-enhanced-dema": {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "Printed byline names the owner Dan O’Leary.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+            "item_key": "oleary2025ai4se"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "DEMA",
+            "AI"
+          ],
+          "preserve_case": false
+        },
+        "event-title": {
+          "protected_terms": [
+            "AI4SE",
+            "SE4AI",
+            "AI",
+            "SE"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "1838ba66-10ad-487d-99fe-eb26527bcd0d",
+      "citation_key": "oleary2025ai4se",
+      "state": "active",
+      "revision": 4,
+      "created_at": "2026-09-27T22:07:42.131223+00:00",
+      "updated_at": "2026-09-29T04:27:53.184552+00:00",
+      "metadata": {
+        "type": "speech",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Ledford",
+            "given": "Allison B."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025,
+              9
+            ]
+          ]
+        },
+        "event-title": "AI4SE & SE4AI Research and Application Workshop",
+        "event-place": "Washington, DC, USA",
+        "genre": "Workshop presentation",
+        "title": "AI-Enhanced DEMA: Transforming Implicit System Knowledge Into Intelligent, Compliant, and Documented Processes"
+      },
+      "corrected_fields": [
+        "context",
+        "extensions",
+        "legacy_tags",
+        "metadata",
+        "native_type",
+        "overrides",
+        "provenance",
+        "title_parts",
+        "title_protection"
+      ],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "156e7cac-5ab0-435a-8d4e-ad4f7836997f",
+          "sha256": "8dfe3d665aa8759d2d470b9e4e5cd51129939022c625a1113303fc699b9b1503",
+          "byte_length": 383,
+          "format": "bib",
+          "origin": "import-applied",
+          "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=2537:2920"
+        },
+        {
+          "id": "63db5473-daba-43c1-9a9a-174b41cb80d7",
+          "sha256": "8dfe3d665aa8759d2d470b9e4e5cd51129939022c625a1113303fc699b9b1503",
+          "byte_length": 383,
+          "format": "bib",
+          "origin": "add",
+          "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=2537:2920"
+        }
+      ],
+      "limitations": [
+        {
+          "field": "organization",
+          "reason": "Unmapped field preserved verbatim"
+        },
+        {
+          "field": "howpublished",
+          "reason": "Preserved from import: howpublished"
+        }
+      ],
+      "resources": [
+        {
+          "id": "f6b8f063-b80b-479f-92ca-40ddb888fcdc",
+          "source_id": "1838ba66-10ad-487d-99fe-eb26527bcd0d",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2025-ai4se-ai-enhanced-dema/AI4SE_AI_Enhanced_DEMA.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "projects": [
+        {
+          "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+          "name": "dema-llm"
+        }
+      ],
+      "links": [],
+      "warnings": [
+        {
+          "code": "protected_term_missing",
+          "message": "Protected term is absent: AI",
+          "path": "metadata.event-title",
+          "details": {},
+          "retryable": false
+        },
+        {
+          "code": "protected_term_missing",
+          "message": "Protected term is absent: SE",
+          "path": "metadata.event-title",
+          "details": {},
+          "retryable": false
+        }
+      ]
+    },
+    "olearyficken2025innovation-culture": {
+      "schema_version": "1.0",
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown"
+        }
+      ],
+      "title_protection": {
+        "event-title": {
+          "protected_terms": [
+            "IISE"
+          ],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [
+        "presentation",
+        "conference"
+      ],
+      "id": "945785bb-0142-47d4-84de-ba86d2b4a8eb",
+      "citation_key": "olearyficken2025innovation-culture",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.187489+00:00",
+      "updated_at": "2026-09-29T04:27:53.187489+00:00",
+      "metadata": {
+        "type": "speech",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Ficken",
+            "given": "Adam"
+          },
+          {
+            "family": "Evans",
+            "given": "John L."
+          },
+          {
+            "family": "Sesek",
+            "given": "Richard"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025
+            ]
+          ]
+        },
+        "event-title": "IISE Annual Conference & Expo",
+        "genre": "Conference presentation",
+        "title": "Building an Innovation Culture: Lessons From Developing and Scaling a Product Innovation Program in Engineering Education"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": "talk",
+      "originals": [
+        {
+          "id": "906b5597-c007-4bed-a393-783ed4c05944",
+          "sha256": "b92476a0fa9bdf75299e81f398b7ec7cd8d58de124c8b08378f9b2c0f9aa73f5",
+          "byte_length": 885,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
+    },
+    "ballard2024neurodiverse-ergonomics": {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "Printed byline names the owner D. O’Leary.",
+          "origin": "user"
+        },
+        {
+          "text": "The printed poster says “ADHD Employees”; the record uses the accepted program title “Neurodiverse Employees”.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "zotero",
+            "library_uri": "users/5765833",
+            "item_key": "P9HKVMP6"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        },
+        "title-short": {
+          "protected_terms": [],
+          "preserve_case": false
+        },
+        "event-title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "21b2d067-d835-45ba-b15f-3242ffe4fb8b",
+      "citation_key": "ballard2024role",
+      "state": "active",
+      "revision": 5,
+      "created_at": "2026-09-23T00:25:18.482207+00:00",
+      "updated_at": "2026-09-29T04:27:53.190330+00:00",
+      "loc": "dissertation/misc",
+      "metadata": {
+        "type": "speech",
+        "language": "en",
+        "author": [
+          {
+            "family": "Ballard",
+            "given": "Victoria"
+          },
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Sesek",
+            "given": "Richard F."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "event-title": "Applied Ergonomics Conference 2024",
+        "event-place": "Louisville, KY",
+        "genre": "Poster presentation",
+        "title": "The Role of Technology in Enhancing Workplace Ergonomics for Neurodiverse Employees: A Performance and Safety Perspective",
+        "title-short": "The Role of Technology in Enhancing Workplace Ergonomics for Neurodiverse Employees"
+      },
+      "corrected_fields": [
+        "context",
+        "extensions",
+        "legacy_tags",
+        "metadata",
+        "native_type",
+        "overrides",
+        "provenance",
+        "title_parts",
+        "title_protection"
+      ],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "5e2609bb-bac9-41b5-9b1c-7094e5857f8b",
+          "sha256": "fd1f05f72edd07adca212351814468298a2529246d54b9d637bf4aa9e6c3bec5",
+          "byte_length": 1168,
+          "format": "zotero-json",
+          "origin": "import-unchanged",
+          "locator": "/Users/djo/refs-cutover-20260922/zotero-json/items/P9HKVMP6.json"
+        },
+        {
+          "id": "6863adca-5b40-4cf0-b114-b7fdbbb12dd6",
+          "sha256": "fd1f05f72edd07adca212351814468298a2529246d54b9d637bf4aa9e6c3bec5",
+          "byte_length": 1168,
+          "format": "zotero-json",
+          "origin": "add",
+          "locator": "/Users/djo/refs-cutover-20260922/zotero-json/items/P9HKVMP6.json"
+        },
+        {
+          "id": "bf8eee0c-0efd-4cad-9435-a13e65e15b88",
+          "sha256": "fd1f05f72edd07adca212351814468298a2529246d54b9d637bf4aa9e6c3bec5",
+          "byte_length": 1168,
+          "format": "zotero-json",
+          "origin": "import-applied",
+          "locator": "/Users/djo/refs-cutover-20260922/zotero-json/items/P9HKVMP6.json"
+        }
+      ],
+      "limitations": [
+        {
+          "field": "rights",
+          "reason": "Preserved from import: rights"
+        }
+      ],
+      "resources": [
+        {
+          "id": "1276a61b-5fc6-4c6c-ac74-135008cc0547",
+          "source_id": "21b2d067-d835-45ba-b15f-3242ffe4fb8b",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "dissertation/misc/Ballard et al. - 2024 - The Role of Technology in Enhancing Workplace Ergo.pdf",
+          "label": "Ballard et al. - 2024 - The Role of Technology in Enhancing Workplace Ergo.pdf",
+          "media_type": "application/pdf",
+          "digest": "3030af266568ad7bc5740f00024b1bd285e7ea10293bfb239ebea52eb3f706f3",
+          "copied_from": {
+            "path": "/Users/djo/Box Sync/zotero/dissertation/misc/Ballard et al. - 2024 - The Role of Technology in Enhancing Workplace Ergo.pdf",
+            "root": null,
+            "relative": null
+          }
+        }
+      ],
+      "projects": [
+        {
+          "id": "e4c809c7-33ee-4766-bb43-80cf06f9ae7c",
+          "name": "zotero-library"
+        }
+      ],
+      "links": [],
+      "warnings": []
+    },
+    "ficken2023product-innovation-education": {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "Printed byline names the owner Dan O’Leary.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "zotero",
+            "library_uri": "users/5765833",
+            "item_key": "2STLKCQ2"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        },
+        "event-title": {
+          "protected_terms": [
+            "ASEM"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "f69b5542-8f11-45b2-89f1-65191afc260e",
+      "citation_key": "ficken2023blending",
+      "state": "active",
+      "revision": 2,
+      "created_at": "2026-09-23T00:25:16.544622+00:00",
+      "updated_at": "2026-09-29T04:27:53.193010+00:00",
+      "metadata": {
+        "type": "speech",
+        "language": "en",
+        "author": [
+          {
+            "family": "Ficken",
+            "given": "Adam"
+          },
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Evans",
+            "given": "John"
+          },
+          {
+            "family": "Sesek",
+            "given": "Richard"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2023,
+              10,
+              25
+            ]
+          ]
+        },
+        "event-title": "ASEM International Annual Conference",
+        "event-place": "Boulder, CO",
+        "genre": "Conference presentation",
+        "title": "Blending Product Innovation and Engineering Management for Graduate Education"
+      },
+      "corrected_fields": [
+        "context",
+        "extensions",
+        "legacy_tags",
+        "metadata",
+        "native_type",
+        "overrides",
+        "provenance",
+        "title_parts",
+        "title_protection"
+      ],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": "talk",
+      "originals": [
+        {
+          "id": "86078044-88d4-46a9-ab6e-dea05522de4f",
+          "sha256": "816e82931c61f6f423e1b16df8732e74d02143e549253ed26c9a68ec00303870",
+          "byte_length": 1148,
+          "format": "zotero-json",
+          "origin": "import-unchanged",
+          "locator": "/Users/djo/refs-cutover-20260922/zotero-json/items/2STLKCQ2.json"
+        },
+        {
+          "id": "dc7f57c4-4f48-4ff1-8469-64b815b0c2db",
+          "sha256": "816e82931c61f6f423e1b16df8732e74d02143e549253ed26c9a68ec00303870",
+          "byte_length": 1148,
+          "format": "zotero-json",
+          "origin": "add",
+          "locator": "/Users/djo/refs-cutover-20260922/zotero-json/items/2STLKCQ2.json"
+        },
+        {
+          "id": "e3b45fab-6796-4e42-9c7d-76d5ae9212ea",
+          "sha256": "816e82931c61f6f423e1b16df8732e74d02143e549253ed26c9a68ec00303870",
+          "byte_length": 1148,
+          "format": "zotero-json",
+          "origin": "import-applied",
+          "locator": "/Users/djo/refs-cutover-20260922/zotero-json/items/2STLKCQ2.json"
+        }
+      ],
+      "limitations": [
+        {
+          "field": "rights",
+          "reason": "Preserved from import: rights"
+        },
+        {
+          "field": "extra",
+          "reason": "Preserved from import: extra"
+        }
+      ],
+      "resources": [],
+      "projects": [
+        {
+          "id": "e4c809c7-33ee-4766-bb43-80cf06f9ae7c",
+          "name": "zotero-library"
+        }
+      ],
+      "links": [],
+      "warnings": []
+    },
+    "error-patterns": {
+      "schema_version": "1.0",
+      "context": [],
+      "provenance": [],
+      "title_protection": {
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "c16f5614-a002-4174-a0df-d9c308c5739d",
+      "citation_key": "oleary-2026-instructionalInformation",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.195738+00:00",
+      "updated_at": "2026-09-29T04:27:53.195738+00:00",
+      "metadata": {
+        "type": "manuscript",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026
+            ]
+          ]
+        },
+        "note": "Manuscript in preparation; initial work completed; working title",
+        "title": "Instructional Information and Persistent Errors in Manufacturing Assembly Training"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "3cca1dc4-27a6-4972-ba63-a11a90444d91",
+          "sha256": "01ac127385edf34f5e22f87601a026245dd4119aecfcc81a2bfd16f8c7a380eb",
+          "byte_length": 584,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
+    },
+    "pipyer-joss": {
+      "schema_version": "1.0",
+      "context": [],
+      "provenance": [],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "Pipyer",
+            "LLM"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "43ae1acc-b769-4974-ae05-94bf8f8803da",
+      "citation_key": "oleary-2026-pipyerEvidence",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.198609+00:00",
+      "updated_at": "2026-09-29T04:27:53.198609+00:00",
+      "metadata": {
+        "type": "manuscript",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026
+            ]
+          ]
+        },
+        "note": "Manuscript complete; submission to the Journal of Open Source Software awaits public software release",
+        "title": "Pipyer: Evidence-Producing Orchestration for Reproducible LLM-Assisted Research Workflows"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "bc110f78-5256-4c98-9791-af48ca3f1030",
+          "sha256": "429d07f49d96d32fe9f6d734c795c69b52bda6c05e67ad477e3abbb71fe0e7f8",
+          "byte_length": 633,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
+    },
+    "chapter-4": {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "Printed chapter credit names the owner Dan O’Leary.",
+          "origin": "user"
+        },
+        {
+          "text": "Chapter 4 also credits Ted Neuman with “with” attribution.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [],
+      "title_protection": {
+        "container-title": {
+          "protected_terms": [
+            "3D Studio MAX",
+            "III",
+            "Animation",
+            "MAX"
+          ],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "c3303c19-bb90-466c-ab11-b19f64cbafc7",
+      "citation_key": "kreitzman-1997-animatingControllers",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.201613+00:00",
+      "updated_at": "2026-09-29T04:27:53.201613+00:00",
+      "metadata": {
+        "type": "chapter",
+        "language": "en",
+        "author": [
+          {
+            "family": "Kreitzman",
+            "given": "Randy"
+          },
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          }
+        ],
+        "container-author": [
+          {
+            "family": "Maestri",
+            "given": "George"
+          },
+          {
+            "family": "Kennedy",
+            "given": "Sanford"
+          },
+          {
+            "family": "Frantz",
+            "given": "Ralph"
+          },
+          {
+            "family": "Burke",
+            "given": "Steve"
+          },
+          {
+            "family": "Greene",
+            "given": "Jason"
+          },
+          {
+            "family": "Greenleif",
+            "given": "Eric"
+          },
+          {
+            "family": "Hubbell",
+            "given": "Jeremy"
+          },
+          {
+            "family": "Kakert",
+            "given": "Paul"
+          },
+          {
+            "family": "Kreitzman",
+            "given": "Randy"
+          },
+          {
+            "family": "Lamb",
+            "given": "Bob"
+          },
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Vernon",
+            "given": "Andrew"
+          },
+          {
+            "family": "Silverthorne",
+            "given": "Adam"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1997,
+              6
+            ]
+          ]
+        },
+        "container-title": "Inside 3D Studio MAX, Volume III: Animation",
+        "ISBN": "978-1-56205-699-5",
+        "page": "107–147",
+        "publisher": "New Riders Publishing",
+        "publisher-place": "Indianapolis, IN",
+        "title": "Animating With Controllers",
+        "chapter-number": "4"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "abbea24d-9bab-49b9-87ae-798f377e0efb",
+          "sha256": "1f56a52c0f31b5f83451e802125c82850cfc0dcbc070202eeaa0427aa44eed6f",
+          "byte_length": 1567,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
+    },
+    "chapter-5": {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "Printed chapter credit names the owner Dan O’Leary.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [],
+      "title_protection": {
+        "container-title": {
+          "protected_terms": [
+            "3D Studio MAX",
+            "III",
+            "Animation",
+            "MAX"
+          ],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "5492854e-2934-46d4-9bc6-275a1e47ac4c",
+      "citation_key": "oleary-1997-animatingExpressions",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.204676+00:00",
+      "updated_at": "2026-09-29T04:27:53.204676+00:00",
+      "metadata": {
+        "type": "chapter",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          }
+        ],
+        "container-author": [
+          {
+            "family": "Maestri",
+            "given": "George"
+          },
+          {
+            "family": "Kennedy",
+            "given": "Sanford"
+          },
+          {
+            "family": "Frantz",
+            "given": "Ralph"
+          },
+          {
+            "family": "Burke",
+            "given": "Steve"
+          },
+          {
+            "family": "Greene",
+            "given": "Jason"
+          },
+          {
+            "family": "Greenleif",
+            "given": "Eric"
+          },
+          {
+            "family": "Hubbell",
+            "given": "Jeremy"
+          },
+          {
+            "family": "Kakert",
+            "given": "Paul"
+          },
+          {
+            "family": "Kreitzman",
+            "given": "Randy"
+          },
+          {
+            "family": "Lamb",
+            "given": "Bob"
+          },
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Vernon",
+            "given": "Andrew"
+          },
+          {
+            "family": "Silverthorne",
+            "given": "Adam"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1997,
+              6
+            ]
+          ]
+        },
+        "container-title": "Inside 3D Studio MAX, Volume III: Animation",
+        "ISBN": "978-1-56205-699-5",
+        "page": "149–173",
+        "publisher": "New Riders Publishing",
+        "publisher-place": "Indianapolis, IN",
+        "title": "Animating With Expressions",
+        "chapter-number": "5"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "77f6ea9e-b49b-4fe9-a22a-852aa5fe2d63",
+          "sha256": "0f03a743844a118a8af81888a789ea41e27b8ff9b087b240290f3669c3a02344",
+          "byte_length": 1421,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
+    },
+    "chapter-6": {
+      "schema_version": "1.0",
+      "context": [
+        {
+          "text": "Printed chapter credit names the owner Dan O’Leary.",
+          "origin": "user"
+        }
+      ],
+      "provenance": [],
+      "title_protection": {
+        "container-title": {
+          "protected_terms": [
+            "3D Studio MAX",
+            "III",
+            "Animation",
+            "MAX"
+          ],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "fdd26fe3-a953-4499-976c-cb84e07e1f2d",
+      "citation_key": "oleary-1997-animatingMultiple",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.207852+00:00",
+      "updated_at": "2026-09-29T04:27:53.207852+00:00",
+      "metadata": {
+        "type": "chapter",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          }
+        ],
+        "container-author": [
+          {
+            "family": "Maestri",
+            "given": "George"
+          },
+          {
+            "family": "Kennedy",
+            "given": "Sanford"
+          },
+          {
+            "family": "Frantz",
+            "given": "Ralph"
+          },
+          {
+            "family": "Burke",
+            "given": "Steve"
+          },
+          {
+            "family": "Greene",
+            "given": "Jason"
+          },
+          {
+            "family": "Greenleif",
+            "given": "Eric"
+          },
+          {
+            "family": "Hubbell",
+            "given": "Jeremy"
+          },
+          {
+            "family": "Kakert",
+            "given": "Paul"
+          },
+          {
+            "family": "Kreitzman",
+            "given": "Randy"
+          },
+          {
+            "family": "Lamb",
+            "given": "Bob"
+          },
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          },
+          {
+            "family": "Vernon",
+            "given": "Andrew"
+          },
+          {
+            "family": "Silverthorne",
+            "given": "Adam"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1997,
+              6
+            ]
+          ]
+        },
+        "container-title": "Inside 3D Studio MAX, Volume III: Animation",
+        "ISBN": "978-1-56205-699-5",
+        "page": "175–205",
+        "publisher": "New Riders Publishing",
+        "publisher-place": "Indianapolis, IN",
+        "title": "Animating With Multiple Modifiers",
+        "chapter-number": "6"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "6819cbd7-a98d-41c2-a906-a84bcfa42567",
+          "sha256": "37a73dc5d3491d0f185d6494b5f6f93fe79f5189e4eb8cc4f1dd030d866bb7f0",
+          "byte_length": 1425,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV second-revision proposal"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
+    },
+    "oleary-2026-judgmentEconomy": {
+      "schema_version": "1.0",
+      "context": [],
+      "provenance": [
+        {
+          "origin": "agent",
+          "access": "full_text"
+        }
+      ],
+      "title_protection": {
+        "event-title": {
+          "protected_terms": [
+            "AI"
+          ],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        },
+        "title-short": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "9bbf3e16-e4d7-4744-8f4e-b745e7fd15af",
+      "citation_key": "oleary-2026-judgmentEconomy",
+      "state": "active",
+      "revision": 4,
+      "created_at": "2026-09-29T01:37:11.194304+00:00",
+      "updated_at": "2026-09-29T03:00:26.900375+00:00",
+      "metadata": {
+        "type": "speech",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026,
+              2,
+              12
+            ]
+          ]
+        },
+        "event-title": "AI Nexus: Arts, Humanities, and Engineering Converge Conference",
+        "event-place": "Auburn, AL",
+        "genre": "Paper presentation",
+        "title": "The Judgment Economy: Education and the Abstraction of Work",
+        "title-short": "The Judgment Economy"
+      },
+      "corrected_fields": [
+        "context",
+        "metadata.author"
+      ],
+      "key_provenance": {
+        "naming_settings": {
+          "template": "{author}-{year}-{title}",
+          "without_creator": "{title}-{year}",
+          "missing_year": "ND",
+          "title_words": 2,
+          "stopwords": [
+            "a",
+            "an",
+            "and",
+            "for",
+            "in",
+            "of",
+            "on",
+            "or",
+            "the",
+            "to",
+            "with",
+            "your",
+            "is",
+            "are",
+            "was",
+            "be",
+            "as",
+            "at",
+            "by",
+            "from",
+            "into",
+            "not"
+          ],
+          "transliteration_policy": "creator-latin-v1",
+          "corporate_aliases": {}
+        },
+        "origin": "generated",
+        "policy": "creator-latin-v1",
+        "table_version": 1,
+        "table_sha256": "407c585dbbf08e82aca9d51e9657df5cae641b950644bd516c9d282b1a61255e",
+        "unicode_version": "16.0.0"
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "b37c1b6e-a383-4fe9-be06-8f30e4c421d4",
+          "sha256": "422a366960916e016610e4fde91e64cd74e0fd6a203eef6b07302daac22f9d7e",
+          "byte_length": 1470,
+          "format": "refs",
+          "origin": "add",
+          "locator": "/private/tmp/claude-501/nexus/record.json"
+        }
+      ],
+      "limitations": [],
+      "resources": [
+        {
+          "id": "051c3f38-8513-493b-b36b-bc3778af544f",
+          "source_id": "9bbf3e16-e4d7-4744-8f4e-b745e7fd15af",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2026-au-ai_nexus/slides.pptx",
+          "root": null,
+          "relative": null,
+          "label": "slides",
+          "media_type": null,
+          "digest": null
+        },
+        {
+          "id": "2c30ff9c-f8e8-4438-b4de-e63ed4a0ef78",
+          "source_id": "9bbf3e16-e4d7-4744-8f4e-b745e7fd15af",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2026-au-ai_nexus/abstract.pdf",
+          "root": null,
+          "relative": null,
+          "label": "abstract",
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "projects": [],
+      "links": [],
+      "unchanged": true,
+      "warnings": []
+    },
+    "gametech2013": {
+      "schema_version": "1.0",
+      "context": [],
+      "provenance": [],
+      "title_protection": {
+        "event-title": {
+          "protected_terms": [
+            "GameTech"
+          ],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "4cf10dfa-6d28-4ad1-a50d-a3f31b33f35a",
+      "citation_key": "oleary-2013-independentGame",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.213367+00:00",
+      "updated_at": "2026-09-29T04:27:53.213367+00:00",
+      "metadata": {
+        "type": "speech",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2013,
+              4,
+              17
+            ]
+          ]
+        },
+        "event-title": "GameTech Conference",
+        "event-place": "Orlando, FL",
+        "genre": "Conference presentation",
+        "title": "Independent Game Development"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "naming_settings": {},
+        "origin": "generated",
+        "policy": "creator-latin-v1",
+        "table_version": 1,
+        "table_sha256": "407c585dbbf08e82aca9d51e9657df5cae641b950644bd516c9d282b1a61255e",
+        "unicode_version": "16.0.0"
+      },
+      "kind": "talk",
+      "originals": [
+        {
+          "id": "4ab77071-c7fa-4e92-b027-585663bd0db7",
+          "sha256": "bc5e6e33e8456bc334743469e21e381ea82c0c6ec3d37ebdd9bb888a8a67b884",
+          "byte_length": 430,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV and owner-supplied GameTech details"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
+    }
+  },
+  "render": {
+    "baseline": {
+      "entries": {
+        "oleary2025armr-training": {
+          "id": "oleary2025armr-training",
+          "underlined": [],
+          "text": "O’Leary, D. J. (2025). Evaluating the effectiveness of AR/MR technologies in manufacturing training: A multi-modal assessment. Proceedings of the IISE Annual Conference & Expo 2025.",
+          "in_pdf": true
+        },
+        "oleary2025econ-uncertainty": {
+          "id": "oleary2025econ-uncertainty",
+          "underlined": [],
+          "text": "O’Leary, D. J., Evans, J. L., & Park, C. (2025). Estimating real-world uncertainty: Case studies & stochastic models for graduate engineering economy. Proceedings of the IISE Annual Conference & Expo 2025.",
+          "in_pdf": true
+        },
+        "madachyolearymcdermott2026genai-se-tips": {
+          "id": "madachyolearymcdermott2026genai-se-tips",
+          "underlined": [
+            "O’Leary, D. J.,"
+          ],
+          "text": "Madachy, R., O’Leary, D. J., McDermott, T., & Bank, S. (2026). Twenty tips for using generative AI in systems engineering. INSIGHT, 29(3), 29–31. https://doi.org/10.1002/inst.70053",
+          "in_pdf": true
+        },
+        "olearyledford2026insight": {
+          "id": "olearyledford2026insight",
+          "underlined": [],
+          "text": "O’Leary, D. J., & Ledford, A. B. (2026). Trustworthy LLM-augmented data reconciliation for deployment-constrained environments. INSIGHT, 29(3), 37–42. https://doi.org/10.1002/inst.70055",
+          "in_pdf": true
+        },
+        "hossain2024lean-industry40": {
+          "id": "hossain2024lean-industry40",
+          "underlined": [
+            "O’Leary, D. J.,"
+          ],
+          "text": "Hossain, M. M., O’Leary, D. J., & Ballard, V. (2026). Quantifying the integration impact of lean and industry 4.0 on operational efficiency: Insights from an experimental case study. Revised manuscript under full consideration at the International Journal of Lean Six Sigma, manuscript ID IJLSS-08-2025-0243.R5, submitted July 17, 2026.",
+          "in_pdf": true
+        },
+        "oleary2026danvas-jose": {
+          "id": "oleary2026danvas-jose",
+          "underlined": [],
+          "text": "O’Leary, D. J. (2026). Danvas: Command-line course operations for canvas instructors. Submission package complete but not submitted; target journal: Journal of Open Source Education, not accepting submissions as of September 2026.",
+          "in_pdf": true
+        },
+        "oleary2026affordance-bundles": {
+          "id": "oleary2026affordance-bundles",
+          "underlined": [],
+          "text": "O’Leary, D. J. (n.d.). Beyond media labels: Affordance bundles and learning mechanisms in manufacturing instruction. Manuscript in preparation.",
+          "in_pdf": true
+        },
+        "oleary2026instructional-media-tradeoffs": {
+          "id": "oleary2026instructional-media-tradeoffs",
+          "underlined": [],
+          "text": "O’Leary, D. J. (n.d.). Instructional media and speed-quality tradeoffs in manufacturing assembly training. Submission package complete but not submitted; target journal: Journal of Manufacturing Systems.",
+          "in_pdf": true
+        },
+        "oleary2026xr-evaluation-methods": {
+          "id": "oleary2026xr-evaluation-methods",
+          "underlined": [],
+          "text": "O’Leary, D. J. (n.d.). Methods and experimental design for realistic XR manufacturing training evaluation. Manuscript in preparation.",
+          "in_pdf": true
+        },
+        "oleary2026user-fit-friction": {
+          "id": "oleary2026user-fit-friction",
+          "underlined": [],
+          "text": "O’Leary, D. J. (n.d.). User fit and implementation friction in XR-supported manufacturing instruction. Manuscript in preparation.",
+          "in_pdf": true
+        },
+        "elliott1996inside-3d-studio-max": {
+          "id": "elliott1996inside-3d-studio-max",
+          "underlined": [],
+          "text": "Elliott, S. D. (1996). Inside 3D studio max. Contributing author; New Riders.",
+          "in_pdf": true
+        }
+      },
+      "pages": 10
+    },
+    "candidate": {
+      "entries": {
+        "oleary2025framework": {
+          "id": "oleary2025framework",
+          "underlined": [],
+          "text": "O’Leary, D. J. (2025). Evaluating the effectiveness of AR/MR technologies in manufacturing training: A multi-modal assessment framework. In E. Gentry, F. Ju, & X. Liu (Eds.), Proceedings of the IISE annual conference & expo 2025 (pp. 1829–1834). Institute of Industrial and Systems Engineers.",
+          "in_pdf": true
+        },
+        "oleary2025econ-uncertainty": {
+          "id": "oleary2025econ-uncertainty",
+          "underlined": [],
+          "text": "O’Leary, D. J., Evans, J. L., & Park, C. (2025). Estimating real-world uncertainty: Case studies & stochastic models for graduate engineering economy. In E. Gentry, F. Ju, & X. Liu (Eds.), Proceedings of the IISE annual conference & expo 2025 (pp. 1847–1849). Institute of Industrial and Systems Engineers.",
+          "in_pdf": true
+        },
+        "madachyolearymcdermott2026genai-se-tips": {
+          "id": "madachyolearymcdermott2026genai-se-tips",
+          "underlined": [
+            "O’Leary, D. J.,"
+          ],
+          "text": "Madachy, R., O’Leary, D. J., McDermott, T., & Bank, S. (2026). Twenty tips for using generative AI in systems engineering. INSIGHT, 29(3), 29–31. https://doi.org/10.1002/inst.70053",
+          "in_pdf": true
+        },
+        "olearyledford2026insight": {
+          "id": "olearyledford2026insight",
+          "underlined": [],
+          "text": "O’Leary, D. J., & Ledford, A. B. (2026). Trustworthy LLM-augmented data reconciliation for deployment-constrained environments. INSIGHT, 29(3), 37–42. https://doi.org/10.1002/inst.70055",
+          "in_pdf": true
+        },
+        "hossain2024lean-industry40": {
+          "id": "hossain2024lean-industry40",
+          "underlined": [
+            "O’Leary, D. J.,"
+          ],
+          "text": "Hossain, M. M., Ballard, V., O’Leary, D. J., Purdy, G., Sesek, R., & Harris, G. (2026). Quantifying the integration impact of Lean and Industry 4.0 on operational efficiency: Insights from an experimental case study [Unpublished manuscript]. Revised manuscript under consideration at the International Journal of Lean Six Sigma; IJLSS-08-2025-0243.R6; awaiting referee reply.",
+          "in_pdf": true
+        },
+        "oleary2026danvas-jose": {
+          "id": "oleary2026danvas-jose",
+          "underlined": [],
+          "text": "O’Leary, D. J. (2026). danvas: Command-line course operations for Canvas instructors [Unpublished manuscript]. Manuscript complete; awaiting the Journal of Open Source Education reopening submissions.",
+          "in_pdf": true
+        },
+        "oleary-2026-instructionalInformation": {
+          "id": "oleary-2026-instructionalInformation",
+          "underlined": [],
+          "text": "O’Leary, D. J. (2026). Instructional information and persistent errors in manufacturing assembly training [Unpublished manuscript]. Manuscript in preparation; initial work completed; working title.",
+          "in_pdf": true
+        },
+        "oleary2026instructional-media-tradeoffs": {
+          "id": "oleary2026instructional-media-tradeoffs",
+          "underlined": [],
+          "text": "O’Leary, D. J. (2026). Instructional media and speed-quality tradeoffs in manufacturing assembly training [Unpublished manuscript]. Manuscript nearing completion; target journal: Journal of Manufacturing Systems.",
+          "in_pdf": true
+        },
+        "oleary-2026-pipyerEvidence": {
+          "id": "oleary-2026-pipyerEvidence",
+          "underlined": [],
+          "text": "O’Leary, D. J. (2026). Pipyer: Evidence-producing orchestration for reproducible LLM-assisted research workflows [Unpublished manuscript]. Manuscript complete; submission to the Journal of Open Source Software awaits public software release.",
+          "in_pdf": true
+        },
+        "ganesh2026ai-driven-dema": {
+          "id": "ganesh2026ai-driven-dema",
+          "underlined": [
+            "O’Leary, D. J.,"
+          ],
+          "text": "Ganesh, P., Gadzey, S., Bigonah, M., Arslan, B., O’Leary, D. J., Ledford, A., & Dozier, G. (2026, August 26–27). AI-driven DEMA framework for data mapping and model-based systems engineering [Poster presentation]. 2026 outreach and engaged scholarship symposium, Auburn University.",
+          "in_pdf": true
+        },
+        "ganesh2026ai-enhanced-dema": {
+          "id": "ganesh2026ai-enhanced-dema",
+          "underlined": [
+            "O’Leary, D. J.,"
+          ],
+          "text": "Ganesh, P., Gadzey, S., Bigonah, M., Arslan, B., O’Leary, D. J., Ledford, A., & Dozier, G. (2026, June 8–10). AI-enhanced DEMA for streamlined data mapping and efficient model-based systems engineering [Poster presentation]. MBSE2026.",
+          "in_pdf": true
+        },
+        "gadzey2026dema-digital-thread": {
+          "id": "gadzey2026dema-digital-thread",
+          "underlined": [
+            "O’Leary, D. J.,"
+          ],
+          "text": "Gadzey, S., Ganesh, P., Bigonah, M., O’Leary, D. J., Dozier, G., & Ledford, A. B. (2026, March 3–4). A data element mapping and analysis (DEMA) approach for implementing a complete digital thread [Poster presentation]. Defense industrial base digital engineering summit, Auburn University.",
+          "in_pdf": true
+        },
+        "oleary-2026-judgmentEconomy": {
+          "id": "oleary-2026-judgmentEconomy",
+          "underlined": [],
+          "text": "O’Leary, D. J. (2026, February 12). The judgment economy: Education and the abstraction of work [Paper presentation]. AI nexus: Arts, humanities, and engineering converge conference, Auburn, AL.",
+          "in_pdf": true
+        },
+        "oleary2025binary-classification": {
+          "id": "oleary2025binary-classification",
+          "underlined": [],
+          "text": "O’Leary, D. J. (2025, October 28). Beyond binary classification: A comprehensive multi-criteria assessment system for programming assignments [Poster presentation]. INFORMS annual meeting, Atlanta, GA, USA.",
+          "in_pdf": true
+        },
+        "oleary2025ai4se": {
+          "id": "oleary2025ai4se",
+          "underlined": [],
+          "text": "O’Leary, D. J., & Ledford, A. B. (2025, September). AI-enhanced DEMA: Transforming implicit system knowledge into intelligent, compliant, and documented processes [Workshop presentation]. AI4SE & SE4AI research and application workshop, Washington, DC, USA.",
+          "in_pdf": true
+        },
+        "olearyficken2025innovation-culture": {
+          "id": "olearyficken2025innovation-culture",
+          "underlined": [],
+          "text": "O’Leary, D. J., Ficken, A., Evans, J. L., & Sesek, R. (2025). Building an innovation culture: Lessons from developing and scaling a product innovation program in engineering education [Conference presentation]. IISE annual conference & expo.",
+          "in_pdf": true
+        },
+        "ballard2024role": {
+          "id": "ballard2024role",
+          "underlined": [
+            "O’Leary, D. J.,"
+          ],
+          "text": "Ballard, V., O’Leary, D. J., & Sesek, R. F. (2024). The role of technology in enhancing workplace ergonomics for neurodiverse employees: A performance and safety perspective [Poster presentation]. Applied ergonomics conference 2024, Louisville, KY.",
+          "in_pdf": true
+        },
+        "ficken2023blending": {
+          "id": "ficken2023blending",
+          "underlined": [
+            "O’Leary, D. J.,"
+          ],
+          "text": "Ficken, A., O’Leary, D. J., Evans, J., & Sesek, R. (2023, October 25). Blending product innovation and engineering management for graduate education [Conference presentation]. ASEM international annual conference, Boulder, CO.",
+          "in_pdf": true
+        },
+        "oleary-2013-independentGame": {
+          "id": "oleary-2013-independentGame",
+          "underlined": [],
+          "text": "O’Leary, D. J. (2013, April 17). Independent game development [Conference presentation]. GameTech conference, Orlando, FL.",
+          "in_pdf": true
+        },
+        "oleary2009time-dilation": {
+          "id": "oleary2009time-dilation",
+          "underlined": [],
+          "text": "O’Leary, D. J., Newman, T., & Smith, A. L. M. (2009). Video game including time dilation effect and a storage medium storing software for the video game (Patent No. US7497779B2). https://patents.google.com/patent/US7497779B2/en",
+          "in_pdf": true
+        },
+        "kreitzman-1997-animatingControllers": {
+          "id": "kreitzman-1997-animatingControllers",
+          "underlined": [
+            "O’Leary, D. J."
+          ],
+          "text": "Kreitzman, R., & O’Leary, D. J. (1997). Animating with controllers. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 107–147). New Riders Publishing.",
+          "in_pdf": true
+        },
+        "oleary-1997-animatingExpressions": {
+          "id": "oleary-1997-animatingExpressions",
+          "underlined": [],
+          "text": "O’Leary, D. J. (1997). Animating with expressions. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 149–173). New Riders Publishing.",
+          "in_pdf": true
+        },
+        "oleary-1997-animatingMultiple": {
+          "id": "oleary-1997-animatingMultiple",
+          "underlined": [],
+          "text": "O’Leary, D. J. (1997). Animating with multiple modifiers. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 175–205). New Riders Publishing.",
+          "in_pdf": true
+        }
+      },
+      "pages": 11
+    }
+  },
+  "before_after": [
+    {
+      "old_key": "oleary2025armr-training",
+      "key": "oleary2025framework",
+      "before": "O’Leary, D. J. (2025). Evaluating the effectiveness of AR/MR technologies in manufacturing training: A multi-modal assessment. Proceedings of the IISE Annual Conference & Expo 2025.",
+      "after": "O’Leary, D. J. (2025). Evaluating the effectiveness of AR/MR technologies in manufacturing training: A multi-modal assessment framework. In E. Gentry, F. Ju, & X. Liu (Eds.), Proceedings of the IISE annual conference & expo 2025 (pp. 1829–1834). Institute of Industrial and Systems Engineers.",
+      "title_before": "Evaluating the effectiveness of AR/MR technologies in manufacturing training: A multi-modal assessment",
+      "title_after": "Evaluating the effectiveness of AR/MR technologies in manufacturing training: A multi-modal assessment framework"
+    },
+    {
+      "old_key": "oleary2025econ-uncertainty",
+      "key": "oleary2025econ-uncertainty",
+      "before": "O’Leary, D. J., Evans, J. L., & Park, C. (2025). Estimating real-world uncertainty: Case studies & stochastic models for graduate engineering economy. Proceedings of the IISE Annual Conference & Expo 2025.",
+      "after": "O’Leary, D. J., Evans, J. L., & Park, C. (2025). Estimating real-world uncertainty: Case studies & stochastic models for graduate engineering economy. In E. Gentry, F. Ju, & X. Liu (Eds.), Proceedings of the IISE annual conference & expo 2025 (pp. 1847–1849). Institute of Industrial and Systems Engineers.",
+      "title_before": "Estimating real-world uncertainty: Case studies & stochastic models for graduate engineering economy",
+      "title_after": "Estimating real-world uncertainty: Case studies & stochastic models for graduate engineering economy"
+    },
+    {
+      "old_key": "madachyolearymcdermott2026genai-se-tips",
+      "key": "madachyolearymcdermott2026genai-se-tips",
+      "before": "Madachy, R., O’Leary, D. J., McDermott, T., & Bank, S. (2026). Twenty tips for using generative AI in systems engineering. INSIGHT, 29(3), 29–31. https://doi.org/10.1002/inst.70053",
+      "after": "Madachy, R., O’Leary, D. J., McDermott, T., & Bank, S. (2026). Twenty tips for using generative AI in systems engineering. INSIGHT, 29(3), 29–31. https://doi.org/10.1002/inst.70053",
+      "title_before": "Twenty tips for using generative AI in systems engineering",
+      "title_after": "Twenty tips for using generative AI in systems engineering"
+    },
+    {
+      "old_key": "olearyledford2026insight",
+      "key": "olearyledford2026insight",
+      "before": "O’Leary, D. J., & Ledford, A. B. (2026). Trustworthy LLM-augmented data reconciliation for deployment-constrained environments. INSIGHT, 29(3), 37–42. https://doi.org/10.1002/inst.70055",
+      "after": "O’Leary, D. J., & Ledford, A. B. (2026). Trustworthy LLM-augmented data reconciliation for deployment-constrained environments. INSIGHT, 29(3), 37–42. https://doi.org/10.1002/inst.70055",
+      "title_before": "Trustworthy LLM-augmented data reconciliation for deployment-constrained environments",
+      "title_after": "Trustworthy LLM-augmented data reconciliation for deployment-constrained environments"
+    },
+    {
+      "old_key": "hossain2024lean-industry40",
+      "key": "hossain2024lean-industry40",
+      "before": "Hossain, M. M., O’Leary, D. J., & Ballard, V. (2026). Quantifying the integration impact of lean and industry 4.0 on operational efficiency: Insights from an experimental case study. Revised manuscript under full consideration at the International Journal of Lean Six Sigma, manuscript ID IJLSS-08-2025-0243.R5, submitted July 17, 2026.",
+      "after": "Hossain, M. M., Ballard, V., O’Leary, D. J., Purdy, G., Sesek, R., & Harris, G. (2026). Quantifying the integration impact of Lean and Industry 4.0 on operational efficiency: Insights from an experimental case study [Unpublished manuscript]. Revised manuscript under consideration at the International Journal of Lean Six Sigma; IJLSS-08-2025-0243.R6; awaiting referee reply.",
+      "title_before": "Quantifying the integration impact of lean and industry 4.0 on operational efficiency: Insights from an experimental case study",
+      "title_after": "Quantifying the integration impact of Lean and Industry 4.0 on operational efficiency: Insights from an experimental case study"
+    },
+    {
+      "old_key": "oleary2026danvas-jose",
+      "key": "oleary2026danvas-jose",
+      "before": "O’Leary, D. J. (2026). Danvas: Command-line course operations for canvas instructors. Submission package complete but not submitted; target journal: Journal of Open Source Education, not accepting submissions as of September 2026.",
+      "after": "O’Leary, D. J. (2026). danvas: Command-line course operations for Canvas instructors [Unpublished manuscript]. Manuscript complete; awaiting the Journal of Open Source Education reopening submissions.",
+      "title_before": "Danvas: Command-line course operations for canvas instructors",
+      "title_after": "danvas: Command-line course operations for Canvas instructors"
+    },
+    {
+      "old_key": "oleary2026affordance-bundles",
+      "key": null,
+      "before": "O’Leary, D. J. (n.d.). Beyond media labels: Affordance bundles and learning mechanisms in manufacturing instruction. Manuscript in preparation.",
+      "after": null,
+      "title_before": "Beyond media labels: Affordance bundles and learning mechanisms in manufacturing instruction",
+      "title_after": null
+    },
+    {
+      "old_key": "oleary2026instructional-media-tradeoffs",
+      "key": "oleary2026instructional-media-tradeoffs",
+      "before": "O’Leary, D. J. (n.d.). Instructional media and speed-quality tradeoffs in manufacturing assembly training. Submission package complete but not submitted; target journal: Journal of Manufacturing Systems.",
+      "after": "O’Leary, D. J. (2026). Instructional media and speed-quality tradeoffs in manufacturing assembly training [Unpublished manuscript]. Manuscript nearing completion; target journal: Journal of Manufacturing Systems.",
+      "title_before": "Instructional media and speed-quality tradeoffs in manufacturing assembly training",
+      "title_after": "Instructional media and speed-quality tradeoffs in manufacturing assembly training"
+    },
+    {
+      "old_key": "oleary2026xr-evaluation-methods",
+      "key": null,
+      "before": "O’Leary, D. J. (n.d.). Methods and experimental design for realistic XR manufacturing training evaluation. Manuscript in preparation.",
+      "after": null,
+      "title_before": "Methods and experimental design for realistic XR manufacturing training evaluation",
+      "title_after": null
+    },
+    {
+      "old_key": "oleary2026user-fit-friction",
+      "key": null,
+      "before": "O’Leary, D. J. (n.d.). User fit and implementation friction in XR-supported manufacturing instruction. Manuscript in preparation.",
+      "after": null,
+      "title_before": "User fit and implementation friction in XR-supported manufacturing instruction",
+      "title_after": null
+    },
+    {
+      "old_key": "elliott1996inside-3d-studio-max",
+      "key": null,
+      "before": "Elliott, S. D. (1996). Inside 3D studio max. Contributing author; New Riders.",
+      "after": null,
+      "title_before": "Inside 3D studio max",
+      "title_after": null
+    },
+    {
+      "old_key": "ganesh2026ai-enhanced-dema",
+      "key": "ganesh2026ai-enhanced-dema",
+      "before": "AI-Enhanced DEMA for Streamlined Data Mapping and Efficient Model-Based Systems Engineering 2026 Poster presentation, MBSE2026, June 8-10.",
+      "after": "Ganesh, P., Gadzey, S., Bigonah, M., Arslan, B., O’Leary, D. J., Ledford, A., & Dozier, G. (2026, June 8–10). AI-enhanced DEMA for streamlined data mapping and efficient model-based systems engineering [Poster presentation]. MBSE2026.",
+      "title_before": "AI-Enhanced DEMA for Streamlined Data Mapping and Efficient Model-Based Systems Engineering",
+      "title_after": "AI-enhanced DEMA for streamlined data mapping and efficient model-based systems engineering"
+    },
+    {
+      "old_key": "oleary2009time-dilation",
+      "key": "oleary2009time-dilation",
+      "before": "Video Game Including Time Dilation Effect 2009 US Patent 7,497,779. Inventor.",
+      "after": "O’Leary, D. J., Newman, T., & Smith, A. L. M. (2009). Video game including time dilation effect and a storage medium storing software for the video game (Patent No. US7497779B2). https://patents.google.com/patent/US7497779B2/en",
+      "title_before": "Video Game Including Time Dilation Effect",
+      "title_after": "Video game including time dilation effect and a storage medium storing software for the video game"
+    },
+    {
+      "old_key": "oleary2026pipyer-ai4se",
+      "key": null,
+      "before": "Directing, Not Delegating: Repeatable, Auditable LLM Workflows for Systems Engineering Practice 2026 Paper-presentation extended abstract submitted June 12 to the AI4SE & SE4AI Research and Application Workshop, hosted by the George Washington University Trustworthy AI Initiative, September 22-23.",
+      "after": null,
+      "title_before": "Directing, Not Delegating: Repeatable, Auditable LLM Workflows for Systems Engineering Practice",
+      "title_after": null
+    },
+    {
+      "old_key": "ganesh2026ai-driven-dema",
+      "key": "ganesh2026ai-driven-dema",
+      "before": "AI-Driven DEMA Framework for Data Mapping and Model-Based Systems Engineering 2026 Poster presentation, 2026 Outreach and Engaged Scholarship Symposium, Auburn University, August 26-27.",
+      "after": "Ganesh, P., Gadzey, S., Bigonah, M., Arslan, B., O’Leary, D. J., Ledford, A., & Dozier, G. (2026, August 26–27). AI-driven DEMA framework for data mapping and model-based systems engineering [Poster presentation]. 2026 outreach and engaged scholarship symposium, Auburn University.",
+      "title_before": "AI-Driven DEMA Framework for Data Mapping and Model-Based Systems Engineering",
+      "title_after": "AI-driven DEMA framework for data mapping and model-based systems engineering"
+    },
+    {
+      "old_key": "gadzey2026dema-digital-thread",
+      "key": "gadzey2026dema-digital-thread",
+      "before": "A Data Element Mapping and Analysis (DEMA) Approach for Implementing a Complete Digital Thread 2026 Poster presentation, Defense Industrial Base Digital Engineering Summit, Auburn University, March 3-4.",
+      "after": "Gadzey, S., Ganesh, P., Bigonah, M., O’Leary, D. J., Dozier, G., & Ledford, A. B. (2026, March 3–4). A data element mapping and analysis (DEMA) approach for implementing a complete digital thread [Poster presentation]. Defense industrial base digital engineering summit, Auburn University.",
+      "title_before": "A Data Element Mapping and Analysis (DEMA) Approach for Implementing a Complete Digital Thread",
+      "title_after": "A data element mapping and analysis (DEMA) approach for implementing a complete digital thread"
+    },
+    {
+      "old_key": "oleary2025binary-classification",
+      "key": "oleary2025binary-classification",
+      "before": "Beyond Binary Classification: A Comprehensive Multi-Criteria Assessment System for Programming Assignments 2025 Poster presentation, INFORMS Annual Meeting, October.",
+      "after": "O’Leary, D. J. (2025, October 28). Beyond binary classification: A comprehensive multi-criteria assessment system for programming assignments [Poster presentation]. INFORMS annual meeting, Atlanta, GA, USA.",
+      "title_before": "Beyond Binary Classification: A Comprehensive Multi-Criteria Assessment System for Programming Assignments",
+      "title_after": "Beyond binary classification: A comprehensive multi-criteria assessment system for programming assignments"
+    },
+    {
+      "old_key": "olearyledford2025ai-enhanced-dema",
+      "key": "oleary2025ai4se",
+      "before": "AI-Enhanced DEMA: Transforming Implicit System Knowledge into Intelligent, Compliant, and Documented Processes 2025 Workshop presentation, AI4SE & SE4AI Research and Application Workshop, George Washington University, September.",
+      "after": "O’Leary, D. J., & Ledford, A. B. (2025, September). AI-enhanced DEMA: Transforming implicit system knowledge into intelligent, compliant, and documented processes [Workshop presentation]. AI4SE & SE4AI research and application workshop, Washington, DC, USA.",
+      "title_before": "AI-Enhanced DEMA: Transforming Implicit System Knowledge into Intelligent, Compliant, and Documented Processes",
+      "title_after": "AI-enhanced DEMA: Transforming implicit system knowledge into intelligent, compliant, and documented processes"
+    },
+    {
+      "old_key": "olearyficken2025innovation-culture",
+      "key": "olearyficken2025innovation-culture",
+      "before": "Building an Innovation Culture: Lessons from Developing and Scaling a Product Innovation Program in Engineering Education 2025 Conference presentation, IISE Annual Conference & Expo.",
+      "after": "O’Leary, D. J., Ficken, A., Evans, J. L., & Sesek, R. (2025). Building an innovation culture: Lessons from developing and scaling a product innovation program in engineering education [Conference presentation]. IISE annual conference & expo.",
+      "title_before": "Building an Innovation Culture: Lessons from Developing and Scaling a Product Innovation Program in Engineering Education",
+      "title_after": "Building an innovation culture: Lessons from developing and scaling a product innovation program in engineering education"
+    },
+    {
+      "old_key": "ballard2024neurodiverse-ergonomics",
+      "key": "ballard2024role",
+      "before": "The Role of Technology in Enhancing Workplace Ergonomics for Neurodiverse Employees: A Performance and Safety Perspective 2024 Poster presentation, Applied Ergonomics Conference, Louisville, KY.",
+      "after": "Ballard, V., O’Leary, D. J., & Sesek, R. F. (2024). The role of technology in enhancing workplace ergonomics for neurodiverse employees: A performance and safety perspective [Poster presentation]. Applied ergonomics conference 2024, Louisville, KY.",
+      "title_before": "The Role of Technology in Enhancing Workplace Ergonomics for Neurodiverse Employees: A Performance and Safety Perspective",
+      "title_after": "The role of technology in enhancing workplace ergonomics for neurodiverse employees: A performance and safety perspective"
+    },
+    {
+      "old_key": "ficken2023product-innovation-education",
+      "key": "ficken2023blending",
+      "before": "Blending Product Innovation and Engineering Management for Graduate Education 2023 Conference presentation, ASEM International Annual Conference, University of Colorado, Boulder, CO, October.",
+      "after": "Ficken, A., O’Leary, D. J., Evans, J., & Sesek, R. (2023, October 25). Blending product innovation and engineering management for graduate education [Conference presentation]. ASEM international annual conference, Boulder, CO.",
+      "title_before": "Blending Product Innovation and Engineering Management for Graduate Education",
+      "title_after": "Blending product innovation and engineering management for graduate education"
+    },
+    {
+      "old_key": null,
+      "key": "oleary-2026-instructionalInformation",
+      "before": null,
+      "after": "O’Leary, D. J. (2026). Instructional information and persistent errors in manufacturing assembly training [Unpublished manuscript]. Manuscript in preparation; initial work completed; working title.",
+      "title_before": null,
+      "title_after": "Instructional information and persistent errors in manufacturing assembly training"
+    },
+    {
+      "old_key": null,
+      "key": "oleary-2026-pipyerEvidence",
+      "before": null,
+      "after": "O’Leary, D. J. (2026). Pipyer: Evidence-producing orchestration for reproducible LLM-assisted research workflows [Unpublished manuscript]. Manuscript complete; submission to the Journal of Open Source Software awaits public software release.",
+      "title_before": null,
+      "title_after": "Pipyer: Evidence-producing orchestration for reproducible LLM-assisted research workflows"
+    },
+    {
+      "old_key": null,
+      "key": "oleary-2026-judgmentEconomy",
+      "before": null,
+      "after": "O’Leary, D. J. (2026, February 12). The judgment economy: Education and the abstraction of work [Paper presentation]. AI nexus: Arts, humanities, and engineering converge conference, Auburn, AL.",
+      "title_before": null,
+      "title_after": "The judgment economy: Education and the abstraction of work"
+    },
+    {
+      "old_key": null,
+      "key": "kreitzman-1997-animatingControllers",
+      "before": null,
+      "after": "Kreitzman, R., & O’Leary, D. J. (1997). Animating with controllers. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 107–147). New Riders Publishing.",
+      "title_before": null,
+      "title_after": "Animating with controllers"
+    },
+    {
+      "old_key": null,
+      "key": "oleary-1997-animatingExpressions",
+      "before": null,
+      "after": "O’Leary, D. J. (1997). Animating with expressions. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 149–173). New Riders Publishing.",
+      "title_before": null,
+      "title_after": "Animating with expressions"
+    },
+    {
+      "old_key": null,
+      "key": "oleary-1997-animatingMultiple",
+      "before": null,
+      "after": "O’Leary, D. J. (1997). Animating with multiple modifiers. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 175–205). New Riders Publishing.",
+      "title_before": null,
+      "title_after": "Animating with multiple modifiers"
+    },
+    {
+      "old_key": null,
+      "key": "oleary-2013-independentGame",
+      "before": "Independent Game Development 2013 Speaker, GameTech Conference, National Center for Simulation, April 17.",
+      "after": "O’Leary, D. J. (2013, April 17). Independent game development [Conference presentation]. GameTech conference, Orlando, FL.",
+      "title_before": "Independent Game Development",
+      "title_after": "Independent game development"
+    }
+  ],
+  "activities": [
+    {
+      "group": "invited_talks",
+      "title": "Running an Independent Game Development Studio",
+      "before": "Running an Independent Game Development Studio 2023-present Florida Interactive Entertainment Academy at the University of Central Florida; delivered annually.",
+      "after": "Running an Independent Game Development Studio 2023-present Florida Interactive Entertainment Academy at the University of Central Florida; delivered annually.",
+      "outcome": "identical"
+    },
+    {
+      "group": "invited_talks",
+      "title": "The Metaverse: More Direction than Vision",
+      "before": "The Metaverse: More Direction than Vision 2022 Air University, June 22.",
+      "after": "The Metaverse: More Direction than Vision 2022 Air University, June 22.",
+      "outcome": "identical"
+    },
+    {
+      "group": "invited_talks",
+      "title": "Game Changer: The Emergence and Potential of Real-Time 3D Development Platforms",
+      "before": "Game Changer: The Emergence and Potential of Real-Time 3D Development Platforms 2021 Air University, November 17.",
+      "after": "Game Changer: The Emergence and Potential of Real-Time 3D Development Platforms 2021 Air University, November 17.",
+      "outcome": "identical"
+    },
+    {
+      "group": "invited_talks",
+      "title": "Game Development to Visualization Research in 25 Years: Real-Time Graphics and the Epic MegaGrant Program",
+      "before": "Game Development to Visualization Research in 25 Years: Real-Time Graphics and the Epic MegaGrant Program 2021 MGMWERX and AUiX, July 23.",
+      "after": "Game Development to Visualization Research in 25 Years: Real-Time Graphics and the Epic MegaGrant Program 2021 MGMWERX and AUiX, July 23.",
+      "outcome": "identical"
+    },
+    {
+      "group": "panels_and_participation",
+      "title": "Games and Strategy, LEDx: Strategic Games",
+      "before": "Games and Strategy, LEDx: Strategic Games 2024 Panel organized October 30. Panelists: Col Mark Jacobsen, PhD (USAF Ret.) and Col Jason Trew, PhD (USAF Ret.).",
+      "after": "Games and Strategy, LEDx: Strategic Games 2024 Panel organized October 30. Panelists: Col Mark Jacobsen, PhD (USAF Ret.) and Col Jason Trew, PhD (USAF Ret.).",
+      "outcome": "identical"
+    },
+    {
+      "group": "panels_and_participation",
+      "title": "The Societal Impact of Digital Convergence, LEDxSI Conference",
+      "before": "The Societal Impact of Digital Convergence, LEDxSI Conference 2022 Panel organized October 12. Panelists: Steven Mills, Allan David, PhD, and SueAnne Griffith, PhD.",
+      "after": "The Societal Impact of Digital Convergence, LEDxSI Conference 2022 Panel organized October 12. Panelists: Steven Mills, Allan David, PhD, and SueAnne Griffith, PhD.",
+      "outcome": "identical"
+    },
+    {
+      "group": "panels_and_participation",
+      "title": "Entertainment Panel",
+      "before": "Entertainment Panel 2015 Moderator and speaker, Florida Simulation Summit, National Center for Simulation, September 16.",
+      "after": "Entertainment Panel 2015 Moderator and speaker, Florida Simulation Summit, National Center for Simulation, September 16.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Software Project Management",
+      "before": "Software Project Management 2025 Guest lecturer, Project Management (INSY 6250), April 17.",
+      "after": "Software Project Management 2025 Guest lecturer, Project Management (INSY 6250), April 17.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Lessons from an Accidental Entrepreneur",
+      "before": null,
+      "after": "Lessons from an Accidental Entrepreneur 2024 Guest speaker, Entrepreneurs of Auburn Club, November 5.",
+      "outcome": "added"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Lessons from an Accidental Entrepreneur",
+      "before": "Lessons from an Accidental Entrepreneur 2024 Guest speaker, Entrepreneurs of Auburn Club, April 25.",
+      "after": "Lessons from an Accidental Entrepreneur 2024 Guest speaker, Entrepreneurs of Auburn Club, April 25.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Augmented vs Traditional Instruction in Manufacturing Assembly",
+      "before": "Augmented vs Traditional Instruction in Manufacturing Assembly 2024 ISE Seminar, March 20.",
+      "after": "Augmented vs Traditional Instruction in Manufacturing Assembly 2024 ISE Seminar, March 20.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "The Value of Engineering Econ, A Balanced (Biased?) Opinion",
+      "before": "The Value of Engineering Econ, A Balanced (Biased?) Opinion 2023 Guest lecturer, Engineering Economics (INSY 3600), November 2.",
+      "after": "The Value of Engineering Econ, A Balanced (Biased?) Opinion 2023 Guest lecturer, Engineering Economics (INSY 3600), November 2.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Creativity and Design Thinking",
+      "before": "Creativity and Design Thinking 2022 Guest lecturer, Business Plan for the New Venture (ENFB 4200), October 26.",
+      "after": "Creativity and Design Thinking 2022 Guest lecturer, Business Plan for the New Venture (ENFB 4200), October 26.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Introduction to Version Control Using Git",
+      "before": "Introduction to Version Control Using Git 2022 Presented to the INFORMS Auburn student chapter, March 2.",
+      "after": "Introduction to Version Control Using Git 2022 Presented to the INFORMS Auburn student chapter, March 2.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Design and Innovation Center: Vision, Strategy, and Alignment",
+      "before": "Design and Innovation Center: Vision, Strategy, and Alignment 2021 Finalist presentation for director search, June 23.",
+      "after": "Design and Innovation Center: Vision, Strategy, and Alignment 2021 Finalist presentation for director search, June 23.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Data Science Career Roundtable",
+      "before": "Data Science Career Roundtable 2021 Organized, recruited participants, hosted, promoted, and moderated, March 30.",
+      "after": "Data Science Career Roundtable 2021 Organized, recruited participants, hosted, promoted, and moderated, March 30.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "AI and Machine Learning Concepts",
+      "before": "AI and Machine Learning Concepts 2020 Presented to the Data Science Society of Auburn, November 9.",
+      "after": "AI and Machine Learning Concepts 2020 Presented to the Data Science Society of Auburn, November 9.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Real-Time Visualization and the Epic MegaGrant Program",
+      "before": "Real-Time Visualization and the Epic MegaGrant Program 2020 Presented to Auburn Industrial & Systems Engineering faculty and the Advanced Manufacturing Research Group, July 13 and July 28.",
+      "after": "Real-Time Visualization and the Epic MegaGrant Program 2020 Presented to Auburn Industrial & Systems Engineering faculty and the Advanced Manufacturing Research Group, July 13 and July 28.",
+      "outcome": "identical"
+    }
+  ],
+  "activity_storage_proposed": true,
+  "gametech_public_evidence": [
+    {
+      "url": "https://olearydj.github.io/antisimplistic/docs/2021-05-03-DJO-CV-Hybrid-Portfolio.pdf",
+      "finding": "Owner-published 2021 CV explicitly lists Independent Game Development, GameTech, April 17, 2013; not an independent event program or the talk itself."
+    },
+    {
+      "url": "https://www.simulationinformation.com/news/defense-news-article-about-2013-gametech-conference/",
+      "finding": "Organizer-hosted April 22, 2013 report establishes the Orlando conference and mentions an n-Space president speaking, without naming this talk or its speaker. It does not independently establish this exact work."
+    }
+  ],
+  "gametech_status": "provisional work in scratch; no talk-specific public program/deck/recording found; owner decision needed",
+  "shared_changes": [
+    {
+      "key": "oleary2025framework",
+      "projects": [
+        "manufacturing-training-media-tradeoffs"
+      ],
+      "changes": {
+        "metadata": {
+          "before": {
+            "type": "paper-conference",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              }
+            ],
+            "editor": [
+              {
+                "family": "Gentry",
+                "given": "E."
+              },
+              {
+                "family": "Ju",
+                "given": "F."
+              },
+              {
+                "family": "Liu",
+                "given": "X."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2025
+                ]
+              ]
+            },
+            "container-title": "Proceedings of the IISE Annual Conference & Expo 2025",
+            "ISBN": "979-8-3313-2546-6",
+            "page": "1829–1834",
+            "publisher": "Institute of Industrial and Systems Engineers",
+            "title": "Evaluating the Effectiveness of AR/MR Technologies in Manufacturing Training: A Multi-Modal Assessment Framework"
+          },
+          "after": {
+            "type": "paper-conference",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              }
+            ],
+            "editor": [
+              {
+                "family": "Gentry",
+                "given": "E."
+              },
+              {
+                "family": "Ju",
+                "given": "F."
+              },
+              {
+                "family": "Liu",
+                "given": "X."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2025
+                ]
+              ]
+            },
+            "container-title": "Proceedings of the IISE Annual Conference & Expo 2025",
+            "ISBN": "979-8-3313-2546-6",
+            "page": "1829–1834",
+            "publisher": "Institute of Industrial and Systems Engineers",
+            "title": "Evaluating the Effectiveness of AR/MR Technologies in Manufacturing Training: A Multi-Modal Assessment Framework"
+          }
+        }
+      }
+    },
+    {
+      "key": "olearyledford2026insight",
+      "projects": [
+        "dema-llm"
+      ],
+      "changes": {
+        "title_protection": {
+          "before": {
+            "title": {
+              "protected_terms": [
+                "LLM"
+              ],
+              "preserve_case": false
+            },
+            "container-title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "after": {
+            "title": {
+              "protected_terms": [
+                "LLM"
+              ],
+              "preserve_case": false
+            },
+            "container-title": {
+              "protected_terms": [
+                "INSIGHT"
+              ],
+              "preserve_case": false
+            }
+          }
+        },
+        "context": {
+          "before": [
+            {
+              "text": "Accepted for publication; forthcoming in INCOSE INSIGHT special issue on AI and automation in systems engineering",
+              "origin": "import"
+            }
+          ],
+          "after": []
+        }
+      }
+    },
+    {
+      "key": "oleary2025binary-classification",
+      "projects": [
+        "dema-llm"
+      ],
+      "changes": {
+        "context": {
+          "before": [
+            {
+              "text": "INFORMS 2025 abstract 9229, Tuesday poster session, 28 October 2025, Atlanta. The printed poster omits Comprehensive from the title; use the full abstract title.",
+              "origin": "user"
+            }
+          ],
+          "after": [
+            {
+              "text": "The printed poster omits “Comprehensive”; the record uses the accepted program title.",
+              "origin": "user"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "oleary2025ai4se",
+      "projects": [
+        "dema-llm"
+      ],
+      "changes": {
+        "metadata": {
+          "before": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Daniel J."
+              },
+              {
+                "family": "Ledford",
+                "given": "Allison B."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2025,
+                  9
+                ]
+              ]
+            },
+            "event-title": "AI4SE & SE4AI Research and Application Workshop",
+            "event-place": "Washington, DC, USA",
+            "genre": "Workshop presentation",
+            "title": "AI-Enhanced DEMA: Transforming Implicit System Knowledge Into Intelligent, Compliant, and Documented Processes"
+          },
+          "after": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Ledford",
+                "given": "Allison B."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2025,
+                  9
+                ]
+              ]
+            },
+            "event-title": "AI4SE & SE4AI Research and Application Workshop",
+            "event-place": "Washington, DC, USA",
+            "genre": "Workshop presentation",
+            "title": "AI-Enhanced DEMA: Transforming Implicit System Knowledge Into Intelligent, Compliant, and Documented Processes"
+          }
+        },
+        "title_protection": {
+          "before": {
+            "title": {
+              "protected_terms": [
+                "DEMA",
+                "AI"
+              ],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [
+                "AI",
+                "SE"
+              ],
+              "preserve_case": false
+            }
+          },
+          "after": {
+            "title": {
+              "protected_terms": [
+                "DEMA",
+                "AI"
+              ],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [
+                "AI4SE",
+                "SE4AI",
+                "AI",
+                "SE"
+              ],
+              "preserve_case": false
+            }
+          }
+        },
+        "context": {
+          "before": [
+            {
+              "text": "Presented at The George Washington University, Washington, DC, USA. The proposed IEEE speech style fallback prints the city from event-place.",
+              "origin": "user"
+            }
+          ],
+          "after": [
+            {
+              "text": "Printed byline names the owner Dan O’Leary.",
+              "origin": "user"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "ballard2024role",
+      "projects": [
+        "zotero-library"
+      ],
+      "changes": {
+        "metadata": {
+          "before": {
+            "type": "paper-conference",
+            "author": [
+              {
+                "family": "Ballard",
+                "given": "Victoria"
+              },
+              {
+                "family": "O’Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Sesek",
+                "given": "Richard F."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2024
+                ]
+              ]
+            },
+            "container-title": "Applied Ergonomics Conference 2024",
+            "publisher": "Applied Ergonomics Conference",
+            "publisher-place": "Louisville, KY",
+            "title": "The Role of Technology in Enhancing Workplace Ergonomics for Neurodiverse Employees: A Performance and Safety Perspective",
+            "title-short": "The Role of Technology in Enhancing Workplace Ergonomics for Neurodiverse Employees"
+          },
+          "after": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "Ballard",
+                "given": "Victoria"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Sesek",
+                "given": "Richard F."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2024
+                ]
+              ]
+            },
+            "event-title": "Applied Ergonomics Conference 2024",
+            "event-place": "Louisville, KY",
+            "genre": "Poster presentation",
+            "title": "The Role of Technology in Enhancing Workplace Ergonomics for Neurodiverse Employees: A Performance and Safety Perspective",
+            "title-short": "The Role of Technology in Enhancing Workplace Ergonomics for Neurodiverse Employees"
+          }
+        },
+        "title_protection": {
+          "before": {
+            "container-title": {
+              "protected_terms": [],
+              "preserve_case": false
+            },
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            },
+            "title-short": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "after": {
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            },
+            "title-short": {
+              "protected_terms": [],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          }
+        },
+        "native_type": {
+          "before": {
+            "namespace": "zotero",
+            "value": "conferencePaper"
+          },
+          "after": null
+        },
+        "context": {
+          "before": [
+            {
+              "text": "Poster Presentation",
+              "origin": "import",
+              "original_ref": "users/5765833/items/3GAZ5WEC"
+            }
+          ],
+          "after": [
+            {
+              "text": "Printed byline names the owner D. O’Leary.",
+              "origin": "user"
+            },
+            {
+              "text": "The printed poster says “ADHD Employees”; the record uses the accepted program title “Neurodiverse Employees”.",
+              "origin": "user"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "ficken2023blending",
+      "projects": [
+        "zotero-library"
+      ],
+      "changes": {
+        "metadata": {
+          "before": {
+            "type": "paper-conference",
+            "author": [
+              {
+                "family": "Ficken",
+                "given": "Adam"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Evans",
+                "given": "John"
+              },
+              {
+                "family": "Sesek",
+                "given": "Richard"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2023,
+                  10,
+                  25
+                ]
+              ]
+            },
+            "container-title": "ASEM International Annual Conference",
+            "publisher": "University of Colorado",
+            "publisher-place": "Boulder, CO",
+            "title": "Blending Product Innovation and Engineering Management for Graduate Education"
+          },
+          "after": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "Ficken",
+                "given": "Adam"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Evans",
+                "given": "John"
+              },
+              {
+                "family": "Sesek",
+                "given": "Richard"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2023,
+                  10,
+                  25
+                ]
+              ]
+            },
+            "event-title": "ASEM International Annual Conference",
+            "event-place": "Boulder, CO",
+            "genre": "Conference presentation",
+            "title": "Blending Product Innovation and Engineering Management for Graduate Education"
+          }
+        },
+        "title_protection": {
+          "before": {
+            "container-title": {
+              "protected_terms": [],
+              "preserve_case": false
+            },
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "after": {
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [
+                "ASEM"
+              ],
+              "preserve_case": false
+            }
+          }
+        },
+        "native_type": {
+          "before": {
+            "namespace": "zotero",
+            "value": "conferencePaper"
+          },
+          "after": null
+        },
+        "context": {
+          "before": [
+            {
+              "text": "Presented at the ASEM International Annual Conference",
+              "origin": "import",
+              "original_ref": "users/5765833/items/K3QA9NUH"
+            }
+          ],
+          "after": [
+            {
+              "text": "Printed byline names the owner Dan O’Leary.",
+              "origin": "user"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "shared_gate": {
+    "exit_code": 0,
+    "summary": [
+      {
+        "project": "jhl-report",
+        "consumer": "quarto",
+        "identical": 92
+      },
+      {
+        "project": "jhl-report",
+        "consumer": "site",
+        "identical": 103
+      },
+      {
+        "project": "jose-danvas",
+        "consumer": "quarto",
+        "identical": 11
+      },
+      {
+        "project": "jose-danvas",
+        "consumer": "jose",
+        "identical": 11
+      },
+      {
+        "project": "manufacturing-training-media-tradeoffs",
+        "consumer": "html",
+        "identical": 39
+      },
+      {
+        "project": "manufacturing-training-media-tradeoffs",
+        "consumer": "elsevier",
+        "identical": 39
+      },
+      {
+        "project": "dema-llm",
+        "consumer": "tdd-html",
+        "identical": 34
+      },
+      {
+        "project": "dema-llm",
+        "consumer": "tdd-pdf",
+        "identical": 34
+      },
+      {
+        "project": "dema-llm",
+        "consumer": "pdd-docx",
+        "identical": 6
+      },
+      {
+        "project": "dema-llm",
+        "consumer": "pdd-pdf",
+        "identical": 6
+      },
+      {
+        "project": "near-earth-object-monitor",
+        "consumer": "neo-report",
+        "identical": 2
+      },
+      {
+        "project": "near-earth-object-monitor",
+        "consumer": "neo-report-agu",
+        "identical": 2
+      }
+    ],
+    "changes": []
+  },
+  "artifacts": {
+    "baseline_html": {
+      "path": "/private/tmp/refs-cv-second-revision/baseline/_output/cv-master.html",
+      "sha256": "817c93bd0ce14635c3478c9570c96ac68b2e3848d1369c29c0cdebfc92959034"
+    },
+    "baseline_pdf": {
+      "path": "/private/tmp/refs-cv-second-revision/baseline/_output/cv-master.pdf",
+      "sha256": "1c658da1321a186978b088d5fe936a61b2096f78f375f8fb4245f1e063bba312"
+    },
+    "candidate_html": {
+      "path": "/private/tmp/refs-cv-second-revision/candidate/_output/cv-master.html",
+      "sha256": "ac15bb497a77abcdba4c7cd3c38f3d43b4086cb8b10478f2bcf82210254e757d"
+    },
+    "candidate_pdf": {
+      "path": "/private/tmp/refs-cv-second-revision/candidate/_output/cv-master.pdf",
+      "sha256": "a256be333e0c62eb29c9e62161a79de253af3f7fe11557e624046423e96335fe"
+    }
+  }
+}
