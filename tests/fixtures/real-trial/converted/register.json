@@ -711,6 +711,118 @@
       "proposal_commit": "4a69c29",
       "execution_source_commit": "e2231a7fe8143dc86a4972e3b6fb42c32a26f4a8",
       "notes": "Adopted configuration. Each full native PDF uses current report front matter with explicitly selected saved computed Markdown body and figures, checks citation keys against the current source, and disables fresh Jupyter/NASA execution. No bibliography switch or legacy assertion remains."
+    },
+    {
+      "name": "cv",
+      "path": "/Volumes/Casa/pub/cv",
+      "refs_project": "cv",
+      "targets": [
+        {
+          "path": "refs/cv.json",
+          "profile": "csl-json-v1"
+        }
+      ],
+      "exclude": [
+        "_output",
+        ".refs-gate",
+        "docs/sessions"
+      ],
+      "consumers": [
+        {
+          "name": "html",
+          "command": [
+            "python3",
+            "-c",
+            "from pathlib import Path\nimport subprocess,sys\np=Path('.refs-gate');p.mkdir(exist_ok=True)\n(p/'cv_consumer.py').write_text('\"\"\"Scratch-only native CV rendering and reference extraction.\"\"\"\\nimport json\\nimport re\\nimport subprocess\\nimport sys\\nimport unicodedata\\nfrom html.parser import HTMLParser\\nfrom pathlib import Path\\n\\nroot = Path.cwd()\\nassert not (root / \\'.git\\').exists(), \\'CV gate refuses a live checkout\\'\\noutput = root / \\'.refs-gate\\'\\noutput.mkdir(exist_ok=True)\\nmode = sys.argv[1]\\nassert mode in (\\'html\\', \\'pdf\\')\\nif mode == \\'html\\':\\n    subprocess.run([\\'quarto\\', \\'render\\', \\'cv-master.qmd\\', \\'--to\\', \\'all\\'], check=True)\\n\\nclass Entries(HTMLParser):\\n    def __init__(self):\\n        super().__init__()\\n        self.depth = 0\\n        self.entry = None\\n        self.rows = []\\n\\n    def handle_starttag(self, tag, attrs):\\n        attrs = dict(attrs)\\n        if tag == \\'div\\':\\n            self.depth += 1\\n            if \\'csl-entry\\' in attrs.get(\\'class\\', \\'\\').split():\\n                self.entry = {\\'key\\': attrs[\\'id\\'][4:], \\'parts\\': [], \\'depth\\': self.depth}\\n\\n    def handle_endtag(self, tag):\\n        if tag == \\'div\\':\\n            if self.entry and self.entry[\\'depth\\'] == self.depth:\\n                self.rows.append({\\'key\\': self.entry[\\'key\\'], \\'text\\': \\' \\'.join(\\'\\'.join(self.entry[\\'parts\\']).split())})\\n                self.entry = None\\n            self.depth -= 1\\n\\n    def handle_data(self, data):\\n        if self.entry:\\n            self.entry[\\'parts\\'].append(data)\\n\\nparser = Entries()\\nparser.feed((root / \\'_output/cv-master.html\\').read_text())\\nkeys = {record[\\'id\\'] for record in json.loads((root / \\'refs/cv.json\\').read_text())}\\nassert len(parser.rows) == len(keys) and {row[\\'key\\'] for row in parser.rows} == keys\\nrows = parser.rows\\nif mode == \\'pdf\\':\\n    # HTML supplies identities, never replacement PDF content. Locate every complete\\n    # entry in the independently extracted native PDF and retain that PDF substring.\\n    text = subprocess.check_output([\\'pdftotext\\', \\'-layout\\', str(root / \\'_output/cv-master.pdf\\'), \\'-\\'], text=True)\\n    chars, offsets = [], []\\n    for index, char in enumerate(text):\\n        for normal in unicodedata.normalize(\\'NFKC\\', char):\\n            if not normal.isspace() and normal != \\'\\\\u00ad\\':\\n                chars.append(normal)\\n                offsets.append(index)\\n    normalized = \\'\\'.join(chars)\\n    def normalize(value):\\n        return re.sub(r\\'\\\\s+\\', \\'\\', unicodedata.normalize(\\'NFKC\\', value)).replace(\\'\\\\u00ad\\', \\'\\')\\n    rows = []\\n    for row in parser.rows:\\n        query = normalize(row[\\'text\\'])\\n        start = normalized.find(query)\\n        assert start >= 0, (\\'Native PDF reference missing or differs\\', row[\\'key\\'])\\n        end = start + len(query) - 1\\n        actual = \\' \\'.join(text[offsets[start]:offsets[end] + 1].split())\\n        assert normalize(actual) == query\\n        rows.append({\\'key\\': row[\\'key\\'], \\'text\\': actual})\\n    (output / \\'cv-pdf-text.txt\\').write_text(text)\\n(output / (\\'cv-\\' + mode + \\'.json\\')).write_text(json.dumps(rows, ensure_ascii=False))\\n')\nsubprocess.run([sys.executable,str(p/'cv_consumer.py'),'html'],check=True)\n"
+          ],
+          "artifact": ".refs-gate/cv-html.json",
+          "extract": {
+            "kind": "json",
+            "path": [],
+            "key": "key"
+          },
+          "tools": {
+            "quarto": {
+              "command": [
+                "quarto",
+                "--version"
+              ],
+              "recorded": "1.10.18"
+            },
+            "pandoc": {
+              "command": [
+                "quarto",
+                "pandoc",
+                "--version"
+              ],
+              "recorded": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose."
+            },
+            "pdftotext": {
+              "command": [
+                "pdftotext",
+                "-v"
+              ],
+              "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+            }
+          },
+          "style": "Native CV APA style, owner-approved sentence casing; full HTML and Typst PDF rendered, actual references extracted",
+          "fixture_provenance": {
+            "publication_commit": "84ad8ab0192988ea0e59dfc6fb99815261a289f9",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-29T05:26:10.455082+00:00",
+            "artifact_sha256": "e9c4064e959509547f95e84c76a0c19c5f0c201fb1bfc8c10a784b61985a9116",
+            "fixture_sha256": "862d849e3be70f51a2759ed4c80f7e1b586c3fb2d919f3d2dad359a40fb06523"
+          }
+        },
+        {
+          "name": "pdf",
+          "command": [
+            "python3",
+            ".refs-gate/cv_consumer.py",
+            "pdf"
+          ],
+          "artifact": ".refs-gate/cv-pdf.json",
+          "extract": {
+            "kind": "json",
+            "path": [],
+            "key": "key"
+          },
+          "tools": {
+            "quarto": {
+              "command": [
+                "quarto",
+                "--version"
+              ],
+              "recorded": "1.10.18"
+            },
+            "pandoc": {
+              "command": [
+                "quarto",
+                "pandoc",
+                "--version"
+              ],
+              "recorded": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose."
+            },
+            "pdftotext": {
+              "command": [
+                "pdftotext",
+                "-v"
+              ],
+              "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+            }
+          },
+          "style": "Native CV APA style, owner-approved sentence casing; full HTML and Typst PDF rendered, actual references extracted",
+          "fixture_provenance": {
+            "publication_commit": "84ad8ab0192988ea0e59dfc6fb99815261a289f9",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-29T05:26:10.459515+00:00",
+            "artifact_sha256": "52bf9b4edb400d3eb23de8d8d1fec125c1d01d527316ab5824ac9a17ae2f37b5",
+            "fixture_sha256": "38c320ca27b268694a6993b3385879ccf960b2d728e9e176b3c1a9d5a31e1ec4"
+          }
+        }
+      ],
+      "notes": "Adopted configuration. The project carries its section manifest, pre-render selector, local style/highlighter and activity YAML. The first consumer renders both native formats; the second extracts PDF text using HTML identities and verifies every complete entry in the PDF. Fixtures re-recorded at adopted CV commit 84ad8ab after the owner's conditional \"yes\" (2026-09-29-002457-s1-cv-rerecord-approved.md), with all 44 CV and 379 other entries identical. Fixture bytes are unchanged from the accepted pre-adoption render.",
+      "execution_source_commit": "84ad8ab0192988ea0e59dfc6fb99815261a289f9"
     }
   ]
 }
