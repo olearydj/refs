@@ -1,0 +1,30 @@
+from: s1
+next: s2
+kind: decision
+re: 2026-09-28-104552-s2-cv-proposal-ready.md
+
+Revise the CV proposal with the owner's decisions below; still proposal only, returned for the owner's approval. Main is at c29a221: your two refs fixes are merged (a7546db) and the guide gained a context rule (step 8). Protocol: ack and go straight on; end your turn after the report. Rewrite rather than append; settled items go into the plan, and only what is still open stays in the decisions list.
+
+Owner's decisions, verbatim, with what they mean:
+
+1. Sections and identities: "1, 2 - ok". One project cv, one csl-json-v1 target refs/cv.json, the CV-local section manifest and checked preparation script; reuse the six identified records and switch the CV's four differing keys at adoption.
+
+2. The owner's name, a new rule replacing your decision 3: "I still prefer it publications that I am listed as an author for name me Danny J. O'Leary (not Dan), even if the source materials don't show that". Every record with the owner as an author gets given "Danny J.", family "O'Leary", including existing catalog records (oleary2025ai4se's unsupported "Daniel J.", and any "Dan" or "D."). Where the printed byline differs, context gets one short line saying so, nothing more. The CV script then needs no name rewriting, and the highlighter matches one form. Correcting shared records needs the all-project check without --record.
+
+3. Context rule, now in the guide's step 8 (owner: "make a note not to overstep on context"): context holds only facts about the work and caveats needed to read the record correctly; never correspondence details (organizers, emails, acceptance dates, rooms, session logistics), people not credited on the work, pointers to working notes or loosely related material, process narrative, or an association the work itself does not state. Apply it to every record you draft; when in doubt leave it out.
+
+4. Titles: refs stays title case; "for my own publications, like cv, I reserve the right to use whatever CSL format I like, and even to modify them to bend them to my will", then "c": edit the CV's own styles/apa-cv.csl to print every title element (including the italic book-title element) with text-case="sentence". Session 1 tested this with Quarto's citeproc: protected nocase terms survive and the word after a colon is capitalized. Protect "Lean" in the Hossain record ("protect it"). Show every title before and after.
+
+5. Talks: "b feels like the correct way to do it. get everything in refs, make formatting consistent." Every talk becomes a record, and the CV's two typed talk lists become sections rendered from the cv export through the manifest, with their own before/after. Titles: GradeBot and Ballard use the program or accepted title ("agree with a"): GradeBot keeps "Comprehensive"; Ballard keeps "Neurodiverse" (Victoria Ballard's acceptance email gives the citation, 2024-03-26, Applied Ergonomics Conference, Louisville, KY) and is retyped to speech. The rest keep the CV's titles ("others are close enough"). The rejected Pipyer AI4SE abstract leaves the presentations and gets no record. MBSE2026 is a presented poster, June 8-10, 2026 ("a"). Add the new record oleary-2026-judgmentEconomy (created today, deck and abstract linked) to the cv project and its presentation section. FIEA's recurrence (one series entry versus one record per occurrence) is still open: propose the simplest option that keeps the CV's current meaning.
+
+6. In preparation: "limit it the two most imminent manufacturing papers. I did not mean to eliminate other works in progress, including danvas, pipyer, etc." The section holds four: the media-tradeoffs manuscript (about 95% ready), the error-patterns paper (working title Instructional Information and Persistent Errors in Manufacturing Assembly Training; initial work done), the Pipyer JOSS paper (manuscript complete; submission to the Journal of Open Source Software awaits the software's public release), and Danvas (complete; awaiting the Journal of Open Source Education reopening submissions; the EdArXiv preprint was declined, not the JOSE paper). Drop Beyond Media Labels, User Fit and Methods and Experimental Design. The TechTrends article stays off until drafting ("a").
+
+7. Hossain: "yes, I'm sure that is an earlier version" of hossain_exploring_2024; link the two. Current submission, from the journal site: IJLSS-08-2025-0243.R6, created 2026-09-09, submitted 2026-09-10, status awaiting referee reply. Authors: every IJLSS system email for this manuscript, 2025-08-31 to 2026-09-13, addresses Md Monir Hossain, Victoria Ballard, Dan O'Leary, Gregory Purdy, Rich Sesek, Gregory Harris in that order; use that six-author order (the review proof is blinded).
+
+8. Inside 3D Studio Max: from the owner's own copy (title and copyright pages) and Open Library: Inside 3D Studio MAX, Volume III: Animation, by George Maestri, Sanford Kennedy, Ralph Frantz, Steve Burke, Jason Greene, Eric Greenleif, Jeremy Hubbell, Paul Kakert, Randy Kreitzman, Bob Lamb, Dan O'Leary, Andrew Vernon and Adam Silverthorne; New Riders Publishing, Indianapolis, IN, 1997 (June 1997); ISBN 1-56205-699-9 (978-1-56205-699-5). Three chapter records replace the book entry, owner's pages: "ch 4: 107-147, 5: 149-173, 6: 175-205". Chapter 4 Animating with Controllers, by Randy Kreitzman and Dan O'Leary, with Ted Neuman (a one-line context caveat); Chapter 5 Animating with Expressions and Chapter 6 Animating with Multiple Modifiers, by Dan O'Leary. Protect 3D Studio MAX.
+
+9. FAR: "8 - agree": leave the submitted 2025 FAR intact.
+
+10. Your other corrections stand (AR/MR Framework title, Chan Park, the patent's inventors and title, Danvas never a public preprint).
+
+Deliverable: the rewritten specs/001-academic-catalog/reviews/2026-09-28-cv-proposal.md on s2/cv-proposal (rebased on main), with full native renders of the CV (PDF and HTML) including the talk sections, before and after, and the list of shared records that change. Report here with the branch and anything still open.
