@@ -1,0 +1,4409 @@
+{
+  "approved_proposal": "1a9b690",
+  "base": "122b0c5",
+  "preflight": {
+    "catalog_sha256": "06efbc84a966614bcf7c275eb2f9374e698c2b9c63450a4fc5c12f19b81db0cb",
+    "cv_commit": "07d3b2b948d265879edbd35a22fc47a445f37cbd",
+    "cv_clean": true,
+    "new_keys": [
+      "oleary2025econ-uncertainty",
+      "madachyolearymcdermott2026genai-se-tips",
+      "hossain2024lean-industry40",
+      "ganesh2026ai-enhanced-dema",
+      "oleary2026instructional-media-tradeoffs",
+      "oleary2009time-dilation",
+      "ganesh2026ai-driven-dema",
+      "gadzey2026dema-digital-thread",
+      "oleary2026danvas-jose",
+      "olearyficken2025innovation-culture",
+      "oleary-2026-instructionalInformation",
+      "oleary-2026-pipyerEvidence",
+      "kreitzman-1997-animatingControllers",
+      "oleary-1997-animatingExpressions",
+      "oleary-1997-animatingMultiple"
+    ],
+    "reused_keys": [
+      "oleary2025framework",
+      "olearyledford2026insight",
+      "oleary2025binary-classification",
+      "oleary2025ai4se",
+      "ballard2024role",
+      "ficken2023blending",
+      "oleary-2026-judgmentEconomy"
+    ]
+  },
+  "backup_path": "/Volumes/Casa/refs-backups/2026-09-28-before-cv-conversion",
+  "validated_backup_manifest": {
+    "format": "refs-backup",
+    "schema_version": 1,
+    "configuration_path": "/Users/djo/.config/refs/config.toml",
+    "catalog_schema_version": 6,
+    "catalog_id": "c03298ee-caee-4e20-aa0c-ddf121aafc0a",
+    "catalog_revision": 4864,
+    "external_contents_included": false,
+    "members": {
+      "catalog.sqlite": {
+        "size": 32047104,
+        "sha256": "43d85d773db82cc7b581cc9242249ba094b280c6e9f1dbdf822ab65530e80c0f"
+      },
+      "config.toml": {
+        "size": 423,
+        "sha256": "61b3093d2ecf1caa6a5dfb3360fac24ac486a5590cdd443e37c54e249a16d0d2"
+      },
+      "resources.jsonl": {
+        "size": 410978,
+        "sha256": "80e2a61e759b9e47d041bb0530267602fa85ae44e8326fcba6708f51437cb587"
+      }
+    }
+  },
+  "intake": {
+    "records": [
+      {
+        "key": "oleary2025framework",
+        "operation": "update",
+        "id": "6fa9e382-6621-4a6b-9a74-0625221b1a19",
+        "warnings": []
+      },
+      {
+        "key": "oleary2025econ-uncertainty",
+        "operation": "add",
+        "id": "15b68374-92b8-4709-a5a2-caa975b5183c",
+        "warnings": []
+      },
+      {
+        "key": "olearyledford2026insight",
+        "operation": "update",
+        "id": "5c903a55-e2f9-4087-80f9-a6572c639263",
+        "warnings": [
+          {
+            "code": "unprotected_capital",
+            "message": "Review unprotected internal capitals",
+            "path": "metadata.container-title",
+            "details": {},
+            "retryable": false
+          }
+        ]
+      },
+      {
+        "key": "madachyolearymcdermott2026genai-se-tips",
+        "operation": "add",
+        "id": "d04195d7-850e-4f3b-95c1-b1b5c936bdb0",
+        "warnings": [
+          {
+            "code": "unprotected_capital",
+            "message": "Review unprotected internal capitals",
+            "path": "metadata.container-title",
+            "details": {},
+            "retryable": false
+          }
+        ]
+      },
+      {
+        "key": "hossain2024lean-industry40",
+        "operation": "add",
+        "id": "062008f8-d23b-4ce2-befa-9774b4d490f2",
+        "warnings": []
+      },
+      {
+        "key": "ganesh2026ai-enhanced-dema",
+        "operation": "add",
+        "id": "c8161d3b-735a-4f03-bac2-8b7113c21aee",
+        "warnings": [
+          {
+            "code": "unprotected_capital",
+            "message": "Review unprotected internal capitals",
+            "path": "metadata.event-title",
+            "details": {},
+            "retryable": false
+          }
+        ]
+      },
+      {
+        "key": "oleary2026instructional-media-tradeoffs",
+        "operation": "add",
+        "id": "3398e1ac-c0b7-41e2-b6b0-8e4ce991210b",
+        "warnings": []
+      },
+      {
+        "key": "oleary2009time-dilation",
+        "operation": "add",
+        "id": "5b21e9bd-35c6-4f0d-b9ef-3b5ba843dc18",
+        "warnings": []
+      },
+      {
+        "key": "ganesh2026ai-driven-dema",
+        "operation": "add",
+        "id": "deeee184-657e-45ec-a9b9-082d69654f05",
+        "warnings": []
+      },
+      {
+        "key": "gadzey2026dema-digital-thread",
+        "operation": "add",
+        "id": "f33dfc34-f392-4853-8c1c-611ebb982aae",
+        "warnings": [
+          {
+            "code": "likely_match",
+            "message": "Similar title found; created separately because title alone is not identity",
+            "path": null,
+            "details": {
+              "candidates": [
+                {
+                  "id": "b502cc23-fcb0-481a-ad08-5b59ee84e4e6",
+                  "citation_key": "ledford2023dissertation"
+                }
+              ]
+            },
+            "retryable": false
+          }
+        ]
+      },
+      {
+        "key": "oleary2026danvas-jose",
+        "operation": "add",
+        "id": "e47e96dd-1a1c-43ba-9848-670c7bfb4760",
+        "warnings": []
+      },
+      {
+        "key": "oleary2025binary-classification",
+        "operation": "update",
+        "id": "c67972f5-0957-422b-ac42-29f2f1e2ded5",
+        "warnings": []
+      },
+      {
+        "key": "oleary2025ai4se",
+        "operation": "update",
+        "id": "1838ba66-10ad-487d-99fe-eb26527bcd0d",
+        "warnings": [
+          {
+            "code": "protected_term_missing",
+            "message": "Protected term is absent: AI",
+            "path": "metadata.event-title",
+            "details": {},
+            "retryable": false
+          },
+          {
+            "code": "protected_term_missing",
+            "message": "Protected term is absent: SE",
+            "path": "metadata.event-title",
+            "details": {},
+            "retryable": false
+          }
+        ]
+      },
+      {
+        "key": "olearyficken2025innovation-culture",
+        "operation": "add",
+        "id": "129e386d-c047-4a03-a652-12de3a83cbdd",
+        "warnings": []
+      },
+      {
+        "key": "ballard2024role",
+        "operation": "update",
+        "id": "21b2d067-d835-45ba-b15f-3242ffe4fb8b",
+        "warnings": []
+      },
+      {
+        "key": "ficken2023blending",
+        "operation": "update",
+        "id": "f69b5542-8f11-45b2-89f1-65191afc260e",
+        "warnings": []
+      },
+      {
+        "key": "oleary-2026-instructionalInformation",
+        "operation": "add",
+        "id": "ca0e6a73-066c-48bf-88f2-5cc93a04cc6e",
+        "warnings": []
+      },
+      {
+        "key": "oleary-2026-pipyerEvidence",
+        "operation": "add",
+        "id": "beef340e-04cb-4057-b112-7fa59d9738ef",
+        "warnings": []
+      },
+      {
+        "key": "kreitzman-1997-animatingControllers",
+        "operation": "add",
+        "id": "dbcdd96e-a01e-4c6d-8456-df642470889c",
+        "warnings": []
+      },
+      {
+        "key": "oleary-1997-animatingExpressions",
+        "operation": "add",
+        "id": "f13f3734-0e02-4889-82be-aa71e9740ea4",
+        "warnings": []
+      },
+      {
+        "key": "oleary-1997-animatingMultiple",
+        "operation": "add",
+        "id": "f06ac95e-cf73-4086-9b1c-fbd941ecbdc2",
+        "warnings": []
+      },
+      {
+        "key": "oleary-2026-judgmentEconomy",
+        "operation": "reuse",
+        "id": "9bbf3e16-e4d7-4744-8f4e-b745e7fd15af",
+        "warnings": []
+      }
+    ],
+    "originals": [
+      {
+        "cv_key": "oleary2025armr-training",
+        "catalog_key": "oleary2025framework",
+        "id": "c052c7e0-e53b-4684-ad6a-aff5b1d74897",
+        "sha256": "1baedd09cfa0d065a50c29db15d184bd0469d7079b9072c1f70e89f0a49f2167"
+      },
+      {
+        "cv_key": "oleary2025econ-uncertainty",
+        "catalog_key": "oleary2025econ-uncertainty",
+        "id": "1661c295-c1b5-4d7a-9f2e-bad52a6a00be",
+        "sha256": "5caec714b7b0fcac884fdc70e6f3cc7bed696436568b435c1fe47ac5fa2fed8b"
+      },
+      {
+        "cv_key": "olearyledford2026insight",
+        "catalog_key": "olearyledford2026insight",
+        "id": "fed6683f-0241-492e-b675-20fa05b59b91",
+        "sha256": "ed8f1a86b20461135ba7d90dafbfa74dd90e922d21761ae1b134f72273055d41"
+      },
+      {
+        "cv_key": "madachyolearymcdermott2026genai-se-tips",
+        "catalog_key": "madachyolearymcdermott2026genai-se-tips",
+        "id": "95adff39-1354-461b-add6-10db5781a3d7",
+        "sha256": "e628859d97c0971ebaa86589e18ee9c9c74d49b5b388c7d3aa8998fec92df7b9"
+      },
+      {
+        "cv_key": "hossain2024lean-industry40",
+        "catalog_key": "hossain2024lean-industry40",
+        "id": "5c4ecd86-51dc-48c8-b06f-e41c19ef40c5",
+        "sha256": "856e50b54cccdfb408cbea0ec5c6d6cdff96b3db9cb85593d8d2f9b371a28c07"
+      },
+      {
+        "cv_key": "ganesh2026ai-enhanced-dema",
+        "catalog_key": "ganesh2026ai-enhanced-dema",
+        "id": "43d657c0-f517-4011-9327-0cf58ed3f8c0",
+        "sha256": "0e948bdb182968219900a5f183b6656916452a035583de3da0a49768a717d970"
+      },
+      {
+        "cv_key": "oleary2026instructional-media-tradeoffs",
+        "catalog_key": "oleary2026instructional-media-tradeoffs",
+        "id": "18021809-7f2b-4e3d-a0c7-8484df999a95",
+        "sha256": "2d30ceeb15c57e6975844be05fa2114c79b47500a4b7d02fc2601805d6bcb113"
+      },
+      {
+        "cv_key": "oleary2009time-dilation",
+        "catalog_key": "oleary2009time-dilation",
+        "id": "32c31d0f-cf44-4264-a1dd-09a2707f23da",
+        "sha256": "bb608b1270d5427ec266c5790b2bf060eaf06fd471efdcf81417e0084068f54b"
+      },
+      {
+        "cv_key": "ganesh2026ai-driven-dema",
+        "catalog_key": "ganesh2026ai-driven-dema",
+        "id": "9dfdc4d2-0425-4620-ab1b-67820b60f85a",
+        "sha256": "e29c3484579edd38d91a4cf81cb5c5fa4c8be5777904e4c4bc9067190e797413"
+      },
+      {
+        "cv_key": "gadzey2026dema-digital-thread",
+        "catalog_key": "gadzey2026dema-digital-thread",
+        "id": "19fa968b-357a-4745-9ba3-3e01bdb69578",
+        "sha256": "06b92ed60fdbaebcc50ec079fea827a3d41aa93f737c9daa7e9d30d217f6949a"
+      },
+      {
+        "cv_key": "oleary2026danvas-jose",
+        "catalog_key": "oleary2026danvas-jose",
+        "id": "1ea5f2ca-186f-4507-9da4-50755e7cbfc0",
+        "sha256": "6bbba77fc65f929064a1e1c514327cc4bcfbb7c0562f96666244a6f95b6a530a"
+      },
+      {
+        "cv_key": "oleary2025binary-classification",
+        "catalog_key": "oleary2025binary-classification",
+        "id": "d206b6da-9f2a-4454-ace3-5e6065b25830",
+        "sha256": "4327522e54ff02fddf5bff4f20dc4214dc4e4cf88991c24264099770010f9c25"
+      },
+      {
+        "cv_key": "olearyledford2025ai-enhanced-dema",
+        "catalog_key": "oleary2025ai4se",
+        "id": "1168645b-083e-48a0-8970-2b82ea14d57b",
+        "sha256": "67b7893a890270da60c867952521e75ea83fd83bef90e29258ed5d0ce31eeac9"
+      },
+      {
+        "cv_key": "olearyficken2025innovation-culture",
+        "catalog_key": "olearyficken2025innovation-culture",
+        "id": "c9b4d1e7-eb82-4dbe-94dd-f35b35cbc1cc",
+        "sha256": "6d3cb47dead435ff7c8b4526b30417f603691723ee0e8d3d8c242596b701bb2c"
+      },
+      {
+        "cv_key": "ballard2024neurodiverse-ergonomics",
+        "catalog_key": "ballard2024role",
+        "id": "0c3e5840-35c2-488d-b5a9-0e9ac3d99a53",
+        "sha256": "986ae299774bf96c21a12ad6bec84ecbea07e19f1eee6b20612c4dab33453d3e"
+      },
+      {
+        "cv_key": "ficken2023product-innovation-education",
+        "catalog_key": "ficken2023blending",
+        "id": "bc8cc91c-de26-4530-8174-754616bc5da6",
+        "sha256": "094173b6d0590ef20791757968bdc81b656e27e2c20c2157e7462edfbaf3b11b"
+      }
+    ],
+    "linked_files": [
+      {
+        "key": "oleary2025econ-uncertainty",
+        "path": "/Volumes/Casa/pub/2025-iise-engineering-economy-uncertainty/eng_econ-case-final.pdf",
+        "sha256": "d5580276537867fdc059111200d8f2dc14af6f2901805a80ebf2e4a5fec8ceab",
+        "result": {
+          "id": "53d3e14f-f668-47af-9b7a-69da903ff05f",
+          "source_id": "15b68374-92b8-4709-a5a2-caa975b5183c",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2025-iise-engineering-economy-uncertainty/eng_econ-case-final.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null,
+          "dry_run": false,
+          "citation_key": "oleary2025econ-uncertainty",
+          "resolved_path": "/Volumes/Casa/pub/2025-iise-engineering-economy-uncertainty/eng_econ-case-final.pdf"
+        }
+      },
+      {
+        "key": "madachyolearymcdermott2026genai-se-tips",
+        "path": "/Volumes/Casa/pub/2026-incose-insight-ai4se-top-20-tips/published/madachy-et-al-2026-twenty-tips-version-of-record.pdf",
+        "sha256": "673208d155c3828ce347e0ff89421ca52586fad9ead011673af2f395f2c803f5",
+        "result": {
+          "id": "62c03320-66b8-4acf-b758-f5eaf8d08aba",
+          "source_id": "d04195d7-850e-4f3b-95c1-b1b5c936bdb0",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2026-incose-insight-ai4se-top-20-tips/published/madachy-et-al-2026-twenty-tips-version-of-record.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null,
+          "dry_run": false,
+          "citation_key": "madachyolearymcdermott2026genai-se-tips",
+          "resolved_path": "/Volumes/Casa/pub/2026-incose-insight-ai4se-top-20-tips/published/madachy-et-al-2026-twenty-tips-version-of-record.pdf"
+        }
+      },
+      {
+        "key": "oleary2026instructional-media-tradeoffs",
+        "path": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/_output/submission/article.pdf",
+        "sha256": "49d204de7d1abf78f5847679d91f64b507e3cd17fd2f22b86e655dabe4e7583f",
+        "result": {
+          "id": "ec914f69-3ded-4d0d-9dd0-89b6602d80fd",
+          "source_id": "3398e1ac-c0b7-41e2-b6b0-8e4ce991210b",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/_output/submission/article.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null,
+          "dry_run": false,
+          "citation_key": "oleary2026instructional-media-tradeoffs",
+          "resolved_path": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/_output/submission/article.pdf"
+        }
+      },
+      {
+        "key": "oleary-2026-pipyerEvidence",
+        "path": "/Volumes/Casa/pub/pipyer-paper/output/pdf/paper.pdf",
+        "sha256": "48a9790ec5b2dfc604e8f0473cc076627dbd5437d4eab1ca17041faa516ad327",
+        "result": {
+          "id": "a1c401f6-ba41-4d04-840f-163c47e13203",
+          "source_id": "beef340e-04cb-4057-b112-7fa59d9738ef",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/pipyer-paper/output/pdf/paper.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null,
+          "dry_run": false,
+          "citation_key": "oleary-2026-pipyerEvidence",
+          "resolved_path": "/Volumes/Casa/pub/pipyer-paper/output/pdf/paper.pdf"
+        }
+      },
+      {
+        "key": "oleary2026danvas-jose",
+        "path": "/Volumes/Casa/pub/2026-jose-danvas/output/pdf/paper.pdf",
+        "sha256": "5c715b09076a0bfe26925456b4eeda11a74a7c29bd15a6d9cbdb6ad554a31afc",
+        "result": {
+          "id": "aec17dd1-ed8b-4a21-a9f3-4fc1fa7e6afa",
+          "source_id": "e47e96dd-1a1c-43ba-9848-670c7bfb4760",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2026-jose-danvas/output/pdf/paper.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null,
+          "dry_run": false,
+          "citation_key": "oleary2026danvas-jose",
+          "resolved_path": "/Volumes/Casa/pub/2026-jose-danvas/output/pdf/paper.pdf"
+        }
+      },
+      {
+        "key": "ganesh2026ai-driven-dema",
+        "path": "/Volumes/Casa/pub/posters/2026-08-26-ai-driven-dema-outreach-symposium.pptx",
+        "sha256": "47bac8f46b7dc13a96ccad02559062e3b48dd6320b2e7d40bb68b724280685ee",
+        "result": {
+          "id": "5055b5b2-b7f0-46a9-ac7f-9b4ef008db5c",
+          "source_id": "deeee184-657e-45ec-a9b9-082d69654f05",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/posters/2026-08-26-ai-driven-dema-outreach-symposium.pptx",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null,
+          "dry_run": false,
+          "citation_key": "ganesh2026ai-driven-dema",
+          "resolved_path": "/Volumes/Casa/pub/posters/2026-08-26-ai-driven-dema-outreach-symposium.pptx"
+        }
+      },
+      {
+        "key": "gadzey2026dema-digital-thread",
+        "path": "/Volumes/Casa/pub/posters/2026-03-03-dema-digital-thread-dib-summit.pptx",
+        "sha256": "856cc122a052313a672b11db820f006aaefe1f3e0b3de5e5c022e6bd45e2fe0a",
+        "result": {
+          "id": "cb3adcbb-271a-44d1-9ed9-4cc709458782",
+          "source_id": "f33dfc34-f392-4853-8c1c-611ebb982aae",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/posters/2026-03-03-dema-digital-thread-dib-summit.pptx",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null,
+          "dry_run": false,
+          "citation_key": "gadzey2026dema-digital-thread",
+          "resolved_path": "/Volumes/Casa/pub/posters/2026-03-03-dema-digital-thread-dib-summit.pptx"
+        }
+      },
+      {
+        "key": "olearyficken2025innovation-culture",
+        "path": "/Volumes/Casa/au/!Presentations/IISE 2025/prod-innovation/prod_innov-iise2025.pdf",
+        "sha256": "bb28dc5e63dc97e3b7f17bf0612e21cedf9734ebb0fd7d87a29ad32c79432c24",
+        "result": {
+          "id": "e04f497d-2834-4451-b058-7240010e9d21",
+          "source_id": "129e386d-c047-4a03-a652-12de3a83cbdd",
+          "revision": 1,
+          "path": "/Volumes/Casa/au/!Presentations/IISE 2025/prod-innovation/prod_innov-iise2025.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null,
+          "dry_run": false,
+          "citation_key": "olearyficken2025innovation-culture",
+          "resolved_path": "/Volumes/Casa/au/!Presentations/IISE 2025/prod-innovation/prod_innov-iise2025.pdf"
+        }
+      },
+      {
+        "key": "ficken2023blending",
+        "path": "/Volumes/Casa/au/!Presentations/ASEM 2023/Auburn ASEM 2023-djo-2.pdf",
+        "sha256": "743b2bc027df337758a4bee7a4c6d1bb1821d9769ef9a824e14eca39a4b05567",
+        "result": {
+          "id": "2e8744ff-22a9-4abb-842d-8d4f97cc7840",
+          "source_id": "f69b5542-8f11-45b2-89f1-65191afc260e",
+          "revision": 1,
+          "path": "/Volumes/Casa/au/!Presentations/ASEM 2023/Auburn ASEM 2023-djo-2.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null,
+          "dry_run": false,
+          "citation_key": "ficken2023blending",
+          "resolved_path": "/Volumes/Casa/au/!Presentations/ASEM 2023/Auburn ASEM 2023-djo-2.pdf"
+        }
+      }
+    ],
+    "project": {
+      "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+      "name": "cv",
+      "description": "Curriculum vitae: approved citable works",
+      "revision": 23,
+      "sources": [
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Printed byline names the owner D. O’Leary.",
+              "origin": "user"
+            },
+            {
+              "text": "The printed poster says “ADHD Employees”; the record uses the accepted program title “Neurodiverse Employees”.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "zotero",
+                "library_uri": "users/5765833",
+                "item_key": "P9HKVMP6"
+              }
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            },
+            "title-short": {
+              "protected_terms": [],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "21b2d067-d835-45ba-b15f-3242ffe4fb8b",
+          "citation_key": "ballard2024role",
+          "state": "active",
+          "revision": 5,
+          "created_at": "2026-09-23T00:25:18.482207+00:00",
+          "updated_at": "2026-09-29T04:41:50.533104+00:00",
+          "loc": "dissertation/misc",
+          "metadata": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "Ballard",
+                "given": "Victoria"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Sesek",
+                "given": "Richard F."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2024
+                ]
+              ]
+            },
+            "event-title": "Applied Ergonomics Conference 2024",
+            "event-place": "Louisville, KY",
+            "genre": "Poster presentation",
+            "title": "The Role of Technology in Enhancing Workplace Ergonomics for Neurodiverse Employees: A Performance and Safety Perspective",
+            "title-short": "The Role of Technology in Enhancing Workplace Ergonomics for Neurodiverse Employees"
+          },
+          "corrected_fields": [
+            "context",
+            "extensions",
+            "legacy_tags",
+            "metadata",
+            "native_type",
+            "overrides",
+            "provenance",
+            "title_parts",
+            "title_protection"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "0c3e5840-35c2-488d-b5a9-0e9ac3d99a53",
+              "sha256": "986ae299774bf96c21a12ad6bec84ecbea07e19f1eee6b20612c4dab33453d3e",
+              "byte_length": 396,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#ballard2024neurodiverse-ergonomics"
+            },
+            {
+              "id": "5e2609bb-bac9-41b5-9b1c-7094e5857f8b",
+              "sha256": "fd1f05f72edd07adca212351814468298a2529246d54b9d637bf4aa9e6c3bec5",
+              "byte_length": 1168,
+              "format": "zotero-json",
+              "origin": "import-unchanged",
+              "locator": "/Users/djo/refs-cutover-20260922/zotero-json/items/P9HKVMP6.json"
+            },
+            {
+              "id": "6863adca-5b40-4cf0-b114-b7fdbbb12dd6",
+              "sha256": "fd1f05f72edd07adca212351814468298a2529246d54b9d637bf4aa9e6c3bec5",
+              "byte_length": 1168,
+              "format": "zotero-json",
+              "origin": "add",
+              "locator": "/Users/djo/refs-cutover-20260922/zotero-json/items/P9HKVMP6.json"
+            },
+            {
+              "id": "bf8eee0c-0efd-4cad-9435-a13e65e15b88",
+              "sha256": "fd1f05f72edd07adca212351814468298a2529246d54b9d637bf4aa9e6c3bec5",
+              "byte_length": 1168,
+              "format": "zotero-json",
+              "origin": "import-applied",
+              "locator": "/Users/djo/refs-cutover-20260922/zotero-json/items/P9HKVMP6.json"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "rights",
+              "reason": "Preserved from import: rights"
+            },
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [
+            {
+              "id": "1276a61b-5fc6-4c6c-ac74-135008cc0547",
+              "source_id": "21b2d067-d835-45ba-b15f-3242ffe4fb8b",
+              "revision": 2,
+              "path": null,
+              "root": "library",
+              "relative": "dissertation/misc/Ballard et al. - 2024 - The Role of Technology in Enhancing Workplace Ergo.pdf",
+              "label": "Ballard et al. - 2024 - The Role of Technology in Enhancing Workplace Ergo.pdf",
+              "media_type": "application/pdf",
+              "digest": "3030af266568ad7bc5740f00024b1bd285e7ea10293bfb239ebea52eb3f706f3",
+              "copied_from": {
+                "path": "/Users/djo/Box Sync/zotero/dissertation/misc/Ballard et al. - 2024 - The Role of Technology in Enhancing Workplace Ergo.pdf",
+                "root": null,
+                "relative": null
+              }
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            },
+            {
+              "id": "e4c809c7-33ee-4766-bb43-80cf06f9ae7c",
+              "name": "zotero-library"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Printed byline names the owner Dan O’Leary.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "zotero",
+                "library_uri": "users/5765833",
+                "item_key": "2STLKCQ2"
+              }
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [
+                "ASEM"
+              ],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "f69b5542-8f11-45b2-89f1-65191afc260e",
+          "citation_key": "ficken2023blending",
+          "state": "active",
+          "revision": 3,
+          "created_at": "2026-09-23T00:25:16.544622+00:00",
+          "updated_at": "2026-09-29T04:41:50.622173+00:00",
+          "metadata": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "Ficken",
+                "given": "Adam"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Evans",
+                "given": "John"
+              },
+              {
+                "family": "Sesek",
+                "given": "Richard"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2023,
+                  10,
+                  25
+                ]
+              ]
+            },
+            "event-title": "ASEM International Annual Conference",
+            "event-place": "Boulder, CO",
+            "genre": "Conference presentation",
+            "title": "Blending Product Innovation and Engineering Management for Graduate Education"
+          },
+          "corrected_fields": [
+            "context",
+            "extensions",
+            "legacy_tags",
+            "metadata",
+            "native_type",
+            "overrides",
+            "provenance",
+            "title_parts",
+            "title_protection"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": "talk",
+          "originals": [
+            {
+              "id": "86078044-88d4-46a9-ab6e-dea05522de4f",
+              "sha256": "816e82931c61f6f423e1b16df8732e74d02143e549253ed26c9a68ec00303870",
+              "byte_length": 1148,
+              "format": "zotero-json",
+              "origin": "import-unchanged",
+              "locator": "/Users/djo/refs-cutover-20260922/zotero-json/items/2STLKCQ2.json"
+            },
+            {
+              "id": "bc8cc91c-de26-4530-8174-754616bc5da6",
+              "sha256": "094173b6d0590ef20791757968bdc81b656e27e2c20c2157e7462edfbaf3b11b",
+              "byte_length": 419,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#ficken2023product-innovation-education"
+            },
+            {
+              "id": "dc7f57c4-4f48-4ff1-8469-64b815b0c2db",
+              "sha256": "816e82931c61f6f423e1b16df8732e74d02143e549253ed26c9a68ec00303870",
+              "byte_length": 1148,
+              "format": "zotero-json",
+              "origin": "add",
+              "locator": "/Users/djo/refs-cutover-20260922/zotero-json/items/2STLKCQ2.json"
+            },
+            {
+              "id": "e3b45fab-6796-4e42-9c7d-76d5ae9212ea",
+              "sha256": "816e82931c61f6f423e1b16df8732e74d02143e549253ed26c9a68ec00303870",
+              "byte_length": 1148,
+              "format": "zotero-json",
+              "origin": "import-applied",
+              "locator": "/Users/djo/refs-cutover-20260922/zotero-json/items/2STLKCQ2.json"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "rights",
+              "reason": "Preserved from import: rights"
+            },
+            {
+              "field": "extra",
+              "reason": "Preserved from import: extra"
+            },
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [
+            {
+              "id": "2e8744ff-22a9-4abb-842d-8d4f97cc7840",
+              "source_id": "f69b5542-8f11-45b2-89f1-65191afc260e",
+              "revision": 1,
+              "path": "/Volumes/Casa/au/!Presentations/ASEM 2023/Auburn ASEM 2023-djo-2.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            },
+            {
+              "id": "e4c809c7-33ee-4766-bb43-80cf06f9ae7c",
+              "name": "zotero-library"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Printed byline names the owner Dan O’Leary.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown"
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "DEMA"
+              ],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [
+            "presentation",
+            "conference"
+          ],
+          "id": "f33dfc34-f392-4853-8c1c-611ebb982aae",
+          "citation_key": "gadzey2026dema-digital-thread",
+          "state": "active",
+          "revision": 2,
+          "created_at": "2026-09-29T04:41:50.511442+00:00",
+          "updated_at": "2026-09-29T04:41:50.613587+00:00",
+          "metadata": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "Gadzey",
+                "given": "Selom"
+              },
+              {
+                "family": "Ganesh",
+                "given": "Parishruthi"
+              },
+              {
+                "family": "Bigonah",
+                "given": "Maryam"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Dozier",
+                "given": "Gerry"
+              },
+              {
+                "family": "Ledford",
+                "given": "Allison B."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2026,
+                  3,
+                  3
+                ],
+                [
+                  2026,
+                  3,
+                  4
+                ]
+              ]
+            },
+            "event-title": "Defense Industrial Base Digital Engineering Summit",
+            "event-place": "Auburn University",
+            "genre": "Poster presentation",
+            "title": "A Data Element Mapping and Analysis (DEMA) Approach for Implementing a Complete Digital Thread"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "19fa968b-357a-4745-9ba3-3e01bdb69578",
+              "sha256": "06b92ed60fdbaebcc50ec079fea827a3d41aa93f737c9daa7e9d30d217f6949a",
+              "byte_length": 484,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#gadzey2026dema-digital-thread"
+            },
+            {
+              "id": "d8a1bf25-7ceb-4394-8242-d2ff6a400a35",
+              "sha256": "0eb29d24f35b283d4a4640d53c98b1978336c891c161fbe51cdd7d54c9758480",
+              "byte_length": 1094,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: gadzey2026dema-digital-thread"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [
+            {
+              "id": "cb3adcbb-271a-44d1-9ed9-4cc709458782",
+              "source_id": "f33dfc34-f392-4853-8c1c-611ebb982aae",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/posters/2026-03-03-dema-digital-thread-dib-summit.pptx",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Printed byline names the owner Dan O’Leary.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown"
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "AI",
+                "DEMA"
+              ],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [
+            "presentation",
+            "conference"
+          ],
+          "id": "deeee184-657e-45ec-a9b9-082d69654f05",
+          "citation_key": "ganesh2026ai-driven-dema",
+          "state": "active",
+          "revision": 2,
+          "created_at": "2026-09-29T04:41:50.507223+00:00",
+          "updated_at": "2026-09-29T04:41:50.610943+00:00",
+          "metadata": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "Ganesh",
+                "given": "Parishruthi"
+              },
+              {
+                "family": "Gadzey",
+                "given": "Selom"
+              },
+              {
+                "family": "Bigonah",
+                "given": "Maryam"
+              },
+              {
+                "family": "Arslan",
+                "given": "Berke"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Ledford",
+                "given": "Allison"
+              },
+              {
+                "family": "Dozier",
+                "given": "Gerry"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2026,
+                  8,
+                  26
+                ],
+                [
+                  2026,
+                  8,
+                  27
+                ]
+              ]
+            },
+            "event-title": "2026 Outreach and Engaged Scholarship Symposium",
+            "event-place": "Auburn University",
+            "genre": "Poster presentation",
+            "title": "AI-Driven DEMA Framework for Data Mapping and Model-Based Systems Engineering"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "8580dc99-1230-4df6-956c-9f23a5ec0028",
+              "sha256": "858b8c2f5618ef3492b2194c5dbf2570db31c05102cd6ac7a75379bc02f5cf00",
+              "byte_length": 1114,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: ganesh2026ai-driven-dema"
+            },
+            {
+              "id": "9dfdc4d2-0425-4620-ab1b-67820b60f85a",
+              "sha256": "e29c3484579edd38d91a4cf81cb5c5fa4c8be5777904e4c4bc9067190e797413",
+              "byte_length": 482,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#ganesh2026ai-driven-dema"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [
+            {
+              "id": "5055b5b2-b7f0-46a9-ac7f-9b4ef008db5c",
+              "source_id": "deeee184-657e-45ec-a9b9-082d69654f05",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/posters/2026-08-26-ai-driven-dema-outreach-symposium.pptx",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Submitted byline names the owner Dan O’Leary.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown"
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "AI",
+                "DEMA"
+              ],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [
+                "MBSE2026"
+              ],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [
+            "presentation",
+            "conference"
+          ],
+          "id": "c8161d3b-735a-4f03-bac2-8b7113c21aee",
+          "citation_key": "ganesh2026ai-enhanced-dema",
+          "state": "active",
+          "revision": 1,
+          "created_at": "2026-09-29T04:41:50.494431+00:00",
+          "updated_at": "2026-09-29T04:41:50.494431+00:00",
+          "metadata": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "Ganesh",
+                "given": "Parishruthi"
+              },
+              {
+                "family": "Gadzey",
+                "given": "Selom"
+              },
+              {
+                "family": "Bigonah",
+                "given": "Maryam"
+              },
+              {
+                "family": "Arslan",
+                "given": "Berke"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Ledford",
+                "given": "Allison"
+              },
+              {
+                "family": "Dozier",
+                "given": "Gerry"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2026,
+                  6,
+                  8
+                ],
+                [
+                  2026,
+                  6,
+                  10
+                ]
+              ]
+            },
+            "event-title": "MBSE2026",
+            "genre": "Poster presentation",
+            "title": "AI-Enhanced DEMA for Streamlined Data Mapping and Efficient Model-Based Systems Engineering"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "43d657c0-f517-4011-9327-0cf58ed3f8c0",
+              "sha256": "0e948bdb182968219900a5f183b6656916452a035583de3da0a49768a717d970",
+              "byte_length": 439,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#ganesh2026ai-enhanced-dema"
+            },
+            {
+              "id": "608cb28e-82e9-4fdf-932f-e6065536934d",
+              "sha256": "897373bb6770e8837dd6e17922c2cae841f9ba52081d23226ee6bdffdd028a7e",
+              "byte_length": 1066,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: ganesh2026ai-enhanced-dema"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "The manuscript system credits the owner as Dan O’Leary.",
+              "origin": "user"
+            },
+            {
+              "text": "Revision R6 was submitted September 10, 2026.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown"
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "Lean",
+                "Industry 4.0"
+              ],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [
+            "submission"
+          ],
+          "id": "062008f8-d23b-4ce2-befa-9774b4d490f2",
+          "citation_key": "hossain2024lean-industry40",
+          "state": "active",
+          "revision": 2,
+          "created_at": "2026-09-29T04:41:50.489943+00:00",
+          "updated_at": "2026-09-29T04:41:50.583122+00:00",
+          "metadata": {
+            "type": "manuscript",
+            "language": "en",
+            "author": [
+              {
+                "family": "Hossain",
+                "given": "Md Monir"
+              },
+              {
+                "family": "Ballard",
+                "given": "Victoria"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Purdy",
+                "given": "Gregory"
+              },
+              {
+                "family": "Sesek",
+                "given": "Rich"
+              },
+              {
+                "family": "Harris",
+                "given": "Gregory"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2026
+                ]
+              ]
+            },
+            "note": "Revised manuscript under consideration at the International Journal of Lean Six Sigma; IJLSS-08-2025-0243.R6; awaiting referee reply",
+            "title": "Quantifying the Integration Impact of Lean and Industry 4.0 on Operational Efficiency: Insights From an Experimental Case Study"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "51227ffb-a91b-40d9-87aa-be9a0c33990f",
+              "sha256": "8d6c084fa82d56d5a8845d122285703d022c273ba7dd8dff7252c2cab886ac56",
+              "byte_length": 1135,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: hossain2024lean-industry40"
+            },
+            {
+              "id": "5c4ecd86-51dc-48c8-b06f-e41c19ef40c5",
+              "sha256": "856e50b54cccdfb408cbea0ec5c6d6cdff96b3db9cb85593d8d2f9b371a28c07",
+              "byte_length": 466,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#hossain2024lean-industry40"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": [
+            {
+              "id": "978c5fbc-9e54-4dff-af79-db093d642202",
+              "citation_key": "hossain_exploring_2024",
+              "state": "active",
+              "title": "Exploring the Integration Effect of Lean and Industry 4.0: A Case Study"
+            }
+          ]
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Printed chapter credit names the owner Dan O’Leary.",
+              "origin": "user"
+            },
+            {
+              "text": "Chapter 4 also credits Ted Neuman with “with” attribution.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [],
+          "title_protection": {
+            "container-title": {
+              "protected_terms": [
+                "3D Studio MAX",
+                "III",
+                "Animation",
+                "MAX"
+              ],
+              "preserve_case": false
+            },
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "dbcdd96e-a01e-4c6d-8456-df642470889c",
+          "citation_key": "kreitzman-1997-animatingControllers",
+          "state": "active",
+          "revision": 1,
+          "created_at": "2026-09-29T04:41:50.550793+00:00",
+          "updated_at": "2026-09-29T04:41:50.550793+00:00",
+          "metadata": {
+            "type": "chapter",
+            "language": "en",
+            "author": [
+              {
+                "family": "Kreitzman",
+                "given": "Randy"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              }
+            ],
+            "container-author": [
+              {
+                "family": "Maestri",
+                "given": "George"
+              },
+              {
+                "family": "Kennedy",
+                "given": "Sanford"
+              },
+              {
+                "family": "Frantz",
+                "given": "Ralph"
+              },
+              {
+                "family": "Burke",
+                "given": "Steve"
+              },
+              {
+                "family": "Greene",
+                "given": "Jason"
+              },
+              {
+                "family": "Greenleif",
+                "given": "Eric"
+              },
+              {
+                "family": "Hubbell",
+                "given": "Jeremy"
+              },
+              {
+                "family": "Kakert",
+                "given": "Paul"
+              },
+              {
+                "family": "Kreitzman",
+                "given": "Randy"
+              },
+              {
+                "family": "Lamb",
+                "given": "Bob"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Vernon",
+                "given": "Andrew"
+              },
+              {
+                "family": "Silverthorne",
+                "given": "Adam"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  1997,
+                  6
+                ]
+              ]
+            },
+            "container-title": "Inside 3D Studio MAX, Volume III: Animation",
+            "ISBN": "978-1-56205-699-5",
+            "page": "107–147",
+            "publisher": "New Riders Publishing",
+            "publisher-place": "Indianapolis, IN",
+            "title": "Animating With Controllers",
+            "chapter-number": "4"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "af019ad1-1249-4562-aeab-75ad615b5cee",
+              "sha256": "77ebbded64e9b1238568d0b91414e814f8fd18284a4d4c44b67b774c6514055b",
+              "byte_length": 1555,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: chapter-4"
+            }
+          ],
+          "limitations": [],
+          "resources": [],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Printed byline names the owner Dan O’Leary.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown"
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "AI"
+              ],
+              "preserve_case": false
+            },
+            "container-title": {
+              "protected_terms": [
+                "INSIGHT"
+              ],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [
+            "published"
+          ],
+          "id": "d04195d7-850e-4f3b-95c1-b1b5c936bdb0",
+          "citation_key": "madachyolearymcdermott2026genai-se-tips",
+          "state": "active",
+          "revision": 2,
+          "created_at": "2026-09-29T04:41:50.485192+00:00",
+          "updated_at": "2026-09-29T04:41:50.599015+00:00",
+          "metadata": {
+            "type": "article-journal",
+            "language": "en",
+            "author": [
+              {
+                "family": "Madachy",
+                "given": "Ray"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "McDermott",
+                "given": "Tom"
+              },
+              {
+                "family": "Bank",
+                "given": "Sinan"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2026
+                ]
+              ]
+            },
+            "container-title": "INSIGHT",
+            "DOI": "10.1002/inst.70053",
+            "issue": "3",
+            "page": "29–31",
+            "publisher": "International Council on Systems Engineering (INCOSE)",
+            "title": "Twenty Tips for Using Generative AI in Systems Engineering",
+            "volume": "29"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "583e15fa-bc89-4a68-9bb6-71e433642846",
+              "sha256": "83ce6cb666ce071c9dcc0c0614fb7c3b08b16406f6418a59ac3735c7862f9805",
+              "byte_length": 996,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: madachyolearymcdermott2026genai-se-tips"
+            },
+            {
+              "id": "95adff39-1354-461b-add6-10db5781a3d7",
+              "sha256": "e628859d97c0971ebaa86589e18ee9c9c74d49b5b388c7d3aa8998fec92df7b9",
+              "byte_length": 533,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#madachyolearymcdermott2026genai-se-tips"
+            }
+          ],
+          "limitations": [],
+          "resources": [
+            {
+              "id": "62c03320-66b8-4acf-b758-f5eaf8d08aba",
+              "source_id": "d04195d7-850e-4f3b-95c1-b1b5c936bdb0",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/2026-incose-insight-ai4se-top-20-tips/published/madachy-et-al-2026-twenty-tips-version-of-record.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Printed chapter credit names the owner Dan O’Leary.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [],
+          "title_protection": {
+            "container-title": {
+              "protected_terms": [
+                "3D Studio MAX",
+                "III",
+                "Animation",
+                "MAX"
+              ],
+              "preserve_case": false
+            },
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "f13f3734-0e02-4889-82be-aa71e9740ea4",
+          "citation_key": "oleary-1997-animatingExpressions",
+          "state": "active",
+          "revision": 1,
+          "created_at": "2026-09-29T04:41:50.555489+00:00",
+          "updated_at": "2026-09-29T04:41:50.555489+00:00",
+          "metadata": {
+            "type": "chapter",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              }
+            ],
+            "container-author": [
+              {
+                "family": "Maestri",
+                "given": "George"
+              },
+              {
+                "family": "Kennedy",
+                "given": "Sanford"
+              },
+              {
+                "family": "Frantz",
+                "given": "Ralph"
+              },
+              {
+                "family": "Burke",
+                "given": "Steve"
+              },
+              {
+                "family": "Greene",
+                "given": "Jason"
+              },
+              {
+                "family": "Greenleif",
+                "given": "Eric"
+              },
+              {
+                "family": "Hubbell",
+                "given": "Jeremy"
+              },
+              {
+                "family": "Kakert",
+                "given": "Paul"
+              },
+              {
+                "family": "Kreitzman",
+                "given": "Randy"
+              },
+              {
+                "family": "Lamb",
+                "given": "Bob"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Vernon",
+                "given": "Andrew"
+              },
+              {
+                "family": "Silverthorne",
+                "given": "Adam"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  1997,
+                  6
+                ]
+              ]
+            },
+            "container-title": "Inside 3D Studio MAX, Volume III: Animation",
+            "ISBN": "978-1-56205-699-5",
+            "page": "149–173",
+            "publisher": "New Riders Publishing",
+            "publisher-place": "Indianapolis, IN",
+            "title": "Animating With Expressions",
+            "chapter-number": "5"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "54cbe82f-96a3-4549-9499-c62f3c51f001",
+              "sha256": "8cc4c76865a769c5bacff6b64941811a6546ebfca953a023329274bccb0687c3",
+              "byte_length": 1415,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: chapter-5"
+            }
+          ],
+          "limitations": [],
+          "resources": [],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Printed chapter credit names the owner Dan O’Leary.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [],
+          "title_protection": {
+            "container-title": {
+              "protected_terms": [
+                "3D Studio MAX",
+                "III",
+                "Animation",
+                "MAX"
+              ],
+              "preserve_case": false
+            },
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "f06ac95e-cf73-4086-9b1c-fbd941ecbdc2",
+          "citation_key": "oleary-1997-animatingMultiple",
+          "state": "active",
+          "revision": 1,
+          "created_at": "2026-09-29T04:41:50.560057+00:00",
+          "updated_at": "2026-09-29T04:41:50.560057+00:00",
+          "metadata": {
+            "type": "chapter",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              }
+            ],
+            "container-author": [
+              {
+                "family": "Maestri",
+                "given": "George"
+              },
+              {
+                "family": "Kennedy",
+                "given": "Sanford"
+              },
+              {
+                "family": "Frantz",
+                "given": "Ralph"
+              },
+              {
+                "family": "Burke",
+                "given": "Steve"
+              },
+              {
+                "family": "Greene",
+                "given": "Jason"
+              },
+              {
+                "family": "Greenleif",
+                "given": "Eric"
+              },
+              {
+                "family": "Hubbell",
+                "given": "Jeremy"
+              },
+              {
+                "family": "Kakert",
+                "given": "Paul"
+              },
+              {
+                "family": "Kreitzman",
+                "given": "Randy"
+              },
+              {
+                "family": "Lamb",
+                "given": "Bob"
+              },
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Vernon",
+                "given": "Andrew"
+              },
+              {
+                "family": "Silverthorne",
+                "given": "Adam"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  1997,
+                  6
+                ]
+              ]
+            },
+            "container-title": "Inside 3D Studio MAX, Volume III: Animation",
+            "ISBN": "978-1-56205-699-5",
+            "page": "175–205",
+            "publisher": "New Riders Publishing",
+            "publisher-place": "Indianapolis, IN",
+            "title": "Animating With Multiple Modifiers",
+            "chapter-number": "6"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "2eff9647-db53-4969-850d-0b33ab45e6cf",
+              "sha256": "4be8ffe86f391dc9fa1d314bb3754e7afd92933c1b4b9c481c82832df4c4d9e9",
+              "byte_length": 1419,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: chapter-6"
+            }
+          ],
+          "limitations": [],
+          "resources": [],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [],
+          "provenance": [],
+          "title_protection": {
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "ca0e6a73-066c-48bf-88f2-5cc93a04cc6e",
+          "citation_key": "oleary-2026-instructionalInformation",
+          "state": "active",
+          "revision": 1,
+          "created_at": "2026-09-29T04:41:50.541304+00:00",
+          "updated_at": "2026-09-29T04:41:50.541304+00:00",
+          "metadata": {
+            "type": "manuscript",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2026
+                ]
+              ]
+            },
+            "note": "Manuscript in preparation; initial work completed; working title",
+            "title": "Instructional Information and Persistent Errors in Manufacturing Assembly Training"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "8671ed5a-0097-40ea-be79-2f1d8c782908",
+              "sha256": "01ac127385edf34f5e22f87601a026245dd4119aecfcc81a2bfd16f8c7a380eb",
+              "byte_length": 584,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: error-patterns"
+            }
+          ],
+          "limitations": [],
+          "resources": [],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [],
+          "provenance": [
+            {
+              "origin": "agent",
+              "access": "full_text"
+            }
+          ],
+          "title_protection": {
+            "event-title": {
+              "protected_terms": [
+                "AI"
+              ],
+              "preserve_case": false
+            },
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            },
+            "title-short": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "9bbf3e16-e4d7-4744-8f4e-b745e7fd15af",
+          "citation_key": "oleary-2026-judgmentEconomy",
+          "state": "active",
+          "revision": 4,
+          "created_at": "2026-09-29T01:37:11.194304+00:00",
+          "updated_at": "2026-09-29T03:00:26.900375+00:00",
+          "metadata": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2026,
+                  2,
+                  12
+                ]
+              ]
+            },
+            "event-title": "AI Nexus: Arts, Humanities, and Engineering Converge Conference",
+            "event-place": "Auburn, AL",
+            "genre": "Paper presentation",
+            "title": "The Judgment Economy: Education and the Abstraction of Work",
+            "title-short": "The Judgment Economy"
+          },
+          "corrected_fields": [
+            "context",
+            "metadata.author"
+          ],
+          "key_provenance": {
+            "naming_settings": {
+              "template": "{author}-{year}-{title}",
+              "without_creator": "{title}-{year}",
+              "missing_year": "ND",
+              "title_words": 2,
+              "stopwords": [
+                "a",
+                "an",
+                "and",
+                "for",
+                "in",
+                "of",
+                "on",
+                "or",
+                "the",
+                "to",
+                "with",
+                "your",
+                "is",
+                "are",
+                "was",
+                "be",
+                "as",
+                "at",
+                "by",
+                "from",
+                "into",
+                "not"
+              ],
+              "transliteration_policy": "creator-latin-v1",
+              "corporate_aliases": {}
+            },
+            "origin": "generated",
+            "policy": "creator-latin-v1",
+            "table_version": 1,
+            "table_sha256": "407c585dbbf08e82aca9d51e9657df5cae641b950644bd516c9d282b1a61255e",
+            "unicode_version": "16.0.0"
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "b37c1b6e-a383-4fe9-be06-8f30e4c421d4",
+              "sha256": "422a366960916e016610e4fde91e64cd74e0fd6a203eef6b07302daac22f9d7e",
+              "byte_length": 1470,
+              "format": "refs",
+              "origin": "add",
+              "locator": "/private/tmp/claude-501/nexus/record.json"
+            }
+          ],
+          "limitations": [],
+          "resources": [
+            {
+              "id": "051c3f38-8513-493b-b36b-bc3778af544f",
+              "source_id": "9bbf3e16-e4d7-4744-8f4e-b745e7fd15af",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/2026-au-ai_nexus/slides.pptx",
+              "root": null,
+              "relative": null,
+              "label": "slides",
+              "media_type": null,
+              "digest": null
+            },
+            {
+              "id": "2c30ff9c-f8e8-4438-b4de-e63ed4a0ef78",
+              "source_id": "9bbf3e16-e4d7-4744-8f4e-b745e7fd15af",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/2026-au-ai_nexus/abstract.pdf",
+              "root": null,
+              "relative": null,
+              "label": "abstract",
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [],
+          "provenance": [],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "Pipyer",
+                "LLM"
+              ],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "beef340e-04cb-4057-b112-7fa59d9738ef",
+          "citation_key": "oleary-2026-pipyerEvidence",
+          "state": "active",
+          "revision": 2,
+          "created_at": "2026-09-29T04:41:50.545782+00:00",
+          "updated_at": "2026-09-29T04:41:50.607995+00:00",
+          "metadata": {
+            "type": "manuscript",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2026
+                ]
+              ]
+            },
+            "note": "Manuscript complete; submission to the Journal of Open Source Software awaits public software release",
+            "title": "Pipyer: Evidence-Producing Orchestration for Reproducible LLM-Assisted Research Workflows"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "eee06ee0-f20e-44ee-ab5e-9523e3db5454",
+              "sha256": "429d07f49d96d32fe9f6d734c795c69b52bda6c05e67ad477e3abbb71fe0e7f8",
+              "byte_length": 633,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: pipyer-joss"
+            }
+          ],
+          "limitations": [],
+          "resources": [
+            {
+              "id": "a1c401f6-ba41-4d04-840f-163c47e13203",
+              "source_id": "beef340e-04cb-4057-b112-7fa59d9738ef",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/pipyer-paper/output/pdf/paper.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown"
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [
+            "patent"
+          ],
+          "id": "5b21e9bd-35c6-4f0d-b9ef-3b5ba843dc18",
+          "citation_key": "oleary2009time-dilation",
+          "state": "active",
+          "revision": 1,
+          "created_at": "2026-09-29T04:41:50.502902+00:00",
+          "updated_at": "2026-09-29T04:41:50.502902+00:00",
+          "metadata": {
+            "type": "patent",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Newman",
+                "given": "Theodore"
+              },
+              {
+                "family": "Smith",
+                "given": "Adam L. M."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2009,
+                  3,
+                  3
+                ]
+              ]
+            },
+            "note": "Inventor",
+            "number": "US7497779B2",
+            "title": "Video Game Including Time Dilation Effect and a Storage Medium Storing Software for the Video Game",
+            "URL": "https://patents.google.com/patent/US7497779B2/en"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "32c31d0f-cf44-4264-a1dd-09a2707f23da",
+              "sha256": "bb608b1270d5427ec266c5790b2bf060eaf06fd471efdcf81417e0084068f54b",
+              "byte_length": 208,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#oleary2009time-dilation"
+            },
+            {
+              "id": "cf552f87-2376-4230-95a2-8171c70890df",
+              "sha256": "17fb8079b0930d65867861336be07f700e347d1a4476149b10a6f3b1af126620",
+              "byte_length": 753,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: oleary2009time-dilation"
+            }
+          ],
+          "limitations": [],
+          "resources": [],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Printed byline names the owner Dan O’Leary.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+                "item_key": "oleary2025ai4se"
+              }
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "DEMA",
+                "AI"
+              ],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [
+                "AI4SE",
+                "SE4AI",
+                "AI",
+                "SE"
+              ],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "1838ba66-10ad-487d-99fe-eb26527bcd0d",
+          "citation_key": "oleary2025ai4se",
+          "state": "active",
+          "revision": 4,
+          "created_at": "2026-09-27T22:07:42.131223+00:00",
+          "updated_at": "2026-09-29T04:41:50.524575+00:00",
+          "metadata": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Ledford",
+                "given": "Allison B."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2025,
+                  9
+                ]
+              ]
+            },
+            "event-title": "AI4SE & SE4AI Research and Application Workshop",
+            "event-place": "Washington, DC, USA",
+            "genre": "Workshop presentation",
+            "title": "AI-Enhanced DEMA: Transforming Implicit System Knowledge Into Intelligent, Compliant, and Documented Processes"
+          },
+          "corrected_fields": [
+            "context",
+            "extensions",
+            "legacy_tags",
+            "metadata",
+            "native_type",
+            "overrides",
+            "provenance",
+            "title_parts",
+            "title_protection"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "1168645b-083e-48a0-8970-2b82ea14d57b",
+              "sha256": "67b7893a890270da60c867952521e75ea83fd83bef90e29258ed5d0ce31eeac9",
+              "byte_length": 433,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#olearyledford2025ai-enhanced-dema"
+            },
+            {
+              "id": "156e7cac-5ab0-435a-8d4e-ad4f7836997f",
+              "sha256": "8dfe3d665aa8759d2d470b9e4e5cd51129939022c625a1113303fc699b9b1503",
+              "byte_length": 383,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=2537:2920"
+            },
+            {
+              "id": "63db5473-daba-43c1-9a9a-174b41cb80d7",
+              "sha256": "8dfe3d665aa8759d2d470b9e4e5cd51129939022c625a1113303fc699b9b1503",
+              "byte_length": 383,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=2537:2920"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "organization",
+              "reason": "Unmapped field preserved verbatim"
+            },
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [
+            {
+              "id": "f6b8f063-b80b-479f-92ca-40ddb888fcdc",
+              "source_id": "1838ba66-10ad-487d-99fe-eb26527bcd0d",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/2025-ai4se-ai-enhanced-dema/AI4SE_AI_Enhanced_DEMA.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            },
+            {
+              "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+              "name": "dema-llm"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "The printed poster omits “Comprehensive”; the record uses the accepted program title.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+                "item_key": "oleary2025binary-classification"
+              }
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [
+                "INFORMS"
+              ],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "c67972f5-0957-422b-ac42-29f2f1e2ded5",
+          "citation_key": "oleary2025binary-classification",
+          "state": "active",
+          "revision": 4,
+          "created_at": "2026-09-27T22:07:42.152860+00:00",
+          "updated_at": "2026-09-29T04:41:50.520116+00:00",
+          "metadata": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2025,
+                  10,
+                  28
+                ]
+              ]
+            },
+            "event-title": "INFORMS Annual Meeting",
+            "event-place": "Atlanta, GA, USA",
+            "genre": "Poster presentation",
+            "title": "Beyond Binary Classification: A Comprehensive Multi-Criteria Assessment System for Programming Assignments"
+          },
+          "corrected_fields": [
+            "context",
+            "extensions",
+            "legacy_tags",
+            "metadata",
+            "native_type",
+            "overrides",
+            "provenance",
+            "title_parts",
+            "title_protection"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "a906b461-37d8-48ef-8106-25155bd439e6",
+              "sha256": "b531f6147597d6265e21b4c2a4ad5d18f4353bf7d7270cfcf2ab191a7fb6bbea",
+              "byte_length": 303,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=4452:4755"
+            },
+            {
+              "id": "d206b6da-9f2a-4454-ace3-5e6065b25830",
+              "sha256": "4327522e54ff02fddf5bff4f20dc4214dc4e4cf88991c24264099770010f9c25",
+              "byte_length": 343,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#oleary2025binary-classification"
+            },
+            {
+              "id": "d95373a8-561b-4bc3-a6e3-82df5350d1a5",
+              "sha256": "b531f6147597d6265e21b4c2a4ad5d18f4353bf7d7270cfcf2ab191a7fb6bbea",
+              "byte_length": 303,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=4452:4755"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [
+            {
+              "id": "5ce1e5ba-5272-45ea-830d-4dc9fa409ce7",
+              "source_id": "c67972f5-0957-422b-ac42-29f2f1e2ded5",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/2025-informs-gradebot-poster/poster-oleary-informs25.pptx",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            },
+            {
+              "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+              "name": "dema-llm"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown"
+            }
+          ],
+          "title_protection": {
+            "container-title": {
+              "protected_terms": [
+                "IISE"
+              ],
+              "preserve_case": false
+            },
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [
+            "proceedings"
+          ],
+          "id": "15b68374-92b8-4709-a5a2-caa975b5183c",
+          "citation_key": "oleary2025econ-uncertainty",
+          "state": "active",
+          "revision": 2,
+          "created_at": "2026-09-29T04:41:50.471163+00:00",
+          "updated_at": "2026-09-29T04:41:50.598008+00:00",
+          "metadata": {
+            "type": "paper-conference",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Evans",
+                "given": "John L."
+              },
+              {
+                "family": "Park",
+                "given": "Chan"
+              }
+            ],
+            "editor": [
+              {
+                "family": "Gentry",
+                "given": "E."
+              },
+              {
+                "family": "Ju",
+                "given": "F."
+              },
+              {
+                "family": "Liu",
+                "given": "X."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2025
+                ]
+              ]
+            },
+            "container-title": "Proceedings of the IISE Annual Conference & Expo 2025",
+            "ISBN": "979-8-3313-2546-6",
+            "page": "1847–1849",
+            "publisher": "Institute of Industrial and Systems Engineers",
+            "title": "Estimating Real-World Uncertainty: Case Studies & Stochastic Models for Graduate Engineering Economy"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "1661c295-c1b5-4d7a-9f2e-bad52a6a00be",
+              "sha256": "5caec714b7b0fcac884fdc70e6f3cc7bed696436568b435c1fe47ac5fa2fed8b",
+              "byte_length": 339,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#oleary2025econ-uncertainty"
+            },
+            {
+              "id": "5d0c677f-1dce-4ffa-87ca-8305697d6106",
+              "sha256": "215ec6b24a4b196da05bd1da67e63169a58526d76c5f06d5e9e303f710612e7c",
+              "byte_length": 1034,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: oleary2025econ-uncertainty"
+            }
+          ],
+          "limitations": [],
+          "resources": [
+            {
+              "id": "53d3e14f-f668-47af-9b7a-69da903ff05f",
+              "source_id": "15b68374-92b8-4709-a5a2-caa975b5183c",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/2025-iise-engineering-economy-uncertainty/eng_econ-case-final.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/references.bib",
+                "item_key": "oleary2025framework"
+              }
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "AR/MR",
+                "AR",
+                "MR"
+              ],
+              "preserve_case": false
+            },
+            "container-title": {
+              "protected_terms": [
+                "IISE"
+              ],
+              "preserve_case": false
+            }
+          },
+          "native_type": {
+            "namespace": "bibtex",
+            "value": "inproceedings"
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "6fa9e382-6621-4a6b-9a74-0625221b1a19",
+          "citation_key": "oleary2025framework",
+          "state": "active",
+          "revision": 3,
+          "created_at": "2026-09-27T06:56:14.756176+00:00",
+          "updated_at": "2026-09-29T04:41:50.465327+00:00",
+          "metadata": {
+            "type": "paper-conference",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              }
+            ],
+            "editor": [
+              {
+                "family": "Gentry",
+                "given": "E."
+              },
+              {
+                "family": "Ju",
+                "given": "F."
+              },
+              {
+                "family": "Liu",
+                "given": "X."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2025
+                ]
+              ]
+            },
+            "container-title": "Proceedings of the IISE Annual Conference & Expo 2025",
+            "ISBN": "979-8-3313-2546-6",
+            "page": "1829–1834",
+            "publisher": "Institute of Industrial and Systems Engineers",
+            "title": "Evaluating the Effectiveness of AR/MR Technologies in Manufacturing Training: A Multi-Modal Assessment Framework"
+          },
+          "corrected_fields": [
+            "context",
+            "extensions",
+            "legacy_tags",
+            "metadata",
+            "native_type",
+            "overrides",
+            "provenance",
+            "title_parts",
+            "title_protection"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "0111c43c-4a8c-4564-9b01-2192f87105d0",
+              "sha256": "0ca4d441f87fd018387f5ec3125b97968b4d9692feb713203f3c8795045887cd",
+              "byte_length": 450,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/references.bib#bytes=1555:2005"
+            },
+            {
+              "id": "7b34d95e-2bd1-43b5-8130-c0489310c31f",
+              "sha256": "0ca4d441f87fd018387f5ec3125b97968b4d9692feb713203f3c8795045887cd",
+              "byte_length": 450,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/references.bib#bytes=1555:2005"
+            },
+            {
+              "id": "c052c7e0-e53b-4684-ad6a-aff5b1d74897",
+              "sha256": "1baedd09cfa0d065a50c29db15d184bd0469d7079b9072c1f70e89f0a49f2167",
+              "byte_length": 308,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#oleary2025armr-training"
+            }
+          ],
+          "limitations": [],
+          "resources": [
+            {
+              "id": "b1858470-70d6-4073-8a75-f3a4a90abed6",
+              "source_id": "6fa9e382-6621-4a6b-9a74-0625221b1a19",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/_output/submission/related-paper-iise-2025.pdf",
+              "root": null,
+              "relative": null,
+              "label": "PDF",
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            },
+            {
+              "id": "dd8a33bc-2667-43bb-81d3-bdd0fdf659c5",
+              "name": "manufacturing-training-media-tradeoffs"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "The EdArXiv deposit was declined before public posting; this was not a JOSE submission or rejection.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown"
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "danvas",
+                "Canvas"
+              ],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [
+            "preparation"
+          ],
+          "id": "e47e96dd-1a1c-43ba-9848-670c7bfb4760",
+          "citation_key": "oleary2026danvas-jose",
+          "state": "active",
+          "revision": 2,
+          "created_at": "2026-09-29T04:41:50.515650+00:00",
+          "updated_at": "2026-09-29T04:41:50.608807+00:00",
+          "metadata": {
+            "type": "manuscript",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2026
+                ]
+              ]
+            },
+            "note": "Manuscript complete; awaiting the Journal of Open Source Education reopening submissions",
+            "title": "danvas: Command-Line Course Operations for Canvas Instructors"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "1ea5f2ca-186f-4507-9da4-50755e7cbfc0",
+              "sha256": "6bbba77fc65f929064a1e1c514327cc4bcfbb7c0562f96666244a6f95b6a530a",
+              "byte_length": 352,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#oleary2026danvas-jose"
+            },
+            {
+              "id": "76e6451f-57da-4e3e-ab4d-e54c6230f5e5",
+              "sha256": "68b9946c0368840ec6a711e51199ac857ac43bb9cbf9c3a34c549f21985c6a66",
+              "byte_length": 774,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: oleary2026danvas-jose"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [
+            {
+              "id": "aec17dd1-ed8b-4a21-a9f3-4fc1fa7e6afa",
+              "source_id": "e47e96dd-1a1c-43ba-9848-670c7bfb4760",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/2026-jose-danvas/output/pdf/paper.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown"
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [
+            "preparation"
+          ],
+          "id": "3398e1ac-c0b7-41e2-b6b0-8e4ce991210b",
+          "citation_key": "oleary2026instructional-media-tradeoffs",
+          "state": "active",
+          "revision": 2,
+          "created_at": "2026-09-29T04:41:50.498852+00:00",
+          "updated_at": "2026-09-29T04:41:50.603800+00:00",
+          "metadata": {
+            "type": "manuscript",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2026
+                ]
+              ]
+            },
+            "note": "Manuscript nearing completion; target journal: Journal of Manufacturing Systems",
+            "title": "Instructional Media and Speed-Quality Tradeoffs in Manufacturing Assembly Training"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "18021809-7f2b-4e3d-a0c7-8484df999a95",
+              "sha256": "2d30ceeb15c57e6975844be05fa2114c79b47500a4b7d02fc2601805d6bcb113",
+              "byte_length": 326,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#oleary2026instructional-media-tradeoffs"
+            },
+            {
+              "id": "c9311f5e-0f05-49d5-86cb-12b584bf0970",
+              "sha256": "cb811862e32a1427abae8e86c8ae52cde8db12e2b85f390384470444812b662b",
+              "byte_length": 656,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: oleary2026instructional-media-tradeoffs"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [
+            {
+              "id": "ec914f69-3ded-4d0d-9dd0-89b6602d80fd",
+              "source_id": "3398e1ac-c0b7-41e2-b6b0-8e4ce991210b",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/_output/submission/article.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown"
+            }
+          ],
+          "title_protection": {
+            "event-title": {
+              "protected_terms": [
+                "IISE"
+              ],
+              "preserve_case": false
+            },
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [
+            "presentation",
+            "conference"
+          ],
+          "id": "129e386d-c047-4a03-a652-12de3a83cbdd",
+          "citation_key": "olearyficken2025innovation-culture",
+          "state": "active",
+          "revision": 2,
+          "created_at": "2026-09-29T04:41:50.528820+00:00",
+          "updated_at": "2026-09-29T04:41:50.617476+00:00",
+          "metadata": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Ficken",
+                "given": "Adam"
+              },
+              {
+                "family": "Evans",
+                "given": "John L."
+              },
+              {
+                "family": "Sesek",
+                "given": "Richard"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2025
+                ]
+              ]
+            },
+            "event-title": "IISE Annual Conference & Expo",
+            "genre": "Conference presentation",
+            "title": "Building an Innovation Culture: Lessons From Developing and Scaling a Product Innovation Program in Engineering Education"
+          },
+          "corrected_fields": [],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": "talk",
+          "originals": [
+            {
+              "id": "926a0f02-bea6-475b-9158-24aa7ff8e988",
+              "sha256": "b92476a0fa9bdf75299e81f398b7ec7cd8d58de124c8b08378f9b2c0f9aa73f5",
+              "byte_length": 885,
+              "format": "refs",
+              "origin": "add",
+              "locator": "cv approved conversion: olearyficken2025innovation-culture"
+            },
+            {
+              "id": "c9b4d1e7-eb82-4dbe-94dd-f35b35cbc1cc",
+              "sha256": "6d3cb47dead435ff7c8b4526b30417f603691723ee0e8d3d8c242596b701bb2c",
+              "byte_length": 407,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#olearyficken2025innovation-culture"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [
+            {
+              "id": "e04f497d-2834-4451-b058-7240010e9d21",
+              "source_id": "129e386d-c047-4a03-a652-12de3a83cbdd",
+              "revision": 1,
+              "path": "/Volumes/Casa/au/!Presentations/IISE 2025/prod-innovation/prod_innov-iise2025.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+                "item_key": "olearyledford2026insight"
+              }
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "LLM"
+              ],
+              "preserve_case": false
+            },
+            "container-title": {
+              "protected_terms": [
+                "INSIGHT"
+              ],
+              "preserve_case": false
+            }
+          },
+          "native_type": {
+            "namespace": "bibtex",
+            "value": "article"
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "5c903a55-e2f9-4087-80f9-a6572c639263",
+          "citation_key": "olearyledford2026insight",
+          "state": "active",
+          "revision": 4,
+          "created_at": "2026-09-27T22:07:42.157139+00:00",
+          "updated_at": "2026-09-29T04:41:50.476010+00:00",
+          "metadata": {
+            "type": "article-journal",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Ledford",
+                "given": "Allison B."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2026
+                ]
+              ]
+            },
+            "container-title": "INSIGHT",
+            "DOI": "10.1002/inst.70055",
+            "issue": "3",
+            "page": "37–42",
+            "publisher": "International Council on Systems Engineering (INCOSE)",
+            "title": "Trustworthy LLM-Augmented Data Reconciliation for Deployment-Constrained Environments",
+            "volume": "29"
+          },
+          "corrected_fields": [
+            "context",
+            "extensions",
+            "legacy_tags",
+            "metadata",
+            "native_type",
+            "overrides",
+            "provenance",
+            "title_parts",
+            "title_protection"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "08ffc04a-ae0b-46d3-8047-9b53628fcc1c",
+              "sha256": "61e2d128dbf7b12b007c751d5faf27918e7ffdab97f6dc983dbfb7c6a3332f7e",
+              "byte_length": 435,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=4757:5192"
+            },
+            {
+              "id": "2cbbbc78-e0a4-49ee-b82d-7c3cb62619c2",
+              "sha256": "61e2d128dbf7b12b007c751d5faf27918e7ffdab97f6dc983dbfb7c6a3332f7e",
+              "byte_length": 435,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=4757:5192"
+            },
+            {
+              "id": "fed6683f-0241-492e-b675-20fa05b59b91",
+              "sha256": "ed8f1a86b20461135ba7d90dafbfa74dd90e922d21761ae1b134f72273055d41",
+              "byte_length": 564,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#olearyledford2026insight"
+            }
+          ],
+          "limitations": [],
+          "resources": [
+            {
+              "id": "5bec7ab7-34f7-46ef-8961-4582593bb34a",
+              "source_id": "5c903a55-e2f9-4087-80f9-a6572c639263",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/2026-insight-dema-llm/published/oleary-ledford-2026-insight-dema-llm-version-of-record.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            },
+            {
+              "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+              "name": "dema-llm"
+            }
+          ],
+          "links": []
+        }
+      ],
+      "removed_sources": []
+    }
+  },
+  "patent": {
+    "schema_version": "1.0",
+    "command": "resource add",
+    "status": "ok",
+    "data": {
+      "id": "26d37b86-2b54-465f-986f-fddd31906145",
+      "source_id": "5b21e9bd-35c6-4f0d-b9ef-3b5ba843dc18",
+      "revision": 2,
+      "path": null,
+      "root": "library",
+      "relative": "unfiled/VideoGameIncludingTimeDilationEffectAndAStorageMediumStoringSoftwareForTheVideoGame-2009-patent.pdf",
+      "label": "patent",
+      "media_type": null,
+      "digest": "62bab0f5c2f25379cc30115c6b6af19585cbb64148129fa512b7f4b546287ab0",
+      "copied_from": {
+        "path": "/private/tmp/refs-cv-execution/US7497779.pdf",
+        "root": null,
+        "relative": null
+      },
+      "citation_key": "oleary2009time-dilation",
+      "moved": true,
+      "destination": "/Volumes/Casa/refs/lib/unfiled/VideoGameIncludingTimeDilationEffectAndAStorageMediumStoringSoftwareForTheVideoGame-2009-patent.pdf",
+      "moves": [
+        {
+          "operation_id": "08288b31-2e73-4e82-a921-ee7779cb6c90",
+          "resource_id": "26d37b86-2b54-465f-986f-fddd31906145",
+          "old_path": "/private/tmp/refs-cv-execution/US7497779.pdf",
+          "new_path": "/Volumes/Casa/refs/lib/unfiled/VideoGameIncludingTimeDilationEffectAndAStorageMediumStoringSoftwareForTheVideoGame-2009-patent.pdf",
+          "old_name": "US7497779.pdf",
+          "new_name": "VideoGameIncludingTimeDilationEffectAndAStorageMediumStoringSoftwareForTheVideoGame-2009-patent.pdf",
+          "state": "removed",
+          "error": null
+        }
+      ],
+      "unlinked_paths": []
+    },
+    "warnings": [],
+    "errors": []
+  },
+  "state_at_gate": [
+    {
+      "key": "hossain2024lean-industry40",
+      "id": "062008f8-d23b-4ce2-befa-9774b4d490f2",
+      "revision": 2,
+      "resources": [],
+      "links": [
+        {
+          "id": "978c5fbc-9e54-4dff-af79-db093d642202",
+          "citation_key": "hossain_exploring_2024",
+          "state": "active",
+          "title": "Exploring the Integration Effect of Lean and Industry 4.0: A Case Study"
+        }
+      ]
+    },
+    {
+      "key": "olearyficken2025innovation-culture",
+      "id": "129e386d-c047-4a03-a652-12de3a83cbdd",
+      "revision": 2,
+      "resources": [
+        {
+          "id": "e04f497d-2834-4451-b058-7240010e9d21",
+          "source_id": "129e386d-c047-4a03-a652-12de3a83cbdd",
+          "revision": 1,
+          "path": "/Volumes/Casa/au/!Presentations/IISE 2025/prod-innovation/prod_innov-iise2025.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "oleary2025econ-uncertainty",
+      "id": "15b68374-92b8-4709-a5a2-caa975b5183c",
+      "revision": 2,
+      "resources": [
+        {
+          "id": "53d3e14f-f668-47af-9b7a-69da903ff05f",
+          "source_id": "15b68374-92b8-4709-a5a2-caa975b5183c",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2025-iise-engineering-economy-uncertainty/eng_econ-case-final.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "oleary2025ai4se",
+      "id": "1838ba66-10ad-487d-99fe-eb26527bcd0d",
+      "revision": 4,
+      "resources": [
+        {
+          "id": "f6b8f063-b80b-479f-92ca-40ddb888fcdc",
+          "source_id": "1838ba66-10ad-487d-99fe-eb26527bcd0d",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2025-ai4se-ai-enhanced-dema/AI4SE_AI_Enhanced_DEMA.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "ballard2024role",
+      "id": "21b2d067-d835-45ba-b15f-3242ffe4fb8b",
+      "revision": 5,
+      "resources": [
+        {
+          "id": "1276a61b-5fc6-4c6c-ac74-135008cc0547",
+          "source_id": "21b2d067-d835-45ba-b15f-3242ffe4fb8b",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "dissertation/misc/Ballard et al. - 2024 - The Role of Technology in Enhancing Workplace Ergo.pdf",
+          "label": "Ballard et al. - 2024 - The Role of Technology in Enhancing Workplace Ergo.pdf",
+          "media_type": "application/pdf",
+          "digest": "3030af266568ad7bc5740f00024b1bd285e7ea10293bfb239ebea52eb3f706f3",
+          "copied_from": {
+            "path": "/Users/djo/Box Sync/zotero/dissertation/misc/Ballard et al. - 2024 - The Role of Technology in Enhancing Workplace Ergo.pdf",
+            "root": null,
+            "relative": null
+          }
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "oleary2026instructional-media-tradeoffs",
+      "id": "3398e1ac-c0b7-41e2-b6b0-8e4ce991210b",
+      "revision": 2,
+      "resources": [
+        {
+          "id": "ec914f69-3ded-4d0d-9dd0-89b6602d80fd",
+          "source_id": "3398e1ac-c0b7-41e2-b6b0-8e4ce991210b",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/_output/submission/article.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "oleary2009time-dilation",
+      "id": "5b21e9bd-35c6-4f0d-b9ef-3b5ba843dc18",
+      "revision": 4,
+      "resources": [
+        {
+          "id": "26d37b86-2b54-465f-986f-fddd31906145",
+          "source_id": "5b21e9bd-35c6-4f0d-b9ef-3b5ba843dc18",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/VideoGameIncludingTimeDilationEffectAndAStorageMediumStoringSoftwareForTheVideoGame-2009-patent.pdf",
+          "label": "patent",
+          "media_type": null,
+          "digest": "62bab0f5c2f25379cc30115c6b6af19585cbb64148129fa512b7f4b546287ab0",
+          "copied_from": {
+            "path": "/private/tmp/refs-cv-execution/US7497779.pdf",
+            "root": null,
+            "relative": null
+          }
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "olearyledford2026insight",
+      "id": "5c903a55-e2f9-4087-80f9-a6572c639263",
+      "revision": 4,
+      "resources": [
+        {
+          "id": "5bec7ab7-34f7-46ef-8961-4582593bb34a",
+          "source_id": "5c903a55-e2f9-4087-80f9-a6572c639263",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2026-insight-dema-llm/published/oleary-ledford-2026-insight-dema-llm-version-of-record.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "oleary2025framework",
+      "id": "6fa9e382-6621-4a6b-9a74-0625221b1a19",
+      "revision": 3,
+      "resources": [
+        {
+          "id": "b1858470-70d6-4073-8a75-f3a4a90abed6",
+          "source_id": "6fa9e382-6621-4a6b-9a74-0625221b1a19",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/manufacturing-training-media-tradeoffs/_output/submission/related-paper-iise-2025.pdf",
+          "root": null,
+          "relative": null,
+          "label": "PDF",
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "oleary-2026-judgmentEconomy",
+      "id": "9bbf3e16-e4d7-4744-8f4e-b745e7fd15af",
+      "revision": 4,
+      "resources": [
+        {
+          "id": "051c3f38-8513-493b-b36b-bc3778af544f",
+          "source_id": "9bbf3e16-e4d7-4744-8f4e-b745e7fd15af",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2026-au-ai_nexus/slides.pptx",
+          "root": null,
+          "relative": null,
+          "label": "slides",
+          "media_type": null,
+          "digest": null
+        },
+        {
+          "id": "2c30ff9c-f8e8-4438-b4de-e63ed4a0ef78",
+          "source_id": "9bbf3e16-e4d7-4744-8f4e-b745e7fd15af",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2026-au-ai_nexus/abstract.pdf",
+          "root": null,
+          "relative": null,
+          "label": "abstract",
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "oleary-2026-pipyerEvidence",
+      "id": "beef340e-04cb-4057-b112-7fa59d9738ef",
+      "revision": 2,
+      "resources": [
+        {
+          "id": "a1c401f6-ba41-4d04-840f-163c47e13203",
+          "source_id": "beef340e-04cb-4057-b112-7fa59d9738ef",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/pipyer-paper/output/pdf/paper.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "oleary2025binary-classification",
+      "id": "c67972f5-0957-422b-ac42-29f2f1e2ded5",
+      "revision": 4,
+      "resources": [
+        {
+          "id": "5ce1e5ba-5272-45ea-830d-4dc9fa409ce7",
+          "source_id": "c67972f5-0957-422b-ac42-29f2f1e2ded5",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2025-informs-gradebot-poster/poster-oleary-informs25.pptx",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "ganesh2026ai-enhanced-dema",
+      "id": "c8161d3b-735a-4f03-bac2-8b7113c21aee",
+      "revision": 1,
+      "resources": [],
+      "links": []
+    },
+    {
+      "key": "oleary-2026-instructionalInformation",
+      "id": "ca0e6a73-066c-48bf-88f2-5cc93a04cc6e",
+      "revision": 1,
+      "resources": [],
+      "links": []
+    },
+    {
+      "key": "madachyolearymcdermott2026genai-se-tips",
+      "id": "d04195d7-850e-4f3b-95c1-b1b5c936bdb0",
+      "revision": 2,
+      "resources": [
+        {
+          "id": "62c03320-66b8-4acf-b758-f5eaf8d08aba",
+          "source_id": "d04195d7-850e-4f3b-95c1-b1b5c936bdb0",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2026-incose-insight-ai4se-top-20-tips/published/madachy-et-al-2026-twenty-tips-version-of-record.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "kreitzman-1997-animatingControllers",
+      "id": "dbcdd96e-a01e-4c6d-8456-df642470889c",
+      "revision": 1,
+      "resources": [],
+      "links": []
+    },
+    {
+      "key": "ganesh2026ai-driven-dema",
+      "id": "deeee184-657e-45ec-a9b9-082d69654f05",
+      "revision": 2,
+      "resources": [
+        {
+          "id": "5055b5b2-b7f0-46a9-ac7f-9b4ef008db5c",
+          "source_id": "deeee184-657e-45ec-a9b9-082d69654f05",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/posters/2026-08-26-ai-driven-dema-outreach-symposium.pptx",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "oleary2026danvas-jose",
+      "id": "e47e96dd-1a1c-43ba-9848-670c7bfb4760",
+      "revision": 2,
+      "resources": [
+        {
+          "id": "aec17dd1-ed8b-4a21-a9f3-4fc1fa7e6afa",
+          "source_id": "e47e96dd-1a1c-43ba-9848-670c7bfb4760",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/2026-jose-danvas/output/pdf/paper.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "oleary-1997-animatingMultiple",
+      "id": "f06ac95e-cf73-4086-9b1c-fbd941ecbdc2",
+      "revision": 1,
+      "resources": [],
+      "links": []
+    },
+    {
+      "key": "oleary-1997-animatingExpressions",
+      "id": "f13f3734-0e02-4889-82be-aa71e9740ea4",
+      "revision": 1,
+      "resources": [],
+      "links": []
+    },
+    {
+      "key": "gadzey2026dema-digital-thread",
+      "id": "f33dfc34-f392-4853-8c1c-611ebb982aae",
+      "revision": 2,
+      "resources": [
+        {
+          "id": "cb3adcbb-271a-44d1-9ed9-4cc709458782",
+          "source_id": "f33dfc34-f392-4853-8c1c-611ebb982aae",
+          "revision": 1,
+          "path": "/Volumes/Casa/pub/posters/2026-03-03-dema-digital-thread-dib-summit.pptx",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "key": "ficken2023blending",
+      "id": "f69b5542-8f11-45b2-89f1-65191afc260e",
+      "revision": 3,
+      "resources": [
+        {
+          "id": "2e8744ff-22a9-4abb-842d-8d4f97cc7840",
+          "source_id": "f69b5542-8f11-45b2-89f1-65191afc260e",
+          "revision": 1,
+          "path": "/Volumes/Casa/au/!Presentations/ASEM 2023/Auburn ASEM 2023-djo-2.pdf",
+          "root": null,
+          "relative": null,
+          "label": null,
+          "media_type": null,
+          "digest": null
+        }
+      ],
+      "links": []
+    }
+  ],
+  "gate_exit_code": 3,
+  "gate_summaries": [
+    {
+      "project": "jhl-report",
+      "consumer": "quarto",
+      "fixture_missing": false,
+      "outcomes": {
+        "identical": 92
+      },
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "pdftotext": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+      }
+    },
+    {
+      "project": "jhl-report",
+      "consumer": "site",
+      "fixture_missing": false,
+      "outcomes": {
+        "identical": 103
+      },
+      "versions": {
+        "python": "⚠️  This Python instance is for ad-hoc usage only.\n   If working in a project with its own venv, use that instead.\n\nPython 3.14.2"
+      }
+    },
+    {
+      "project": "jose-danvas",
+      "consumer": "quarto",
+      "fixture_missing": false,
+      "outcomes": {
+        "identical": 11
+      },
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "pdftotext": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+      }
+    },
+    {
+      "project": "jose-danvas",
+      "consumer": "jose",
+      "fixture_missing": false,
+      "outcomes": {
+        "identical": 11
+      },
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "pdftotext": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+      }
+    },
+    {
+      "project": "manufacturing-training-media-tradeoffs",
+      "consumer": "html",
+      "fixture_missing": false,
+      "outcomes": {
+        "identical": 39
+      },
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "R": "Rscript (R) version 4.5.3 (2026-03-11)"
+      }
+    },
+    {
+      "project": "manufacturing-training-media-tradeoffs",
+      "consumer": "elsevier",
+      "fixture_missing": false,
+      "outcomes": {
+        "identical": 39
+      },
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "R": "Rscript (R) version 4.5.3 (2026-03-11)",
+        "bibtex": "BibTeX 0.99e (TeX Live 2026)\nkpathsea version 6.4.2\nCopyright 2026 Oren Patashnik.\nThere is NO warranty.  Redistribution of this software is\ncovered by the terms of both the BibTeX copyright and\nthe Lesser GNU General Public License.\nFor more information about these matters, see the file\nnamed COPYING and the BibTeX source.\nPrimary author of BibTeX: Oren Patashnik.",
+        "pdftotext": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+      }
+    },
+    {
+      "project": "dema-llm",
+      "consumer": "tdd-html",
+      "fixture_missing": false,
+      "outcomes": {
+        "identical": 34
+      },
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "pdftotext": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+      }
+    },
+    {
+      "project": "dema-llm",
+      "consumer": "tdd-pdf",
+      "fixture_missing": false,
+      "outcomes": {
+        "identical": 34
+      },
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "pdftotext": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+      }
+    },
+    {
+      "project": "dema-llm",
+      "consumer": "pdd-docx",
+      "fixture_missing": false,
+      "outcomes": {
+        "identical": 6
+      },
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "pdftotext": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+      }
+    },
+    {
+      "project": "dema-llm",
+      "consumer": "pdd-pdf",
+      "fixture_missing": false,
+      "outcomes": {
+        "identical": 6
+      },
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "pdftotext": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+      }
+    },
+    {
+      "project": "near-earth-object-monitor",
+      "consumer": "neo-report",
+      "fixture_missing": false,
+      "outcomes": {
+        "identical": 2
+      },
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "pdftotext": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+      }
+    },
+    {
+      "project": "near-earth-object-monitor",
+      "consumer": "neo-report-agu",
+      "fixture_missing": false,
+      "outcomes": {
+        "identical": 2
+      },
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "pdftotext": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+      }
+    },
+    {
+      "project": "cv",
+      "consumer": "html",
+      "fixture_missing": true,
+      "outcomes": {
+        "changed": 22
+      },
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "pdftotext": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+      }
+    },
+    {
+      "project": "cv",
+      "consumer": "pdf",
+      "fixture_missing": true,
+      "outcomes": {
+        "changed": 22
+      },
+      "versions": {
+        "quarto": "1.10.18",
+        "pandoc": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.",
+        "pdftotext": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+      }
+    }
+  ],
+  "approved_candidate_comparison": [
+    {
+      "consumer": "html",
+      "key": "oleary2025framework",
+      "expected": "O’Leary, D. J. (2025). Evaluating the effectiveness of AR/MR technologies in manufacturing training: A multi-modal assessment framework. In E. Gentry, F. Ju, & X. Liu (Eds.), Proceedings of the IISE annual conference & expo 2025 (pp. 1829–1834). Institute of Industrial and Systems Engineers.",
+      "actual": "O’Leary, D. J. (2025). Evaluating the effectiveness of AR/MR technologies in manufacturing training: A multi-modal assessment framework. In E. Gentry, F. Ju, & X. Liu (Eds.), Proceedings of the IISE annual conference & expo 2025 (pp. 1829–1834). Institute of Industrial and Systems Engineers.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "oleary2025econ-uncertainty",
+      "expected": "O’Leary, D. J., Evans, J. L., & Park, C. (2025). Estimating real-world uncertainty: Case studies & stochastic models for graduate engineering economy. In E. Gentry, F. Ju, & X. Liu (Eds.), Proceedings of the IISE annual conference & expo 2025 (pp. 1847–1849). Institute of Industrial and Systems Engineers.",
+      "actual": "O’Leary, D. J., Evans, J. L., & Park, C. (2025). Estimating real-world uncertainty: Case studies & stochastic models for graduate engineering economy. In E. Gentry, F. Ju, & X. Liu (Eds.), Proceedings of the IISE annual conference & expo 2025 (pp. 1847–1849). Institute of Industrial and Systems Engineers.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "madachyolearymcdermott2026genai-se-tips",
+      "expected": "Madachy, R., O’Leary, D. J., McDermott, T., & Bank, S. (2026). Twenty tips for using generative AI in systems engineering. INSIGHT, 29(3), 29–31. https://doi.org/10.1002/inst.70053",
+      "actual": "Madachy, R., O’Leary, D. J., McDermott, T., & Bank, S. (2026). Twenty tips for using generative AI in systems engineering. INSIGHT, 29(3), 29–31. https://doi.org/10.1002/inst.70053",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "olearyledford2026insight",
+      "expected": "O’Leary, D. J., & Ledford, A. B. (2026). Trustworthy LLM-augmented data reconciliation for deployment-constrained environments. INSIGHT, 29(3), 37–42. https://doi.org/10.1002/inst.70055",
+      "actual": "O’Leary, D. J., & Ledford, A. B. (2026). Trustworthy LLM-augmented data reconciliation for deployment-constrained environments. INSIGHT, 29(3), 37–42. https://doi.org/10.1002/inst.70055",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "hossain2024lean-industry40",
+      "expected": "Hossain, M. M., Ballard, V., O’Leary, D. J., Purdy, G., Sesek, R., & Harris, G. (2026). Quantifying the integration impact of Lean and Industry 4.0 on operational efficiency: Insights from an experimental case study [Unpublished manuscript]. Revised manuscript under consideration at the International Journal of Lean Six Sigma; IJLSS-08-2025-0243.R6; awaiting referee reply.",
+      "actual": "Hossain, M. M., Ballard, V., O’Leary, D. J., Purdy, G., Sesek, R., & Harris, G. (2026). Quantifying the integration impact of Lean and Industry 4.0 on operational efficiency: Insights from an experimental case study [Unpublished manuscript]. Revised manuscript under consideration at the International Journal of Lean Six Sigma; IJLSS-08-2025-0243.R6; awaiting referee reply.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "oleary2026danvas-jose",
+      "expected": "O’Leary, D. J. (2026). danvas: Command-line course operations for Canvas instructors [Unpublished manuscript]. Manuscript complete; awaiting the Journal of Open Source Education reopening submissions.",
+      "actual": "O’Leary, D. J. (2026). danvas: Command-line course operations for Canvas instructors [Unpublished manuscript]. Manuscript complete; awaiting the Journal of Open Source Education reopening submissions.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "oleary-2026-instructionalInformation",
+      "expected": "O’Leary, D. J. (2026). Instructional information and persistent errors in manufacturing assembly training [Unpublished manuscript]. Manuscript in preparation; initial work completed; working title.",
+      "actual": "O’Leary, D. J. (2026). Instructional information and persistent errors in manufacturing assembly training [Unpublished manuscript]. Manuscript in preparation; initial work completed; working title.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "oleary2026instructional-media-tradeoffs",
+      "expected": "O’Leary, D. J. (2026). Instructional media and speed-quality tradeoffs in manufacturing assembly training [Unpublished manuscript]. Manuscript nearing completion; target journal: Journal of Manufacturing Systems.",
+      "actual": "O’Leary, D. J. (2026). Instructional media and speed-quality tradeoffs in manufacturing assembly training [Unpublished manuscript]. Manuscript nearing completion; target journal: Journal of Manufacturing Systems.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "oleary-2026-pipyerEvidence",
+      "expected": "O’Leary, D. J. (2026). Pipyer: Evidence-producing orchestration for reproducible LLM-assisted research workflows [Unpublished manuscript]. Manuscript complete; submission to the Journal of Open Source Software awaits public software release.",
+      "actual": "O’Leary, D. J. (2026). Pipyer: Evidence-producing orchestration for reproducible LLM-assisted research workflows [Unpublished manuscript]. Manuscript complete; submission to the Journal of Open Source Software awaits public software release.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "ganesh2026ai-driven-dema",
+      "expected": "Ganesh, P., Gadzey, S., Bigonah, M., Arslan, B., O’Leary, D. J., Ledford, A., & Dozier, G. (2026, August 26–27). AI-driven DEMA framework for data mapping and model-based systems engineering [Poster presentation]. 2026 outreach and engaged scholarship symposium, Auburn University.",
+      "actual": "Ganesh, P., Gadzey, S., Bigonah, M., Arslan, B., O’Leary, D. J., Ledford, A., & Dozier, G. (2026, August 26–27). AI-driven DEMA framework for data mapping and model-based systems engineering [Poster presentation]. 2026 outreach and engaged scholarship symposium, Auburn University.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "ganesh2026ai-enhanced-dema",
+      "expected": "Ganesh, P., Gadzey, S., Bigonah, M., Arslan, B., O’Leary, D. J., Ledford, A., & Dozier, G. (2026, June 8–10). AI-enhanced DEMA for streamlined data mapping and efficient model-based systems engineering [Poster presentation]. MBSE2026.",
+      "actual": "Ganesh, P., Gadzey, S., Bigonah, M., Arslan, B., O’Leary, D. J., Ledford, A., & Dozier, G. (2026, June 8–10). AI-enhanced DEMA for streamlined data mapping and efficient model-based systems engineering [Poster presentation]. MBSE2026.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "gadzey2026dema-digital-thread",
+      "expected": "Gadzey, S., Ganesh, P., Bigonah, M., O’Leary, D. J., Dozier, G., & Ledford, A. B. (2026, March 3–4). A data element mapping and analysis (DEMA) approach for implementing a complete digital thread [Poster presentation]. Defense industrial base digital engineering summit, Auburn University.",
+      "actual": "Gadzey, S., Ganesh, P., Bigonah, M., O’Leary, D. J., Dozier, G., & Ledford, A. B. (2026, March 3–4). A data element mapping and analysis (DEMA) approach for implementing a complete digital thread [Poster presentation]. Defense industrial base digital engineering summit, Auburn University.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "oleary-2026-judgmentEconomy",
+      "expected": "O’Leary, D. J. (2026, February 12). The judgment economy: Education and the abstraction of work [Paper presentation]. AI nexus: Arts, humanities, and engineering converge conference, Auburn, AL.",
+      "actual": "O’Leary, D. J. (2026, February 12). The judgment economy: Education and the abstraction of work [Paper presentation]. AI nexus: Arts, humanities, and engineering converge conference, Auburn, AL.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "oleary2025binary-classification",
+      "expected": "O’Leary, D. J. (2025, October 28). Beyond binary classification: A comprehensive multi-criteria assessment system for programming assignments [Poster presentation]. INFORMS annual meeting, Atlanta, GA, USA.",
+      "actual": "O’Leary, D. J. (2025, October 28). Beyond binary classification: A comprehensive multi-criteria assessment system for programming assignments [Poster presentation]. INFORMS annual meeting, Atlanta, GA, USA.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "oleary2025ai4se",
+      "expected": "O’Leary, D. J., & Ledford, A. B. (2025, September). AI-enhanced DEMA: Transforming implicit system knowledge into intelligent, compliant, and documented processes [Workshop presentation]. AI4SE & SE4AI research and application workshop, Washington, DC, USA.",
+      "actual": "O’Leary, D. J., & Ledford, A. B. (2025, September). AI-enhanced DEMA: Transforming implicit system knowledge into intelligent, compliant, and documented processes [Workshop presentation]. AI4SE & SE4AI research and application workshop, Washington, DC, USA.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "olearyficken2025innovation-culture",
+      "expected": "O’Leary, D. J., Ficken, A., Evans, J. L., & Sesek, R. (2025). Building an innovation culture: Lessons from developing and scaling a product innovation program in engineering education [Conference presentation]. IISE annual conference & expo.",
+      "actual": "O’Leary, D. J., Ficken, A., Evans, J. L., & Sesek, R. (2025). Building an innovation culture: Lessons from developing and scaling a product innovation program in engineering education [Conference presentation]. IISE annual conference & expo.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "ballard2024role",
+      "expected": "Ballard, V., O’Leary, D. J., & Sesek, R. F. (2024). The role of technology in enhancing workplace ergonomics for neurodiverse employees: A performance and safety perspective [Poster presentation]. Applied ergonomics conference 2024, Louisville, KY.",
+      "actual": "Ballard, V., O’Leary, D. J., & Sesek, R. F. (2024). The role of technology in enhancing workplace ergonomics for neurodiverse employees: A performance and safety perspective [Poster presentation]. Applied ergonomics conference 2024, Louisville, KY.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "ficken2023blending",
+      "expected": "Ficken, A., O’Leary, D. J., Evans, J., & Sesek, R. (2023, October 25). Blending product innovation and engineering management for graduate education [Conference presentation]. ASEM international annual conference, Boulder, CO.",
+      "actual": "Ficken, A., O’Leary, D. J., Evans, J., & Sesek, R. (2023, October 25). Blending product innovation and engineering management for graduate education [Conference presentation]. ASEM international annual conference, Boulder, CO.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "oleary2009time-dilation",
+      "expected": "O’Leary, D. J., Newman, T., & Smith, A. L. M. (2009). Video game including time dilation effect and a storage medium storing software for the video game (Patent No. US7497779B2). https://patents.google.com/patent/US7497779B2/en",
+      "actual": "O’Leary, D. J., Newman, T., & Smith, A. L. M. (2009). Video game including time dilation effect and a storage medium storing software for the video game (Patent No. US7497779B2). https://patents.google.com/patent/US7497779B2/en",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "kreitzman-1997-animatingControllers",
+      "expected": "Kreitzman, R., & O’Leary, D. J. (1997). Animating with controllers. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 107–147). New Riders Publishing.",
+      "actual": "Kreitzman, R., & O’Leary, D. J. (1997). Animating with controllers. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 107–147). New Riders Publishing.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "oleary-1997-animatingExpressions",
+      "expected": "O’Leary, D. J. (1997). Animating with expressions. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 149–173). New Riders Publishing.",
+      "actual": "O’Leary, D. J. (1997). Animating with expressions. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 149–173). New Riders Publishing.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "html",
+      "key": "oleary-1997-animatingMultiple",
+      "expected": "O’Leary, D. J. (1997). Animating with multiple modifiers. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 175–205). New Riders Publishing.",
+      "actual": "O’Leary, D. J. (1997). Animating with multiple modifiers. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 175–205). New Riders Publishing.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "oleary2025framework",
+      "expected": "O’Leary, D. J. (2025). Evaluating the effectiveness of AR/MR technologies in manufacturing training: A multi-modal assessment framework. In E. Gentry, F. Ju, & X. Liu (Eds.), Proceedings of the IISE annual conference & expo 2025 (pp. 1829–1834). Institute of Industrial and Systems Engineers.",
+      "actual": "O’Leary, D. J. (2025). Evaluating the effectiveness of AR/MR technologies in manufacturing training: A multi- modal assessment framework. In E. Gentry, F. Ju, & X. Liu (Eds.), Proceedings of the IISE annual conference & expo 2025 (pp. 1829–1834). Institute of Industrial and Systems Engineers.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "oleary2025econ-uncertainty",
+      "expected": "O’Leary, D. J., Evans, J. L., & Park, C. (2025). Estimating real-world uncertainty: Case studies & stochastic models for graduate engineering economy. In E. Gentry, F. Ju, & X. Liu (Eds.), Proceedings of the IISE annual conference & expo 2025 (pp. 1847–1849). Institute of Industrial and Systems Engineers.",
+      "actual": "O’Leary, D. J., Evans, J. L., & Park, C. (2025). Estimating real-world uncertainty: Case studies & stochastic models for graduate engineering economy. In E. Gentry, F. Ju, & X. Liu (Eds.), Proceedings of the IISE annual conference & expo 2025 (pp. 1847–1849). Institute of Industrial and Systems Engineers.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "madachyolearymcdermott2026genai-se-tips",
+      "expected": "Madachy, R., O’Leary, D. J., McDermott, T., & Bank, S. (2026). Twenty tips for using generative AI in systems engineering. INSIGHT, 29(3), 29–31. https://doi.org/10.1002/inst.70053",
+      "actual": "Madachy, R., O’Leary, D. J., McDermott, T., & Bank, S. (2026). Twenty tips for using generative AI in systems engineering. INSIGHT, 29(3), 29–31. https://doi.org/10.1002/inst.70053",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "olearyledford2026insight",
+      "expected": "O’Leary, D. J., & Ledford, A. B. (2026). Trustworthy LLM-augmented data reconciliation for deployment-constrained environments. INSIGHT, 29(3), 37–42. https://doi.org/10.1002/inst.70055",
+      "actual": "O’Leary, D. J., & Ledford, A. B. (2026). Trustworthy LLM-augmented data reconciliation for deployment- constrained environments. INSIGHT, 29(3), 37–42. https://doi.org/10.1002/inst.70055",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "hossain2024lean-industry40",
+      "expected": "Hossain, M. M., Ballard, V., O’Leary, D. J., Purdy, G., Sesek, R., & Harris, G. (2026). Quantifying the integration impact of Lean and Industry 4.0 on operational efficiency: Insights from an experimental case study [Unpublished manuscript]. Revised manuscript under consideration at the International Journal of Lean Six Sigma; IJLSS-08-2025-0243.R6; awaiting referee reply.",
+      "actual": "Hossain, M. M., Ballard, V., O’Leary, D. J., Purdy, G., Sesek, R., & Harris, G. (2026). Quantifying the integration impact of Lean and Industry 4.0 on operational efficiency: Insights from an experimental case study [Unpublished manuscript]. Revised manuscript under consideration at the International Journal of Lean Six Sigma; IJLSS-08-2025-0243.R6; awaiting referee reply.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "oleary2026danvas-jose",
+      "expected": "O’Leary, D. J. (2026). danvas: Command-line course operations for Canvas instructors [Unpublished manuscript]. Manuscript complete; awaiting the Journal of Open Source Education reopening submissions.",
+      "actual": "O’Leary, D. J. (2026). danvas: Command-line course operations for Canvas instructors [Unpublished manuscript]. Manuscript complete; awaiting the Journal of Open Source Education reopening submissions.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "oleary-2026-instructionalInformation",
+      "expected": "O’Leary, D. J. (2026). Instructional information and persistent errors in manufacturing assembly training [Unpublished manuscript]. Manuscript in preparation; initial work completed; working title.",
+      "actual": "O’Leary, D. J. (2026). Instructional information and persistent errors in manufacturing assembly training [Unpublished manuscript]. Manuscript in preparation; initial work completed; working title.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "oleary2026instructional-media-tradeoffs",
+      "expected": "O’Leary, D. J. (2026). Instructional media and speed-quality tradeoffs in manufacturing assembly training [Unpublished manuscript]. Manuscript nearing completion; target journal: Journal of Manufacturing Systems.",
+      "actual": "O’Leary, D. J. (2026). Instructional media and speed-quality tradeoffs in manufacturing assembly training [Unpublished manuscript]. Manuscript nearing completion; target journal: Journal of Manufacturing Systems.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "oleary-2026-pipyerEvidence",
+      "expected": "O’Leary, D. J. (2026). Pipyer: Evidence-producing orchestration for reproducible LLM-assisted research workflows [Unpublished manuscript]. Manuscript complete; submission to the Journal of Open Source Software awaits public software release.",
+      "actual": "O’Leary, D. J. (2026). Pipyer: Evidence-producing orchestration for reproducible LLM-assisted research workflows [Unpublished manuscript]. Manuscript complete; submission to the Journal of Open Source Software awaits public software release.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "ganesh2026ai-driven-dema",
+      "expected": "Ganesh, P., Gadzey, S., Bigonah, M., Arslan, B., O’Leary, D. J., Ledford, A., & Dozier, G. (2026, August 26–27). AI-driven DEMA framework for data mapping and model-based systems engineering [Poster presentation]. 2026 outreach and engaged scholarship symposium, Auburn University.",
+      "actual": "Ganesh, P., Gadzey, S., Bigonah, M., Arslan, B., O’Leary, D. J., Ledford, A., & Dozier, G. (2026, August 26–27). AI-driven DEMA framework for data mapping and model-based systems engineering [Poster presentation]. 2026 outreach and engaged scholarship symposium, Auburn University.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "ganesh2026ai-enhanced-dema",
+      "expected": "Ganesh, P., Gadzey, S., Bigonah, M., Arslan, B., O’Leary, D. J., Ledford, A., & Dozier, G. (2026, June 8–10). AI-enhanced DEMA for streamlined data mapping and efficient model-based systems engineering [Poster presentation]. MBSE2026.",
+      "actual": "Ganesh, P., Gadzey, S., Bigonah, M., Arslan, B., O’Leary, D. J., Ledford, A., & Dozier, G. (2026, June 8–10). AI- enhanced DEMA for streamlined data mapping and efficient model-based systems engineering [Poster presentation]. MBSE2026.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "gadzey2026dema-digital-thread",
+      "expected": "Gadzey, S., Ganesh, P., Bigonah, M., O’Leary, D. J., Dozier, G., & Ledford, A. B. (2026, March 3–4). A data element mapping and analysis (DEMA) approach for implementing a complete digital thread [Poster presentation]. Defense industrial base digital engineering summit, Auburn University.",
+      "actual": "Gadzey, S., Ganesh, P., Bigonah, M., O’Leary, D. J., Dozier, G., & Ledford, A. B. (2026, March 3–4). A data element mapping and analysis (DEMA) approach for implementing a complete digital thread [Poster presentation]. Defense industrial base digital engineering summit, Auburn University.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "oleary-2026-judgmentEconomy",
+      "expected": "O’Leary, D. J. (2026, February 12). The judgment economy: Education and the abstraction of work [Paper presentation]. AI nexus: Arts, humanities, and engineering converge conference, Auburn, AL.",
+      "actual": "O’Leary, D. J. (2026, February 12). The judgment economy: Education and the abstraction of work [Paper presentation]. AI nexus: Arts, humanities, and engineering converge conference, Auburn, AL.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "oleary2025binary-classification",
+      "expected": "O’Leary, D. J. (2025, October 28). Beyond binary classification: A comprehensive multi-criteria assessment system for programming assignments [Poster presentation]. INFORMS annual meeting, Atlanta, GA, USA.",
+      "actual": "O’Leary, D. J. (2025, October 28). Beyond binary classification: A comprehensive multi-criteria assessment system for programming assignments [Poster presentation]. INFORMS annual meeting, Atlanta, GA, USA.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "oleary2025ai4se",
+      "expected": "O’Leary, D. J., & Ledford, A. B. (2025, September). AI-enhanced DEMA: Transforming implicit system knowledge into intelligent, compliant, and documented processes [Workshop presentation]. AI4SE & SE4AI research and application workshop, Washington, DC, USA.",
+      "actual": "O’Leary, D. J., & Ledford, A. B. (2025, September). AI-enhanced DEMA: Transforming implicit system knowledge into intelligent, compliant, and documented processes [Workshop presentation]. AI4SE & SE4AI research and application workshop, Washington, DC, USA.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "olearyficken2025innovation-culture",
+      "expected": "O’Leary, D. J., Ficken, A., Evans, J. L., & Sesek, R. (2025). Building an innovation culture: Lessons from developing and scaling a product innovation program in engineering education [Conference presentation]. IISE annual conference & expo.",
+      "actual": "O’Leary, D. J., Ficken, A., Evans, J. L., & Sesek, R. (2025). Building an innovation culture: Lessons from developing and scaling a product innovation program in engineering education [Conference presentation]. IISE annual conference & expo.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "ballard2024role",
+      "expected": "Ballard, V., O’Leary, D. J., & Sesek, R. F. (2024). The role of technology in enhancing workplace ergonomics for neurodiverse employees: A performance and safety perspective [Poster presentation]. Applied ergonomics conference 2024, Louisville, KY.",
+      "actual": "Ballard, V., O’Leary, D. J., & Sesek, R. F. (2024). The role of technology in enhancing workplace ergonomics for neurodiverse employees: A performance and safety perspective [Poster presentation]. Applied ergonomics conference 2024, Louisville, KY.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "ficken2023blending",
+      "expected": "Ficken, A., O’Leary, D. J., Evans, J., & Sesek, R. (2023, October 25). Blending product innovation and engineering management for graduate education [Conference presentation]. ASEM international annual conference, Boulder, CO.",
+      "actual": "Ficken, A., O’Leary, D. J., Evans, J., & Sesek, R. (2023, October 25). Blending product innovation and engineering management for graduate education [Conference presentation]. ASEM international annual conference, Boulder, CO.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "oleary2009time-dilation",
+      "expected": "O’Leary, D. J., Newman, T., & Smith, A. L. M. (2009). Video game including time dilation effect and a storage medium storing software for the video game (Patent No. US7497779B2). https://patents.google.com/patent/US7497779B2/en",
+      "actual": "O’Leary, D. J., Newman, T., & Smith, A. L. M. (2009). Video game including time dilation effect and a storage medium storing software for the video game (Patent No. US7497779B2). https://patents.google.com/patent/US 7497779B2/en",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "kreitzman-1997-animatingControllers",
+      "expected": "Kreitzman, R., & O’Leary, D. J. (1997). Animating with controllers. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 107–147). New Riders Publishing.",
+      "actual": "Kreitzman, R., & O’Leary, D. J. (1997). Animating with controllers. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 107–147). New Riders Publishing.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "oleary-1997-animatingExpressions",
+      "expected": "O’Leary, D. J. (1997). Animating with expressions. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 149–173). New Riders Publishing.",
+      "actual": "O’Leary, D. J. (1997). Animating with expressions. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 149–173). New Riders Publishing.",
+      "outcome": "expected-identical"
+    },
+    {
+      "consumer": "pdf",
+      "key": "oleary-1997-animatingMultiple",
+      "expected": "O’Leary, D. J. (1997). Animating with multiple modifiers. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 175–205). New Riders Publishing.",
+      "actual": "O’Leary, D. J. (1997). Animating with multiple modifiers. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 175–205). New Riders Publishing.",
+      "outcome": "expected-identical"
+    }
+  ],
+  "activities": [
+    {
+      "expected": "Running an Independent Game Development Studio 2023-present Florida Interactive Entertainment Academy at the University of Central Florida; delivered annually.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "The Metaverse: More Direction than Vision 2022 Air University, June 22.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Game Changer: The Emergence and Potential of Real-Time 3D Development Platforms 2021 Air University, November 17.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Game Development to Visualization Research in 25 Years: Real-Time Graphics and the Epic MegaGrant Program 2021 MGMWERX and AUiX, July 23.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Games and Strategy, LEDx: Strategic Games 2024 Panel organized October 30. Panelists: Col Mark Jacobsen, PhD (USAF Ret.) and Col Jason Trew, PhD (USAF Ret.).",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "The Societal Impact of Digital Convergence, LEDxSI Conference 2022 Panel organized October 12. Panelists: Steven Mills, Allan David, PhD, and SueAnne Griffith, PhD.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Entertainment Panel 2015 Moderator and speaker, Florida Simulation Summit, National Center for Simulation, September 16.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Software Project Management 2025 Guest lecturer, Project Management (INSY 6250), April 17.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Lessons from an Accidental Entrepreneur 2024 Guest speaker, Entrepreneurs of Auburn Club, November 5.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Lessons from an Accidental Entrepreneur 2024 Guest speaker, Entrepreneurs of Auburn Club, April 25.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Augmented vs Traditional Instruction in Manufacturing Assembly 2024 ISE Seminar, March 20.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "The Value of Engineering Econ, A Balanced (Biased?) Opinion 2023 Guest lecturer, Engineering Economics (INSY 3600), November 2.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Creativity and Design Thinking 2022 Guest lecturer, Business Plan for the New Venture (ENFB 4200), October 26.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Introduction to Version Control Using Git 2022 Presented to the INFORMS Auburn student chapter, March 2.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Design and Innovation Center: Vision, Strategy, and Alignment 2021 Finalist presentation for director search, June 23.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Data Science Career Roundtable 2021 Organized, recruited participants, hosted, promoted, and moderated, March 30.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "AI and Machine Learning Concepts 2020 Presented to the Data Science Society of Auburn, November 9.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Real-Time Visualization and the Epic MegaGrant Program 2020 Presented to Auburn Industrial & Systems Engineering faculty and the Advanced Manufacturing Research Group, July 13 and July 28.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    },
+    {
+      "expected": "Independent Game Development 2013 Speaker, GameTech Conference, National Center for Simulation, April 17.",
+      "html": "expected-identical",
+      "pdf": "expected-identical"
+    }
+  ],
+  "pdf_pages": 11,
+  "scratch_root": "/private/tmp/refs-cv-execution",
+  "checks": {
+    "harness_tests": 23,
+    "ruff": "passed",
+    "ty": "passed",
+    "family_record": "unchanged",
+    "live_export_targets": "all 8 unchanged from backup",
+    "live_cv_worktree": "clean at 07d3b2b948d265879edbd35a22fc47a445f37cbd",
+    "gametech_catalog_record": "absent",
+    "all_project_cv_extraction": "identical to individual CV gate"
+  },
+  "render_sha256": {
+    "cv-master.html": "88345a5c91822215fb88e33854ab248cd410ec398d7e6ad2477eddd7feff4b0d",
+    "cv-master.pdf": "c8ce382bbce89998f665cedf8203250c8bc22654761269df17a46661ce5193b9"
+  }
+}
