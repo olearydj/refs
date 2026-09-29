@@ -6,6 +6,19 @@ from refs.adapters.bibtex import parse, partition
 from refs.results import RefError
 
 
+@pytest.mark.parametrize('ampersand', ['&', r'\&'])
+def test_bibliographic_ampersands_survive_decoding(ampersand):
+    raw = ('@inproceedings{x,title={Research ' + ampersand + ' Development},'
+           'booktitle={Systems ' + ampersand + ' Engineering},'
+           'author={{Research ' + ampersand + ' Design}},'
+           'note={Tools ' + ampersand + ' methods}}').encode()
+    metadata = parse(raw)['source'].canonical()['metadata']
+    assert metadata['title'] == 'Research & Development'
+    assert metadata['container-title'] == 'Systems & Engineering'
+    assert metadata['author'] == [{'literal': 'Research & Design'}]
+    assert metadata['note'] == 'Tools & methods'
+
+
 @pytest.mark.parametrize(('entry', 'path', 'expected'), [
     ('@article{x,title={Test},journal={Legacy Journal},number={7}}', 'issue', '7'),
     ('@article{x,title={Test},number={1},issue={2}}', 'issue', '1'),
