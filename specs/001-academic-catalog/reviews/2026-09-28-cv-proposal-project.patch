@@ -1,6 +1,6 @@
 --- a/cv-master.qmd
 +++ b/cv-master.qmd
-@@ -5,12 +5,12 @@
+@@ -5,12 +5,15 @@
  jupyter: cv-data-importer
  csl: styles/apa-cv.csl
  suppress-bibliography: true
@@ -16,94 +16,150 @@
 +bibliography_submission: refs/submission.json
 +bibliography_preparation: refs/preparation.json
 +bibliography_otherpublications: refs/other-publications.json
++bibliography_invitedtalks: refs/invited-talks.json
++bibliography_presentations: refs/presentations.json
++bibliography_patents: refs/patents.json
  filters:
    - citetools
    - filters/highlight-djo.lua
---- a/styles/apa-cv.csl
-+++ b/styles/apa-cv.csl
-@@ -1959,6 +1959,7 @@
-             </group>
-             <text macro="source-DOI-URL"/>
-             <text macro="publication-history"/>
-+            <choose><if type="manuscript book" match="any"><text variable="note" prefix=" " suffix="."/></if></choose>
-           </else>
-         </choose>
-       </group>
-@@ -1997,6 +1998,7 @@
-             </group>
-             <text macro="source-DOI-URL"/>
-             <text macro="publication-history"/>
-+            <choose><if type="manuscript book" match="any"><text variable="note" prefix=" " suffix="."/></if></choose>
-           </else>
-         </choose>
-       </group>
---- a/filters/highlight-djo.lua
-+++ b/filters/highlight-djo.lua
-@@ -54,7 +54,18 @@
-   return keys
- end
+@@ -125,28 +128,6 @@
+     },
+ ]
 
--local nonfirst_author_keys = parse_bib_authorship("refs/all.bib")
-+local nonfirst_author_keys = {}
-+for _, path in ipairs({"refs/proceedings.json", "refs/published.json", "refs/forthcoming.json", "refs/submission.json", "refs/preparation.json", "refs/other-publications.json"}) do
-+  local handle = assert(io.open(path, "r"))
-+  local records = pandoc.json.decode(handle:read("*a"))
-+  handle:close()
-+  for _, record in ipairs(records) do
-+    for index, author in ipairs(record.author or {}) do
-+      local family = (author.family or ""):lower():gsub("’", "'")
-+      if family == target_surname and index > 1 then nonfirst_author_keys[record.id] = true end
-+    end
-+  end
-+end
+-INVITED_TALK_ENTRIES = [
+-    {
+-        'title': 'Running an Independent Game Development Studio',
+-        'date': '2023-present',
+-        'detail': 'Florida Interactive Entertainment Academy at the University of Central Florida; delivered annually.',
+-    },
+-    {
+-        'title': 'The Metaverse: More Direction than Vision',
+-        'date': '2022',
+-        'detail': 'Air University, June 22.',
+-    },
+-    {
+-        'title': 'Game Changer: The Emergence and Potential of Real-Time 3D Development Platforms',
+-        'date': '2021',
+-        'detail': 'Air University, November 17.',
+-    },
+-    {
+-        'title': 'Game Development to Visualization Research in 25 Years: Real-Time Graphics and the Epic MegaGrant Program',
+-        'date': '2021',
+-        'detail': 'MGMWERX and AUiX, July 23.',
+-    },
+-]
 
- local function is_target_name_start(inlines, index)
-   local first = inlines[index]
-@@ -63,7 +74,7 @@
-   local fourth = inlines[index + 3]
-   local fifth = inlines[index + 4]
+ PANEL_ENTRIES = [
+     {
+@@ -161,56 +142,6 @@
+     },
+ ]
 
--  if not (first and second and third and fourth and fifth) then
-+  if not (first and second and third) then
-     return false
-   end
+-CONFERENCE_PRESENTATION_ENTRIES = [
+-    {
+-        'title': 'Directing, Not Delegating: Repeatable, Auditable LLM Workflows for Systems Engineering Practice',
+-        'date': '2026',
+-        'detail': 'Paper-presentation extended abstract submitted June 12 to the AI4SE & SE4AI Research and Application Workshop, hosted by the George Washington University Trustworthy AI Initiative, September 22-23.',
+-    },
+-    {
+-        'title': 'AI-Driven DEMA Framework for Data Mapping and Model-Based Systems Engineering',
+-        'title_typst': 'AI-Driven DEMA Framework for Data Mapping#linebreak()and Model-Based Systems Engineering',
+-        'date': '2026',
+-        'detail': 'Poster presentation, 2026 Outreach and Engaged Scholarship Symposium, Auburn University, August 26-27.',
+-    },
+-    {
+-        'title': 'AI-Enhanced DEMA for Streamlined Data Mapping and Efficient Model-Based Systems Engineering',
+-        'title_typst': 'AI-Enhanced DEMA for Streamlined Data Mapping#linebreak()and Efficient Model-Based Systems Engineering',
+-        'date': '2026',
+-        'detail': 'Poster presentation, MBSE2026, June 8-10.',
+-    },
+-    {
+-        'title': 'A Data Element Mapping and Analysis (DEMA) Approach for Implementing a Complete Digital Thread',
+-        'title_typst': 'A Data Element Mapping and Analysis (DEMA)#linebreak()Approach for Implementing a Complete Digital Thread',
+-        'date': '2026',
+-        'detail': 'Poster presentation, Defense Industrial Base Digital Engineering Summit, Auburn University, March 3-4.',
+-    },
+-    {
+-        'title': 'Beyond Binary Classification: A Comprehensive Multi-Criteria Assessment System for Programming Assignments',
+-        'date': '2025',
+-        'detail': 'Poster presentation, INFORMS Annual Meeting, October.',
+-    },
+-    {
+-        'title': 'AI-Enhanced DEMA: Transforming Implicit System Knowledge into Intelligent, Compliant, and Documented Processes',
+-        'date': '2025',
+-        'detail': 'Workshop presentation, AI4SE & SE4AI Research and Application Workshop, George Washington University, September.',
+-    },
+-    {
+-        'title': 'Building an Innovation Culture: Lessons from Developing and Scaling a Product Innovation Program in Engineering Education',
+-        'date': '2025',
+-        'detail': 'Conference presentation, IISE Annual Conference & Expo.',
+-    },
+-    {
+-        'title': 'The Role of Technology in Enhancing Workplace Ergonomics for Neurodiverse Employees: A Performance and Safety Perspective',
+-        'date': '2024',
+-        'detail': 'Poster presentation, Applied Ergonomics Conference, Louisville, KY.',
+-    },
+-    {
+-        'title': 'Blending Product Innovation and Engineering Management for Graduate Education',
+-        'date': '2023',
+-        'detail': 'Conference presentation, ASEM International Annual Conference, University of Colorado, Boulder, CO, October.',
+-    },
+-]
 
-@@ -71,10 +82,7 @@
-     and (first.text == "O’Leary," or first.text == "O'Leary,")
-     and second.t == "Space"
-     and third.t == "Str"
--    and third.text == "D."
--    and fourth.t == "Space"
--    and fifth.t == "Str"
--    and (fifth.text == "J." or fifth.text == "J.,")
-+    and (third.text == "D." or third.text == "D.,")
- end
+ DISCUSSANT_ENTRIES = [
+     {
+@@ -1045,20 +976,19 @@
 
- local function underline_target_name(inlines)
-@@ -83,14 +91,12 @@
+ #### Invited Talks
 
-   while i <= #inlines do
-     if is_target_name_start(inlines, i) then
--      table.insert(output, pandoc.Underline({
--        inlines[i],
--        inlines[i + 1],
--        inlines[i + 2],
--        inlines[i + 3],
--        inlines[i + 4],
--      }))
--      i = i + 5
-+      local count = 3
-+      if inlines[i + 3] and inlines[i + 4] and inlines[i + 3].t == "Space" and inlines[i + 4].t == "Str" and (inlines[i + 4].text == "J." or inlines[i + 4].text == "J.,") then count = 5 end
-+      local name = {}
-+      for offset = 0, count - 1 do table.insert(name, inlines[i + offset]) end
-+      table.insert(output, pandoc.Underline(name))
-+      i = i + count
-     else
-       table.insert(output, inlines[i])
-       i = i + 1
+-```{python}
+-#| echo: false
+-#| output: asis
+-
+-print(render_cv_entries(INVITED_TALK_ENTRIES))
+-```
++::: {#refs_invitedtalks}
++:::
+
+ #### Conference Presentations and Participation
+
+-```{python}
+-#| echo: false
+-#| output: asis
+-
+-print(render_cv_entries(CONFERENCE_PRESENTATION_ENTRIES + PANEL_ENTRIES + DISCUSSANT_ENTRIES))
++::: {#refs_presentations}
++:::
++
++```{python}
++#| echo: false
++#| output: asis
++
++print(render_cv_entries(PANEL_ENTRIES + DISCUSSANT_ENTRIES))
+ ```
+
+ #### Campus Talks
+@@ -1080,10 +1010,13 @@
+ #| echo: false
+ #| output: asis
+
+-print(render_cv_entries(patents_and_disclosures))
+-```
+-
+-### Books
++print(render_cv_entries([entry for entry in patents_and_disclosures if entry['date'] != 2009]))
++```
++
++::: {#refs_patents}
++:::
++
++### Book Chapters
+
+ ::: {#refs_otherpublications}
+ :::
 --- /dev/null
 +++ b/cv-sections.json
-@@ -0,0 +1,24 @@
+@@ -0,0 +1,45 @@
 +{
 +  "proceedings": [
 +    "oleary2025econ-uncertainty",
@@ -118,35 +174,351 @@
 +    "hossain2024lean-industry40"
 +  ],
 +  "preparation": [
-+    "oleary2026affordance-bundles",
-+    "oleary2026danvas-jose",
 +    "oleary2026instructional-media-tradeoffs",
-+    "oleary2026user-fit-friction",
-+    "oleary2026xr-evaluation-methods"
++    "oleary-2026-instructionalInformation",
++    "oleary-2026-pipyerEvidence",
++    "oleary2026danvas-jose"
 +  ],
 +  "other-publications": [
-+    "elliott1996inside-3d-studio-max"
++    "kreitzman-1997-animatingControllers",
++    "oleary-1997-animatingExpressions",
++    "oleary-1997-animatingMultiple"
++  ],
++  "invited-talks": [
++    "oleary2023independent-studio",
++    "oleary2022metaverse",
++    "oleary2021game-changer",
++    "oleary2021visualization-research"
++  ],
++  "presentations": [
++    "ganesh2026ai-driven-dema",
++    "ganesh2026ai-enhanced-dema",
++    "gadzey2026dema-digital-thread",
++    "oleary-2026-judgmentEconomy",
++    "oleary2025binary-classification",
++    "oleary2025ai4se",
++    "olearyficken2025innovation-culture",
++    "ballard2024role",
++    "ficken2023blending"
++  ],
++  "patents": [
++    "oleary2009time-dilation"
 +  ]
 +}
 --- /dev/null
 +++ b/scripts/prepare_cv_bibliographies.py
-@@ -0,0 +1,19 @@
-+"""Proposal prototype: project-local section selection from one refs export."""
+@@ -0,0 +1,24 @@
++"""Select CV sections from the single refs export; fail before writing on bad keys."""
 +import json
 +from pathlib import Path
 +
 +root = Path(__file__).resolve().parents[1]
-+records = json.loads((root / 'refs/cv.json').read_text())
-+by_key = {record['id']: record for record in records}
++records = json.loads((root / "refs/cv.json").read_text())
++by_key = {record["id"]: record for record in records}
 +if len(by_key) != len(records):
-+    raise ValueError('Duplicate exported key')
-+sections = json.loads((root / 'cv-sections.json').read_text())
++    raise ValueError("Duplicate exported key")
++sections = json.loads((root / "cv-sections.json").read_text())
++allowed = {"proceedings", "published", "forthcoming", "submission", "preparation", "other-publications", "invited-talks", "presentations", "patents"}
++if set(sections) != allowed:
++    raise ValueError("Missing or unknown CV section")
 +seen = set()
++outputs = {}
 +for name, keys in sections.items():
-+    if name not in {'proceedings', 'published', 'forthcoming', 'submission', 'preparation', 'other-publications'}:
-+        raise ValueError('Unknown CV section')
 +    if len(set(keys)) != len(keys) or seen.intersection(keys):
-+        raise ValueError('Duplicate section membership')
++        raise ValueError("Duplicate section membership")
 +    seen.update(keys)
-+    selected = [by_key[key] for key in keys]  # Missing keys fail before rendering.
-+    (root / 'refs' / (name + '.json')).write_text(json.dumps(selected, ensure_ascii=False, sort_keys=True, indent=2) + '\n')
++    outputs[name] = [by_key[key] for key in keys]
++if seen != set(by_key):
++    raise ValueError("Exported record missing from section manifest")
++for name, selected in outputs.items():
++    (root / "refs" / (name + ".json")).write_text(json.dumps(selected, ensure_ascii=False, sort_keys=True, indent=2) + "\n")
+--- a/styles/apa-cv.csl
++++ b/styles/apa-cv.csl
+@@ -667,13 +667,13 @@
+   </macro>
+   <macro name="title-and-part-title">
+     <group delimiter=": ">
+-      <text variable="title"/>
++      <text variable="title" text-case="sentence"/>
+       <text macro="title-part"/>
+     </group>
+   </macro>
+   <macro name="title-and-volume-title">
+     <group delimiter=": ">
+-      <text variable="title"/>
++      <text variable="title" text-case="sentence"/>
+       <text macro="title-volume"/>
+     </group>
+   </macro>
+@@ -681,7 +681,7 @@
+     <!-- For monographic items, assume `part-number` and `part-title` refer to the book/volume. -->
+     <choose>
+       <if variable="container-title">
+-        <text variable="title"/>
++        <text variable="title" text-case="sentence"/>
+       </if>
+       <else>
+         <!-- For monographic items without `container-title` and with `volume-title`, append `volume-title` to `title` (APA example 30) -->
+@@ -694,7 +694,7 @@
+       <if variable="part-title">
+         <group delimiter=". ">
+           <text macro="label-part-number"/>
+-          <text text-case="capitalize-first" variable="part-title"/>
++          <text variable="part-title" text-case="sentence"/>
+         </group>
+       </if>
+       <else-if is-numeric="part-number"/>
+@@ -723,7 +723,7 @@
+           <group delimiter=": ">
+             <group delimiter=". ">
+               <text macro="label-volume"/>
+-              <text variable="volume-title"/>
++              <text variable="volume-title" text-case="sentence"/>
+             </group>
+             <text macro="title-part"/>
+           </group>
+@@ -1011,7 +1011,7 @@
+     <choose>
+       <if match="any" type="document report standard">
+         <group delimiter=" ">
+-          <text text-case="title" variable="collection-title"/>
++          <text variable="collection-title" text-case="sentence"/>
+           <text variable="collection-number"/>
+         </group>
+       </if>
+@@ -1254,11 +1254,11 @@
+       <if match="any" variable="reviewed-genre reviewed-title">
+         <!-- Not possible to distinguish TV series episode from other reviewed works without a reviewed source title (APA example 69) -->
+         <!-- TODO: Adapt for `reviewed-container-title` or similar if it becomes available -->
+-        <text font-style="italic" variable="reviewed-title"/>
++        <text font-style="italic" variable="reviewed-title" text-case="sentence"/>
+       </if>
+       <else>
+         <!-- Assume `title` is the title of the reviewed work -->
+-        <text font-style="italic" variable="title"/>
++        <text font-style="italic" variable="title" text-case="sentence"/>
+       </else>
+     </choose>
+   </macro>
+@@ -1344,9 +1344,9 @@
+     <group delimiter=". ">
+       <group delimiter=", ">
+         <group delimiter=", " font-style="italic">
+-          <text text-case="title" variable="container-title"/>
++          <text variable="container-title" text-case="sentence"/>
+           <!-- `collection-title` is for any serial with multiple series (e.g. 'second series') -->
+-          <text text-case="title" variable="collection-title"/>
++          <text variable="collection-title" text-case="sentence"/>
+         </group>
+         <group>
+           <text font-style="italic" variable="volume"/>
+@@ -1436,7 +1436,7 @@
+   <!-- Monographic source title -->
+   <macro name="source-monographic-title">
+     <group delimiter=": " font-style="italic">
+-      <text variable="container-title"/>
++      <text variable="container-title" text-case="sentence"/>
+       <text macro="title-volume"/>
+     </group>
+   </macro>
+@@ -1552,7 +1552,7 @@
+       <choose>
+         <!-- TODO: We expect `event-title` to be used, but processors and applications may not be updated yet. This macro ensures that either `event` or `event-title` can be accepted. Remove if processor logic and application adoption can handle this. -->
+         <if variable="event-title">
+-          <text text-case="capitalize-first" variable="event-title"/>
++          <text variable="event-title" text-case="sentence"/>
+         </if>
+         <else>
+           <text text-case="capitalize-first" variable="event"/>
+@@ -1566,7 +1566,7 @@
+   <macro name="source-website">
+     <choose>
+       <if match="any" type="post webpage">
+-        <text text-case="title" variable="container-title"/>
++        <text variable="container-title" text-case="sentence"/>
+       </if>
+     </choose>
+   </macro>
+@@ -1620,7 +1620,7 @@
+                 <group delimiter=", ">
+                   <group delimiter=" ">
+                     <text value="as"/>
+-                    <text font-style="italic" variable="original-title"/>
++                    <text font-style="italic" variable="original-title" text-case="sentence"/>
+                   </group>
+                   <text macro="date-original-year"/>
+                   <text variable="original-publisher"/>
+@@ -1736,12 +1736,12 @@
+   <macro name="legal-title">
+     <choose>
+       <if match="any" type="bill legal_case legislation regulation treaty">
+-        <text text-case="title" variable="title"/>
++        <text variable="title" text-case="sentence"/>
+       </if>
+       <else-if type="hearing">
+         <!-- use standard format (Bluebook 13.3) -->
+         <group delimiter=": " font-style="italic">
+-          <text text-case="capitalize-first" variable="title"/>
++          <text variable="title" text-case="sentence"/>
+           <group delimiter=" ">
+             <text term="hearing" text-case="capitalize-first"/>
+             <group delimiter=" ">
+@@ -1824,7 +1824,7 @@
+       </group>
+       <group delimiter=" ">
+         <text variable="volume"/>
+-        <text variable="container-title"/>
++        <text variable="container-title" text-case="sentence"/>
+         <text variable="page-first"/>
+       </group>
+     </group>
+@@ -1834,7 +1834,7 @@
+       <choose>
+         <if variable="container-title">
+           <text variable="volume"/>
+-          <text variable="container-title"/>
++          <text variable="container-title" text-case="sentence"/>
+           <text macro="label-section-symbol"/>
+           <choose>
+             <if match="any" variable="page page-first">
+@@ -1876,7 +1876,7 @@
+           </group>
+           <group delimiter=" ">
+             <text variable="volume"/>
+-            <text variable="container-title"/>
++            <text variable="container-title" text-case="sentence"/>
+             <text variable="page-first"/>
+           </group>
+         </group>
+@@ -1884,7 +1884,7 @@
+       <else>
+         <group delimiter=" ">
+           <text variable="volume"/>
+-          <text variable="container-title"/>
++          <text variable="container-title" text-case="sentence"/>
+           <choose>
+             <if variable="section">
+               <text macro="label-section-symbol"/>
+@@ -1905,7 +1905,7 @@
+       </group>
+       <group delimiter=" ">
+         <text variable="volume"/>
+-        <text variable="container-title"/>
++        <text variable="container-title" text-case="sentence"/>
+         <choose>
+           <if variable="section">
+             <text macro="label-section-symbol"/>
+@@ -1920,7 +1920,7 @@
+   <macro name="legal-source-treaty">
+     <group delimiter=" ">
+       <number variable="volume"/>
+-      <text variable="container-title"/>
++      <text variable="container-title" text-case="sentence"/>
+       <choose>
+         <if match="any" variable="page page-first">
+           <text variable="page-first"/>
+@@ -1959,6 +1959,7 @@
+             </group>
+             <text macro="source-DOI-URL"/>
+             <text macro="publication-history"/>
++            <choose><if type="manuscript book speech" match="any"><text variable="note" prefix=" " suffix="."/></if></choose>
+           </else>
+         </choose>
+       </group>
+@@ -1997,6 +1998,7 @@
+             </group>
+             <text macro="source-DOI-URL"/>
+             <text macro="publication-history"/>
++            <choose><if type="manuscript book speech" match="any"><text variable="note" prefix=" " suffix="."/></if></choose>
+           </else>
+         </choose>
+       </group>
+--- a/filters/highlight-djo.lua
++++ b/filters/highlight-djo.lua
+@@ -1,60 +1,14 @@
+-local target_surname = "o'leary"
+-
+-local function trim(s)
+-  return (s:gsub("^%s+", ""):gsub("%s+$", ""))
+-end
+-
+-local function normalize_name(s)
+-  return trim(s:lower():gsub("[{}]", ""))
+-end
+-
+-local function split_authors(author_field)
+-  local authors = {}
+-  for author in author_field:gmatch("([^%c]-)%s+and%s+") do
+-    table.insert(authors, trim(author))
+-  end
+-
+-  local last = author_field:match(".*%s+and%s+(.+)$")
+-  if last then
+-    table.insert(authors, trim(last))
+-  elseif trim(author_field) ~= "" then
+-    table.insert(authors, trim(author_field))
+-  end
+-  return authors
+-end
+-
+-local function parse_bib_authorship(path)
+-  local handle = io.open(path, "r")
+-  if not handle then
+-    return {}
+-  end
+-
+-  local content = handle:read("*a")
+-  handle:close()
+-
+-  local keys = {}
+-  for entry_type, key, body in content:gmatch("@(%w+)%s*{%s*([^,%s]+)%s*,(.-)\n}%s*") do
+-    local author_field = body:match("author%s*=%s*{(.-)}")
+-    if author_field then
+-      local authors = split_authors(author_field)
+-      local target_index = nil
+-      for idx, author in ipairs(authors) do
+-        local normalized = normalize_name(author)
+-        if normalized:find(target_surname, 1, true) then
+-          target_index = idx
+-          break
+-        end
+-      end
+-      if target_index and target_index > 1 then
+-        keys[key] = true
+-      end
++local nonfirst_author_keys = {}
++local handle = assert(io.open("refs/cv.json", "r"))
++local records = pandoc.json.decode(handle:read("*a"))
++handle:close()
++for _, record in ipairs(records) do
++  for index, author in ipairs(record.author or {}) do
++    if author.family == "O'Leary" and author.given == "Danny J." and index > 1 then
++      nonfirst_author_keys[record.id] = true
+     end
+   end
+-
+-  return keys
+ end
+-
+-local nonfirst_author_keys = parse_bib_authorship("refs/all.bib")
+
+ local function is_target_name_start(inlines, index)
+   local first = inlines[index]
+--- a/_quarto.yml
++++ b/_quarto.yml
+@@ -1,5 +1,7 @@
+ project:
+   type: default
++  pre-render:
++    - python3 scripts/prepare_cv_bibliographies.py
+   output-dir: _output
+   render:
+     - cv-master.qmd
+--- /dev/null
++++ b/.refs.toml
+@@ -0,0 +1,5 @@
++project = "cv"
++
++[[export.targets]]
++output = "refs/cv.json"
++profile = "csl-json-v1"
