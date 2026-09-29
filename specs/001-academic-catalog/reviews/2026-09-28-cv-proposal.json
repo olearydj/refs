@@ -1,5 +1,5 @@
 {
-  "base": "c29a221",
+  "base": "416757e",
   "publication_commit": "07d3b2b948d265879edbd35a22fc47a445f37cbd",
   "sections": {
     "proceedings": [
@@ -25,12 +25,6 @@
       "oleary-1997-animatingExpressions",
       "oleary-1997-animatingMultiple"
     ],
-    "invited-talks": [
-      "oleary2023independent-studio",
-      "oleary2022metaverse",
-      "oleary2021game-changer",
-      "oleary2021visualization-research"
-    ],
     "presentations": [
       "ganesh2026ai-driven-dema",
       "ganesh2026ai-enhanced-dema",
@@ -40,7 +34,8 @@
       "oleary2025ai4se",
       "olearyficken2025innovation-culture",
       "ballard2024role",
-      "ficken2023blending"
+      "ficken2023blending",
+      "oleary-2013-independentGame"
     ],
     "patents": [
       "oleary2009time-dilation"
@@ -90,7 +85,7 @@
       "state": "active",
       "revision": 3,
       "created_at": "2026-09-27T06:56:14.756176+00:00",
-      "updated_at": "2026-09-29T03:13:21.256072+00:00",
+      "updated_at": "2026-09-29T04:27:53.143109+00:00",
       "metadata": {
         "type": "paper-conference",
         "language": "en",
@@ -213,12 +208,12 @@
       "legacy_tags": [
         "proceedings"
       ],
-      "id": "e90150f2-4dcd-4700-b474-d626b392e574",
+      "id": "46c63b32-fc9b-4390-9d6b-92d303a55930",
       "citation_key": "oleary2025econ-uncertainty",
       "state": "active",
       "revision": 1,
-      "created_at": "2026-09-29T03:13:21.264033+00:00",
-      "updated_at": "2026-09-29T03:13:21.264033+00:00",
+      "created_at": "2026-09-29T04:27:53.148577+00:00",
+      "updated_at": "2026-09-29T04:27:53.148577+00:00",
       "metadata": {
         "type": "paper-conference",
         "language": "en",
@@ -273,12 +268,12 @@
       "kind": null,
       "originals": [
         {
-          "id": "51e6b629-6239-4d4c-96fb-39ce55c17a11",
-          "sha256": "c4be0536befeb946ced3b3ba6473c120aea01dfe1c3701c5f8c15f7f4aaaaaf0",
-          "byte_length": 979,
+          "id": "040ec63b-433c-46ad-966d-dc68818f6edc",
+          "sha256": "976ce372a1c8b3680f589a7650d2d8c9e939503cd15a00f7b5946f20b1829617",
+          "byte_length": 1037,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
@@ -329,7 +324,7 @@
       "state": "active",
       "revision": 4,
       "created_at": "2026-09-27T22:07:42.157139+00:00",
-      "updated_at": "2026-09-29T03:13:21.268470+00:00",
+      "updated_at": "2026-09-29T04:27:53.151758+00:00",
       "metadata": {
         "type": "article-journal",
         "language": "en",
@@ -459,12 +454,12 @@
       "legacy_tags": [
         "published"
       ],
-      "id": "3a10ad27-ebbe-4bb5-a93c-19721133c66d",
+      "id": "e8932e25-8fae-4806-ba42-93f86ee129da",
       "citation_key": "madachyolearymcdermott2026genai-se-tips",
       "state": "active",
       "revision": 1,
-      "created_at": "2026-09-29T03:13:21.278129+00:00",
-      "updated_at": "2026-09-29T03:13:21.278129+00:00",
+      "created_at": "2026-09-29T04:27:53.156938+00:00",
+      "updated_at": "2026-09-29T04:27:53.156938+00:00",
       "metadata": {
         "type": "article-journal",
         "language": "en",
@@ -511,12 +506,12 @@
       "kind": null,
       "originals": [
         {
-          "id": "672c8aae-4526-4b37-b5e1-e8179e8643cc",
-          "sha256": "0e6e05ea7613dc2c5bdf46daad31649ae90265093c975c7b0880dde2ad0da851",
+          "id": "6d367b88-3f00-4cd8-830d-4f137843c183",
+          "sha256": "66e6541bff15137a5a088ea46e67bff669cd9171c5d3de6935177fccd5238604",
           "byte_length": 1002,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
@@ -567,12 +562,12 @@
       "legacy_tags": [
         "submission"
       ],
-      "id": "443f005d-bdcc-4748-bbfe-76a7eb7a28c3",
+      "id": "6d60bb8e-4493-470b-8a49-b2a338ad87d7",
       "citation_key": "hossain2024lean-industry40",
       "state": "active",
       "revision": 1,
-      "created_at": "2026-09-29T03:13:21.282727+00:00",
-      "updated_at": "2026-09-29T03:13:21.282727+00:00",
+      "created_at": "2026-09-29T04:27:53.160149+00:00",
+      "updated_at": "2026-09-29T04:27:53.160149+00:00",
       "metadata": {
         "type": "manuscript",
         "language": "en",
@@ -622,12 +617,12 @@
       "kind": null,
       "originals": [
         {
-          "id": "e2c76f40-435b-4f46-a2ff-65fdc5ba83cb",
-          "sha256": "3d567dd7566d43cface8d1d9038b4641a4f246df54f6835c93ffad3cddbb4f41",
+          "id": "498c28a4-54a7-496a-9132-ccafa9cab277",
+          "sha256": "8151f3a314f41e2c361d5f342e3858e0882b3d5776a0c2f4a557671d0b2f4aa7",
           "byte_length": 1138,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
@@ -673,12 +668,12 @@
         "presentation",
         "conference"
       ],
-      "id": "5457c12a-3498-46cf-9b67-af8a380a97d5",
+      "id": "7bf8c2a8-8b97-4f7b-9920-2742960560b5",
       "citation_key": "ganesh2026ai-enhanced-dema",
       "state": "active",
       "revision": 1,
-      "created_at": "2026-09-29T03:13:21.287741+00:00",
-      "updated_at": "2026-09-29T03:13:21.287741+00:00",
+      "created_at": "2026-09-29T04:27:53.163475+00:00",
+      "updated_at": "2026-09-29T04:27:53.163475+00:00",
       "metadata": {
         "type": "speech",
         "language": "en",
@@ -740,12 +735,12 @@
       "kind": null,
       "originals": [
         {
-          "id": "338baf46-dc26-4c05-bf85-5430f345fae2",
-          "sha256": "d508e19e38b1861d17696b4a4c24ae6637208b09993bed74c0890b4f470cfbb2",
+          "id": "cfd3dca9-5ae0-495c-82ad-b148757cd66a",
+          "sha256": "5005c9f757a09b570751f1a87683f713f794b84d07718cd4f41ebaf783c4951f",
           "byte_length": 1069,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
@@ -784,12 +779,12 @@
       "legacy_tags": [
         "preparation"
       ],
-      "id": "3e55e8ab-1d20-46dd-9cf3-21a91f82feed",
+      "id": "8982f160-9034-4a32-88c9-114241fe5be4",
       "citation_key": "oleary2026instructional-media-tradeoffs",
       "state": "active",
       "revision": 1,
-      "created_at": "2026-09-29T03:13:21.292419+00:00",
-      "updated_at": "2026-09-29T03:13:21.292419+00:00",
+      "created_at": "2026-09-29T04:27:53.166451+00:00",
+      "updated_at": "2026-09-29T04:27:53.166451+00:00",
       "metadata": {
         "type": "manuscript",
         "language": "en",
@@ -819,12 +814,12 @@
       "kind": null,
       "originals": [
         {
-          "id": "1403271c-a988-4efb-9e47-55f472dd2b8e",
-          "sha256": "c6daf17ea451d2d79aeb84371832e079c86a47e6099a7e28e075c6021255ccb8",
-          "byte_length": 600,
+          "id": "74db848a-bf19-415f-8d27-36a28a4fecdf",
+          "sha256": "cb811862e32a1427abae8e86c8ae52cde8db12e2b85f390384470444812b662b",
+          "byte_length": 656,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
@@ -855,12 +850,12 @@
       "legacy_tags": [
         "patent"
       ],
-      "id": "34acbd6f-a7b7-4505-a9cf-dac2eafc1574",
+      "id": "94049e1d-7b38-4558-895e-646c3cea98e6",
       "citation_key": "oleary2009time-dilation",
       "state": "active",
       "revision": 1,
-      "created_at": "2026-09-29T03:13:21.296724+00:00",
-      "updated_at": "2026-09-29T03:13:21.296724+00:00",
+      "created_at": "2026-09-29T04:27:53.169355+00:00",
+      "updated_at": "2026-09-29T04:27:53.169355+00:00",
       "metadata": {
         "type": "patent",
         "language": "en",
@@ -902,12 +897,12 @@
       "kind": null,
       "originals": [
         {
-          "id": "a6d854c1-e62a-47f1-9ac0-469194561f5f",
-          "sha256": "4825cc1cf396e437b6af1804cd3c4a05822a48709dd50346b80bd2e5f2904caf",
-          "byte_length": 697,
+          "id": "14d0d89c-08c1-4a05-9ce6-05c355cde059",
+          "sha256": "17fb8079b0930d65867861336be07f700e347d1a4476149b10a6f3b1af126620",
+          "byte_length": 753,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
@@ -951,12 +946,12 @@
         "presentation",
         "conference"
       ],
-      "id": "61593063-70b5-4c9a-8222-fe86f23f86b0",
+      "id": "98f319a5-37d4-4fe1-9cee-da7e48edb590",
       "citation_key": "ganesh2026ai-driven-dema",
       "state": "active",
       "revision": 1,
-      "created_at": "2026-09-29T03:13:21.301020+00:00",
-      "updated_at": "2026-09-29T03:13:21.301020+00:00",
+      "created_at": "2026-09-29T04:27:53.172223+00:00",
+      "updated_at": "2026-09-29T04:27:53.172223+00:00",
       "metadata": {
         "type": "speech",
         "language": "en",
@@ -1019,12 +1014,12 @@
       "kind": null,
       "originals": [
         {
-          "id": "f31b7152-aeaa-49ef-9e0a-946e1920f372",
-          "sha256": "e48db43d999184156f868be5871798e1b4e75e74f667bf2d255735ec8bffb8c5",
+          "id": "1f0a331f-08e3-425c-9965-f3deebe68ae7",
+          "sha256": "acf367fd5721ba981f525b56e4039235055404aa5dfc6ade38585eef087d0b52",
           "byte_length": 1117,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
@@ -1067,12 +1062,12 @@
         "presentation",
         "conference"
       ],
-      "id": "24580047-6e87-4e3a-b547-db76817f8c7c",
+      "id": "cbc74b42-e61b-4ccf-ac15-4ddb556326bc",
       "citation_key": "gadzey2026dema-digital-thread",
       "state": "active",
       "revision": 1,
-      "created_at": "2026-09-29T03:13:21.305481+00:00",
-      "updated_at": "2026-09-29T03:13:21.305481+00:00",
+      "created_at": "2026-09-29T04:27:53.175257+00:00",
+      "updated_at": "2026-09-29T04:27:53.175257+00:00",
       "metadata": {
         "type": "speech",
         "language": "en",
@@ -1131,12 +1126,12 @@
       "kind": null,
       "originals": [
         {
-          "id": "56a54867-114d-4088-89e9-777156f7caac",
-          "sha256": "98a7956af533cb46e77fdc88a6f6f9e4272d6e2fed930d0cc6315993a5353779",
+          "id": "2db07c4b-9551-41b8-bd6e-f6fb70eeb62c",
+          "sha256": "3ef43f1c630e1e47d318786f5823d90c6f69cb785dab68c94d2ed79aff896e05",
           "byte_length": 1097,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
@@ -1190,12 +1185,12 @@
       "legacy_tags": [
         "preparation"
       ],
-      "id": "e124bb42-ec1c-4c23-b3c9-eaee60b0b3bb",
+      "id": "592c0ff2-02ec-42f3-ad47-875330bb5b0f",
       "citation_key": "oleary2026danvas-jose",
       "state": "active",
       "revision": 1,
-      "created_at": "2026-09-29T03:13:21.310440+00:00",
-      "updated_at": "2026-09-29T03:13:21.310440+00:00",
+      "created_at": "2026-09-29T04:27:53.178514+00:00",
+      "updated_at": "2026-09-29T04:27:53.178514+00:00",
       "metadata": {
         "type": "manuscript",
         "language": "en",
@@ -1225,12 +1220,12 @@
       "kind": null,
       "originals": [
         {
-          "id": "98bbdb3e-4db4-4b35-a81a-2cdef784126a",
-          "sha256": "9ee937c477480efe77b7ef4c39ceca26d955c0379a1ca97af0d94235c6547bc0",
+          "id": "90a7e171-1762-4617-98a7-171f954913c1",
+          "sha256": "68b9946c0368840ec6a711e51199ac857ac43bb9cbf9c3a34c549f21985c6a66",
           "byte_length": 774,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
@@ -1280,7 +1275,7 @@
       "state": "active",
       "revision": 4,
       "created_at": "2026-09-27T22:07:42.152860+00:00",
-      "updated_at": "2026-09-29T03:13:21.314749+00:00",
+      "updated_at": "2026-09-29T04:27:53.181490+00:00",
       "metadata": {
         "type": "speech",
         "language": "en",
@@ -1414,7 +1409,7 @@
       "state": "active",
       "revision": 4,
       "created_at": "2026-09-27T22:07:42.131223+00:00",
-      "updated_at": "2026-09-29T03:13:21.319688+00:00",
+      "updated_at": "2026-09-29T04:27:53.184552+00:00",
       "metadata": {
         "type": "speech",
         "language": "en",
@@ -1552,12 +1547,12 @@
         "presentation",
         "conference"
       ],
-      "id": "076f6321-0fbc-47b8-b81e-85f8815017c2",
+      "id": "945785bb-0142-47d4-84de-ba86d2b4a8eb",
       "citation_key": "olearyficken2025innovation-culture",
       "state": "active",
       "revision": 1,
-      "created_at": "2026-09-29T03:13:21.324798+00:00",
-      "updated_at": "2026-09-29T03:13:21.324798+00:00",
+      "created_at": "2026-09-29T04:27:53.187489+00:00",
+      "updated_at": "2026-09-29T04:27:53.187489+00:00",
       "metadata": {
         "type": "speech",
         "language": "en",
@@ -1600,12 +1595,12 @@
       "kind": "talk",
       "originals": [
         {
-          "id": "157d686d-fce8-4fee-838a-4f2683b99c80",
-          "sha256": "580bd0c90213a5b45e27a57043ec5789db7c9d9f9e73203ffd69ceadefeb32a9",
-          "byte_length": 827,
+          "id": "906b5597-c007-4bed-a393-783ed4c05944",
+          "sha256": "b92476a0fa9bdf75299e81f398b7ec7cd8d58de124c8b08378f9b2c0f9aa73f5",
+          "byte_length": 885,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
@@ -1661,7 +1656,7 @@
       "state": "active",
       "revision": 5,
       "created_at": "2026-09-23T00:25:18.482207+00:00",
-      "updated_at": "2026-09-29T03:13:21.328939+00:00",
+      "updated_at": "2026-09-29T04:27:53.190330+00:00",
       "loc": "dissertation/misc",
       "metadata": {
         "type": "speech",
@@ -1810,7 +1805,7 @@
       "state": "active",
       "revision": 2,
       "created_at": "2026-09-23T00:25:16.544622+00:00",
-      "updated_at": "2026-09-29T03:13:21.333067+00:00",
+      "updated_at": "2026-09-29T04:27:53.193010+00:00",
       "metadata": {
         "type": "speech",
         "language": "en",
@@ -1910,352 +1905,6 @@
       "links": [],
       "warnings": []
     },
-    "oleary2023independent-studio": {
-      "schema_version": "1.0",
-      "context": [
-        {
-          "text": "Printed byline names the owner Dan O’Leary.",
-          "origin": "user"
-        },
-        {
-          "text": "Recurring invited talk; the record represents the series beginning in 2023.",
-          "origin": "user"
-        }
-      ],
-      "provenance": [
-        {
-          "origin": "import",
-          "access": "unknown"
-        }
-      ],
-      "title_protection": {
-        "title": {
-          "protected_terms": [],
-          "preserve_case": false
-        },
-        "event-title": {
-          "protected_terms": [],
-          "preserve_case": false
-        }
-      },
-      "extensions": {},
-      "overrides": {},
-      "title_parts": {},
-      "legacy_tags": [
-        "presentation",
-        "invited"
-      ],
-      "id": "a273655a-beb9-458a-ac2d-401b35da9548",
-      "citation_key": "oleary2023independent-studio",
-      "state": "active",
-      "revision": 1,
-      "created_at": "2026-09-29T03:13:21.337667+00:00",
-      "updated_at": "2026-09-29T03:13:21.337667+00:00",
-      "metadata": {
-        "type": "speech",
-        "language": "en",
-        "author": [
-          {
-            "family": "O'Leary",
-            "given": "Danny J."
-          }
-        ],
-        "issued": {
-          "date-parts": [
-            [
-              2023
-            ]
-          ]
-        },
-        "event-title": "Florida Interactive Entertainment Academy, University of Central Florida",
-        "genre": "Invited talk",
-        "note": "Delivered annually, 2023–present",
-        "title": "Running an Independent Game Development Studio"
-      },
-      "corrected_fields": [],
-      "key_provenance": {
-        "origin": "supplied",
-        "policy": null,
-        "table_version": null,
-        "unicode_version": null
-      },
-      "kind": null,
-      "originals": [
-        {
-          "id": "cb4a188f-4768-4635-b859-a163577d7990",
-          "sha256": "5956674d1ee5f28166c43bc73f3796d03d5d1359c58849a59f2905dc48ccdb56",
-          "byte_length": 940,
-          "format": "refs",
-          "origin": "add",
-          "locator": "CV revision proposal"
-        }
-      ],
-      "limitations": [],
-      "resources": [],
-      "projects": [],
-      "links": [],
-      "outcome": "created",
-      "warnings": []
-    },
-    "oleary2022metaverse": {
-      "schema_version": "1.0",
-      "context": [
-        {
-          "text": "Printed byline names the owner Dan O’Leary.",
-          "origin": "user"
-        }
-      ],
-      "provenance": [
-        {
-          "origin": "import",
-          "access": "unknown"
-        }
-      ],
-      "title_protection": {
-        "title": {
-          "protected_terms": [],
-          "preserve_case": false
-        },
-        "event-title": {
-          "protected_terms": [],
-          "preserve_case": false
-        }
-      },
-      "extensions": {},
-      "overrides": {},
-      "title_parts": {},
-      "legacy_tags": [
-        "presentation",
-        "invited"
-      ],
-      "id": "3ba83c9b-0c60-4db1-97e3-22a87a0c689a",
-      "citation_key": "oleary2022metaverse",
-      "state": "active",
-      "revision": 1,
-      "created_at": "2026-09-29T03:13:21.342064+00:00",
-      "updated_at": "2026-09-29T03:13:21.342064+00:00",
-      "metadata": {
-        "type": "speech",
-        "language": "en",
-        "author": [
-          {
-            "family": "O'Leary",
-            "given": "Danny J."
-          }
-        ],
-        "issued": {
-          "date-parts": [
-            [
-              2022,
-              6,
-              22
-            ]
-          ]
-        },
-        "event-title": "Air University",
-        "genre": "Invited talk",
-        "title": "The Metaverse: More Direction Than Vision"
-      },
-      "corrected_fields": [],
-      "key_provenance": {
-        "origin": "supplied",
-        "policy": null,
-        "table_version": null,
-        "unicode_version": null
-      },
-      "kind": null,
-      "originals": [
-        {
-          "id": "9c7c295a-a5b0-4c03-8298-239df7767f8d",
-          "sha256": "1b99685f059a29eb72683eb98109f2a4b736ca174cf8b0cb876941c4b88e89b8",
-          "byte_length": 719,
-          "format": "refs",
-          "origin": "add",
-          "locator": "CV revision proposal"
-        }
-      ],
-      "limitations": [],
-      "resources": [],
-      "projects": [],
-      "links": [],
-      "outcome": "created",
-      "warnings": []
-    },
-    "oleary2021game-changer": {
-      "schema_version": "1.0",
-      "context": [
-        {
-          "text": "Printed byline names the owner Dan O’Leary.",
-          "origin": "user"
-        }
-      ],
-      "provenance": [
-        {
-          "origin": "import",
-          "access": "unknown"
-        }
-      ],
-      "title_protection": {
-        "title": {
-          "protected_terms": [
-            "3D"
-          ],
-          "preserve_case": false
-        },
-        "event-title": {
-          "protected_terms": [],
-          "preserve_case": false
-        }
-      },
-      "extensions": {},
-      "overrides": {},
-      "title_parts": {},
-      "legacy_tags": [
-        "presentation",
-        "invited"
-      ],
-      "id": "a7e096d7-98a9-45f3-8cee-5bd89eabf7e6",
-      "citation_key": "oleary2021game-changer",
-      "state": "active",
-      "revision": 1,
-      "created_at": "2026-09-29T03:13:21.346384+00:00",
-      "updated_at": "2026-09-29T03:13:21.346384+00:00",
-      "metadata": {
-        "type": "speech",
-        "language": "en",
-        "author": [
-          {
-            "family": "O'Leary",
-            "given": "Danny J."
-          }
-        ],
-        "issued": {
-          "date-parts": [
-            [
-              2021,
-              11,
-              17
-            ]
-          ]
-        },
-        "event-title": "Air University",
-        "genre": "Invited talk",
-        "title": "Game Changer: The Emergence and Potential of Real-Time 3D Development Platforms"
-      },
-      "corrected_fields": [],
-      "key_provenance": {
-        "origin": "supplied",
-        "policy": null,
-        "table_version": null,
-        "unicode_version": null
-      },
-      "kind": null,
-      "originals": [
-        {
-          "id": "e43ee2de-f9f1-4437-92f0-49711f070777",
-          "sha256": "bc8661f0589de18be53157a8f130d455d96fb3dbef568a41909bbdf2b3dff011",
-          "byte_length": 765,
-          "format": "refs",
-          "origin": "add",
-          "locator": "CV revision proposal"
-        }
-      ],
-      "limitations": [],
-      "resources": [],
-      "projects": [],
-      "links": [],
-      "outcome": "created",
-      "warnings": []
-    },
-    "oleary2021visualization-research": {
-      "schema_version": "1.0",
-      "context": [
-        {
-          "text": "Printed byline names the owner Dan O’Leary.",
-          "origin": "user"
-        }
-      ],
-      "provenance": [
-        {
-          "origin": "import",
-          "access": "unknown"
-        }
-      ],
-      "title_protection": {
-        "title": {
-          "protected_terms": [
-            "Epic MegaGrant"
-          ],
-          "preserve_case": false
-        },
-        "event-title": {
-          "protected_terms": [
-            "MGMWERX",
-            "AUiX"
-          ],
-          "preserve_case": false
-        }
-      },
-      "extensions": {},
-      "overrides": {},
-      "title_parts": {},
-      "legacy_tags": [
-        "presentation",
-        "invited"
-      ],
-      "id": "45522fe3-0c70-4824-8610-747536776bc9",
-      "citation_key": "oleary2021visualization-research",
-      "state": "active",
-      "revision": 1,
-      "created_at": "2026-09-29T03:13:21.350687+00:00",
-      "updated_at": "2026-09-29T03:13:21.350687+00:00",
-      "metadata": {
-        "type": "speech",
-        "language": "en",
-        "author": [
-          {
-            "family": "O'Leary",
-            "given": "Danny J."
-          }
-        ],
-        "issued": {
-          "date-parts": [
-            [
-              2021,
-              7,
-              23
-            ]
-          ]
-        },
-        "event-title": "MGMWERX and AUiX",
-        "genre": "Invited talk",
-        "title": "Game Development to Visualization Research in 25 Years: Real-Time Graphics and the Epic MegaGrant Program"
-      },
-      "corrected_fields": [],
-      "key_provenance": {
-        "origin": "supplied",
-        "policy": null,
-        "table_version": null,
-        "unicode_version": null
-      },
-      "kind": null,
-      "originals": [
-        {
-          "id": "b44aaf4d-f21e-4f9c-a594-6c6d925a11b8",
-          "sha256": "175211fa9a5acc81628859b6d02dd8f40a787e036e1404b31f1ebb68608c941f",
-          "byte_length": 831,
-          "format": "refs",
-          "origin": "add",
-          "locator": "CV revision proposal"
-        }
-      ],
-      "limitations": [],
-      "resources": [],
-      "projects": [],
-      "links": [],
-      "outcome": "created",
-      "warnings": []
-    },
     "error-patterns": {
       "schema_version": "1.0",
       "context": [],
@@ -2270,12 +1919,12 @@
       "overrides": {},
       "title_parts": {},
       "legacy_tags": [],
-      "id": "9261ca5f-7e8d-4775-98d3-2ad71a231d4e",
+      "id": "c16f5614-a002-4174-a0df-d9c308c5739d",
       "citation_key": "oleary-2026-instructionalInformation",
       "state": "active",
       "revision": 1,
-      "created_at": "2026-09-29T03:13:21.355135+00:00",
-      "updated_at": "2026-09-29T03:13:21.355135+00:00",
+      "created_at": "2026-09-29T04:27:53.195738+00:00",
+      "updated_at": "2026-09-29T04:27:53.195738+00:00",
       "metadata": {
         "type": "manuscript",
         "language": "en",
@@ -2297,22 +1946,20 @@
       },
       "corrected_fields": [],
       "key_provenance": {
-        "naming_settings": {},
-        "origin": "generated",
-        "policy": "creator-latin-v1",
-        "table_version": 1,
-        "table_sha256": "407c585dbbf08e82aca9d51e9657df5cae641b950644bd516c9d282b1a61255e",
-        "unicode_version": "16.0.0"
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
       },
       "kind": null,
       "originals": [
         {
-          "id": "26c2b241-600d-4772-bb15-61017c20f8d0",
-          "sha256": "7b78b5dc2bdd57f0baf0be7f50ffa5131a9e5a66ffe8229ef6ddfa3679efea19",
-          "byte_length": 357,
+          "id": "3cca1dc4-27a6-4972-ba63-a11a90444d91",
+          "sha256": "01ac127385edf34f5e22f87601a026245dd4119aecfcc81a2bfd16f8c7a380eb",
+          "byte_length": 584,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
@@ -2339,12 +1986,12 @@
       "overrides": {},
       "title_parts": {},
       "legacy_tags": [],
-      "id": "cc966729-23b0-459b-8ccd-77f9623831d4",
+      "id": "43ae1acc-b769-4974-ae05-94bf8f8803da",
       "citation_key": "oleary-2026-pipyerEvidence",
       "state": "active",
       "revision": 1,
-      "created_at": "2026-09-29T03:13:21.359444+00:00",
-      "updated_at": "2026-09-29T03:13:21.359444+00:00",
+      "created_at": "2026-09-29T04:27:53.198609+00:00",
+      "updated_at": "2026-09-29T04:27:53.198609+00:00",
       "metadata": {
         "type": "manuscript",
         "language": "en",
@@ -2366,22 +2013,20 @@
       },
       "corrected_fields": [],
       "key_provenance": {
-        "naming_settings": {},
-        "origin": "generated",
-        "policy": "creator-latin-v1",
-        "table_version": 1,
-        "table_sha256": "407c585dbbf08e82aca9d51e9657df5cae641b950644bd516c9d282b1a61255e",
-        "unicode_version": "16.0.0"
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
       },
       "kind": null,
       "originals": [
         {
-          "id": "5559c92c-f065-4b7c-89c3-329093e1b653",
-          "sha256": "5d9febbfa59f8eb2acc9097ae7c3fb3eaa3a3d662d267e6d20a936fefce44d3a",
-          "byte_length": 496,
+          "id": "bc110f78-5256-4c98-9791-af48ca3f1030",
+          "sha256": "429d07f49d96d32fe9f6d734c795c69b52bda6c05e67ad477e3abbb71fe0e7f8",
+          "byte_length": 633,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
@@ -2423,12 +2068,12 @@
       "overrides": {},
       "title_parts": {},
       "legacy_tags": [],
-      "id": "93e16915-7ed0-4bc8-9d7e-3a08e2ced07c",
+      "id": "c3303c19-bb90-466c-ab11-b19f64cbafc7",
       "citation_key": "kreitzman-1997-animatingControllers",
       "state": "active",
-      "revision": 2,
-      "created_at": "2026-09-29T03:13:21.363678+00:00",
-      "updated_at": "2026-09-29T03:15:06.151714+00:00",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.201613+00:00",
+      "updated_at": "2026-09-29T04:27:53.201613+00:00",
       "metadata": {
         "type": "chapter",
         "language": "en",
@@ -2512,33 +2157,29 @@
         "title": "Animating With Controllers",
         "chapter-number": "4"
       },
-      "corrected_fields": [
-        "metadata.container-author",
-        "title_protection.container-title"
-      ],
+      "corrected_fields": [],
       "key_provenance": {
-        "naming_settings": {},
-        "origin": "generated",
-        "policy": "creator-latin-v1",
-        "table_version": 1,
-        "table_sha256": "407c585dbbf08e82aca9d51e9657df5cae641b950644bd516c9d282b1a61255e",
-        "unicode_version": "16.0.0"
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
       },
       "kind": null,
       "originals": [
         {
-          "id": "4d3c9fcc-846b-4a65-af31-e994f64d83d2",
-          "sha256": "98578b0c5a0a1055f8ae545c9dcc5ceaa26054d750e970a65efa27729d2bfd67",
-          "byte_length": 785,
+          "id": "abbea24d-9bab-49b9-87ae-798f377e0efb",
+          "sha256": "1f56a52c0f31b5f83451e802125c82850cfc0dcbc070202eeaa0427aa44eed6f",
+          "byte_length": 1567,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
       "resources": [],
       "projects": [],
       "links": [],
+      "outcome": "created",
       "warnings": []
     },
     "chapter-5": {
@@ -2569,12 +2210,12 @@
       "overrides": {},
       "title_parts": {},
       "legacy_tags": [],
-      "id": "d6746f87-882b-48b1-abfc-a889d8ccc0ca",
+      "id": "5492854e-2934-46d4-9bc6-275a1e47ac4c",
       "citation_key": "oleary-1997-animatingExpressions",
       "state": "active",
-      "revision": 2,
-      "created_at": "2026-09-29T03:13:21.368101+00:00",
-      "updated_at": "2026-09-29T03:15:06.156839+00:00",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.204676+00:00",
+      "updated_at": "2026-09-29T04:27:53.204676+00:00",
       "metadata": {
         "type": "chapter",
         "language": "en",
@@ -2654,33 +2295,29 @@
         "title": "Animating With Expressions",
         "chapter-number": "5"
       },
-      "corrected_fields": [
-        "metadata.container-author",
-        "title_protection.container-title"
-      ],
+      "corrected_fields": [],
       "key_provenance": {
-        "naming_settings": {},
-        "origin": "generated",
-        "policy": "creator-latin-v1",
-        "table_version": 1,
-        "table_sha256": "407c585dbbf08e82aca9d51e9657df5cae641b950644bd516c9d282b1a61255e",
-        "unicode_version": "16.0.0"
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
       },
       "kind": null,
       "originals": [
         {
-          "id": "681a3a05-1614-4ead-8cf1-dea26f219c61",
-          "sha256": "4e1ba55a4d4d4a8cf81897b92e2d2fd1bb924bc339bf63fc83f090b7a03f7476",
-          "byte_length": 642,
+          "id": "77f6ea9e-b49b-4fe9-a22a-852aa5fe2d63",
+          "sha256": "0f03a743844a118a8af81888a789ea41e27b8ff9b087b240290f3669c3a02344",
+          "byte_length": 1421,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
       "resources": [],
       "projects": [],
       "links": [],
+      "outcome": "created",
       "warnings": []
     },
     "chapter-6": {
@@ -2711,12 +2348,12 @@
       "overrides": {},
       "title_parts": {},
       "legacy_tags": [],
-      "id": "b367e543-5396-453e-8b91-b22a5c4e64ae",
+      "id": "fdd26fe3-a953-4499-976c-cb84e07e1f2d",
       "citation_key": "oleary-1997-animatingMultiple",
       "state": "active",
-      "revision": 2,
-      "created_at": "2026-09-29T03:13:21.372386+00:00",
-      "updated_at": "2026-09-29T03:15:06.160674+00:00",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.207852+00:00",
+      "updated_at": "2026-09-29T04:27:53.207852+00:00",
       "metadata": {
         "type": "chapter",
         "language": "en",
@@ -2796,33 +2433,29 @@
         "title": "Animating With Multiple Modifiers",
         "chapter-number": "6"
       },
-      "corrected_fields": [
-        "metadata.container-author",
-        "title_protection.container-title"
-      ],
+      "corrected_fields": [],
       "key_provenance": {
-        "naming_settings": {},
-        "origin": "generated",
-        "policy": "creator-latin-v1",
-        "table_version": 1,
-        "table_sha256": "407c585dbbf08e82aca9d51e9657df5cae641b950644bd516c9d282b1a61255e",
-        "unicode_version": "16.0.0"
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
       },
       "kind": null,
       "originals": [
         {
-          "id": "3aeef5d5-0ffc-44b8-b05a-cc868f77b267",
-          "sha256": "5b4ce499bd5cb67d5ff9ee1c25757874e05c5ef79bef2c529d3a11c77ba8cfa3",
-          "byte_length": 649,
+          "id": "6819cbd7-a98d-41c2-a906-a84bcfa42567",
+          "sha256": "37a73dc5d3491d0f185d6494b5f6f93fe79f5189e4eb8cc4f1dd030d866bb7f0",
+          "byte_length": 1425,
           "format": "refs",
           "origin": "add",
-          "locator": "CV revision proposal"
+          "locator": "CV second-revision proposal"
         }
       ],
       "limitations": [],
       "resources": [],
       "projects": [],
       "links": [],
+      "outcome": "created",
       "warnings": []
     },
     "oleary-2026-judgmentEconomy": {
@@ -2967,6 +2600,82 @@
       "links": [],
       "unchanged": true,
       "warnings": []
+    },
+    "gametech2013": {
+      "schema_version": "1.0",
+      "context": [],
+      "provenance": [],
+      "title_protection": {
+        "event-title": {
+          "protected_terms": [
+            "GameTech"
+          ],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "4cf10dfa-6d28-4ad1-a50d-a3f31b33f35a",
+      "citation_key": "oleary-2013-independentGame",
+      "state": "active",
+      "revision": 1,
+      "created_at": "2026-09-29T04:27:53.213367+00:00",
+      "updated_at": "2026-09-29T04:27:53.213367+00:00",
+      "metadata": {
+        "type": "speech",
+        "language": "en",
+        "author": [
+          {
+            "family": "O'Leary",
+            "given": "Danny J."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2013,
+              4,
+              17
+            ]
+          ]
+        },
+        "event-title": "GameTech Conference",
+        "event-place": "Orlando, FL",
+        "genre": "Conference presentation",
+        "title": "Independent Game Development"
+      },
+      "corrected_fields": [],
+      "key_provenance": {
+        "naming_settings": {},
+        "origin": "generated",
+        "policy": "creator-latin-v1",
+        "table_version": 1,
+        "table_sha256": "407c585dbbf08e82aca9d51e9657df5cae641b950644bd516c9d282b1a61255e",
+        "unicode_version": "16.0.0"
+      },
+      "kind": "talk",
+      "originals": [
+        {
+          "id": "4ab77071-c7fa-4e92-b027-585663bd0db7",
+          "sha256": "bc5e6e33e8456bc334743469e21e381ea82c0c6ec3d37ebdd9bb888a8a67b884",
+          "byte_length": 430,
+          "format": "refs",
+          "origin": "add",
+          "locator": "CV and owner-supplied GameTech details"
+        }
+      ],
+      "limitations": [],
+      "resources": [],
+      "projects": [],
+      "links": [],
+      "outcome": "created",
+      "warnings": []
     }
   },
   "render": {
@@ -3105,30 +2814,6 @@
           "text": "O’Leary, D. J. (2026). Pipyer: Evidence-producing orchestration for reproducible LLM-assisted research workflows [Unpublished manuscript]. Manuscript complete; submission to the Journal of Open Source Software awaits public software release.",
           "in_pdf": true
         },
-        "oleary2023independent-studio": {
-          "id": "oleary2023independent-studio",
-          "underlined": [],
-          "text": "O’Leary, D. J. (2023). Running an independent game development studio [Invited talk]. Florida interactive entertainment academy, university of central florida. Delivered annually, 2023–present.",
-          "in_pdf": true
-        },
-        "oleary2022metaverse": {
-          "id": "oleary2022metaverse",
-          "underlined": [],
-          "text": "O’Leary, D. J. (2022, June 22). The metaverse: More direction than vision [Invited talk]. Air university.",
-          "in_pdf": true
-        },
-        "oleary2021game-changer": {
-          "id": "oleary2021game-changer",
-          "underlined": [],
-          "text": "O’Leary, D. J. (2021, November 17). Game changer: The emergence and potential of real-time 3D development platforms [Invited talk]. Air university.",
-          "in_pdf": true
-        },
-        "oleary2021visualization-research": {
-          "id": "oleary2021visualization-research",
-          "underlined": [],
-          "text": "O’Leary, D. J. (2021, July 23). Game development to visualization research in 25 years: Real-time graphics and the Epic MegaGrant program [Invited talk]. MGMWERX and AUiX.",
-          "in_pdf": true
-        },
         "ganesh2026ai-driven-dema": {
           "id": "ganesh2026ai-driven-dema",
           "underlined": [
@@ -3191,6 +2876,12 @@
             "O’Leary, D. J.,"
           ],
           "text": "Ficken, A., O’Leary, D. J., Evans, J., & Sesek, R. (2023, October 25). Blending product innovation and engineering management for graduate education [Conference presentation]. ASEM international annual conference, Boulder, CO.",
+          "in_pdf": true
+        },
+        "oleary-2013-independentGame": {
+          "id": "oleary-2013-independentGame",
+          "underlined": [],
+          "text": "O’Leary, D. J. (2013, April 17). Independent game development [Conference presentation]. GameTech conference, Orlando, FL.",
           "in_pdf": true
         },
         "oleary2009time-dilation": {
@@ -3393,38 +3084,6 @@
       "title_after": "Blending product innovation and engineering management for graduate education"
     },
     {
-      "old_key": "oleary2023independent-studio",
-      "key": "oleary2023independent-studio",
-      "before": "Running an Independent Game Development Studio 2023-present Florida Interactive Entertainment Academy at the University of Central Florida; delivered annually.",
-      "after": "O’Leary, D. J. (2023). Running an independent game development studio [Invited talk]. Florida interactive entertainment academy, university of central florida. Delivered annually, 2023–present.",
-      "title_before": "Running an Independent Game Development Studio",
-      "title_after": "Running an independent game development studio"
-    },
-    {
-      "old_key": "oleary2022metaverse",
-      "key": "oleary2022metaverse",
-      "before": "The Metaverse: More Direction than Vision 2022 Air University, June 22.",
-      "after": "O’Leary, D. J. (2022, June 22). The metaverse: More direction than vision [Invited talk]. Air university.",
-      "title_before": "The Metaverse: More Direction than Vision",
-      "title_after": "The metaverse: More direction than vision"
-    },
-    {
-      "old_key": "oleary2021game-changer",
-      "key": "oleary2021game-changer",
-      "before": "Game Changer: The Emergence and Potential of Real-Time 3D Development Platforms 2021 Air University, November 17.",
-      "after": "O’Leary, D. J. (2021, November 17). Game changer: The emergence and potential of real-time 3D development platforms [Invited talk]. Air university.",
-      "title_before": "Game Changer: The Emergence and Potential of Real-Time 3D Development Platforms",
-      "title_after": "Game changer: The emergence and potential of real-time 3D development platforms"
-    },
-    {
-      "old_key": "oleary2021visualization-research",
-      "key": "oleary2021visualization-research",
-      "before": "Game Development to Visualization Research in 25 Years: Real-Time Graphics and the Epic MegaGrant Program 2021 MGMWERX and AUiX, July 23.",
-      "after": "O’Leary, D. J. (2021, July 23). Game development to visualization research in 25 years: Real-time graphics and the Epic MegaGrant program [Invited talk]. MGMWERX and AUiX.",
-      "title_before": "Game Development to Visualization Research in 25 Years: Real-Time Graphics and the Epic MegaGrant Program",
-      "title_after": "Game development to visualization research in 25 years: Real-time graphics and the Epic MegaGrant program"
-    },
-    {
       "old_key": null,
       "key": "oleary-2026-instructionalInformation",
       "before": null,
@@ -3471,8 +3130,156 @@
       "after": "O’Leary, D. J. (1997). Animating with multiple modifiers. In G. Maestri, S. Kennedy, R. Frantz, S. Burke, J. Greene, E. Greenleif, J. Hubbell, P. Kakert, R. Kreitzman, B. Lamb, D. J. O’Leary, A. Vernon, & A. Silverthorne, Inside 3D Studio MAX, volume III: Animation (pp. 175–205). New Riders Publishing.",
       "title_before": null,
       "title_after": "Animating with multiple modifiers"
+    },
+    {
+      "old_key": null,
+      "key": "oleary-2013-independentGame",
+      "before": "Independent Game Development 2013 Speaker, GameTech Conference, National Center for Simulation, April 17.",
+      "after": "O’Leary, D. J. (2013, April 17). Independent game development [Conference presentation]. GameTech conference, Orlando, FL.",
+      "title_before": "Independent Game Development",
+      "title_after": "Independent game development"
     }
   ],
+  "activities": [
+    {
+      "group": "invited_talks",
+      "title": "Running an Independent Game Development Studio",
+      "before": "Running an Independent Game Development Studio 2023-present Florida Interactive Entertainment Academy at the University of Central Florida; delivered annually.",
+      "after": "Running an Independent Game Development Studio 2023-present Florida Interactive Entertainment Academy at the University of Central Florida; delivered annually.",
+      "outcome": "identical"
+    },
+    {
+      "group": "invited_talks",
+      "title": "The Metaverse: More Direction than Vision",
+      "before": "The Metaverse: More Direction than Vision 2022 Air University, June 22.",
+      "after": "The Metaverse: More Direction than Vision 2022 Air University, June 22.",
+      "outcome": "identical"
+    },
+    {
+      "group": "invited_talks",
+      "title": "Game Changer: The Emergence and Potential of Real-Time 3D Development Platforms",
+      "before": "Game Changer: The Emergence and Potential of Real-Time 3D Development Platforms 2021 Air University, November 17.",
+      "after": "Game Changer: The Emergence and Potential of Real-Time 3D Development Platforms 2021 Air University, November 17.",
+      "outcome": "identical"
+    },
+    {
+      "group": "invited_talks",
+      "title": "Game Development to Visualization Research in 25 Years: Real-Time Graphics and the Epic MegaGrant Program",
+      "before": "Game Development to Visualization Research in 25 Years: Real-Time Graphics and the Epic MegaGrant Program 2021 MGMWERX and AUiX, July 23.",
+      "after": "Game Development to Visualization Research in 25 Years: Real-Time Graphics and the Epic MegaGrant Program 2021 MGMWERX and AUiX, July 23.",
+      "outcome": "identical"
+    },
+    {
+      "group": "panels_and_participation",
+      "title": "Games and Strategy, LEDx: Strategic Games",
+      "before": "Games and Strategy, LEDx: Strategic Games 2024 Panel organized October 30. Panelists: Col Mark Jacobsen, PhD (USAF Ret.) and Col Jason Trew, PhD (USAF Ret.).",
+      "after": "Games and Strategy, LEDx: Strategic Games 2024 Panel organized October 30. Panelists: Col Mark Jacobsen, PhD (USAF Ret.) and Col Jason Trew, PhD (USAF Ret.).",
+      "outcome": "identical"
+    },
+    {
+      "group": "panels_and_participation",
+      "title": "The Societal Impact of Digital Convergence, LEDxSI Conference",
+      "before": "The Societal Impact of Digital Convergence, LEDxSI Conference 2022 Panel organized October 12. Panelists: Steven Mills, Allan David, PhD, and SueAnne Griffith, PhD.",
+      "after": "The Societal Impact of Digital Convergence, LEDxSI Conference 2022 Panel organized October 12. Panelists: Steven Mills, Allan David, PhD, and SueAnne Griffith, PhD.",
+      "outcome": "identical"
+    },
+    {
+      "group": "panels_and_participation",
+      "title": "Entertainment Panel",
+      "before": "Entertainment Panel 2015 Moderator and speaker, Florida Simulation Summit, National Center for Simulation, September 16.",
+      "after": "Entertainment Panel 2015 Moderator and speaker, Florida Simulation Summit, National Center for Simulation, September 16.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Software Project Management",
+      "before": "Software Project Management 2025 Guest lecturer, Project Management (INSY 6250), April 17.",
+      "after": "Software Project Management 2025 Guest lecturer, Project Management (INSY 6250), April 17.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Lessons from an Accidental Entrepreneur",
+      "before": null,
+      "after": "Lessons from an Accidental Entrepreneur 2024 Guest speaker, Entrepreneurs of Auburn Club, November 5.",
+      "outcome": "added"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Lessons from an Accidental Entrepreneur",
+      "before": "Lessons from an Accidental Entrepreneur 2024 Guest speaker, Entrepreneurs of Auburn Club, April 25.",
+      "after": "Lessons from an Accidental Entrepreneur 2024 Guest speaker, Entrepreneurs of Auburn Club, April 25.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Augmented vs Traditional Instruction in Manufacturing Assembly",
+      "before": "Augmented vs Traditional Instruction in Manufacturing Assembly 2024 ISE Seminar, March 20.",
+      "after": "Augmented vs Traditional Instruction in Manufacturing Assembly 2024 ISE Seminar, March 20.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "The Value of Engineering Econ, A Balanced (Biased?) Opinion",
+      "before": "The Value of Engineering Econ, A Balanced (Biased?) Opinion 2023 Guest lecturer, Engineering Economics (INSY 3600), November 2.",
+      "after": "The Value of Engineering Econ, A Balanced (Biased?) Opinion 2023 Guest lecturer, Engineering Economics (INSY 3600), November 2.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Creativity and Design Thinking",
+      "before": "Creativity and Design Thinking 2022 Guest lecturer, Business Plan for the New Venture (ENFB 4200), October 26.",
+      "after": "Creativity and Design Thinking 2022 Guest lecturer, Business Plan for the New Venture (ENFB 4200), October 26.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Introduction to Version Control Using Git",
+      "before": "Introduction to Version Control Using Git 2022 Presented to the INFORMS Auburn student chapter, March 2.",
+      "after": "Introduction to Version Control Using Git 2022 Presented to the INFORMS Auburn student chapter, March 2.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Design and Innovation Center: Vision, Strategy, and Alignment",
+      "before": "Design and Innovation Center: Vision, Strategy, and Alignment 2021 Finalist presentation for director search, June 23.",
+      "after": "Design and Innovation Center: Vision, Strategy, and Alignment 2021 Finalist presentation for director search, June 23.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Data Science Career Roundtable",
+      "before": "Data Science Career Roundtable 2021 Organized, recruited participants, hosted, promoted, and moderated, March 30.",
+      "after": "Data Science Career Roundtable 2021 Organized, recruited participants, hosted, promoted, and moderated, March 30.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "AI and Machine Learning Concepts",
+      "before": "AI and Machine Learning Concepts 2020 Presented to the Data Science Society of Auburn, November 9.",
+      "after": "AI and Machine Learning Concepts 2020 Presented to the Data Science Society of Auburn, November 9.",
+      "outcome": "identical"
+    },
+    {
+      "group": "campus_talks",
+      "title": "Real-Time Visualization and the Epic MegaGrant Program",
+      "before": "Real-Time Visualization and the Epic MegaGrant Program 2020 Presented to Auburn Industrial & Systems Engineering faculty and the Advanced Manufacturing Research Group, July 13 and July 28.",
+      "after": "Real-Time Visualization and the Epic MegaGrant Program 2020 Presented to Auburn Industrial & Systems Engineering faculty and the Advanced Manufacturing Research Group, July 13 and July 28.",
+      "outcome": "identical"
+    }
+  ],
+  "activity_storage_proposed": true,
+  "gametech_public_evidence": [
+    {
+      "url": "https://olearydj.github.io/antisimplistic/docs/2021-05-03-DJO-CV-Hybrid-Portfolio.pdf",
+      "finding": "Owner-published 2021 CV explicitly lists Independent Game Development, GameTech, April 17, 2013; not an independent event program or the talk itself."
+    },
+    {
+      "url": "https://www.simulationinformation.com/news/defense-news-article-about-2013-gametech-conference/",
+      "finding": "Organizer-hosted April 22, 2013 report establishes the Orlando conference and mentions an n-Space president speaking, without naming this talk or its speaker. It does not independently establish this exact work."
+    }
+  ],
+  "gametech_status": "provisional work in scratch; no talk-specific public program/deck/recording found; owner decision needed",
   "shared_changes": [
     {
       "key": "oleary2025framework",
@@ -3983,71 +3790,20 @@
           ]
         }
       }
-    },
-    {
-      "key": "family",
-      "projects": [
-        "jhl-report"
-      ],
-      "changes": {
-        "metadata": {
-          "before": {
-            "type": "document",
-            "author": [
-              {
-                "family": "O'Leary",
-                "given": "Dan"
-              }
-            ],
-            "issued": {
-              "date-parts": [
-                [
-                  2026
-                ]
-              ]
-            },
-            "genre": "Family recollection",
-            "note": "The aircraft remembered as “Skunk Holler”; service on D-Day; his tour ending before the aircraft burned; postwar work at Tennessee Eastman in Kingsport; later years in Florida",
-            "title": "Family recollections of James Harvey Long, recorded by Dan O'Leary, September 2026"
-          },
-          "after": {
-            "type": "document",
-            "author": [
-              {
-                "family": "O'Leary",
-                "given": "Danny J."
-              }
-            ],
-            "issued": {
-              "date-parts": [
-                [
-                  2026
-                ]
-              ]
-            },
-            "genre": "Family recollection",
-            "note": "The aircraft remembered as “Skunk Holler”; service on D-Day; his tour ending before the aircraft burned; postwar work at Tennessee Eastman in Kingsport; later years in Florida",
-            "title": "Family recollections of James Harvey Long, recorded by Dan O'Leary, September 2026"
-          }
-        }
-      },
-      "context_added": "The source credits the owner as Dan O’Leary."
     }
   ],
   "shared_gate": {
-    "exit_code": 1,
+    "exit_code": 0,
     "summary": [
       {
         "project": "jhl-report",
         "consumer": "quarto",
-        "identical": 91,
-        "changed": 1
+        "identical": 92
       },
       {
         "project": "jhl-report",
         "consumer": "site",
-        "identical": 102,
-        "changed": 1
+        "identical": 103
       },
       {
         "project": "jose-danvas",
@@ -4100,41 +3856,24 @@
         "identical": 2
       }
     ],
-    "changes": [
-      {
-        "project": "jhl-report",
-        "consumer": "quarto",
-        "entry": "83",
-        "outcome": "changed",
-        "before": "[83] D. O’Leary, “Family recollections of James Harvey Long, recorded by Dan O’Leary, September 2026,” Family recollection. 2026.",
-        "after": "[83] D. J. O’Leary, “Family recollections of James Harvey Long, recorded by Dan O’Leary, September 2026,” Family recollection. 2026."
-      },
-      {
-        "project": "jhl-report",
-        "consumer": "site",
-        "entry": "family",
-        "outcome": "changed",
-        "before": "{\"accessed\": \"\", \"author\": \"Dan O'Leary\", \"cat\": \"Family\", \"key\": \"family\", \"short\": \"Family recollection\", \"title\": \"Family recollections of James Harvey Long, recorded by Dan O'Leary, September 2026\", \"titleHtml\": \"Family recollections of James Harvey Long, recorded by Dan O'Leary, September 2026\", \"url\": \"\", \"where\": \"Family recollection. The aircraft remembered as “Skunk Holler”; service on D-Day; his tour ending before the aircraft burned; postwar work at Tennessee Eastman in Kingsport; later years in Florida\"}",
-        "after": "{\"accessed\": \"\", \"author\": \"Danny J. O'Leary\", \"cat\": \"Family\", \"key\": \"family\", \"short\": \"Family recollection\", \"title\": \"Family recollections of James Harvey Long, recorded by Dan O'Leary, September 2026\", \"titleHtml\": \"Family recollections of James Harvey Long, recorded by Dan O'Leary, September 2026\", \"url\": \"\", \"where\": \"Family recollection. The aircraft remembered as “Skunk Holler”; service on D-Day; his tour ending before the aircraft burned; postwar work at Tennessee Eastman in Kingsport; later years in Florida\"}"
-      }
-    ]
+    "changes": []
   },
   "artifacts": {
     "baseline_html": {
-      "path": "/private/tmp/refs-cv-revision/baseline/_output/cv-master.html",
+      "path": "/private/tmp/refs-cv-second-revision/baseline/_output/cv-master.html",
       "sha256": "817c93bd0ce14635c3478c9570c96ac68b2e3848d1369c29c0cdebfc92959034"
     },
     "baseline_pdf": {
-      "path": "/private/tmp/refs-cv-revision/baseline/_output/cv-master.pdf",
+      "path": "/private/tmp/refs-cv-second-revision/baseline/_output/cv-master.pdf",
       "sha256": "1c658da1321a186978b088d5fe936a61b2096f78f375f8fb4245f1e063bba312"
     },
     "candidate_html": {
-      "path": "/private/tmp/refs-cv-revision/candidate/_output/cv-master.html",
-      "sha256": "7822ad6b06f502608dc60f7441b7299d2ff0369ac7d153607282ebbfcd29c925"
+      "path": "/private/tmp/refs-cv-second-revision/candidate/_output/cv-master.html",
+      "sha256": "ac15bb497a77abcdba4c7cd3c38f3d43b4086cb8b10478f2bcf82210254e757d"
     },
     "candidate_pdf": {
-      "path": "/private/tmp/refs-cv-revision/candidate/_output/cv-master.pdf",
-      "sha256": "450462f97d19833e760f1c934a6fd04d0d9035f81fa3b77a410fa4121ca44daa"
+      "path": "/private/tmp/refs-cv-second-revision/candidate/_output/cv-master.pdf",
+      "sha256": "a256be333e0c62eb29c9e62161a79de253af3f7fe11557e624046423e96335fe"
     }
   }
 }

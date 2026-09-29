@@ -1,6 +1,6 @@
 --- a/cv-master.qmd
 +++ b/cv-master.qmd
-@@ -5,12 +5,15 @@
+@@ -5,12 +5,14 @@
  jupyter: cv-data-importer
  csl: styles/apa-cv.csl
  suppress-bibliography: true
@@ -16,13 +16,20 @@
 +bibliography_submission: refs/submission.json
 +bibliography_preparation: refs/preparation.json
 +bibliography_otherpublications: refs/other-publications.json
-+bibliography_invitedtalks: refs/invited-talks.json
 +bibliography_presentations: refs/presentations.json
 +bibliography_patents: refs/patents.json
  filters:
    - citetools
    - filters/highlight-djo.lua
-@@ -125,28 +128,6 @@
+@@ -97,6 +99,7 @@
+ proposals = yaml.safe_load((ROOT / 'data/proposals.yml').read_text())['proposals']
+ service = yaml.safe_load((ROOT / 'data/service.yml').read_text())
+ patents_and_disclosures = yaml.safe_load((ROOT / 'data/ip.yml').read_text())['patents_and_disclosures']
++activities = yaml.safe_load((ROOT / 'data/activities.yml').read_text())
+
+ DIGITAL_SCHOLARSHIP_ENTRIES = [
+     {
+@@ -125,158 +128,10 @@
      },
  ]
 
@@ -48,13 +55,20 @@
 -        'detail': 'MGMWERX and AUiX, July 23.',
 -    },
 -]
-
- PANEL_ENTRIES = [
-     {
-@@ -161,56 +142,6 @@
-     },
- ]
-
+-
+-PANEL_ENTRIES = [
+-    {
+-        'title': 'Games and Strategy, LEDx: Strategic Games',
+-        'date': '2024',
+-        'detail': 'Panel organized October 30. Panelists: Col Mark Jacobsen, PhD (USAF Ret.) and Col Jason Trew, PhD (USAF Ret.).',
+-    },
+-    {
+-        'title': 'The Societal Impact of Digital Convergence, LEDxSI Conference',
+-        'date': '2022',
+-        'detail': 'Panel organized October 12. Panelists: Steven Mills, Allan David, PhD, and SueAnne Griffith, PhD.',
+-    },
+-]
+-
 -CONFERENCE_PRESENTATION_ENTRIES = [
 -    {
 -        'title': 'Directing, Not Delegating: Repeatable, Auditable LLM Workflows for Systems Engineering Practice',
@@ -105,41 +119,121 @@
 -        'detail': 'Conference presentation, ASEM International Annual Conference, University of Colorado, Boulder, CO, October.',
 -    },
 -]
-
- DISCUSSANT_ENTRIES = [
-     {
-@@ -1045,20 +976,19 @@
-
- #### Invited Talks
-
--```{python}
--#| echo: false
--#| output: asis
 -
+-DISCUSSANT_ENTRIES = [
+-    {
+-        'title': 'Entertainment Panel',
+-        'date': '2015',
+-        'detail': 'Moderator and speaker, Florida Simulation Summit, National Center for Simulation, September 16.',
+-    },
+-    {
+-        'title': 'Independent Game Development',
+-        'date': '2013',
+-        'detail': 'Speaker, GameTech Conference, National Center for Simulation, April 17.',
+-    },
+-]
+-
+-CAMPUS_TALK_ENTRIES = [
+-    {
+-        'title': 'Software Project Management',
+-        'date': '2025',
+-        'detail': 'Guest lecturer, Project Management (INSY 6250), April 17.',
+-    },
+-    {
+-        'title': 'Lessons from an Accidental Entrepreneur',
+-        'date': '2024',
+-        'detail': 'Guest speaker, Entrepreneurs of Auburn Club, April 25.',
+-    },
+-    {
+-        'title': 'Augmented vs Traditional Instruction in Manufacturing Assembly',
+-        'date': '2024',
+-        'detail': 'ISE Seminar, March 20.',
+-    },
+-    {
+-        'title': 'The Value of Engineering Econ, A Balanced (Biased?) Opinion',
+-        'date': '2023',
+-        'detail': 'Guest lecturer, Engineering Economics (INSY 3600), November 2.',
+-    },
+-    {
+-        'title': 'Creativity and Design Thinking',
+-        'date': '2022',
+-        'detail': 'Guest lecturer, Business Plan for the New Venture (ENFB 4200), October 26.',
+-    },
+-    {
+-        'title': 'Introduction to Version Control Using Git',
+-        'date': '2022',
+-        'detail': 'Presented to the INFORMS Auburn student chapter, March 2.',
+-    },
+-    {
+-        'title': 'Design and Innovation Center: Vision, Strategy, and Alignment',
+-        'date': '2021',
+-        'detail': 'Finalist presentation for director search, June 23.',
+-    },
+-    {
+-        'title': 'Data Science Career Roundtable',
+-        'date': '2021',
+-        'detail': 'Organized, recruited participants, hosted, promoted, and moderated, March 30.',
+-    },
+-    {
+-        'title': 'AI and Machine Learning Concepts',
+-        'date': '2020',
+-        'detail': 'Presented to the Data Science Society of Auburn, November 9.',
+-    },
+-    {
+-        'title': 'Real-Time Visualization and the Epic MegaGrant Program',
+-        'date': '2020',
+-        'detail': 'Presented to Auburn Industrial & Systems Engineering faculty and the Advanced Manufacturing Research Group, July 13 and July 28.',
+-    },
+-]
++
++
++
++
+
+ PROFESSIONAL_DEVELOPMENT_ENTRIES = [
+     {
+@@ -1049,16 +904,21 @@
+ #| echo: false
+ #| output: asis
+
 -print(render_cv_entries(INVITED_TALK_ENTRIES))
 -```
-+::: {#refs_invitedtalks}
-+:::
-
- #### Conference Presentations and Participation
-
+-
+-#### Conference Presentations and Participation
+-
 -```{python}
 -#| echo: false
 -#| output: asis
 -
 -print(render_cv_entries(CONFERENCE_PRESENTATION_ENTRIES + PANEL_ENTRIES + DISCUSSANT_ENTRIES))
++print(render_cv_entries(activities['invited_talks']))
++```
++
++#### Conference Presentations
++
 +::: {#refs_presentations}
 +:::
++
++#### Panels and Participation
 +
 +```{python}
 +#| echo: false
 +#| output: asis
 +
-+print(render_cv_entries(PANEL_ENTRIES + DISCUSSANT_ENTRIES))
++print(render_cv_entries(activities['panels_and_participation']))
  ```
 
  #### Campus Talks
-@@ -1080,10 +1010,13 @@
+@@ -1067,7 +927,7 @@
+ #| echo: false
+ #| output: asis
+
+-print(render_cv_entries(CAMPUS_TALK_ENTRIES))
++print(render_cv_entries(activities['campus_talks']))
+ ```
+
+ ```{=typst}
+@@ -1080,10 +940,13 @@
  #| echo: false
  #| output: asis
 
@@ -159,7 +253,7 @@
  :::
 --- /dev/null
 +++ b/cv-sections.json
-@@ -0,0 +1,45 @@
+@@ -0,0 +1,40 @@
 +{
 +  "proceedings": [
 +    "oleary2025econ-uncertainty",
@@ -184,12 +278,6 @@
 +    "oleary-1997-animatingExpressions",
 +    "oleary-1997-animatingMultiple"
 +  ],
-+  "invited-talks": [
-+    "oleary2023independent-studio",
-+    "oleary2022metaverse",
-+    "oleary2021game-changer",
-+    "oleary2021visualization-research"
-+  ],
 +  "presentations": [
 +    "ganesh2026ai-driven-dema",
 +    "ganesh2026ai-enhanced-dema",
@@ -199,7 +287,8 @@
 +    "oleary2025ai4se",
 +    "olearyficken2025innovation-culture",
 +    "ballard2024role",
-+    "ficken2023blending"
++    "ficken2023blending",
++    "oleary-2013-independentGame"
 +  ],
 +  "patents": [
 +    "oleary2009time-dilation"
@@ -218,7 +307,7 @@
 +if len(by_key) != len(records):
 +    raise ValueError("Duplicate exported key")
 +sections = json.loads((root / "cv-sections.json").read_text())
-+allowed = {"proceedings", "published", "forthcoming", "submission", "preparation", "other-publications", "invited-talks", "presentations", "patents"}
++allowed = {"proceedings", "published", "forthcoming", "submission", "preparation", "other-publications", "presentations", "patents"}
 +if set(sections) != allowed:
 +    raise ValueError("Missing or unknown CV section")
 +seen = set()
@@ -522,3 +611,63 @@
 +[[export.targets]]
 +output = "refs/cv.json"
 +profile = "csl-json-v1"
+--- /dev/null
++++ b/data/activities.yml
+@@ -0,0 +1,57 @@
++invited_talks:
++  - title: "Running an Independent Game Development Studio"
++    date: "2023-present"
++    detail: "Florida Interactive Entertainment Academy at the University of Central Florida; delivered annually."
++  - title: "The Metaverse: More Direction than Vision"
++    date: "2022"
++    detail: "Air University, June 22."
++  - title: "Game Changer: The Emergence and Potential of Real-Time 3D Development Platforms"
++    date: "2021"
++    detail: "Air University, November 17."
++  - title: "Game Development to Visualization Research in 25 Years: Real-Time Graphics and the Epic MegaGrant Program"
++    date: "2021"
++    detail: "MGMWERX and AUiX, July 23."
++panels_and_participation:
++  - title: "Games and Strategy, LEDx: Strategic Games"
++    date: "2024"
++    detail: "Panel organized October 30. Panelists: Col Mark Jacobsen, PhD (USAF Ret.) and Col Jason Trew, PhD (USAF Ret.)."
++  - title: "The Societal Impact of Digital Convergence, LEDxSI Conference"
++    date: "2022"
++    detail: "Panel organized October 12. Panelists: Steven Mills, Allan David, PhD, and SueAnne Griffith, PhD."
++  - title: "Entertainment Panel"
++    date: "2015"
++    detail: "Moderator and speaker, Florida Simulation Summit, National Center for Simulation, September 16."
++campus_talks:
++  - title: "Software Project Management"
++    date: "2025"
++    detail: "Guest lecturer, Project Management (INSY 6250), April 17."
++  - title: "Lessons from an Accidental Entrepreneur"
++    date: "2024"
++    detail: "Guest speaker, Entrepreneurs of Auburn Club, November 5."
++  - title: "Lessons from an Accidental Entrepreneur"
++    date: "2024"
++    detail: "Guest speaker, Entrepreneurs of Auburn Club, April 25."
++  - title: "Augmented vs Traditional Instruction in Manufacturing Assembly"
++    date: "2024"
++    detail: "ISE Seminar, March 20."
++  - title: "The Value of Engineering Econ, A Balanced (Biased?) Opinion"
++    date: "2023"
++    detail: "Guest lecturer, Engineering Economics (INSY 3600), November 2."
++  - title: "Creativity and Design Thinking"
++    date: "2022"
++    detail: "Guest lecturer, Business Plan for the New Venture (ENFB 4200), October 26."
++  - title: "Introduction to Version Control Using Git"
++    date: "2022"
++    detail: "Presented to the INFORMS Auburn student chapter, March 2."
++  - title: "Design and Innovation Center: Vision, Strategy, and Alignment"
++    date: "2021"
++    detail: "Finalist presentation for director search, June 23."
++  - title: "Data Science Career Roundtable"
++    date: "2021"
++    detail: "Organized, recruited participants, hosted, promoted, and moderated, March 30."
++  - title: "AI and Machine Learning Concepts"
++    date: "2020"
++    detail: "Presented to the Data Science Society of Auburn, November 9."
++  - title: "Real-Time Visualization and the Epic MegaGrant Program"
++    date: "2020"
++    detail: "Presented to Auburn Industrial & Systems Engineering faculty and the Advanced Manufacturing Research Group, July 13 and July 28."
