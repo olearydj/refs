@@ -112,23 +112,31 @@ def test_generated_title_tokens_do_not_remove_stored_or_exported_apostrophes(ini
     context = [{'origin': 'user', 'text': f'Owner{apostrophe}s Copy'}]
     payload = tmp_path / 'apostrophe.json'
     payload.write_text(json.dumps({'schema_version': '1.0', 'metadata': metadata, 'context': context}))
-    added = initialized('add', '--format', 'refs', '--input', payload)['data']
+    attachment = tmp_path / 'download.pdf'
+    attachment.write_bytes(b'%PDF apostrophe source')
+    added = initialized('add', '--format', 'refs', '--input', payload,
+                        '--file', attachment, '--copy')['data']
     assert added['citation_key'] == 'wilson-2024-developersPlaybook'
     shown = initialized('show', added['id'])['data']
     assert shown['metadata'] == metadata
     assert shown['context'] == context
+    assert shown['resources'][0]['relative'] == 'unfiled/DevelopersPlaybook-2024.pdf'
+    assert (tmp_path / 'lib/unfiled/DevelopersPlaybook-2024.pdf').read_bytes() == attachment.read_bytes()
     initialized('project', 'create', 'apostrophe')
     initialized('project', 'cite', 'apostrophe', added['id'])
     for profile in ('csl-json-v1', 'portable-bibtex-v1', 'biblatex-v1'):
         output = tmp_path / (profile + '.txt')
         initialized('export', '--project', 'apostrophe', '--profile', profile, '--output', output)
         if profile == 'csl-json-v1':
-            assert json.loads(output.read_text())[0]['title'] == title
+            exported = json.loads(output.read_text())[0]
+            assert exported['title'] == exported['title-short'] == title
         else:
-            assert 'title = {' + title + '}' in output.read_text()
+            assert '  title = {' + title + '}' in output.read_text()
+            assert '  shorttitle = {' + title + '}' in output.read_text()
     after = initialized('show', added['id'])['data']
     assert after['metadata'] == metadata
     assert after['context'] == context
+    assert after['resources'] == shown['resources']
 
 
 @pytest.mark.parametrize('command', ['add', 'resource add'])
