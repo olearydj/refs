@@ -1,8 +1,8 @@
 # INSIGHT and AI4SE bibliography mirror proposal — 2026-09-29
 
-**Proposal only.** Create two cited-work projects, reuse five catalog records, add two verified works, and defer the uncited technical report. INSIGHT cites **six** works, although its starter `.bib` contains seven; the submitted AI4SE abstract cites **four**, although its `.bib` contains five. Each paper retains its own bibliography and delivered text. No catalog or publication changes, backups, attachment intake, exports, register rows, conversion checks, or renders were performed.
+**Approved with the owner’s amendments on 2026-09-29; execution follows.** Create two cited-work projects, reuse five catalog records, add two verified works, and omit the uncited internal technical report. INSIGHT cites **six** works, although its starter `.bib` contains seven; the submitted AI4SE abstract cites **four**, although its `.bib` contains five. Each paper retains its own bibliography and delivered text. During the proposal stage, no catalog or publication changes, backups, attachment intake, exports, register rows, conversion checks, or renders were performed. The approved execution is recorded in the companion execution report.
 
-This follows the owner's instruction to mirror the papers “in spirit” while making refs entries as correct as the sources allow. The branch is `s2/insight-ai4se-mirror-proposal`, based on `f75d9d7`. The owner decides this proposal before execution.
+This follows the owner's instruction to mirror the papers “in spirit” while making refs entries as correct as the sources allow. The branch is `s2/insight-ai4se-mirror-proposal`, based on `f75d9d7`. The owner approved execution through `comms/2026-09-29-221022-s1-mirror-proposal-decision.md`: duplicate the two PDFs into refs unfiled, preserving the originals, and drop the internal technical report entirely.
 
 ## What the papers actually cite
 
@@ -19,9 +19,9 @@ AI4SE's `proposal/abstract.qmd` cites four identities in “Background: From a P
 | `ledford2024patent` | Same, new | Cited | Absent | US 12,131,134 B1, granted 2024-10-29; official document and Google Patents, detailed below. |
 | `oleary2025ai4se` | Same, existing | Cited | Cited | Exact title, both presenters, existing deck and [organizer's public workshop record](https://sercuarc.org/event/ai4se-se4ai-workshop-2025/). |
 | `oleary2026insight` | `olearyledford2026insight`, existing | This paper itself, not a reference | Cited | Exact title and two authors; delivered INSIGHT PDF and DOI `10.1002/inst.70055`, volume 29(3), pages 37–42. |
-| `oleary2025techreport` | No addition proposed | Not cited; `.bib` only | Absent | Local report exists; public publication status unverified. See decision 1. |
+| `oleary2025techreport` | No addition proposed | Not cited; `.bib` only | Absent | Local report exists; internal and not citable, omitted by owner decision. |
 
-Catalog search by patent number and distinguishing titles found no existing copy of either proposed new work. The five existing records were read through `refs show`, and their linked primary PDFs were checked. The catalog's `gadzey2026dema-digital-thread` is a different 2026 poster with six authors despite sharing the dissertation title; it is not used for either mirror. Neither proposed project name already exists.
+Catalog search by patent number and distinguishing titles found no existing copy of either proposed new work. The five existing records were read through `refs show`, and their linked primary PDFs were checked. The catalog's `gadzey2026dema-digital-thread` is a different 2026 poster with six authors despite sharing the dissertation title; it is not used for either mirror. Neither proposed project name existed at proposal preflight.
 
 ## Record accuracy and differences from the papers
 
@@ -47,22 +47,20 @@ The [Google Patents record](https://patents.google.com/patent/US12131134B1/en) a
 
 INSIGHT prints the shorthand “Data Element Mapping and Analysis (DEMA)” and abbreviates the inventors as Allison B. Ledford, Gregory Harris, H. Patterson and P. Farrington. The exact patent number and issue date settle identity despite those differences. Refs should hold the official title and full inventor names; the paper remains untouched.
 
-### 3. `oleary2025techreport`: defer; not cited and eligibility unverified
+### 3. `oleary2025techreport`: dropped by owner decision
 
-`/Volumes/Casa/dev/dema-llm/docs/reports/dema_llm_technical_report.md` exists with the heading **DEMA-LLM Technical Development Report**, subtitle **AI-Enhanced Data Element Reconciliation System**, ICAMS Research Laboratory/Auburn University, and September 2025. Its title block says “Technical Director” rather than naming an author; the paper's unused `.bib` attributes it to Danny J. O'Leary. The local file has later git edits and is not established as a fixed September 2025 release.
-
-Exact-title and DEMA-LLM/report web searches found no public publication record. The local DEMA publications index lists the talk and patent with public links but not this report; the implementation repository has no configured remote. This is bounded negative evidence, not proof that no published copy exists. Under the kickoff's request to verify scope eligibility, defer addition pending a discoverable publication record or an explicit owner decision about this internal report. If admitted later, use `report`, the complete title above, author Danny J. O'Leary once confirmed, publisher ICAMS Research Laboratory, Auburn University, and the verified release date/version. It would remain outside both cited-only projects.
+The owner confirmed: “the technical report can be dropped entirely. it was an internal reference, so is not citeable anyway”. It is uncited, receives no catalog record or attachment, and is not a pending item.
 
 ## Proposed attachments and owner fetch list
 
-Link the two existing reference copies in place during approved execution. These files belong to the DEMA documentation repository; do not move, rename or replace them. Existing catalog resource links remain unchanged.
+Copy the two existing PDFs into the refs library under unfiled during approved execution. The owner wants dema-docs and refs lib kept separate. Preserve both source files in place byte-for-byte; do not move, rename or replace them. Existing catalog resources remain unchanged.
 
 | New key / proposed label | Existing source | SHA-256 |
 |---|---|---|
 | `ledford2024mbe` / `slides` | `/Volumes/Casa/dev/dema-docs/publications/files/ledford-2024-mbe-summit-dema.pdf` | `930acdb69fbe6afb84730886abce7bb14c44985dbe641789d60949dc9f72c7d6` |
 | `ledford2024patent` / `published` | `/Volumes/Casa/dev/dema-docs/publications/files/us-12131134-b1-dema-patent.pdf` | `d9ad6b2042ef734a249eadda41a65160b12d5d8ef4172eb1960768cb7ddf465b` |
 
-Execution would use `refs resource add <key> --link --path <existing-path> --label <label>`, with dry runs first. Public recovery URLs are supplied above. No owner PDF fetch is needed for either eligible addition. For the deferred report, the only open source request is a public release/record and identified version if the owner wants catalog consideration; the local Markdown file is already available and need not be fetched.
+Execution uses `refs resource add <key> --copy --path <existing-path> --label <label>`, with dry runs first and destination/source SHA-256 equality checks. Public recovery URLs are supplied above. No owner fetch is needed. The internal report is dropped entirely.
 
 ## Projects and exact description notes
 
@@ -85,7 +83,7 @@ Project descriptions and the following documentation provide the requested confi
 
 This published paper keeps its own `references.bib`; refs is not the source of its bibliography. The local Quarto and BibTeX files are pre-review sources. The delivered manuscript and published version of record retain their frozen references.
 
-The refs project `insight-dema-llm` mirrors the six works cited in the published paper. Refs records are kept as correct as possible and may be more correct than the paper's printed entries. That is intentional and does not change the paper. The unused technical-report entry in `references.bib` is not project membership.
+The refs project `insight-dema-llm` mirrors the six works cited in the published paper. Refs records are kept as correct as possible and may be more correct than the paper's printed entries. That is intentional and does not change the paper. The technical-report entry in `references.bib` is an internal document, not cited, and not in refs.
 
 Inspect the catalog mirror with `refs project show insight-dema-llm`. Do not export a refs bibliography into this publication or rewrite its citations as part of mirror maintenance.
 ```
@@ -104,11 +102,9 @@ Inspect the catalog mirror with `refs project show ai4se-pipyer-proposal`. Do no
 
 Session 1's subagent should stage and commit **only `docs/refs.md`** in each paper after approval. INSIGHT is at `521e994`; its actual preflight status includes modified `.gitignore` and `README.md`, plus untracked `AGENTS.md`, `PROJECT_CONTEXT.md`, `admin/`, `published/`, and `revisions/`. AI4SE has the reported modified `.gitignore` and untracked `REJECTED.md`. Preserve all of them, including the publication PDFs currently untracked in INSIGHT. No pointer edits to README/AGENTS/PROJECT_CONTEXT are proposed.
 
-## Owner decision
+## Owner decision — settled
 
-1. **Technical report scope:** **A — defer it (recommended)** and approve the two verified additions plus the six/four cited-work mirrors. The report is uncited and lacks an established public release; no mirror is incomplete by leaving it out. **B — supply a public publication record/version** and revisit its catalog eligibility as a separate, uncited record before execution. An internal-only exception would require an explicit owner scope decision rather than treating the unused `.bib` entry as proof of publication.
-
-No other substantive judgment is needed. The six/four counts follow the delivered evidence, and the corrected patent identity is verified. Approval of this proposal also approves the proposed project names, descriptions, two in-place attachments, and two documentation files; it does not authorize export or conversion.
+The owner approved the proposal with two amendments: use duplicate managed copies in unfiled rather than links, and drop the internal technical report entirely. The six/four memberships, five unchanged reused records, two new corrected records with source entries preserved as originals, project names/descriptions and documentation drafts are approved. No unresolved decision or fetch remains. This pass does not authorize export or conversion.
 
 ## Verification record
 
