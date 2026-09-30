@@ -1,5 +1,5 @@
 {
-  "status": "awaiting three owner PDFs; gate matches approved prediction",
+  "status": "execution complete; awaiting owner gate acceptance",
   "branch_base": "ebb845f",
   "backup_path": "/Volumes/Casa/refs-backups/2026-09-29-before-pipyer-paper-conversion",
   "backup_manifest": {
@@ -1533,23 +1533,192 @@
       },
       "verified_target_sha256": "441107d2feb0a044e6bbc2552b216371477f003602820abcc172f6bc528155ee",
       "source_removed": true
+    },
+    {
+      "source": {
+        "key": "ditommaso2017",
+        "path": "/Users/djo/Downloads/nbt.3820.pdf",
+        "sha256": "b9812621325d28becd34bb58ad192340f1ae70fb33eec38ddf9a4d3df5c48739",
+        "label": "published",
+        "provided_by": "owner",
+        "edition_verification": "Published Nature Biotechnology 35(4), April 2017, pp. 316–319; title and six-author byline verified. Four-page journal extract includes adjacent correspondence; preserved intact.",
+        "verified_at": "2026-09-30T01:27:44.951121+00:00"
+      },
+      "receipt": {
+        "schema_version": "1.0",
+        "command": "resource add",
+        "status": "ok",
+        "data": {
+          "id": "f7726bf2-e59d-432c-b2c9-dea7469ecb13",
+          "source_id": "17a7478a-94b4-4550-8c71-e2033f475a6d",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/NextflowEnablesReproducibleComputationalWorkflows-2017-published.pdf",
+          "label": "published",
+          "media_type": null,
+          "digest": "b9812621325d28becd34bb58ad192340f1ae70fb33eec38ddf9a4d3df5c48739",
+          "copied_from": {
+            "path": "/Users/djo/Downloads/nbt.3820.pdf",
+            "root": null,
+            "relative": null
+          },
+          "citation_key": "ditommaso2017",
+          "moved": true,
+          "destination": "/Volumes/Casa/refs/lib/unfiled/NextflowEnablesReproducibleComputationalWorkflows-2017-published.pdf",
+          "moves": [
+            {
+              "operation_id": "46e4677a-740c-4b64-8578-86c471b439d8",
+              "resource_id": "f7726bf2-e59d-432c-b2c9-dea7469ecb13",
+              "old_path": "/Users/djo/Downloads/nbt.3820.pdf",
+              "new_path": "/Volumes/Casa/refs/lib/unfiled/NextflowEnablesReproducibleComputationalWorkflows-2017-published.pdf",
+              "old_name": "nbt.3820.pdf",
+              "new_name": "NextflowEnablesReproducibleComputationalWorkflows-2017-published.pdf",
+              "state": "removed",
+              "error": null
+            }
+          ],
+          "unlinked_paths": []
+        },
+        "warnings": [],
+        "errors": []
+      },
+      "verified_target_sha256": "b9812621325d28becd34bb58ad192340f1ae70fb33eec38ddf9a4d3df5c48739",
+      "source_removed": true
+    },
+    {
+      "source": {
+        "key": "kapoor-2025-aiAgents",
+        "path": "/Users/djo/Downloads/3403_AI_Agents_That_Matter.pdf",
+        "sha256": "18038b6c27700657711c6ec00e345355bf9ab68e4ad87104ce4985f0f0139750",
+        "label": "published",
+        "provided_by": "owner",
+        "edition_verification": "Published TMLR 05/2025; title, five authors and OpenReview identity Zy4uFzMviZ verified.",
+        "verified_at": "2026-09-30T01:27:45.261156+00:00"
+      },
+      "receipt": {
+        "schema_version": "1.0",
+        "command": "resource add",
+        "status": "ok",
+        "data": {
+          "id": "50434825-8e20-422e-913f-efea70ce419c",
+          "source_id": "a10b14e4-c138-4873-90a6-fb0e9f6d15a9",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/AIAgentsThatMatter-2025-published.pdf",
+          "label": "published",
+          "media_type": null,
+          "digest": "18038b6c27700657711c6ec00e345355bf9ab68e4ad87104ce4985f0f0139750",
+          "copied_from": {
+            "path": "/Users/djo/Downloads/3403_AI_Agents_That_Matter.pdf",
+            "root": null,
+            "relative": null
+          },
+          "citation_key": "kapoor-2025-aiAgents",
+          "moved": true,
+          "destination": "/Volumes/Casa/refs/lib/unfiled/AIAgentsThatMatter-2025-published.pdf",
+          "moves": [
+            {
+              "operation_id": "44f287c8-e453-441a-92c7-6fea589c892d",
+              "resource_id": "50434825-8e20-422e-913f-efea70ce419c",
+              "old_path": "/Users/djo/Downloads/3403_AI_Agents_That_Matter.pdf",
+              "new_path": "/Volumes/Casa/refs/lib/unfiled/AIAgentsThatMatter-2025-published.pdf",
+              "old_name": "3403_AI_Agents_That_Matter.pdf",
+              "new_name": "AIAgentsThatMatter-2025-published.pdf",
+              "state": "removed",
+              "error": null
+            }
+          ],
+          "unlinked_paths": []
+        },
+        "warnings": [],
+        "errors": []
+      },
+      "verified_target_sha256": "18038b6c27700657711c6ec00e345355bf9ab68e4ad87104ce4985f0f0139750",
+      "source_removed": true
+    },
+    {
+      "source": {
+        "key": "koster2012",
+        "path": "/Users/djo/Downloads/bioinformatics_28_19_2520.pdf",
+        "sha256": "d33c43ef89792abcb07955f3a5c728e9966135b44e6f27752ada7450194d63dd",
+        "label": "published",
+        "provided_by": "owner",
+        "edition_verification": "Published Bioinformatics 28(19), 2012, pp. 2520–2522; title, two authors and DOI 10.1093/bioinformatics/bts480 verified.",
+        "verified_at": "2026-09-30T01:27:45.581502+00:00"
+      },
+      "receipt": {
+        "schema_version": "1.0",
+        "command": "resource add",
+        "status": "ok",
+        "data": {
+          "id": "4dc5d5c3-069d-4d80-a12e-b6f08a6c59c1",
+          "source_id": "aebc939c-3774-4107-a8f7-64d7d39b0cd3",
+          "revision": 2,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/SnakemakeAScalableBioinformaticsWorkflowEngine-2012-published.pdf",
+          "label": "published",
+          "media_type": null,
+          "digest": "d33c43ef89792abcb07955f3a5c728e9966135b44e6f27752ada7450194d63dd",
+          "copied_from": {
+            "path": "/Users/djo/Downloads/bioinformatics_28_19_2520.pdf",
+            "root": null,
+            "relative": null
+          },
+          "citation_key": "koster2012",
+          "moved": true,
+          "destination": "/Volumes/Casa/refs/lib/unfiled/SnakemakeAScalableBioinformaticsWorkflowEngine-2012-published.pdf",
+          "moves": [
+            {
+              "operation_id": "1a151418-fbb8-4e23-aa5e-418fed33f33e",
+              "resource_id": "4dc5d5c3-069d-4d80-a12e-b6f08a6c59c1",
+              "old_path": "/Users/djo/Downloads/bioinformatics_28_19_2520.pdf",
+              "new_path": "/Volumes/Casa/refs/lib/unfiled/SnakemakeAScalableBioinformaticsWorkflowEngine-2012-published.pdf",
+              "old_name": "bioinformatics_28_19_2520.pdf",
+              "new_name": "SnakemakeAScalableBioinformaticsWorkflowEngine-2012-published.pdf",
+              "state": "removed",
+              "error": null
+            }
+          ],
+          "unlinked_paths": []
+        },
+        "warnings": [],
+        "errors": []
+      },
+      "verified_target_sha256": "d33c43ef89792abcb07955f3a5c728e9966135b44e6f27752ada7450194d63dd",
+      "source_removed": true
     }
   ],
-  "missing": [
+  "missing": [],
+  "owner_files_verification": [
     {
       "key": "ditommaso2017",
-      "source": "Nextflow, Nature Biotechnology 35 (2017), 316–319",
-      "url": "https://www.nature.com/articles/nbt.3820.pdf"
+      "path": "/Users/djo/Downloads/nbt.3820.pdf",
+      "sha256": "b9812621325d28becd34bb58ad192340f1ae70fb33eec38ddf9a4d3df5c48739",
+      "label": "published",
+      "provided_by": "owner",
+      "edition_verification": "Published Nature Biotechnology 35(4), April 2017, pp. 316–319; title and six-author byline verified. Four-page journal extract includes adjacent correspondence; preserved intact.",
+      "verified_at": "2026-09-30T01:27:44.951121+00:00"
     },
     {
       "key": "kapoor-2025-aiAgents",
-      "source": "AI Agents That Matter, TMLR 05/2025",
-      "url": "https://openreview.net/pdf?id=Zy4uFzMviZ"
+      "path": "/Users/djo/Downloads/3403_AI_Agents_That_Matter.pdf",
+      "sha256": "18038b6c27700657711c6ec00e345355bf9ab68e4ad87104ce4985f0f0139750",
+      "label": "published",
+      "provided_by": "owner",
+      "edition_verification": "Published TMLR 05/2025; title, five authors and OpenReview identity Zy4uFzMviZ verified.",
+      "verified_at": "2026-09-30T01:27:45.261156+00:00"
     },
     {
       "key": "koster2012",
-      "source": "Snakemake, Bioinformatics 28(19) (2012), 2520–2522",
-      "url": "https://academic.oup.com/bioinformatics/article/28/19/2520/290322"
+      "path": "/Users/djo/Downloads/bioinformatics_28_19_2520.pdf",
+      "sha256": "d33c43ef89792abcb07955f3a5c728e9966135b44e6f27752ada7450194d63dd",
+      "label": "published",
+      "provided_by": "owner",
+      "edition_verification": "Published Bioinformatics 28(19), 2012, pp. 2520–2522; title, two authors and DOI 10.1093/bioinformatics/bts480 verified.",
+      "verified_at": "2026-09-30T01:27:45.581502+00:00"
     }
   ],
   "state_at_gate": {
@@ -1596,9 +1765,10 @@
           "id": "17a7478a-94b4-4550-8c71-e2033f475a6d",
           "citation_key": "ditommaso2017",
           "state": "active",
-          "revision": 2,
+          "revision": 5,
           "created_at": "2026-09-23T00:36:45.107977+00:00",
-          "updated_at": "2026-09-30T01:16:09.356511+00:00",
+          "updated_at": "2026-09-30T01:27:45.236971+00:00",
+          "loc": "unfiled",
           "metadata": {
             "type": "article-journal",
             "language": "en",
@@ -1679,7 +1849,24 @@
             }
           ],
           "limitations": [],
-          "resources": [],
+          "resources": [
+            {
+              "id": "f7726bf2-e59d-432c-b2c9-dea7469ecb13",
+              "source_id": "17a7478a-94b4-4550-8c71-e2033f475a6d",
+              "revision": 2,
+              "path": null,
+              "root": "library",
+              "relative": "unfiled/NextflowEnablesReproducibleComputationalWorkflows-2017-published.pdf",
+              "label": "published",
+              "media_type": null,
+              "digest": "b9812621325d28becd34bb58ad192340f1ae70fb33eec38ddf9a4d3df5c48739",
+              "copied_from": {
+                "path": "/Users/djo/Downloads/nbt.3820.pdf",
+                "root": null,
+                "relative": null
+              }
+            }
+          ],
           "projects": [
             {
               "id": "b1ad93bd-65f2-4458-92a7-5f5365d4c98a",
@@ -1711,9 +1898,10 @@
           "id": "a10b14e4-c138-4873-90a6-fb0e9f6d15a9",
           "citation_key": "kapoor-2025-aiAgents",
           "state": "active",
-          "revision": 2,
+          "revision": 5,
           "created_at": "2026-09-30T01:16:09.400690+00:00",
-          "updated_at": "2026-09-30T01:16:09.403870+00:00",
+          "updated_at": "2026-09-30T01:27:45.558533+00:00",
+          "loc": "unfiled",
           "metadata": {
             "type": "article-journal",
             "language": "en",
@@ -1770,7 +1958,24 @@
             }
           ],
           "limitations": [],
-          "resources": [],
+          "resources": [
+            {
+              "id": "50434825-8e20-422e-913f-efea70ce419c",
+              "source_id": "a10b14e4-c138-4873-90a6-fb0e9f6d15a9",
+              "revision": 2,
+              "path": null,
+              "root": "library",
+              "relative": "unfiled/AIAgentsThatMatter-2025-published.pdf",
+              "label": "published",
+              "media_type": null,
+              "digest": "18038b6c27700657711c6ec00e345355bf9ab68e4ad87104ce4985f0f0139750",
+              "copied_from": {
+                "path": "/Users/djo/Downloads/3403_AI_Agents_That_Matter.pdf",
+                "root": null,
+                "relative": null
+              }
+            }
+          ],
           "projects": [
             {
               "id": "b1ad93bd-65f2-4458-92a7-5f5365d4c98a",
@@ -2004,9 +2209,10 @@
           "id": "aebc939c-3774-4107-a8f7-64d7d39b0cd3",
           "citation_key": "koster2012",
           "state": "active",
-          "revision": 2,
+          "revision": 5,
           "created_at": "2026-09-23T00:36:45.154029+00:00",
-          "updated_at": "2026-09-30T01:16:09.367187+00:00",
+          "updated_at": "2026-09-30T01:27:45.865537+00:00",
+          "loc": "unfiled",
           "metadata": {
             "type": "article-journal",
             "language": "en",
@@ -2071,7 +2277,24 @@
             }
           ],
           "limitations": [],
-          "resources": [],
+          "resources": [
+            {
+              "id": "4dc5d5c3-069d-4d80-a12e-b6f08a6c59c1",
+              "source_id": "aebc939c-3774-4107-a8f7-64d7d39b0cd3",
+              "revision": 2,
+              "path": null,
+              "root": "library",
+              "relative": "unfiled/SnakemakeAScalableBioinformaticsWorkflowEngine-2012-published.pdf",
+              "label": "published",
+              "media_type": null,
+              "digest": "d33c43ef89792abcb07955f3a5c728e9966135b44e6f27752ada7450194d63dd",
+              "copied_from": {
+                "path": "/Users/djo/Downloads/bioinformatics_28_19_2520.pdf",
+                "root": null,
+                "relative": null
+              }
+            }
+          ],
           "projects": [
             {
               "id": "b1ad93bd-65f2-4458-92a7-5f5365d4c98a",
@@ -3295,7 +3518,17 @@
       ]
     },
     "shared_dspy_unchanged": true,
-    "live_export_targets_unchanged": true
+    "live_export_targets_unchanged": true,
+    "post_attachment_verification": {
+      "only_resources_revision_updated_at_changed": [
+        "ditommaso2017",
+        "kapoor-2025-aiAgents",
+        "koster2012"
+      ],
+      "publication_tracked_hashes_unchanged": true,
+      "publication_clean": true,
+      "live_export_targets_unchanged": true
+    }
   },
   "per_entry_gate": [
     {
