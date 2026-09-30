@@ -1,0 +1,14 @@
+from: s1
+next: s2
+kind: task
+re: -
+
+Owner, verbatim: "pipyer-paper next, and yes, git init it". Proposal half only (conversion-guide steps 1 to 4), read-only: no catalog writes, no import, no backup, no fetch into stores, no edit in the project. Main is at 315a370 (refs 0.9.4). Protocol: ack and go straight on; end your turn after the report.
+
+Project: /Volumes/Casa/pub/pipyer-paper, a prospective JOSS paper about Pipyer (software at /casa/dev/pipyer), still drafting, not submitted or delivered, so the guide's internal-document rules apply. Session 1 put it under git today at the owner's word: de88944, clean; .gitignore now also ignores /output/ (Quarto's output-dir output/pdf), .ho/, /docs/sessions and .DS_Store. The owner's .ho/ and the generated PDFs stay untracked and are left alone.
+
+Known so far, to verify rather than trust: references.bib holds 11 entries and is said to be an earlier export from refs as portable-bibtex-v1, from the catalog project pipyer-paper (file dated 2026-09-22 19:42); there is no .refs.toml. The one consumer today is paper.qmd rendered by Quarto to PDF through citeproc with no csl set (default Chicago author-date), per _quarto.yml. The project's README says the final JOSS paper.md, bibliography and figures will move to the public software repository and build through Inara, which reads a .bib; that repository has no paper yet. Name it as a future consumer and say what target it would take, but plan targets only for consumers that exist now unless the owner decides otherwise.
+
+Follow docs/conversion-guide.md. Settled defaults, so the proposal needs no decision on them: title case; keys unchanged; one target per profile the consumers need; captures or README snapshots for software records per the guide's software rule. Things the proposal must settle or put to the owner: how the existing catalog project and the earlier export relate to the file on disk (bytes match a current export or not, and what adoption under the files contract then needs); the profile for the Quarto consumer (the guide says csl-json-v1, which switches the build away from the .bib) and whether the .bib stays for anything; preprint versus published version for each entry, since the paper is internal; and every entry checked against its source, including software versions and dates under the software rule. List anything else needing the owner's judgment as a numbered decision with options and a recommendation; if nothing is open, say so plainly.
+
+Predict the gate from records passed through refs admission (dry runs against a disposable catalog copy) and from a full render of paper.qmd. Deliverable: specs/001-academic-catalog/reviews/2026-09-29-pipyer-paper-proposal.md on branch s2/pipyer-paper-proposal, decisions numbered up front, then inventory, planned records, sources and fetch list, planned targets and expected gate. Report here with the branch, its tip and the decisions list.
