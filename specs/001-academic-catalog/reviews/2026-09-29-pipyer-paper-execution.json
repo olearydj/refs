@@ -1,5 +1,5 @@
 {
-  "status": "owner accepted; pre-adoption fixture recorded; adoption pending",
+  "status": "adopted; individual and all-project gates identical; re-recorded at adoption commit",
   "branch_base": "ebb845f",
   "backup_path": "/Volumes/Casa/refs-backups/2026-09-29-before-pipyer-paper-conversion",
   "backup_manifest": {
@@ -3829,5 +3829,26 @@
       "artifact_sha256": "8e14aac1e4c76dc1b45c65f55ac1a98c3301db43c89746580f20251e50522884",
       "fixture_sha256": "f9c8b4f208faad5a35e32241e1f10f9d509f5bc1808ca085352b8927e85b8887"
     }
+  },
+  "adoption_verification": {
+    "publication_commit": "0be3dd93ecad079492e9d949109550254f899216",
+    "publication_clean": true,
+    "individual_work": "/private/tmp/refs-pipyer-adopted-check",
+    "all_project_work": "/private/tmp/refs-pipyer-adopted-all",
+    "record_work": "/private/tmp/refs-pipyer-adopted-record",
+    "pipyer_identical": 11,
+    "prior_identical": 423,
+    "all_exit_codes": 0,
+    "fixture_bytes_unchanged": true,
+    "fixture_provenance": {
+      "publication_commit": "0be3dd93ecad079492e9d949109550254f899216",
+      "source": "owner-accepted scratch render (--record)",
+      "recorded_at": "2026-09-30T02:00:07.648934+00:00",
+      "artifact_sha256": "8e14aac1e4c76dc1b45c65f55ac1a98c3301db43c89746580f20251e50522884",
+      "fixture_sha256": "f9c8b4f208faad5a35e32241e1f10f9d509f5bc1808ca085352b8927e85b8887"
+    },
+    "focused_tests": "22 passed initially; one native test blocked by sandbox font cache passed on elevated rerun",
+    "ruff": "passed",
+    "diff_check": "passed"
   }
 }

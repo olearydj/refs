@@ -8,13 +8,6 @@ root = Path.cwd()
 assert not (root / '.git').exists(), 'Pipyer gate refuses a live checkout'
 out = root / '.refs-gate'
 out.mkdir(exist_ok=True)
-# Execution-only adoption preparation; remove after the project adopts.
-config = root / '_quarto.yml'
-assert 'bibliography: references.bib' in config.read_text()
-config.write_text(config.read_text().replace('bibliography: references.bib', 'bibliography: references.json'))
-paper = root / 'paper.qmd'
-assert '@kapoor2024' in paper.read_text()
-paper.write_text(paper.read_text().replace('@kapoor2024', '@kapoor-2025-aiAgents'))
 subprocess.run(['quarto', 'render', 'paper.qmd', '--to', 'pdf', '-M', 'keep-tex:true'], check=True)
 text = subprocess.check_output(['pdftotext', '-layout', str(root / 'output/pdf/paper.pdf'), '-'], text=True)
 (out / 'pdf-text.txt').write_text(text)

@@ -1,6 +1,6 @@
 # Pipyer paper conversion execution — 2026-09-29
 
-**Status: owner accepted the gate; pre-adoption fixture recorded.** The native gate matches all 11 approved predictions. All 423 entries from previously converted projects remain identical. The fixture is now recorded; the live paper is not yet adopted. All required source attachments are present. The owner authorized adoption and conditional re-recording at its commit.
+**Status: adopted and verified; fixture re-recorded at adoption commit `0be3dd9`.** All 11 Pipyer entries and all 423 prior entries are identical. The sections below preserve the execution history; final adoption verification is recorded at the end.
 
 ## Backup and scope
 
@@ -144,3 +144,11 @@ The owner's exception identifies the actually used software release and pins its
 ## Accepted gate and first recording
 
 The owner accepted and authorized adoption on 2026-09-29. A fresh `--record` run in `/private/tmp/refs-pipyer-record-accepted` reproduced all 11 accepted entries exactly and recorded the fixture and tool/publication provenance. Exit 3 reports the initially absent fixture; recording succeeded. The publication remains untouched and clean at `de88944`. The [adoption package](2026-09-29-pipyer-paper-adoption.md) supplies the exact patch, config, ordered commands and expected JSON hash for session 1’s subagent. Earlier no-record statements describe the initial execution gate.
+
+## Adoption verification and final recording
+
+Session 1’s subagent adopted the paper at `0be3dd93ecad079492e9d949109550254f899216`. The paper remains clean. Removed the bibliography-path and Kapoor-key scratch substitutions from the readable consumer and embedded register command; native rendering and extraction remain unchanged. The register now names the adoption commit.
+
+The individual check in `/private/tmp/refs-pipyer-adopted-check` and all-project check in `/private/tmp/refs-pipyer-adopted-all` both exited 0 without recording: all 11 Pipyer entries and all 423 previous entries are identical. This satisfied the owner's quoted conditional approval. A fresh recording in `/private/tmp/refs-pipyer-adopted-record` then exited 0 and updated provenance to the adoption commit. The fixture bytes are unchanged. No other register row changed.
+
+Focused harness tests: 22 passed initially; the remaining native danvas test encountered a sandbox-only LuaLaTeX font-cache write restriction and passed when rerun with the required permissions. Ruff and diff checks passed. No live rendering or additional publication mutation occurred in this verification turn. Ready for session 1's final review and merge.
