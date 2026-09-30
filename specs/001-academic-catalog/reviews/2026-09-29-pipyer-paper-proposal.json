@@ -1,0 +1,2528 @@
+{
+  "inventory": {
+    "publication_commit": "de8894483ea107068ef0529e81de28d2f18328ed",
+    "tracked_hashes": {
+      ".gitignore": "34bc3e7428f3c30b59c312f05ab4520571ee37baeb43828a840b58968b0ba160",
+      "AGENTS.md": "a2c8c2acf963c65f2f04905e49f77ff0acd838120897095b6bb02bcf9b083750",
+      "PROJECT_CONTEXT.md": "5bff1bd7a5a0b2324d22a0ffb2cbbe563e4f3bad24b26fecada126053a65792c",
+      "README.md": "a363522526f05bf6b45725409c374d5eb0f3767fd045ec9aa44a50a5eea572a7",
+      "_quarto.yml": "1e93f39c51191cf0ea92261c68581e03e7b29b41c2741be55f58f9833382edba",
+      "paper.qmd": "e310818cfa8f16447e3b676ec993066c0b1053b91d5887cebafab9ee4af0247a",
+      "references.bib": "cf3eeae05bfbf12f0a6f352f2034e7655100d843047d4404e947d28aa33e3cb3"
+    },
+    "citation_occurrences": [
+      "pydanticai2026",
+      "kapoor2024",
+      "koster2012",
+      "ditommaso2017",
+      "landau2021",
+      "vandewater2026",
+      "khattab2024",
+      "zhang2025",
+      "qiu2026",
+      "sureshkumar2026",
+      "zaharia2018"
+    ],
+    "unique_keys": [
+      "ditommaso2017",
+      "kapoor2024",
+      "khattab2024",
+      "koster2012",
+      "landau2021",
+      "pydanticai2026",
+      "qiu2026",
+      "sureshkumar2026",
+      "vandewater2026",
+      "zaharia2018",
+      "zhang2025"
+    ],
+    "current_portable_export_matches_file": true
+  },
+  "planned-records": {
+    "ditommaso2017": {
+      "schema_version": "1.0",
+      "citation_key": "ditommaso2017",
+      "metadata": {
+        "type": "article-journal",
+        "language": "en",
+        "author": [
+          {
+            "family": "Di Tommaso",
+            "given": "Paolo"
+          },
+          {
+            "family": "Chatzou",
+            "given": "Maria"
+          },
+          {
+            "family": "Floden",
+            "given": "Evan W."
+          },
+          {
+            "family": "Barja",
+            "given": "Pablo Prieto"
+          },
+          {
+            "family": "Palumbo",
+            "given": "Emilio"
+          },
+          {
+            "family": "Notredame",
+            "given": "Cedric"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2017
+            ]
+          ]
+        },
+        "container-title": "Nature Biotechnology",
+        "DOI": "10.1038/nbt.3820",
+        "issue": "4",
+        "page": "316–319",
+        "title": "Nextflow Enables Reproducible Computational Workflows",
+        "volume": "35"
+      },
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+            "item_key": "ditommaso2017"
+          }
+        }
+      ],
+      "title_protection": {
+        "container-title": {
+          "protected_terms": [],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [
+            "Nextflow"
+          ],
+          "preserve_case": false
+        }
+      },
+      "native_type": {
+        "namespace": "bibtex",
+        "value": "article"
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": []
+    },
+    "kapoor2024": {
+      "schema_version": "1.0",
+      "citation_key": "kapoor2024",
+      "metadata": {
+        "type": "article",
+        "language": "en",
+        "author": [
+          {
+            "family": "Kapoor",
+            "given": "Sayash"
+          },
+          {
+            "family": "Stroebl",
+            "given": "Benedikt"
+          },
+          {
+            "family": "Siegel",
+            "given": "Zachary S."
+          },
+          {
+            "family": "Nadgir",
+            "given": "Nitya"
+          },
+          {
+            "family": "Narayanan",
+            "given": "Arvind"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              7,
+              1
+            ]
+          ]
+        },
+        "DOI": "10.48550/arxiv.2407.01502",
+        "genre": "Preprint",
+        "publisher": "arXiv",
+        "title": "AI Agents That Matter",
+        "URL": "https://arxiv.org/abs/2407.01502v1"
+      },
+      "context": [
+        {
+          "text": "arXiv:2407.01502v1; cited revision dated 2024-07-01.",
+          "origin": "agent"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+            "item_key": "kapoor2024"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "AI"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {
+        "identifiers": {
+          "arxiv": "2407.01502"
+        }
+      },
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": []
+    },
+    "khattab2024": {
+      "schema_version": "1.0",
+      "citation_key": "khattab2024",
+      "loc": "unfiled",
+      "metadata": {
+        "type": "paper-conference",
+        "author": [
+          {
+            "family": "Khattab",
+            "given": "Omar"
+          },
+          {
+            "family": "Singhvi",
+            "given": "Arnav"
+          },
+          {
+            "family": "Maheshwari",
+            "given": "Paridhi"
+          },
+          {
+            "family": "Zhang",
+            "given": "Zhiyuan"
+          },
+          {
+            "family": "Santhanam",
+            "given": "Keshav"
+          },
+          {
+            "family": "A",
+            "given": "Sri Vardhamanan"
+          },
+          {
+            "family": "Haq",
+            "given": "Saiful"
+          },
+          {
+            "family": "Sharma",
+            "given": "Ashutosh"
+          },
+          {
+            "family": "Joshi",
+            "given": "Thomas"
+          },
+          {
+            "family": "Moazam",
+            "given": "Hanna"
+          },
+          {
+            "family": "Miller",
+            "given": "Heather"
+          },
+          {
+            "family": "Zaharia",
+            "given": "Matei"
+          },
+          {
+            "family": "Potts",
+            "given": "Christopher"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "container-title": "International Conference on Learning Representations",
+        "title": "DSPy: Compiling Declarative Language Model Calls Into State-of-the-Art Pipelines",
+        "URL": "https://proceedings.iclr.cc/paper_files/paper/2024/hash/f1cf02ce09757f57c3b93c0db83181e0-Abstract-Conference.html"
+      },
+      "context": [
+        {
+          "text": "For dema-llm, cite this ICLR 2024 publication. Retain and link the separate khattab2023dspy preprint, arXiv:2310.03714, with its own attachment.",
+          "origin": "user"
+        },
+        {
+          "text": "Source acquired 2026-09-27T22:09:40.765485+00:00 from https://proceedings.iclr.cc/paper_files/paper/2024/file/f1cf02ce09757f57c3b93c0db83181e0-Paper-Conference.pdf; SHA-256 0592d139b3a40ba26c6669012339242b59d88ac1c2ed2bf8250429446b9d487b. Attached PDF linked by the official ICLR 2024 proceedings page, marked Published as a conference paper at ICLR 2024. Its cover says Self-Improving Pipelines although the proceedings page and existing catalog title say State-of-the-Art Pipelines; existing approved catalog metadata is preserved.",
+          "origin": "agent"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+            "item_key": "khattab2024"
+          }
+        }
+      ],
+      "title_protection": {
+        "container-title": {
+          "protected_terms": [],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "native_type": {
+        "namespace": "bibtex",
+        "value": "inproceedings"
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": []
+    },
+    "koster2012": {
+      "schema_version": "1.0",
+      "citation_key": "koster2012",
+      "metadata": {
+        "type": "article-journal",
+        "language": "en",
+        "author": [
+          {
+            "family": "Köster",
+            "given": "Johannes"
+          },
+          {
+            "family": "Rahmann",
+            "given": "Sven"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2012
+            ]
+          ]
+        },
+        "container-title": "Bioinformatics",
+        "DOI": "10.1093/bioinformatics/bts480",
+        "issue": "19",
+        "page": "2520–2522",
+        "title": "Snakemake—a Scalable Bioinformatics Workflow Engine",
+        "volume": "28"
+      },
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+            "item_key": "koster2012"
+          }
+        }
+      ],
+      "title_protection": {
+        "container-title": {
+          "protected_terms": [],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [
+            "Snakemake"
+          ],
+          "preserve_case": false
+        }
+      },
+      "native_type": {
+        "namespace": "bibtex",
+        "value": "article"
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": []
+    },
+    "landau2021": {
+      "schema_version": "1.0",
+      "citation_key": "landau2021",
+      "metadata": {
+        "type": "article-journal",
+        "language": "en",
+        "author": [
+          {
+            "family": "Landau",
+            "given": "William Michael"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2021
+            ]
+          ]
+        },
+        "container-title": "Journal of Open Source Software",
+        "DOI": "10.21105/joss.02959",
+        "issue": "57",
+        "page": "2959",
+        "title": "The targets R Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing",
+        "volume": "6"
+      },
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+            "item_key": "landau2021"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "targets",
+            "R",
+            "Make"
+          ],
+          "preserve_case": false
+        },
+        "container-title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "native_type": {
+        "namespace": "bibtex",
+        "value": "article"
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": []
+    },
+    "pydanticai2026": {
+      "schema_version": "1.0",
+      "citation_key": "pydanticai2026",
+      "metadata": {
+        "type": "software",
+        "language": "en",
+        "author": [
+          {
+            "literal": "Pydantic Services Inc."
+          }
+        ],
+        "accessed": {
+          "date-parts": [
+            [
+              2026,
+              9,
+              29
+            ]
+          ]
+        },
+        "issued": {
+          "date-parts": [
+            [
+              2026,
+              9,
+              25
+            ]
+          ]
+        },
+        "genre": "Source code repository",
+        "title": "Pydantic AI",
+        "URL": "https://github.com/pydantic/pydantic-ai",
+        "version": "2.51.0"
+      },
+      "context": [
+        {
+          "text": "PyPI release-history lookup on 2026-09-29: 2.51.0 is the current stable release, uploaded 2026-09-25T23:32:17.554286Z. No earlier accessed date was supplied. https://pypi.org/pypi/pydantic-ai/json",
+          "origin": "agent"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+            "item_key": "pydanticai2026"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "Pydantic AI",
+            "AI"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": []
+    },
+    "qiu2026": {
+      "schema_version": "1.0",
+      "citation_key": "qiu2026",
+      "metadata": {
+        "type": "article",
+        "language": "en",
+        "author": [
+          {
+            "family": "Qiu",
+            "given": "Libin"
+          },
+          {
+            "family": "Ye",
+            "given": "Yuhang"
+          },
+          {
+            "family": "Gao",
+            "given": "Zhirong"
+          },
+          {
+            "family": "Zou",
+            "given": "Xide"
+          },
+          {
+            "family": "Chen",
+            "given": "Junfu"
+          },
+          {
+            "family": "Gui",
+            "given": "Ziming"
+          },
+          {
+            "family": "Huang",
+            "given": "Weizhi"
+          },
+          {
+            "family": "Xue",
+            "given": "Xiaobo"
+          },
+          {
+            "family": "Qiu",
+            "given": "Wenkai"
+          },
+          {
+            "family": "Zhao",
+            "given": "Kun"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026,
+              6,
+              16
+            ]
+          ]
+        },
+        "DOI": "10.48550/arxiv.2508.02721",
+        "genre": "Preprint",
+        "publisher": "arXiv",
+        "title": "Blueprint First, Model Second: A Framework for Deterministic LLM Workflow",
+        "URL": "https://arxiv.org/abs/2508.02721v2"
+      },
+      "context": [
+        {
+          "text": "arXiv:2508.02721v2; cited revision dated 2026-06-16.",
+          "origin": "agent"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+            "item_key": "qiu2026"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "LLM"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {
+        "identifiers": {
+          "arxiv": "2508.02721"
+        }
+      },
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": []
+    },
+    "sureshkumar2026": {
+      "schema_version": "1.0",
+      "citation_key": "sureshkumar2026",
+      "metadata": {
+        "type": "article",
+        "language": "en",
+        "author": [
+          {
+            "family": "Sureshkumar",
+            "given": "Suriya"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026,
+              1,
+              12
+            ]
+          ]
+        },
+        "DOI": "10.48550/arxiv.2601.09749",
+        "genre": "Preprint",
+        "publisher": "arXiv",
+        "title": "R-LAM: Reproducibility-Constrained Large Action Models for Scientific Workflow Automation",
+        "URL": "https://arxiv.org/abs/2601.09749v1"
+      },
+      "context": [
+        {
+          "text": "arXiv:2601.09749v1; cited revision dated 2026-01-12.",
+          "origin": "agent"
+        }
+      ],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+            "item_key": "sureshkumar2026"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "R-LAM",
+            "LAM",
+            "R"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {
+        "identifiers": {
+          "arxiv": "2601.09749"
+        }
+      },
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": []
+    },
+    "vandewater2026": {
+      "schema_version": "1.0",
+      "citation_key": "vandewater2026",
+      "metadata": {
+        "type": "article-journal",
+        "language": "en",
+        "author": [
+          {
+            "family": "Water",
+            "given": "Robin P.",
+            "non-dropping-particle": "van de"
+          },
+          {
+            "family": "Schmidt",
+            "given": "Hendrik"
+          },
+          {
+            "family": "Rockenschaub",
+            "given": "Patrick"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026
+            ]
+          ]
+        },
+        "container-title": "Journal of Open Source Software",
+        "DOI": "10.21105/joss.09261",
+        "issue": "117",
+        "page": "9261",
+        "title": "ReciPies: A Lightweight Data Transformation Pipeline for Reproducible ML",
+        "volume": "11"
+      },
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+            "item_key": "vandewater2026"
+          }
+        }
+      ],
+      "title_protection": {
+        "container-title": {
+          "protected_terms": [],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [
+            "ReciPies",
+            "ML"
+          ],
+          "preserve_case": false
+        }
+      },
+      "native_type": {
+        "namespace": "bibtex",
+        "value": "article"
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": []
+    },
+    "zaharia2018": {
+      "schema_version": "1.0",
+      "citation_key": "zaharia2018",
+      "metadata": {
+        "type": "article-journal",
+        "language": "en",
+        "author": [
+          {
+            "family": "Zaharia",
+            "given": "Matei"
+          },
+          {
+            "family": "Chen",
+            "given": "Andrew"
+          },
+          {
+            "family": "Davidson",
+            "given": "Aaron"
+          },
+          {
+            "family": "Ghodsi",
+            "given": "Ali"
+          },
+          {
+            "family": "Hong",
+            "given": "Sue Ann"
+          },
+          {
+            "family": "Konwinski",
+            "given": "Andy"
+          },
+          {
+            "family": "Murching",
+            "given": "Siddharth"
+          },
+          {
+            "family": "Nykodym",
+            "given": "Tomas"
+          },
+          {
+            "family": "Ogilvie",
+            "given": "Paul"
+          },
+          {
+            "family": "Parkhe",
+            "given": "Mani"
+          },
+          {
+            "family": "Xie",
+            "given": "Fen"
+          },
+          {
+            "family": "Zumar",
+            "given": "Corey"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2018
+            ]
+          ]
+        },
+        "container-title": "IEEE Data Engineering Bulletin",
+        "issue": "4",
+        "page": "39–45",
+        "title": "Accelerating the Machine Learning Lifecycle With MLflow",
+        "URL": "https://people.eecs.berkeley.edu/~matei/papers/2018/ieee_mlflow.pdf",
+        "volume": "41"
+      },
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+            "item_key": "zaharia2018"
+          }
+        }
+      ],
+      "title_protection": {
+        "container-title": {
+          "protected_terms": [
+            "IEEE"
+          ],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [
+            "MLflow"
+          ],
+          "preserve_case": false
+        }
+      },
+      "native_type": {
+        "namespace": "bibtex",
+        "value": "article"
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": []
+    },
+    "zhang2025": {
+      "schema_version": "1.0",
+      "citation_key": "zhang2025",
+      "metadata": {
+        "type": "paper-conference",
+        "language": "en",
+        "author": [
+          {
+            "family": "Zhang",
+            "given": "Qianqian"
+          },
+          {
+            "family": "Liao",
+            "given": "Jiajia"
+          },
+          {
+            "family": "Ying",
+            "given": "Heting"
+          },
+          {
+            "family": "Ma",
+            "given": "Yibo"
+          },
+          {
+            "family": "Shen",
+            "given": "Haozhan"
+          },
+          {
+            "family": "Li",
+            "given": "Jingcheng"
+          },
+          {
+            "family": "Liu",
+            "given": "Peng"
+          },
+          {
+            "family": "Zhang",
+            "given": "Lu"
+          },
+          {
+            "family": "Fang",
+            "given": "Chunxin"
+          },
+          {
+            "family": "Lee",
+            "given": "Kyusong"
+          },
+          {
+            "family": "Xu",
+            "given": "Ruochen"
+          },
+          {
+            "family": "Zhao",
+            "given": "Tiancheng"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025
+            ]
+          ]
+        },
+        "container-title": "Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 3: System Demonstrations)",
+        "DOI": "10.18653/v1/2025.acl-demo.11",
+        "page": "107–117",
+        "publisher": "Association for Computational Linguistics",
+        "title": "Unifying Language Agent Algorithms With Graph-Based Orchestration Engine for Reproducible Agent Research",
+        "URL": "https://aclanthology.org/2025.acl-demo.11/"
+      },
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+            "item_key": "zhang2025"
+          }
+        }
+      ],
+      "title_protection": {
+        "container-title": {
+          "protected_terms": [],
+          "preserve_case": false
+        },
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "native_type": {
+        "namespace": "bibtex",
+        "value": "inproceedings"
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": []
+    },
+    "kapoor-2025-aiAgents": {
+      "schema_version": "1.0",
+      "citation_key": "kapoor-2025-aiAgents",
+      "metadata": {
+        "type": "article-journal",
+        "language": "en",
+        "author": [
+          {
+            "family": "Kapoor",
+            "given": "Sayash"
+          },
+          {
+            "family": "Stroebl",
+            "given": "Benedikt"
+          },
+          {
+            "family": "Siegel",
+            "given": "Zachary S."
+          },
+          {
+            "family": "Nadgir",
+            "given": "Nitya"
+          },
+          {
+            "family": "Narayanan",
+            "given": "Arvind"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025,
+              5
+            ]
+          ]
+        },
+        "container-title": "Transactions on Machine Learning Research",
+        "title": "AI Agents That Matter",
+        "URL": "https://openreview.net/forum?id=Zy4uFzMviZ"
+      },
+      "context": [],
+      "provenance": [],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "AI"
+          ],
+          "preserve_case": false
+        },
+        "container-title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": []
+    }
+  },
+  "admission": [
+    {
+      "key": "ditommaso2017",
+      "dry_run": true,
+      "warnings": [],
+      "canonical": {
+        "schema_version": "1.0",
+        "citation_key": "ditommaso2017",
+        "metadata": {
+          "type": "article-journal",
+          "language": "en",
+          "author": [
+            {
+              "family": "Di Tommaso",
+              "given": "Paolo"
+            },
+            {
+              "family": "Chatzou",
+              "given": "Maria"
+            },
+            {
+              "family": "Floden",
+              "given": "Evan W."
+            },
+            {
+              "family": "Barja",
+              "given": "Pablo Prieto"
+            },
+            {
+              "family": "Palumbo",
+              "given": "Emilio"
+            },
+            {
+              "family": "Notredame",
+              "given": "Cedric"
+            }
+          ],
+          "issued": {
+            "date-parts": [
+              [
+                2017
+              ]
+            ]
+          },
+          "container-title": "Nature Biotechnology",
+          "DOI": "10.1038/nbt.3820",
+          "issue": "4",
+          "page": "316–319",
+          "title": "Nextflow Enables Reproducible Computational Workflows",
+          "volume": "35"
+        },
+        "context": [],
+        "provenance": [
+          {
+            "origin": "import",
+            "access": "unknown",
+            "source_identity": {
+              "namespace": "bibtex",
+              "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+              "item_key": "ditommaso2017"
+            }
+          }
+        ],
+        "title_protection": {
+          "container-title": {
+            "protected_terms": [],
+            "preserve_case": false
+          },
+          "title": {
+            "protected_terms": [
+              "Nextflow"
+            ],
+            "preserve_case": false
+          }
+        },
+        "native_type": {
+          "namespace": "bibtex",
+          "value": "article"
+        },
+        "extensions": {},
+        "overrides": {},
+        "title_parts": {},
+        "legacy_tags": []
+      }
+    },
+    {
+      "key": "kapoor2024",
+      "dry_run": true,
+      "warnings": [],
+      "canonical": {
+        "schema_version": "1.0",
+        "citation_key": "kapoor2024",
+        "metadata": {
+          "type": "article",
+          "language": "en",
+          "author": [
+            {
+              "family": "Kapoor",
+              "given": "Sayash"
+            },
+            {
+              "family": "Stroebl",
+              "given": "Benedikt"
+            },
+            {
+              "family": "Siegel",
+              "given": "Zachary S."
+            },
+            {
+              "family": "Nadgir",
+              "given": "Nitya"
+            },
+            {
+              "family": "Narayanan",
+              "given": "Arvind"
+            }
+          ],
+          "issued": {
+            "date-parts": [
+              [
+                2024,
+                7,
+                1
+              ]
+            ]
+          },
+          "DOI": "10.48550/arxiv.2407.01502",
+          "genre": "Preprint",
+          "publisher": "arXiv",
+          "title": "AI Agents That Matter",
+          "URL": "https://arxiv.org/abs/2407.01502v1"
+        },
+        "context": [
+          {
+            "text": "arXiv:2407.01502v1; cited revision dated 2024-07-01.",
+            "origin": "agent"
+          }
+        ],
+        "provenance": [
+          {
+            "origin": "import",
+            "access": "unknown",
+            "source_identity": {
+              "namespace": "bibtex",
+              "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+              "item_key": "kapoor2024"
+            }
+          }
+        ],
+        "title_protection": {
+          "title": {
+            "protected_terms": [
+              "AI"
+            ],
+            "preserve_case": false
+          }
+        },
+        "extensions": {
+          "identifiers": {
+            "arxiv": "2407.01502"
+          }
+        },
+        "overrides": {},
+        "title_parts": {},
+        "legacy_tags": []
+      }
+    },
+    {
+      "key": "koster2012",
+      "dry_run": true,
+      "warnings": [],
+      "canonical": {
+        "schema_version": "1.0",
+        "citation_key": "koster2012",
+        "metadata": {
+          "type": "article-journal",
+          "language": "en",
+          "author": [
+            {
+              "family": "Köster",
+              "given": "Johannes"
+            },
+            {
+              "family": "Rahmann",
+              "given": "Sven"
+            }
+          ],
+          "issued": {
+            "date-parts": [
+              [
+                2012
+              ]
+            ]
+          },
+          "container-title": "Bioinformatics",
+          "DOI": "10.1093/bioinformatics/bts480",
+          "issue": "19",
+          "page": "2520–2522",
+          "title": "Snakemake—a Scalable Bioinformatics Workflow Engine",
+          "volume": "28"
+        },
+        "context": [],
+        "provenance": [
+          {
+            "origin": "import",
+            "access": "unknown",
+            "source_identity": {
+              "namespace": "bibtex",
+              "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+              "item_key": "koster2012"
+            }
+          }
+        ],
+        "title_protection": {
+          "container-title": {
+            "protected_terms": [],
+            "preserve_case": false
+          },
+          "title": {
+            "protected_terms": [
+              "Snakemake"
+            ],
+            "preserve_case": false
+          }
+        },
+        "native_type": {
+          "namespace": "bibtex",
+          "value": "article"
+        },
+        "extensions": {},
+        "overrides": {},
+        "title_parts": {},
+        "legacy_tags": []
+      }
+    },
+    {
+      "key": "landau2021",
+      "dry_run": true,
+      "warnings": [],
+      "canonical": {
+        "schema_version": "1.0",
+        "citation_key": "landau2021",
+        "metadata": {
+          "type": "article-journal",
+          "language": "en",
+          "author": [
+            {
+              "family": "Landau",
+              "given": "William Michael"
+            }
+          ],
+          "issued": {
+            "date-parts": [
+              [
+                2021
+              ]
+            ]
+          },
+          "container-title": "Journal of Open Source Software",
+          "DOI": "10.21105/joss.02959",
+          "issue": "57",
+          "page": "2959",
+          "title": "The targets R Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing",
+          "volume": "6"
+        },
+        "context": [],
+        "provenance": [
+          {
+            "origin": "import",
+            "access": "unknown",
+            "source_identity": {
+              "namespace": "bibtex",
+              "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+              "item_key": "landau2021"
+            }
+          }
+        ],
+        "title_protection": {
+          "title": {
+            "protected_terms": [
+              "targets",
+              "R",
+              "Make"
+            ],
+            "preserve_case": false
+          },
+          "container-title": {
+            "protected_terms": [],
+            "preserve_case": false
+          }
+        },
+        "native_type": {
+          "namespace": "bibtex",
+          "value": "article"
+        },
+        "extensions": {},
+        "overrides": {},
+        "title_parts": {},
+        "legacy_tags": []
+      }
+    },
+    {
+      "key": "pydanticai2026",
+      "dry_run": true,
+      "warnings": [],
+      "canonical": {
+        "schema_version": "1.0",
+        "citation_key": "pydanticai2026",
+        "metadata": {
+          "type": "software",
+          "language": "en",
+          "author": [
+            {
+              "literal": "Pydantic Services Inc."
+            }
+          ],
+          "accessed": {
+            "date-parts": [
+              [
+                2026,
+                9,
+                29
+              ]
+            ]
+          },
+          "issued": {
+            "date-parts": [
+              [
+                2026,
+                9,
+                25
+              ]
+            ]
+          },
+          "genre": "Source code repository",
+          "title": "Pydantic AI",
+          "URL": "https://github.com/pydantic/pydantic-ai",
+          "version": "2.51.0"
+        },
+        "context": [
+          {
+            "text": "PyPI release-history lookup on 2026-09-29: 2.51.0 is the current stable release, uploaded 2026-09-25T23:32:17.554286Z. No earlier accessed date was supplied. https://pypi.org/pypi/pydantic-ai/json",
+            "origin": "agent"
+          }
+        ],
+        "provenance": [
+          {
+            "origin": "import",
+            "access": "unknown",
+            "source_identity": {
+              "namespace": "bibtex",
+              "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+              "item_key": "pydanticai2026"
+            }
+          }
+        ],
+        "title_protection": {
+          "title": {
+            "protected_terms": [
+              "Pydantic AI",
+              "AI"
+            ],
+            "preserve_case": false
+          }
+        },
+        "extensions": {},
+        "overrides": {},
+        "title_parts": {},
+        "legacy_tags": []
+      }
+    },
+    {
+      "key": "qiu2026",
+      "dry_run": true,
+      "warnings": [],
+      "canonical": {
+        "schema_version": "1.0",
+        "citation_key": "qiu2026",
+        "metadata": {
+          "type": "article",
+          "language": "en",
+          "author": [
+            {
+              "family": "Qiu",
+              "given": "Libin"
+            },
+            {
+              "family": "Ye",
+              "given": "Yuhang"
+            },
+            {
+              "family": "Gao",
+              "given": "Zhirong"
+            },
+            {
+              "family": "Zou",
+              "given": "Xide"
+            },
+            {
+              "family": "Chen",
+              "given": "Junfu"
+            },
+            {
+              "family": "Gui",
+              "given": "Ziming"
+            },
+            {
+              "family": "Huang",
+              "given": "Weizhi"
+            },
+            {
+              "family": "Xue",
+              "given": "Xiaobo"
+            },
+            {
+              "family": "Qiu",
+              "given": "Wenkai"
+            },
+            {
+              "family": "Zhao",
+              "given": "Kun"
+            }
+          ],
+          "issued": {
+            "date-parts": [
+              [
+                2026,
+                6,
+                16
+              ]
+            ]
+          },
+          "DOI": "10.48550/arxiv.2508.02721",
+          "genre": "Preprint",
+          "publisher": "arXiv",
+          "title": "Blueprint First, Model Second: A Framework for Deterministic LLM Workflow",
+          "URL": "https://arxiv.org/abs/2508.02721v2"
+        },
+        "context": [
+          {
+            "text": "arXiv:2508.02721v2; cited revision dated 2026-06-16.",
+            "origin": "agent"
+          }
+        ],
+        "provenance": [
+          {
+            "origin": "import",
+            "access": "unknown",
+            "source_identity": {
+              "namespace": "bibtex",
+              "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+              "item_key": "qiu2026"
+            }
+          }
+        ],
+        "title_protection": {
+          "title": {
+            "protected_terms": [
+              "LLM"
+            ],
+            "preserve_case": false
+          }
+        },
+        "extensions": {
+          "identifiers": {
+            "arxiv": "2508.02721"
+          }
+        },
+        "overrides": {},
+        "title_parts": {},
+        "legacy_tags": []
+      }
+    },
+    {
+      "key": "sureshkumar2026",
+      "dry_run": true,
+      "warnings": [],
+      "canonical": {
+        "schema_version": "1.0",
+        "citation_key": "sureshkumar2026",
+        "metadata": {
+          "type": "article",
+          "language": "en",
+          "author": [
+            {
+              "family": "Sureshkumar",
+              "given": "Suriya"
+            }
+          ],
+          "issued": {
+            "date-parts": [
+              [
+                2026,
+                1,
+                12
+              ]
+            ]
+          },
+          "DOI": "10.48550/arxiv.2601.09749",
+          "genre": "Preprint",
+          "publisher": "arXiv",
+          "title": "R-LAM: Reproducibility-Constrained Large Action Models for Scientific Workflow Automation",
+          "URL": "https://arxiv.org/abs/2601.09749v1"
+        },
+        "context": [
+          {
+            "text": "arXiv:2601.09749v1; cited revision dated 2026-01-12.",
+            "origin": "agent"
+          }
+        ],
+        "provenance": [
+          {
+            "origin": "import",
+            "access": "unknown",
+            "source_identity": {
+              "namespace": "bibtex",
+              "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+              "item_key": "sureshkumar2026"
+            }
+          }
+        ],
+        "title_protection": {
+          "title": {
+            "protected_terms": [
+              "R-LAM",
+              "LAM",
+              "R"
+            ],
+            "preserve_case": false
+          }
+        },
+        "extensions": {
+          "identifiers": {
+            "arxiv": "2601.09749"
+          }
+        },
+        "overrides": {},
+        "title_parts": {},
+        "legacy_tags": []
+      }
+    },
+    {
+      "key": "vandewater2026",
+      "dry_run": true,
+      "warnings": [],
+      "canonical": {
+        "schema_version": "1.0",
+        "citation_key": "vandewater2026",
+        "metadata": {
+          "type": "article-journal",
+          "language": "en",
+          "author": [
+            {
+              "family": "Water",
+              "given": "Robin P.",
+              "non-dropping-particle": "van de"
+            },
+            {
+              "family": "Schmidt",
+              "given": "Hendrik"
+            },
+            {
+              "family": "Rockenschaub",
+              "given": "Patrick"
+            }
+          ],
+          "issued": {
+            "date-parts": [
+              [
+                2026
+              ]
+            ]
+          },
+          "container-title": "Journal of Open Source Software",
+          "DOI": "10.21105/joss.09261",
+          "issue": "117",
+          "page": "9261",
+          "title": "ReciPies: A Lightweight Data Transformation Pipeline for Reproducible ML",
+          "volume": "11"
+        },
+        "context": [],
+        "provenance": [
+          {
+            "origin": "import",
+            "access": "unknown",
+            "source_identity": {
+              "namespace": "bibtex",
+              "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+              "item_key": "vandewater2026"
+            }
+          }
+        ],
+        "title_protection": {
+          "container-title": {
+            "protected_terms": [],
+            "preserve_case": false
+          },
+          "title": {
+            "protected_terms": [
+              "ReciPies",
+              "ML"
+            ],
+            "preserve_case": false
+          }
+        },
+        "native_type": {
+          "namespace": "bibtex",
+          "value": "article"
+        },
+        "extensions": {},
+        "overrides": {},
+        "title_parts": {},
+        "legacy_tags": []
+      }
+    },
+    {
+      "key": "zaharia2018",
+      "dry_run": true,
+      "warnings": [],
+      "canonical": {
+        "schema_version": "1.0",
+        "citation_key": "zaharia2018",
+        "metadata": {
+          "type": "article-journal",
+          "language": "en",
+          "author": [
+            {
+              "family": "Zaharia",
+              "given": "Matei"
+            },
+            {
+              "family": "Chen",
+              "given": "Andrew"
+            },
+            {
+              "family": "Davidson",
+              "given": "Aaron"
+            },
+            {
+              "family": "Ghodsi",
+              "given": "Ali"
+            },
+            {
+              "family": "Hong",
+              "given": "Sue Ann"
+            },
+            {
+              "family": "Konwinski",
+              "given": "Andy"
+            },
+            {
+              "family": "Murching",
+              "given": "Siddharth"
+            },
+            {
+              "family": "Nykodym",
+              "given": "Tomas"
+            },
+            {
+              "family": "Ogilvie",
+              "given": "Paul"
+            },
+            {
+              "family": "Parkhe",
+              "given": "Mani"
+            },
+            {
+              "family": "Xie",
+              "given": "Fen"
+            },
+            {
+              "family": "Zumar",
+              "given": "Corey"
+            }
+          ],
+          "issued": {
+            "date-parts": [
+              [
+                2018
+              ]
+            ]
+          },
+          "container-title": "IEEE Data Engineering Bulletin",
+          "issue": "4",
+          "page": "39–45",
+          "title": "Accelerating the Machine Learning Lifecycle With MLflow",
+          "URL": "https://people.eecs.berkeley.edu/~matei/papers/2018/ieee_mlflow.pdf",
+          "volume": "41"
+        },
+        "context": [],
+        "provenance": [
+          {
+            "origin": "import",
+            "access": "unknown",
+            "source_identity": {
+              "namespace": "bibtex",
+              "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+              "item_key": "zaharia2018"
+            }
+          }
+        ],
+        "title_protection": {
+          "container-title": {
+            "protected_terms": [
+              "IEEE"
+            ],
+            "preserve_case": false
+          },
+          "title": {
+            "protected_terms": [
+              "MLflow"
+            ],
+            "preserve_case": false
+          }
+        },
+        "native_type": {
+          "namespace": "bibtex",
+          "value": "article"
+        },
+        "extensions": {},
+        "overrides": {},
+        "title_parts": {},
+        "legacy_tags": []
+      }
+    },
+    {
+      "key": "zhang2025",
+      "dry_run": true,
+      "warnings": [],
+      "canonical": {
+        "schema_version": "1.0",
+        "citation_key": "zhang2025",
+        "metadata": {
+          "type": "paper-conference",
+          "language": "en",
+          "author": [
+            {
+              "family": "Zhang",
+              "given": "Qianqian"
+            },
+            {
+              "family": "Liao",
+              "given": "Jiajia"
+            },
+            {
+              "family": "Ying",
+              "given": "Heting"
+            },
+            {
+              "family": "Ma",
+              "given": "Yibo"
+            },
+            {
+              "family": "Shen",
+              "given": "Haozhan"
+            },
+            {
+              "family": "Li",
+              "given": "Jingcheng"
+            },
+            {
+              "family": "Liu",
+              "given": "Peng"
+            },
+            {
+              "family": "Zhang",
+              "given": "Lu"
+            },
+            {
+              "family": "Fang",
+              "given": "Chunxin"
+            },
+            {
+              "family": "Lee",
+              "given": "Kyusong"
+            },
+            {
+              "family": "Xu",
+              "given": "Ruochen"
+            },
+            {
+              "family": "Zhao",
+              "given": "Tiancheng"
+            }
+          ],
+          "issued": {
+            "date-parts": [
+              [
+                2025
+              ]
+            ]
+          },
+          "container-title": "Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 3: System Demonstrations)",
+          "DOI": "10.18653/v1/2025.acl-demo.11",
+          "page": "107–117",
+          "publisher": "Association for Computational Linguistics",
+          "title": "Unifying Language Agent Algorithms With Graph-Based Orchestration Engine for Reproducible Agent Research",
+          "URL": "https://aclanthology.org/2025.acl-demo.11/"
+        },
+        "context": [],
+        "provenance": [
+          {
+            "origin": "import",
+            "access": "unknown",
+            "source_identity": {
+              "namespace": "bibtex",
+              "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+              "item_key": "zhang2025"
+            }
+          }
+        ],
+        "title_protection": {
+          "container-title": {
+            "protected_terms": [],
+            "preserve_case": false
+          },
+          "title": {
+            "protected_terms": [],
+            "preserve_case": false
+          }
+        },
+        "native_type": {
+          "namespace": "bibtex",
+          "value": "inproceedings"
+        },
+        "extensions": {},
+        "overrides": {},
+        "title_parts": {},
+        "legacy_tags": []
+      }
+    },
+    {
+      "key": "kapoor-2025-aiAgents",
+      "dry_run": true,
+      "warnings": [
+        {
+          "code": "likely_match",
+          "message": "Similar title found; created separately because title alone is not identity",
+          "path": null,
+          "details": {
+            "candidates": [
+              {
+                "id": "0b7d17bf-9331-4223-8bdc-495ad2a1ea6f",
+                "citation_key": "kapoor2024"
+              }
+            ]
+          },
+          "retryable": false
+        }
+      ],
+      "canonical": {
+        "schema_version": "1.0",
+        "citation_key": "kapoor-2025-aiAgents",
+        "metadata": {
+          "type": "article-journal",
+          "language": "en",
+          "author": [
+            {
+              "family": "Kapoor",
+              "given": "Sayash"
+            },
+            {
+              "family": "Stroebl",
+              "given": "Benedikt"
+            },
+            {
+              "family": "Siegel",
+              "given": "Zachary S."
+            },
+            {
+              "family": "Nadgir",
+              "given": "Nitya"
+            },
+            {
+              "family": "Narayanan",
+              "given": "Arvind"
+            }
+          ],
+          "issued": {
+            "date-parts": [
+              [
+                2025,
+                5
+              ]
+            ]
+          },
+          "container-title": "Transactions on Machine Learning Research",
+          "title": "AI Agents That Matter",
+          "URL": "https://openreview.net/forum?id=Zy4uFzMviZ"
+        },
+        "context": [],
+        "provenance": [],
+        "title_protection": {
+          "title": {
+            "protected_terms": [
+              "AI"
+            ],
+            "preserve_case": false
+          },
+          "container-title": {
+            "protected_terms": [],
+            "preserve_case": false
+          }
+        },
+        "extensions": {},
+        "overrides": {},
+        "title_parts": {},
+        "legacy_tags": []
+      }
+    },
+    {
+      "key": "khattab2024",
+      "dry_run": true,
+      "warnings": [
+        {
+          "code": "unprotected_capital",
+          "message": "Review unprotected internal capitals",
+          "path": "metadata.title",
+          "details": {},
+          "retryable": false
+        }
+      ],
+      "canonical": {
+        "schema_version": "1.0",
+        "citation_key": "khattab2024",
+        "loc": "unfiled",
+        "metadata": {
+          "type": "paper-conference",
+          "author": [
+            {
+              "family": "Khattab",
+              "given": "Omar"
+            },
+            {
+              "family": "Singhvi",
+              "given": "Arnav"
+            },
+            {
+              "family": "Maheshwari",
+              "given": "Paridhi"
+            },
+            {
+              "family": "Zhang",
+              "given": "Zhiyuan"
+            },
+            {
+              "family": "Santhanam",
+              "given": "Keshav"
+            },
+            {
+              "family": "A",
+              "given": "Sri Vardhamanan"
+            },
+            {
+              "family": "Haq",
+              "given": "Saiful"
+            },
+            {
+              "family": "Sharma",
+              "given": "Ashutosh"
+            },
+            {
+              "family": "Joshi",
+              "given": "Thomas"
+            },
+            {
+              "family": "Moazam",
+              "given": "Hanna"
+            },
+            {
+              "family": "Miller",
+              "given": "Heather"
+            },
+            {
+              "family": "Zaharia",
+              "given": "Matei"
+            },
+            {
+              "family": "Potts",
+              "given": "Christopher"
+            }
+          ],
+          "issued": {
+            "date-parts": [
+              [
+                2024
+              ]
+            ]
+          },
+          "container-title": "International Conference on Learning Representations",
+          "title": "DSPy: Compiling Declarative Language Model Calls Into State-of-the-Art Pipelines",
+          "URL": "https://proceedings.iclr.cc/paper_files/paper/2024/hash/f1cf02ce09757f57c3b93c0db83181e0-Abstract-Conference.html"
+        },
+        "context": [
+          {
+            "text": "For dema-llm, cite this ICLR 2024 publication. Retain and link the separate khattab2023dspy preprint, arXiv:2310.03714, with its own attachment.",
+            "origin": "user"
+          },
+          {
+            "text": "Source acquired 2026-09-27T22:09:40.765485+00:00 from https://proceedings.iclr.cc/paper_files/paper/2024/file/f1cf02ce09757f57c3b93c0db83181e0-Paper-Conference.pdf; SHA-256 0592d139b3a40ba26c6669012339242b59d88ac1c2ed2bf8250429446b9d487b. Attached PDF linked by the official ICLR 2024 proceedings page, marked Published as a conference paper at ICLR 2024. Its cover says Self-Improving Pipelines although the proceedings page and existing catalog title say State-of-the-Art Pipelines; existing approved catalog metadata is preserved.",
+            "origin": "agent"
+          }
+        ],
+        "provenance": [
+          {
+            "origin": "import",
+            "access": "unknown",
+            "source_identity": {
+              "namespace": "bibtex",
+              "library_uri": "/Volumes/Casa/pub/pipyer-paper/references.bib",
+              "item_key": "khattab2024"
+            }
+          }
+        ],
+        "title_protection": {
+          "container-title": {
+            "protected_terms": [],
+            "preserve_case": false
+          },
+          "title": {
+            "protected_terms": [],
+            "preserve_case": false
+          }
+        },
+        "native_type": {
+          "namespace": "bibtex",
+          "value": "inproceedings"
+        },
+        "extensions": {},
+        "overrides": {},
+        "title_parts": {},
+        "legacy_tags": []
+      },
+      "unchanged": true
+    }
+  ],
+  "software-lookup": {
+    "pypi": {
+      "url": "https://pypi.org/pypi/pydantic-ai/json",
+      "current": "2.51.0",
+      "recent_releases": [
+        [
+          "2.45.0",
+          "2026-09-18T04:50:03.687954Z"
+        ],
+        [
+          "2.46.0",
+          "2026-09-19T04:05:58.385761Z"
+        ],
+        [
+          "2.47.0",
+          "2026-09-22T04:13:46.766592Z"
+        ],
+        [
+          "2.48.0",
+          "2026-09-23T02:54:52.181824Z"
+        ],
+        [
+          "2.49.0",
+          "2026-09-24T03:23:01.147978Z"
+        ],
+        [
+          "2.50.0",
+          "2026-09-25T05:03:21.781826Z"
+        ],
+        [
+          "2.51.0",
+          "2026-09-25T23:32:17.554286Z"
+        ]
+      ],
+      "used_release": [
+        "1.106.0",
+        "2026-06-05T01:28:56.426881Z"
+      ]
+    },
+    "repo": {
+      "full_name": "pydantic/pydantic-ai",
+      "default_branch": "main",
+      "html_url": "https://github.com/pydantic/pydantic-ai",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    "head": {
+      "sha": "768081688f17a2bcfbf9c2c40822d49e98ddac21",
+      "date": "2026-09-30T00:49:17Z"
+    }
+  },
+  "local-source-search": {
+    "roots": [
+      "/Volumes/Casa/refs/lib",
+      "/Volumes/Casa/tmp/_from2020mbp/devonthink",
+      "/Users/djo/Downloads",
+      "/Volumes/Casa/obsidian/vault/projects/pipyer",
+      "/Volumes/Casa/pub/pipyer-paper"
+    ],
+    "pdf_first_pages_scanned": 1511,
+    "matches": []
+  },
+  "gate-prediction": {
+    "entries": [
+      {
+        "before_key": "ditommaso2017",
+        "after_key": "ditommaso2017",
+        "before": "Di Tommaso, Paolo, Maria Chatzou, Evan W. Floden, Pablo Prieto Barja, Emilio Palumbo, and Cedric Notredame. 2017. “Nextflow Enables Reproducible Computational Workflows.” Nature Biotechnology 35 (4): 316–19. https://doi.org/10.1038/nbt.3820.",
+        "after": "Di Tommaso, Paolo, Maria Chatzou, Evan W. Floden, Pablo Prieto Barja, Emilio Palumbo, and Cedric Notredame. 2017. “Nextflow Enables Reproducible Computational Workflows.” Nature Biotechnology 35 (4): 316–19. https://doi.org/10.1038/nbt.3820.",
+        "outcome": "identical"
+      },
+      {
+        "before_key": "kapoor2024",
+        "after_key": "kapoor-2025-aiAgents",
+        "before": "Kapoor, Sayash, Benedikt Stroebl, Zachary S. Siegel, Nitya Nadgir, and Arvind Narayanan. 2024. AI Agents That Matter. arXiv:2407.01502. https://doi.org/10.48550/arxiv.2407.01502.",
+        "after": "Kapoor, Sayash, Benedikt Stroebl, Zachary S. Siegel, Nitya Nadgir, and Arvind Narayanan. 2025. “AI Agents That Matter.” Transactions on Machine Learning Research, May. https://openreview.net/forum?id=Zy4uFzMviZ.",
+        "outcome": "expected-change"
+      },
+      {
+        "before_key": "khattab2024",
+        "after_key": "khattab2024",
+        "before": "Khattab, Omar, Arnav Singhvi, Paridhi Maheshwari, et al. 2024. “DSPy: Compiling Declarative Language Model Calls into State-of-the-Art Pipelines.” International Conference on Learning Representations. https://proceedi ngs.iclr.cc/paper_files/paper/2024/hash/f1cf02ce09757f57c3b93c0db83181e0-Abstract-Conference.html.",
+        "after": "Khattab, Omar, Arnav Singhvi, Paridhi Maheshwari, et al. 2024. “DSPy: Compiling Declarative Language Model Calls Into State-of-the-Art Pipelines.” International Conference on Learning Representations. https://proceedi ngs.iclr.cc/paper_files/paper/2024/hash/f1cf02ce09757f57c3b93c0db83181e0-Abstract-Conference.html.",
+        "outcome": "expected-change"
+      },
+      {
+        "before_key": "koster2012",
+        "after_key": "koster2012",
+        "before": "Köster, Johannes, and Sven Rahmann. 2012. “Snakemake: A Scalable Bioinformatics Workflow Engine.” Bioinformatics 28 (19): 2520–22. https://doi.org/10.1093/bioinformatics/bts480.",
+        "after": "Köster, Johannes, and Sven Rahmann. 2012. “Snakemake—a Scalable Bioinformatics Workflow Engine.” Bioin- formatics 28 (19): 2520–22. https://doi.org/10.1093/bioinformatics/bts480.",
+        "outcome": "expected-change"
+      },
+      {
+        "before_key": "landau2021",
+        "after_key": "landau2021",
+        "before": "Landau, William Michael. 2021. “The Targets R Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing.” Journal of Open Source Software 6 (57): 2959. https://doi.org/10.21105/joss.02959.",
+        "after": "Landau, William Michael. 2021. “The targets R Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing.” Journal of Open Source Software 6 (57): 2959. https://doi.org/10.21105/joss.02959.",
+        "outcome": "expected-change"
+      },
+      {
+        "before_key": "pydanticai2026",
+        "after_key": "pydanticai2026",
+        "before": "Pydantic Services Inc. 2026. Pydantic AI. Python software, version 1.106. https://ai.pydantic.dev/.",
+        "after": "Pydantic Services Inc. 2026. Pydantic AI. Source code repository. V. 2.51.0. Released September 25. https: //github.com/pydantic/pydantic-ai.",
+        "outcome": "expected-change"
+      },
+      {
+        "before_key": "qiu2026",
+        "after_key": "qiu2026",
+        "before": "Qiu, Libin, Yuhang Ye, Zhirong Gao, et al. 2026. Blueprint First, Model Second: A Framework for Deterministic LLM Workflow. arXiv:2508.02721v2. https://doi.org/10.48550/arxiv.2508.02721.",
+        "after": "Qiu, Libin, Yuhang Ye, Zhirong Gao, et al. 2026. “Blueprint First, Model Second: A Framework for Deterministic LLM Workflow.” Preprint. arXiv, June 16. https://doi.org/10.48550/arxiv.2508.02721.",
+        "outcome": "expected-change"
+      },
+      {
+        "before_key": "sureshkumar2026",
+        "after_key": "sureshkumar2026",
+        "before": "Sureshkumar, Suriya. 2026. R-LAM: Reproducibility-Constrained Large Action Models for Scientific Workflow Automation. arXiv:2601.09749. https://doi.org/10.48550/arxiv.2601.09749.",
+        "after": "Sureshkumar, Suriya. 2026. “R-LAM: Reproducibility-Constrained Large Action Models for Scientific Workflow Automation.” Preprint. arXiv, January 12. https://doi.org/10.48550/arxiv.2601.09749.",
+        "outcome": "expected-change"
+      },
+      {
+        "before_key": "vandewater2026",
+        "after_key": "vandewater2026",
+        "before": "Water, Robin P. van de, Hendrik Schmidt, and Patrick Rockenschaub. 2026. “ReciPies: A Lightweight Data Transformation Pipeline for Reproducible ML.” Journal of Open Source Software 11 (117): 9261. https: //doi.org/10.21105/joss.09261.",
+        "after": "Water, Robin P. van de, Hendrik Schmidt, and Patrick Rockenschaub. 2026. “ReciPies: A Lightweight Data Transformation Pipeline for Reproducible ML.” Journal of Open Source Software 11 (117): 9261. https: //doi.org/10.21105/joss.09261.",
+        "outcome": "identical"
+      },
+      {
+        "before_key": "zaharia2018",
+        "after_key": "zaharia2018",
+        "before": "Zaharia, Matei, Andrew Chen, Aaron Davidson, et al. 2018. “Accelerating the Machine Learning Lifecycle with MLflow.” IEEE Data Engineering Bulletin 41 (4): 39–45. https://people.eecs.berkeley.edu/~matei/papers/20 18/ieee_mlflow.pdf.",
+        "after": "Zaharia, Matei, Andrew Chen, Aaron Davidson, et al. 2018. “Accelerating the Machine Learning Lifecycle With MLflow.” IEEE Data Engineering Bulletin 41 (4): 39–45. https://people.eecs.berkeley.edu/~matei/papers/20 18/ieee_mlflow.pdf.",
+        "outcome": "expected-change"
+      },
+      {
+        "before_key": "zhang2025",
+        "after_key": "zhang2025",
+        "before": "Zhang, Qianqian, Jiajia Liao, Heting Ying, et al. 2025. “Unifying Language Agent Algorithms with Graph- Based Orchestration Engine for Reproducible Agent Research.” Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 3: System Demonstrations), 107–17. https: //doi.org/10.18653/v1/2025.acl-demo.11.",
+        "after": "Zhang, Qianqian, Jiajia Liao, Heting Ying, et al. 2025. “Unifying Language Agent Algorithms With Graph- Based Orchestration Engine for Reproducible Agent Research.” Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 3: System Demonstrations), 107–17. https: //doi.org/10.18653/v1/2025.acl-demo.11.",
+        "outcome": "expected-change"
+      }
+    ],
+    "baseline_citation_keys": [
+      "pydanticai2026",
+      "kapoor2024",
+      "koster2012",
+      "ditommaso2017",
+      "landau2021",
+      "vandewater2026",
+      "khattab2024",
+      "zhang2025",
+      "qiu2026",
+      "sureshkumar2026",
+      "zaharia2018"
+    ],
+    "candidate_citation_keys": [
+      "pydanticai2026",
+      "kapoor-2025-aiAgents",
+      "koster2012",
+      "ditommaso2017",
+      "landau2021",
+      "vandewater2026",
+      "khattab2024",
+      "zhang2025",
+      "qiu2026",
+      "sureshkumar2026",
+      "zaharia2018"
+    ],
+    "internal_pdf_links": [
+      {
+        "page": "1",
+        "target": "paper.html#4",
+        "text": "("
+      },
+      {
+        "page": "1",
+        "target": "paper.html#4",
+        "text": "Pydantic Services Inc. 2026"
+      },
+      {
+        "page": "1",
+        "target": "paper.html#4",
+        "text": "). "
+      },
+      {
+        "page": "1",
+        "target": "paper.html#3",
+        "text": "("
+      },
+      {
+        "page": "1",
+        "target": "paper.html#3",
+        "text": "Kapoor et al. 2025"
+      },
+      {
+        "page": "1",
+        "target": "paper.html#3",
+        "text": ")."
+      },
+      {
+        "page": "1",
+        "target": "paper.html#3",
+        "text": "("
+      },
+      {
+        "page": "1",
+        "target": "paper.html#3",
+        "text": "Köster and Rahmann 2012"
+      },
+      {
+        "page": "1",
+        "target": "paper.html#3",
+        "text": ";"
+      },
+      {
+        "page": "1",
+        "target": "paper.html#3",
+        "text": "Di Tommaso et al."
+      },
+      {
+        "page": "1",
+        "target": "paper.html#3",
+        "text": "2017"
+      },
+      {
+        "page": "1",
+        "target": "paper.html#4",
+        "text": "Landau 2021"
+      },
+      {
+        "page": "1",
+        "target": "paper.html#4",
+        "text": "). "
+      },
+      {
+        "page": "1",
+        "target": "paper.html#4",
+        "text": "("
+      },
+      {
+        "page": "1",
+        "target": "paper.html#4",
+        "text": "van de Water et al. 2026"
+      },
+      {
+        "page": "1",
+        "target": "paper.html#4",
+        "text": "). "
+      },
+      {
+        "page": "2",
+        "target": "paper.html#3",
+        "text": "("
+      },
+      {
+        "page": "2",
+        "target": "paper.html#3",
+        "text": "Khattab et al. 2024"
+      },
+      {
+        "page": "2",
+        "target": "paper.html#3",
+        "text": "), "
+      },
+      {
+        "page": "2",
+        "target": "paper.html#4",
+        "text": "("
+      },
+      {
+        "page": "2",
+        "target": "paper.html#4",
+        "text": "Zhang et al. 2025"
+      },
+      {
+        "page": "2",
+        "target": "paper.html#4",
+        "text": "). "
+      },
+      {
+        "page": "2",
+        "target": "paper.html#4",
+        "text": "("
+      },
+      {
+        "page": "2",
+        "target": "paper.html#4",
+        "text": "Qiu et al. 2026"
+      },
+      {
+        "page": "2",
+        "target": "paper.html#4",
+        "text": "). "
+      },
+      {
+        "page": "2",
+        "target": "paper.html#4",
+        "text": "("
+      },
+      {
+        "page": "2",
+        "target": "paper.html#4",
+        "text": "Sureshkumar 2026"
+      },
+      {
+        "page": "2",
+        "target": "paper.html#4",
+        "text": "). "
+      },
+      {
+        "page": "2",
+        "target": "paper.html#4",
+        "text": "("
+      },
+      {
+        "page": "2",
+        "target": "paper.html#4",
+        "text": "Zaharia et al. 2018"
+      },
+      {
+        "page": "2",
+        "target": "paper.html#4",
+        "text": "). "
+      }
+    ],
+    "page_count": 4,
+    "versions": {
+      "refs": "0.9.4",
+      "quarto": "1.10.18",
+      "pandoc": "pandoc 3.10"
+    },
+    "pdf_sha256": {
+      "baseline": "5ef842a6125e0c1e61cbcdd563c11383b736df62f5932dc40f4c30e8d76279d9",
+      "candidate": "ac54817e99b388b1f245d69ebcc14f977af0a708775f17888b0f941d7060a8dd"
+    },
+    "visual_check": "All four candidate pages inspected; no clipping or overlap. Existing diagram aspect ratio retained."
+  },
+  "current_export": {
+    "schema_version": "1.0",
+    "command": "export",
+    "status": "ok",
+    "data": {
+      "output": "/private/tmp/refs-pipyer-proposal/current.bib",
+      "profile": "portable-bibtex-v1",
+      "count": 11,
+      "keys": [
+        "ditommaso2017",
+        "kapoor2024",
+        "khattab2024",
+        "koster2012",
+        "landau2021",
+        "pydanticai2026",
+        "qiu2026",
+        "sureshkumar2026",
+        "vandewater2026",
+        "zaharia2018",
+        "zhang2025"
+      ],
+      "sha256": "cf3eeae05bfbf12f0a6f352f2034e7655100d843047d4404e947d28aa33e3cb3",
+      "catalog_revision": 4927,
+      "info": [],
+      "unchanged": false,
+      "recovered": false
+    },
+    "warnings": [
+      {
+        "code": "type_fallback",
+        "message": "document is projected as @misc",
+        "path": null,
+        "details": {
+          "citation_key": "kapoor2024",
+          "class": "documented_fallback",
+          "mapping_id": "metadata.type",
+          "override": false
+        },
+        "retryable": false
+      },
+      {
+        "code": "arxiv_fallback",
+        "message": "arXiv identifier retained in eprint fields and a classic-consumer note where needed",
+        "path": null,
+        "details": {
+          "citation_key": "kapoor2024",
+          "class": "documented_fallback",
+          "mapping_id": "extensions.identifiers.arxiv",
+          "override": false
+        },
+        "retryable": false
+      },
+      {
+        "code": "type_fallback",
+        "message": "document is projected as @misc",
+        "path": null,
+        "details": {
+          "citation_key": "pydanticai2026",
+          "class": "documented_fallback",
+          "mapping_id": "metadata.type",
+          "override": false
+        },
+        "retryable": false
+      },
+      {
+        "code": "type_fallback",
+        "message": "document is projected as @misc",
+        "path": null,
+        "details": {
+          "citation_key": "qiu2026",
+          "class": "documented_fallback",
+          "mapping_id": "metadata.type",
+          "override": false
+        },
+        "retryable": false
+      },
+      {
+        "code": "arxiv_fallback",
+        "message": "arXiv identifier retained in eprint fields and a classic-consumer note where needed",
+        "path": null,
+        "details": {
+          "citation_key": "qiu2026",
+          "class": "documented_fallback",
+          "mapping_id": "extensions.identifiers.arxiv",
+          "override": false
+        },
+        "retryable": false
+      },
+      {
+        "code": "type_fallback",
+        "message": "document is projected as @misc",
+        "path": null,
+        "details": {
+          "citation_key": "sureshkumar2026",
+          "class": "documented_fallback",
+          "mapping_id": "metadata.type",
+          "override": false
+        },
+        "retryable": false
+      },
+      {
+        "code": "arxiv_fallback",
+        "message": "arXiv identifier retained in eprint fields and a classic-consumer note where needed",
+        "path": null,
+        "details": {
+          "citation_key": "sureshkumar2026",
+          "class": "documented_fallback",
+          "mapping_id": "extensions.identifiers.arxiv",
+          "override": false
+        },
+        "retryable": false
+      },
+      {
+        "code": "name_particle_fallback",
+        "message": "Portable names retain the particle before the family name; consumers determine dropping behavior",
+        "path": null,
+        "details": {
+          "citation_key": "vandewater2026",
+          "class": "documented_fallback",
+          "mapping_id": "metadata.author",
+          "override": false
+        },
+        "retryable": false
+      }
+    ],
+    "errors": []
+  },
+  "proposed_export": {
+    "schema_version": "1.0",
+    "command": "export",
+    "status": "ok",
+    "data": {
+      "output": "/private/tmp/refs-pipyer-proposal/proposed.json",
+      "profile": "csl-json-v1",
+      "count": 11,
+      "keys": [
+        "ditommaso2017",
+        "kapoor-2025-aiAgents",
+        "khattab2024",
+        "koster2012",
+        "landau2021",
+        "pydanticai2026",
+        "qiu2026",
+        "sureshkumar2026",
+        "vandewater2026",
+        "zaharia2018",
+        "zhang2025"
+      ],
+      "sha256": "040e1a81c74e77044751ffca20f722cdd1c6447fc2180e43df1f1364104bb168",
+      "catalog_revision": 4941,
+      "info": [],
+      "unchanged": false,
+      "recovered": false
+    },
+    "warnings": [],
+    "errors": []
+  }
+}
