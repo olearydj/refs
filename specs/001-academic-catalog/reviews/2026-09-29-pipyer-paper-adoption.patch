@@ -1,0 +1,22 @@
+--- a/_quarto.yml
++++ b/_quarto.yml
+@@ -17,7 +17,7 @@
+     citecolor: blue
+     urlcolor: blue
+ 
+-bibliography: references.bib
++bibliography: references.json
+ link-citations: true
+ reference-section-title: References
+ fig-pos: H
+--- a/paper.qmd
++++ b/paper.qmd
+@@ -26,7 +26,7 @@
+ 
+ ## Statement of need
+ 
+-A short research script can call a model, parse its response, and save a result. The script becomes harder to defend after it grows into a batch process. Researchers must account for missing items, retries, prompt and model changes, partial failures, human corrections, and work carried across interrupted sessions. Cost belongs in that account as well. Agent evaluation research has made the same point from another direction: accuracy alone cannot explain whether an LLM system is useful, reproducible, or affordable [@kapoor2024].
++A short research script can call a model, parse its response, and save a result. The script becomes harder to defend after it grows into a batch process. Researchers must account for missing items, retries, prompt and model changes, partial failures, human corrections, and work carried across interrupted sessions. Cost belongs in that account as well. Agent evaluation research has made the same point from another direction: accuracy alone cannot explain whether an LLM system is useful, reproducible, or affordable [@kapoor-2025-aiAgents].
+ 
+ Existing projects that motivated Pipyer had each rebuilt pieces of this machinery. One grading program had separate paths for fresh and cached scores that drifted apart. A data-reconciliation experiment tracked model conditions through filename conventions. A document-processing campaign needed blinded pair construction, per-cell accounting, and repeated model runs. Their domain code differed, but the failures collected around the execution layer.
+ 

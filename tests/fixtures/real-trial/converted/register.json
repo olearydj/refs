@@ -823,6 +823,73 @@
       ],
       "notes": "Adopted configuration. The project carries its section manifest, pre-render selector, local style/highlighter and activity YAML. The first consumer renders both native formats; the second extracts PDF text using HTML identities and verifies every complete entry in the PDF. Fixtures re-recorded at adopted CV commit 84ad8ab after the owner's conditional \"yes\" (2026-09-29-002457-s1-cv-rerecord-approved.md), with all 44 CV and 379 other entries identical. Fixture bytes are unchanged from the accepted pre-adoption render.",
       "execution_source_commit": "84ad8ab0192988ea0e59dfc6fb99815261a289f9"
+    },
+    {
+      "name": "pipyer-paper",
+      "path": "/Volumes/Casa/pub/pipyer-paper",
+      "refs_project": "pipyer-paper",
+      "targets": [
+        {
+          "path": "references.json",
+          "profile": "csl-json-v1"
+        }
+      ],
+      "exclude": [
+        "output",
+        ".refs-gate",
+        "docs/sessions"
+      ],
+      "consumers": [
+        {
+          "name": "pdf",
+          "command": [
+            "python3",
+            "-c",
+            "from pathlib import Path\nimport subprocess,sys\np=Path('.refs-gate');p.mkdir(exist_ok=True)\n(p/'pipyer_consumer.py').write_text('\"\"\"Native Pipyer draft PDF gate in a disposable project copy.\"\"\"\\nimport json\\nimport re\\nimport subprocess\\nfrom pathlib import Path\\n\\nroot = Path.cwd()\\nassert not (root / \\'.git\\').exists(), \\'Pipyer gate refuses a live checkout\\'\\nout = root / \\'.refs-gate\\'\\nout.mkdir(exist_ok=True)\\nsubprocess.run([\\'quarto\\', \\'render\\', \\'paper.qmd\\', \\'--to\\', \\'pdf\\', \\'-M\\', \\'keep-tex:true\\'], check=True)\\ntext = subprocess.check_output([\\'pdftotext\\', \\'-layout\\', str(root / \\'output/pdf/paper.pdf\\'), \\'-\\'], text=True)\\n(out / \\'pdf-text.txt\\').write_text(text)\\ntex = (root / \\'paper.tex\\').read_text()\\nkeys = re.findall(r\\'\\\\\\\\bibitem\\\\[\\\\\\\\citeproctext\\\\]\\\\{ref-([^}]+)\\\\}\\', tex)\\nrecords = {r[\\'id\\']: r for r in json.loads((root / \\'references.json\\').read_text())}\\ncites = re.findall(r\\'\\\\\\\\citeproc\\\\{ref-([^}]+)\\\\}\\', tex)\\nassert len(keys) == len(records) and set(keys) == set(records) == set(cites)\\nreferences = text.rsplit(\\'\\\\nReferences\\\\n\\', 1)[1]\\nreferences = re.sub(r\\'^\\\\s*\\\\d+\\\\s*$\\', \\'\\', references, flags=re.M).replace(\\'\\\\f\\', \\'\\')\\nentries = [\\' \\'.join(part.split()) for part in re.split(r\\'\\\\n\\\\s*\\\\n\\', references) if part.strip()]\\nassert len(entries) == len(keys), \\'Native PDF entry boundaries differ from bibliography identities\\'\\nrows = []\\nfor key, entry in zip(keys, entries, strict=True):\\n    author = records[key][\\'author\\'][0]\\n    assert entry.startswith(author.get(\\'literal\\') or author[\\'family\\'] + \\',\\'), (key, entry)\\n    locator = records[key].get(\\'DOI\\') or records[key].get(\\'URL\\')\\n    assert locator and re.sub(r\\'\\\\s+\\', \\'\\', locator) in re.sub(r\\'\\\\s+\\', \\'\\', entry), (key, locator)\\n    rows.append({\\'key\\': key, \\'text\\': entry})\\n(out / \\'pdf.json\\').write_text(json.dumps(rows, ensure_ascii=False))\\n(out / \\'citations.json\\').write_text(json.dumps(cites))\\n')\nsubprocess.run([sys.executable,str(p/'pipyer_consumer.py')],check=True)\n"
+          ],
+          "artifact": ".refs-gate/pdf.json",
+          "extract": {
+            "kind": "json",
+            "path": [],
+            "key": "key"
+          },
+          "tools": {
+            "quarto": {
+              "command": [
+                "quarto",
+                "--version"
+              ],
+              "recorded": "1.10.18"
+            },
+            "pandoc": {
+              "command": [
+                "quarto",
+                "pandoc",
+                "--version"
+              ],
+              "recorded": "pandoc 3.10\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /Users/djo/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose."
+            },
+            "pdftotext": {
+              "command": [
+                "pdftotext",
+                "-v"
+              ],
+              "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+            }
+          },
+          "style": "Native Quarto PDF, default Chicago author-date through citeproc/LuaLaTeX, native Mermaid diagram",
+          "fixture_provenance": {
+            "publication_commit": "0be3dd93ecad079492e9d949109550254f899216",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-30T02:00:07.648934+00:00",
+            "artifact_sha256": "8e14aac1e4c76dc1b45c65f55ac1a98c3301db43c89746580f20251e50522884",
+            "fixture_sha256": "f9c8b4f208faad5a35e32241e1f10f9d509f5bc1808ca085352b8927e85b8887"
+          }
+        }
+      ],
+      "proposal_commit": "69ae3a7",
+      "execution_source_commit": "0be3dd93ecad079492e9d949109550254f899216",
+      "notes": "Adopted at 0be3dd9: native Quarto PDF render and extraction against references.json; no scratch bibliography or citation-key substitutions."
     }
   ]
 }
