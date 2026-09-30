@@ -1,0 +1,1923 @@
+{
+  "status": "mirror execution complete; publication documentation handoff pending",
+  "backup_path": "/Volumes/Casa/refs-backups/2026-09-29-before-insight-ai4se-mirror",
+  "backup_manifest": {
+    "format": "refs-backup",
+    "schema_version": 1,
+    "configuration_path": "/Users/djo/.config/refs/config.toml",
+    "catalog_schema_version": 6,
+    "catalog_id": "c03298ee-caee-4e20-aa0c-ddf121aafc0a",
+    "catalog_revision": 4979,
+    "external_contents_included": false,
+    "members": {
+      "catalog.sqlite": {
+        "size": 32047104,
+        "sha256": "e058687ed3f819c00c7338c186c6a189589444e3e3dd52596b976d92c04cf4e8"
+      },
+      "config.toml": {
+        "size": 423,
+        "sha256": "61b3093d2ecf1caa6a5dfb3360fac24ac486a5590cdd443e37c54e249a16d0d2"
+      },
+      "resources.jsonl": {
+        "size": 420469,
+        "sha256": "b212eef839329243319d7bdea11d00fb51d3e0cb2f27dc185ab71f122c0a36ed"
+      }
+    }
+  },
+  "import_receipt": {
+    "schema_version": "1.0",
+    "command": "import",
+    "status": "ok",
+    "data": {
+      "import_id": "b8dde16f-e46f-451e-ba3f-1505c0fbc1b8",
+      "input": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib",
+      "file_digest": "a0b858d932a18836ba933c61fb21da7133b3d057adb9def4a323ca85f7504a78",
+      "counts": {
+        "applied": 2,
+        "unchanged": 0,
+        "conflict": 0,
+        "invalid": 0
+      },
+      "entries": [
+        {
+          "outcome": "applied",
+          "source_id": "f6278c9a-847d-48f1-aced-a7f0f36ccb41",
+          "citation_key": "ledford2024mbe",
+          "binding": {},
+          "warnings": [],
+          "limitations": [],
+          "resource_proposals": [],
+          "resources": [],
+          "kind": null,
+          "incoming": {
+            "schema_version": "1.0",
+            "citation_key": "ledford2024mbe",
+            "metadata": {
+              "type": "document",
+              "author": [
+                {
+                  "family": "Ledford",
+                  "given": "Allison"
+                }
+              ],
+              "issued": {
+                "date-parts": [
+                  [
+                    2024
+                  ]
+                ]
+              },
+              "title": "Data Element Mapping and Analysis (DEMA): A Systematic Method to Implement a Complete Digital Thread"
+            },
+            "context": [],
+            "provenance": [
+              {
+                "origin": "import",
+                "access": "unknown",
+                "source_identity": {
+                  "namespace": "bibtex",
+                  "library_uri": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib",
+                  "item_key": "ledford2024mbe"
+                }
+              }
+            ],
+            "title_protection": {
+              "title": {
+                "protected_terms": [
+                  "DEMA"
+                ],
+                "preserve_case": false
+              }
+            },
+            "native_type": {
+              "namespace": "bibtex",
+              "value": "misc"
+            },
+            "extensions": {},
+            "overrides": {},
+            "title_parts": {},
+            "legacy_tags": []
+          },
+          "status": "applied",
+          "start": 0,
+          "end": 244,
+          "preserved": true,
+          "editable": true,
+          "searchable": true,
+          "exportable": "requires export assessment",
+          "original_ref": "bc177bfe-b19a-47a2-af69-441553deb83e"
+        },
+        {
+          "outcome": "applied",
+          "source_id": "e1762317-472a-4a5e-ba90-327609c91309",
+          "citation_key": "ledford2024patent",
+          "binding": {},
+          "warnings": [],
+          "limitations": [],
+          "resource_proposals": [],
+          "resources": [],
+          "kind": null,
+          "incoming": {
+            "schema_version": "1.0",
+            "citation_key": "ledford2024patent",
+            "metadata": {
+              "type": "document",
+              "author": [
+                {
+                  "family": "Ledford",
+                  "given": "Allison B."
+                },
+                {
+                  "family": "Harris",
+                  "given": "Gregory"
+                },
+                {
+                  "family": "Patterson",
+                  "given": "H."
+                },
+                {
+                  "family": "Farrington",
+                  "given": "P."
+                }
+              ],
+              "issued": {
+                "date-parts": [
+                  [
+                    2024
+                  ]
+                ]
+              },
+              "note": "Issued October 29, 2024",
+              "title": "Data Element Mapping and Analysis (DEMA)"
+            },
+            "context": [],
+            "provenance": [
+              {
+                "origin": "import",
+                "access": "unknown",
+                "source_identity": {
+                  "namespace": "bibtex",
+                  "library_uri": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib",
+                  "item_key": "ledford2024patent"
+                }
+              }
+            ],
+            "title_protection": {
+              "title": {
+                "protected_terms": [
+                  "DEMA"
+                ],
+                "preserve_case": false
+              }
+            },
+            "native_type": {
+              "namespace": "bibtex",
+              "value": "misc"
+            },
+            "extensions": {},
+            "overrides": {},
+            "title_parts": {},
+            "legacy_tags": []
+          },
+          "status": "applied",
+          "start": 246,
+          "end": 512,
+          "preserved": true,
+          "editable": true,
+          "searchable": true,
+          "exportable": "requires export assessment",
+          "original_ref": "89b39733-7672-4331-971f-154982af3b9a"
+        }
+      ],
+      "dry_run": false
+    },
+    "warnings": [],
+    "errors": []
+  },
+  "new_records": {
+    "ledford2024mbe": {
+      "schema_version": "1.0",
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib",
+            "item_key": "ledford2024mbe"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [
+            "DEMA"
+          ],
+          "preserve_case": false
+        },
+        "event-title": {
+          "protected_terms": [
+            "MBE",
+            "QIF"
+          ],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "f6278c9a-847d-48f1-aced-a7f0f36ccb41",
+      "citation_key": "ledford2024mbe",
+      "state": "active",
+      "revision": 4,
+      "created_at": "2026-09-30T03:11:50.287295+00:00",
+      "updated_at": "2026-09-30T03:12:03.219230+00:00",
+      "loc": "unfiled",
+      "metadata": {
+        "type": "speech",
+        "language": "en",
+        "author": [
+          {
+            "family": "Ledford",
+            "given": "Allison B."
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              4,
+              17
+            ]
+          ]
+        },
+        "event-title": "MBE & QIF Summit 2024",
+        "event-place": "MxD, Chicago, IL, USA",
+        "genre": "Conference presentation",
+        "title": "Data Element Mapping and Analysis (DEMA): A Systematic Method to Implement a Complete Digital Thread",
+        "URL": "https://www.nist.gov/system/files/documents/2024/04/24/Ledford_Data_Element_Mapping_and_Analysis.pdf"
+      },
+      "corrected_fields": [
+        "metadata",
+        "native_type",
+        "title_protection"
+      ],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": "talk",
+      "originals": [
+        {
+          "id": "bc177bfe-b19a-47a2-af69-441553deb83e",
+          "sha256": "17f8f5b4576eb2748e24cd7f35291a24b151b4c9485b0615c99ccb285e77d965",
+          "byte_length": 244,
+          "format": "bib",
+          "origin": "import-applied",
+          "locator": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib#bytes=0:244"
+        },
+        {
+          "id": "ec4815fd-1c0a-4ca6-9104-0c02a591fab9",
+          "sha256": "17f8f5b4576eb2748e24cd7f35291a24b151b4c9485b0615c99ccb285e77d965",
+          "byte_length": 244,
+          "format": "bib",
+          "origin": "add",
+          "locator": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib#bytes=0:244"
+        }
+      ],
+      "limitations": [
+        {
+          "field": "howpublished",
+          "reason": "Preserved from import: howpublished"
+        }
+      ],
+      "resources": [
+        {
+          "id": "d820faf5-7ebf-4aa1-b165-a3f6fd0310eb",
+          "source_id": "f6278c9a-847d-48f1-aced-a7f0f36ccb41",
+          "revision": 1,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/DataElementMappingAndAnalysisDEMAASystematicMethodToImplementACompleteDigitalThread-2024-slides.pdf",
+          "label": "slides",
+          "media_type": null,
+          "digest": "930acdb69fbe6afb84730886abce7bb14c44985dbe641789d60949dc9f72c7d6",
+          "copied_from": {
+            "path": "/Volumes/Casa/dev/dema-docs/publications/files/ledford-2024-mbe-summit-dema.pdf",
+            "root": null,
+            "relative": null
+          }
+        }
+      ],
+      "projects": [
+        {
+          "id": "c8acaa9f-3cd1-403b-8fdd-d9b922476051",
+          "name": "insight-dema-llm"
+        }
+      ],
+      "links": []
+    },
+    "ledford2024patent": {
+      "schema_version": "1.0",
+      "context": [],
+      "provenance": [
+        {
+          "origin": "import",
+          "access": "unknown",
+          "source_identity": {
+            "namespace": "bibtex",
+            "library_uri": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib",
+            "item_key": "ledford2024patent"
+          }
+        }
+      ],
+      "title_protection": {
+        "title": {
+          "protected_terms": [],
+          "preserve_case": false
+        }
+      },
+      "extensions": {},
+      "overrides": {},
+      "title_parts": {},
+      "legacy_tags": [],
+      "id": "e1762317-472a-4a5e-ba90-327609c91309",
+      "citation_key": "ledford2024patent",
+      "state": "active",
+      "revision": 4,
+      "created_at": "2026-09-30T03:11:50.291892+00:00",
+      "updated_at": "2026-09-30T03:12:03.731881+00:00",
+      "loc": "unfiled",
+      "metadata": {
+        "type": "patent",
+        "language": "en",
+        "author": [
+          {
+            "family": "Ledford",
+            "given": "Allison Brown"
+          },
+          {
+            "family": "Harris",
+            "given": "Gregory Allen"
+          },
+          {
+            "family": "Patterson",
+            "given": "Haley"
+          },
+          {
+            "family": "Farrington",
+            "given": "Phillip"
+          }
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              10,
+              29
+            ]
+          ]
+        },
+        "authority": "United States Patent and Trademark Office",
+        "jurisdiction": "US",
+        "number": "US 12,131,134 B1",
+        "title": "Physical Components Using Data Element Mapping and Analysis",
+        "URL": "https://patents.google.com/patent/US12131134B1/en"
+      },
+      "corrected_fields": [
+        "metadata",
+        "native_type",
+        "title_protection"
+      ],
+      "key_provenance": {
+        "origin": "supplied",
+        "policy": null,
+        "table_version": null,
+        "unicode_version": null
+      },
+      "kind": null,
+      "originals": [
+        {
+          "id": "89b39733-7672-4331-971f-154982af3b9a",
+          "sha256": "b0976de80881780183ba1981972127418a8a27ac67457605ab89678320444bfb",
+          "byte_length": 266,
+          "format": "bib",
+          "origin": "import-applied",
+          "locator": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib#bytes=246:512"
+        },
+        {
+          "id": "d1962649-0f93-4260-a771-0cc87f1abc0d",
+          "sha256": "b0976de80881780183ba1981972127418a8a27ac67457605ab89678320444bfb",
+          "byte_length": 266,
+          "format": "bib",
+          "origin": "add",
+          "locator": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib#bytes=246:512"
+        }
+      ],
+      "limitations": [
+        {
+          "field": "howpublished",
+          "reason": "Preserved from import: howpublished"
+        }
+      ],
+      "resources": [
+        {
+          "id": "a20aff7c-ac7d-48ad-b010-d2ac355b6e70",
+          "source_id": "e1762317-472a-4a5e-ba90-327609c91309",
+          "revision": 1,
+          "path": null,
+          "root": "library",
+          "relative": "unfiled/PhysicalComponentsUsingDataElementMappingAndAnalysis-2024-published.pdf",
+          "label": "published",
+          "media_type": null,
+          "digest": "d9ad6b2042ef734a249eadda41a65160b12d5d8ef4172eb1960768cb7ddf465b",
+          "copied_from": {
+            "path": "/Volumes/Casa/dev/dema-docs/publications/files/us-12131134-b1-dema-patent.pdf",
+            "root": null,
+            "relative": null
+          }
+        }
+      ],
+      "projects": [
+        {
+          "id": "c8acaa9f-3cd1-403b-8fdd-d9b922476051",
+          "name": "insight-dema-llm"
+        }
+      ],
+      "links": []
+    }
+  },
+  "copies": [
+    {
+      "key": "ledford2024mbe",
+      "source": "/Volumes/Casa/dev/dema-docs/publications/files/ledford-2024-mbe-summit-dema.pdf",
+      "destination": "/Volumes/Casa/refs/lib/unfiled/DataElementMappingAndAnalysisDEMAASystematicMethodToImplementACompleteDigitalThread-2024-slides.pdf",
+      "sha256": "930acdb69fbe6afb84730886abce7bb14c44985dbe641789d60949dc9f72c7d6",
+      "source_preserved": true,
+      "receipt": {
+        "id": "d820faf5-7ebf-4aa1-b165-a3f6fd0310eb",
+        "source_id": "f6278c9a-847d-48f1-aced-a7f0f36ccb41",
+        "revision": 1,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/DataElementMappingAndAnalysisDEMAASystematicMethodToImplementACompleteDigitalThread-2024-slides.pdf",
+        "label": "slides",
+        "media_type": null,
+        "digest": "930acdb69fbe6afb84730886abce7bb14c44985dbe641789d60949dc9f72c7d6",
+        "copied_from": {
+          "path": "/Volumes/Casa/dev/dema-docs/publications/files/ledford-2024-mbe-summit-dema.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "ledford2024mbe",
+        "resolved_path": "/Volumes/Casa/refs/lib/unfiled/DataElementMappingAndAnalysisDEMAASystematicMethodToImplementACompleteDigitalThread-2024-slides.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/DataElementMappingAndAnalysisDEMAASystematicMethodToImplementACompleteDigitalThread-2024-slides.pdf",
+        "copied": true
+      }
+    },
+    {
+      "key": "ledford2024patent",
+      "source": "/Volumes/Casa/dev/dema-docs/publications/files/us-12131134-b1-dema-patent.pdf",
+      "destination": "/Volumes/Casa/refs/lib/unfiled/PhysicalComponentsUsingDataElementMappingAndAnalysis-2024-published.pdf",
+      "sha256": "d9ad6b2042ef734a249eadda41a65160b12d5d8ef4172eb1960768cb7ddf465b",
+      "source_preserved": true,
+      "receipt": {
+        "id": "a20aff7c-ac7d-48ad-b010-d2ac355b6e70",
+        "source_id": "e1762317-472a-4a5e-ba90-327609c91309",
+        "revision": 1,
+        "path": null,
+        "root": "library",
+        "relative": "unfiled/PhysicalComponentsUsingDataElementMappingAndAnalysis-2024-published.pdf",
+        "label": "published",
+        "media_type": null,
+        "digest": "d9ad6b2042ef734a249eadda41a65160b12d5d8ef4172eb1960768cb7ddf465b",
+        "copied_from": {
+          "path": "/Volumes/Casa/dev/dema-docs/publications/files/us-12131134-b1-dema-patent.pdf",
+          "root": null,
+          "relative": null
+        },
+        "citation_key": "ledford2024patent",
+        "resolved_path": "/Volumes/Casa/refs/lib/unfiled/PhysicalComponentsUsingDataElementMappingAndAnalysis-2024-published.pdf",
+        "destination": "/Volumes/Casa/refs/lib/unfiled/PhysicalComponentsUsingDataElementMappingAndAnalysis-2024-published.pdf",
+        "copied": true
+      }
+    }
+  ],
+  "project_show_outputs": {
+    "insight-dema-llm": {
+      "id": "c8acaa9f-3cd1-403b-8fdd-d9b922476051",
+      "name": "insight-dema-llm",
+      "description": "Bibliography mirror of the published INSIGHT DEMA-LLM article. The paper keeps its own references.bib and frozen published references; refs mirrors only the six works it cites. Refs records are kept as correct as possible and may be more correct than the paper's printed entries. This is intentional; refs does not supply or rewrite the paper's bibliography.",
+      "revision": 7,
+      "sources": [
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Establishes DEMA as a technology-agnostic methodology for systematic data element capture and mapping",
+              "origin": "import"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+                "item_key": "ledford2023dissertation"
+              }
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "DEMA"
+              ],
+              "preserve_case": false
+            }
+          },
+          "native_type": {
+            "namespace": "bibtex",
+            "value": "phdthesis"
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "b502cc23-fcb0-481a-ad08-5b59ee84e4e6",
+          "citation_key": "ledford2023dissertation",
+          "state": "active",
+          "revision": 3,
+          "created_at": "2026-09-27T22:07:42.115937+00:00",
+          "updated_at": "2026-09-27T22:08:35.436339+00:00",
+          "metadata": {
+            "type": "thesis",
+            "language": "en",
+            "author": [
+              {
+                "family": "Ledford",
+                "given": "Allison B."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2023
+                ]
+              ]
+            },
+            "genre": "Ph.D. Dissertation",
+            "publisher": "Auburn University",
+            "publisher-place": "Auburn, AL",
+            "title": "A Data Element Mapping and Analysis (DEMA) Approach for Implementing a Complete Digital Thread",
+            "URL": "http://etd.auburn.edu/xmlui/handle/10415/8918"
+          },
+          "corrected_fields": [
+            "context",
+            "metadata"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "0763fb54-c268-4922-b175-7d84fa219c6c",
+              "sha256": "bf9e3b40452444aa8623a941d56ac300923798c35d6fcdb681696c57f224ecf1",
+              "byte_length": 455,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=997:1452"
+            },
+            {
+              "id": "71b72eff-5ee2-4f5b-9dd8-2938c41cc732",
+              "sha256": "bf9e3b40452444aa8623a941d56ac300923798c35d6fcdb681696c57f224ecf1",
+              "byte_length": 455,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=997:1452"
+            }
+          ],
+          "limitations": [],
+          "resources": [
+            {
+              "id": "178b1fd1-5cb9-4324-b920-e9b25d2023d7",
+              "source_id": "b502cc23-fcb0-481a-ad08-5b59ee84e4e6",
+              "revision": 1,
+              "path": "/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2023-dissertation.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+              "name": "dema-llm"
+            },
+            {
+              "id": "c8acaa9f-3cd1-403b-8fdd-d9b922476051",
+              "name": "insight-dema-llm"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Proposes DEMA as tool for identifying data elements at granularity necessary to connect digital threads",
+              "origin": "import"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+                "item_key": "ledford2023ieee"
+              }
+            }
+          ],
+          "title_protection": {
+            "container-title": {
+              "protected_terms": [
+                "IEEE"
+              ],
+              "preserve_case": false
+            },
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "native_type": {
+            "namespace": "bibtex",
+            "value": "article"
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "61370ee9-cb5d-4de9-8db5-6db1a17b25ab",
+          "citation_key": "ledford2023ieee",
+          "state": "active",
+          "revision": 3,
+          "created_at": "2026-09-27T22:07:42.121385+00:00",
+          "updated_at": "2026-09-27T22:08:35.538800+00:00",
+          "metadata": {
+            "type": "article-journal",
+            "language": "en",
+            "author": [
+              {
+                "family": "Ledford",
+                "given": "Allison B."
+              },
+              {
+                "family": "Harris",
+                "given": "Gregory"
+              },
+              {
+                "family": "Purdy",
+                "given": "Gregory"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2023
+                ]
+              ]
+            },
+            "container-title": "IEEE Open Journal of Systems Engineering",
+            "DOI": "10.1109/ojse.2023.3325189",
+            "page": "139–152",
+            "title": "Implementing a Complete Digital Thread: The Need for Data Element Mapping and Analysis",
+            "URL": "https://ieeexplore.ieee.org/document/10286971/",
+            "volume": "1"
+          },
+          "corrected_fields": [
+            "context",
+            "metadata"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "cbe328bb-773e-4704-a956-50ec73ace5dc",
+              "sha256": "a86c575c1df4a326ebf39e9c00531f655c1218847ba435a26ce20120543ccfa9",
+              "byte_length": 521,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=1454:1975"
+            },
+            {
+              "id": "d5342093-4c64-4f08-8f77-e148569f3142",
+              "sha256": "a86c575c1df4a326ebf39e9c00531f655c1218847ba435a26ce20120543ccfa9",
+              "byte_length": 521,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=1454:1975"
+            }
+          ],
+          "limitations": [],
+          "resources": [
+            {
+              "id": "97b54fc0-9db7-42b3-bd69-29fa51af7d34",
+              "source_id": "61370ee9-cb5d-4de9-8db5-6db1a17b25ab",
+              "revision": 1,
+              "path": "/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2023-ieee-digital-thread.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+              "name": "dema-llm"
+            },
+            {
+              "id": "c8acaa9f-3cd1-403b-8fdd-d9b922476051",
+              "name": "insight-dema-llm"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib",
+                "item_key": "ledford2024mbe"
+              }
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "DEMA"
+              ],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [
+                "MBE",
+                "QIF"
+              ],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "f6278c9a-847d-48f1-aced-a7f0f36ccb41",
+          "citation_key": "ledford2024mbe",
+          "state": "active",
+          "revision": 4,
+          "created_at": "2026-09-30T03:11:50.287295+00:00",
+          "updated_at": "2026-09-30T03:12:03.219230+00:00",
+          "loc": "unfiled",
+          "metadata": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "Ledford",
+                "given": "Allison B."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2024,
+                  4,
+                  17
+                ]
+              ]
+            },
+            "event-title": "MBE & QIF Summit 2024",
+            "event-place": "MxD, Chicago, IL, USA",
+            "genre": "Conference presentation",
+            "title": "Data Element Mapping and Analysis (DEMA): A Systematic Method to Implement a Complete Digital Thread",
+            "URL": "https://www.nist.gov/system/files/documents/2024/04/24/Ledford_Data_Element_Mapping_and_Analysis.pdf"
+          },
+          "corrected_fields": [
+            "metadata",
+            "native_type",
+            "title_protection"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": "talk",
+          "originals": [
+            {
+              "id": "bc177bfe-b19a-47a2-af69-441553deb83e",
+              "sha256": "17f8f5b4576eb2748e24cd7f35291a24b151b4c9485b0615c99ccb285e77d965",
+              "byte_length": 244,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib#bytes=0:244"
+            },
+            {
+              "id": "ec4815fd-1c0a-4ca6-9104-0c02a591fab9",
+              "sha256": "17f8f5b4576eb2748e24cd7f35291a24b151b4c9485b0615c99ccb285e77d965",
+              "byte_length": 244,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib#bytes=0:244"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [
+            {
+              "id": "d820faf5-7ebf-4aa1-b165-a3f6fd0310eb",
+              "source_id": "f6278c9a-847d-48f1-aced-a7f0f36ccb41",
+              "revision": 1,
+              "path": null,
+              "root": "library",
+              "relative": "unfiled/DataElementMappingAndAnalysisDEMAASystematicMethodToImplementACompleteDigitalThread-2024-slides.pdf",
+              "label": "slides",
+              "media_type": null,
+              "digest": "930acdb69fbe6afb84730886abce7bb14c44985dbe641789d60949dc9f72c7d6",
+              "copied_from": {
+                "path": "/Volumes/Casa/dev/dema-docs/publications/files/ledford-2024-mbe-summit-dema.pdf",
+                "root": null,
+                "relative": null
+              }
+            }
+          ],
+          "projects": [
+            {
+              "id": "c8acaa9f-3cd1-403b-8fdd-d9b922476051",
+              "name": "insight-dema-llm"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib",
+                "item_key": "ledford2024patent"
+              }
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "e1762317-472a-4a5e-ba90-327609c91309",
+          "citation_key": "ledford2024patent",
+          "state": "active",
+          "revision": 4,
+          "created_at": "2026-09-30T03:11:50.291892+00:00",
+          "updated_at": "2026-09-30T03:12:03.731881+00:00",
+          "loc": "unfiled",
+          "metadata": {
+            "type": "patent",
+            "language": "en",
+            "author": [
+              {
+                "family": "Ledford",
+                "given": "Allison Brown"
+              },
+              {
+                "family": "Harris",
+                "given": "Gregory Allen"
+              },
+              {
+                "family": "Patterson",
+                "given": "Haley"
+              },
+              {
+                "family": "Farrington",
+                "given": "Phillip"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2024,
+                  10,
+                  29
+                ]
+              ]
+            },
+            "authority": "United States Patent and Trademark Office",
+            "jurisdiction": "US",
+            "number": "US 12,131,134 B1",
+            "title": "Physical Components Using Data Element Mapping and Analysis",
+            "URL": "https://patents.google.com/patent/US12131134B1/en"
+          },
+          "corrected_fields": [
+            "metadata",
+            "native_type",
+            "title_protection"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "89b39733-7672-4331-971f-154982af3b9a",
+              "sha256": "b0976de80881780183ba1981972127418a8a27ac67457605ab89678320444bfb",
+              "byte_length": 266,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib#bytes=246:512"
+            },
+            {
+              "id": "d1962649-0f93-4260-a771-0cc87f1abc0d",
+              "sha256": "b0976de80881780183ba1981972127418a8a27ac67457605ab89678320444bfb",
+              "byte_length": 266,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/private/tmp/refs-insight-ai4se-mirror/new-sources.bib#bytes=246:512"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [
+            {
+              "id": "a20aff7c-ac7d-48ad-b010-d2ac355b6e70",
+              "source_id": "e1762317-472a-4a5e-ba90-327609c91309",
+              "revision": 1,
+              "path": null,
+              "root": "library",
+              "relative": "unfiled/PhysicalComponentsUsingDataElementMappingAndAnalysis-2024-published.pdf",
+              "label": "published",
+              "media_type": null,
+              "digest": "d9ad6b2042ef734a249eadda41a65160b12d5d8ef4172eb1960768cb7ddf465b",
+              "copied_from": {
+                "path": "/Volumes/Casa/dev/dema-docs/publications/files/us-12131134-b1-dema-patent.pdf",
+                "root": null,
+                "relative": null
+              }
+            }
+          ],
+          "projects": [
+            {
+              "id": "c8acaa9f-3cd1-403b-8fdd-d9b922476051",
+              "name": "insight-dema-llm"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Demonstrates DEMA application: 1600 vessel occurrences across 79 functions in 23 storage locations",
+              "origin": "import"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+                "item_key": "ledford2025syseng"
+              }
+            }
+          ],
+          "title_protection": {
+            "container-title": {
+              "protected_terms": [],
+              "preserve_case": false
+            },
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "native_type": {
+            "namespace": "bibtex",
+            "value": "article"
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "044976ed-f3b1-4500-9fc9-a512c7c59fa5",
+          "citation_key": "ledford2025syseng",
+          "state": "active",
+          "revision": 3,
+          "created_at": "2026-09-27T22:07:42.126786+00:00",
+          "updated_at": "2026-09-27T22:08:35.638062+00:00",
+          "metadata": {
+            "type": "article-journal",
+            "language": "en",
+            "author": [
+              {
+                "family": "Ledford",
+                "given": "Allison"
+              },
+              {
+                "family": "Harris",
+                "given": "Gregory"
+              },
+              {
+                "family": "Askew",
+                "given": "Susan"
+              },
+              {
+                "family": "Purdy",
+                "given": "Gregory"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2025
+                ]
+              ]
+            },
+            "container-title": "Systems Engineering",
+            "DOI": "10.1002/sys.21776",
+            "issue": "1",
+            "page": "15–28",
+            "title": "Application of Data Element Mapping and Analysis for System Definition to Enable Model-Based Systems Engineering",
+            "URL": "https://incose.onlinelibrary.wiley.com/doi/10.1002/sys.21776",
+            "volume": "28"
+          },
+          "corrected_fields": [
+            "context",
+            "metadata"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "671e973b-511a-4723-a47a-fdc565cd8899",
+              "sha256": "537306a4fe47bce6ab928d8ddfd5bb2ffd56e8c8d25bbc07d2150aeb7b68be92",
+              "byte_length": 558,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=1977:2535"
+            },
+            {
+              "id": "6ee24804-aa32-41c0-99e4-2a18f01c2376",
+              "sha256": "537306a4fe47bce6ab928d8ddfd5bb2ffd56e8c8d25bbc07d2150aeb7b68be92",
+              "byte_length": 558,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=1977:2535"
+            }
+          ],
+          "limitations": [],
+          "resources": [
+            {
+              "id": "b2be3bed-130f-4b26-8229-de617dc015b2",
+              "source_id": "044976ed-f3b1-4500-9fc9-a512c7c59fa5",
+              "revision": 1,
+              "path": "/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2025-syseng.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+              "name": "dema-llm"
+            },
+            {
+              "id": "c8acaa9f-3cd1-403b-8fdd-d9b922476051",
+              "name": "insight-dema-llm"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Printed byline names the owner Dan O’Leary.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+                "item_key": "oleary2025ai4se"
+              }
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "DEMA",
+                "AI"
+              ],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [
+                "AI4SE",
+                "SE4AI",
+                "AI",
+                "SE"
+              ],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "1838ba66-10ad-487d-99fe-eb26527bcd0d",
+          "citation_key": "oleary2025ai4se",
+          "state": "active",
+          "revision": 4,
+          "created_at": "2026-09-27T22:07:42.131223+00:00",
+          "updated_at": "2026-09-29T04:41:50.524575+00:00",
+          "metadata": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Ledford",
+                "given": "Allison B."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2025,
+                  9
+                ]
+              ]
+            },
+            "event-title": "AI4SE & SE4AI Research and Application Workshop",
+            "event-place": "Washington, DC, USA",
+            "genre": "Workshop presentation",
+            "title": "AI-Enhanced DEMA: Transforming Implicit System Knowledge Into Intelligent, Compliant, and Documented Processes"
+          },
+          "corrected_fields": [
+            "context",
+            "extensions",
+            "legacy_tags",
+            "metadata",
+            "native_type",
+            "overrides",
+            "provenance",
+            "title_parts",
+            "title_protection"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "1168645b-083e-48a0-8970-2b82ea14d57b",
+              "sha256": "67b7893a890270da60c867952521e75ea83fd83bef90e29258ed5d0ce31eeac9",
+              "byte_length": 433,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#olearyledford2025ai-enhanced-dema"
+            },
+            {
+              "id": "156e7cac-5ab0-435a-8d4e-ad4f7836997f",
+              "sha256": "8dfe3d665aa8759d2d470b9e4e5cd51129939022c625a1113303fc699b9b1503",
+              "byte_length": 383,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=2537:2920"
+            },
+            {
+              "id": "63db5473-daba-43c1-9a9a-174b41cb80d7",
+              "sha256": "8dfe3d665aa8759d2d470b9e4e5cd51129939022c625a1113303fc699b9b1503",
+              "byte_length": 383,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=2537:2920"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "organization",
+              "reason": "Unmapped field preserved verbatim"
+            },
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [
+            {
+              "id": "f6b8f063-b80b-479f-92ca-40ddb888fcdc",
+              "source_id": "1838ba66-10ad-487d-99fe-eb26527bcd0d",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/2025-ai4se-ai-enhanced-dema/AI4SE_AI_Enhanced_DEMA.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            },
+            {
+              "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+              "name": "dema-llm"
+            },
+            {
+              "id": "c8acaa9f-3cd1-403b-8fdd-d9b922476051",
+              "name": "insight-dema-llm"
+            }
+          ],
+          "links": []
+        }
+      ],
+      "removed_sources": []
+    },
+    "ai4se-pipyer-proposal": {
+      "id": "5b2e39c9-4b7a-4ba5-9cc1-eb097a9b35c5",
+      "name": "ai4se-pipyer-proposal",
+      "description": "Bibliography mirror of the rejected AI4SE/SE4AI 2026 Pipyer abstract, archived as submitted. The paper keeps proposal/references.bib and its frozen submitted references; refs mirrors only the four works it cites. Refs records are kept as correct as possible and may be more correct than the submitted entries. This is intentional; refs does not supply or rewrite the paper's bibliography.",
+      "revision": 5,
+      "sources": [
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Proposes DEMA as tool for identifying data elements at granularity necessary to connect digital threads",
+              "origin": "import"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+                "item_key": "ledford2023ieee"
+              }
+            }
+          ],
+          "title_protection": {
+            "container-title": {
+              "protected_terms": [
+                "IEEE"
+              ],
+              "preserve_case": false
+            },
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "native_type": {
+            "namespace": "bibtex",
+            "value": "article"
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "61370ee9-cb5d-4de9-8db5-6db1a17b25ab",
+          "citation_key": "ledford2023ieee",
+          "state": "active",
+          "revision": 3,
+          "created_at": "2026-09-27T22:07:42.121385+00:00",
+          "updated_at": "2026-09-27T22:08:35.538800+00:00",
+          "metadata": {
+            "type": "article-journal",
+            "language": "en",
+            "author": [
+              {
+                "family": "Ledford",
+                "given": "Allison B."
+              },
+              {
+                "family": "Harris",
+                "given": "Gregory"
+              },
+              {
+                "family": "Purdy",
+                "given": "Gregory"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2023
+                ]
+              ]
+            },
+            "container-title": "IEEE Open Journal of Systems Engineering",
+            "DOI": "10.1109/ojse.2023.3325189",
+            "page": "139–152",
+            "title": "Implementing a Complete Digital Thread: The Need for Data Element Mapping and Analysis",
+            "URL": "https://ieeexplore.ieee.org/document/10286971/",
+            "volume": "1"
+          },
+          "corrected_fields": [
+            "context",
+            "metadata"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "cbe328bb-773e-4704-a956-50ec73ace5dc",
+              "sha256": "a86c575c1df4a326ebf39e9c00531f655c1218847ba435a26ce20120543ccfa9",
+              "byte_length": 521,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=1454:1975"
+            },
+            {
+              "id": "d5342093-4c64-4f08-8f77-e148569f3142",
+              "sha256": "a86c575c1df4a326ebf39e9c00531f655c1218847ba435a26ce20120543ccfa9",
+              "byte_length": 521,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=1454:1975"
+            }
+          ],
+          "limitations": [],
+          "resources": [
+            {
+              "id": "97b54fc0-9db7-42b3-bd69-29fa51af7d34",
+              "source_id": "61370ee9-cb5d-4de9-8db5-6db1a17b25ab",
+              "revision": 1,
+              "path": "/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2023-ieee-digital-thread.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "5b2e39c9-4b7a-4ba5-9cc1-eb097a9b35c5",
+              "name": "ai4se-pipyer-proposal"
+            },
+            {
+              "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+              "name": "dema-llm"
+            },
+            {
+              "id": "c8acaa9f-3cd1-403b-8fdd-d9b922476051",
+              "name": "insight-dema-llm"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Demonstrates DEMA application: 1600 vessel occurrences across 79 functions in 23 storage locations",
+              "origin": "import"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+                "item_key": "ledford2025syseng"
+              }
+            }
+          ],
+          "title_protection": {
+            "container-title": {
+              "protected_terms": [],
+              "preserve_case": false
+            },
+            "title": {
+              "protected_terms": [],
+              "preserve_case": false
+            }
+          },
+          "native_type": {
+            "namespace": "bibtex",
+            "value": "article"
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "044976ed-f3b1-4500-9fc9-a512c7c59fa5",
+          "citation_key": "ledford2025syseng",
+          "state": "active",
+          "revision": 3,
+          "created_at": "2026-09-27T22:07:42.126786+00:00",
+          "updated_at": "2026-09-27T22:08:35.638062+00:00",
+          "metadata": {
+            "type": "article-journal",
+            "language": "en",
+            "author": [
+              {
+                "family": "Ledford",
+                "given": "Allison"
+              },
+              {
+                "family": "Harris",
+                "given": "Gregory"
+              },
+              {
+                "family": "Askew",
+                "given": "Susan"
+              },
+              {
+                "family": "Purdy",
+                "given": "Gregory"
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2025
+                ]
+              ]
+            },
+            "container-title": "Systems Engineering",
+            "DOI": "10.1002/sys.21776",
+            "issue": "1",
+            "page": "15–28",
+            "title": "Application of Data Element Mapping and Analysis for System Definition to Enable Model-Based Systems Engineering",
+            "URL": "https://incose.onlinelibrary.wiley.com/doi/10.1002/sys.21776",
+            "volume": "28"
+          },
+          "corrected_fields": [
+            "context",
+            "metadata"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "671e973b-511a-4723-a47a-fdc565cd8899",
+              "sha256": "537306a4fe47bce6ab928d8ddfd5bb2ffd56e8c8d25bbc07d2150aeb7b68be92",
+              "byte_length": 558,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=1977:2535"
+            },
+            {
+              "id": "6ee24804-aa32-41c0-99e4-2a18f01c2376",
+              "sha256": "537306a4fe47bce6ab928d8ddfd5bb2ffd56e8c8d25bbc07d2150aeb7b68be92",
+              "byte_length": 558,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=1977:2535"
+            }
+          ],
+          "limitations": [],
+          "resources": [
+            {
+              "id": "b2be3bed-130f-4b26-8229-de617dc015b2",
+              "source_id": "044976ed-f3b1-4500-9fc9-a512c7c59fa5",
+              "revision": 1,
+              "path": "/Volumes/Casa/dev/dema-llm/docs/research/references/ledford2025-syseng.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "5b2e39c9-4b7a-4ba5-9cc1-eb097a9b35c5",
+              "name": "ai4se-pipyer-proposal"
+            },
+            {
+              "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+              "name": "dema-llm"
+            },
+            {
+              "id": "c8acaa9f-3cd1-403b-8fdd-d9b922476051",
+              "name": "insight-dema-llm"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [
+            {
+              "text": "Printed byline names the owner Dan O’Leary.",
+              "origin": "user"
+            }
+          ],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+                "item_key": "oleary2025ai4se"
+              }
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "DEMA",
+                "AI"
+              ],
+              "preserve_case": false
+            },
+            "event-title": {
+              "protected_terms": [
+                "AI4SE",
+                "SE4AI",
+                "AI",
+                "SE"
+              ],
+              "preserve_case": false
+            }
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "1838ba66-10ad-487d-99fe-eb26527bcd0d",
+          "citation_key": "oleary2025ai4se",
+          "state": "active",
+          "revision": 4,
+          "created_at": "2026-09-27T22:07:42.131223+00:00",
+          "updated_at": "2026-09-29T04:41:50.524575+00:00",
+          "metadata": {
+            "type": "speech",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Ledford",
+                "given": "Allison B."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2025,
+                  9
+                ]
+              ]
+            },
+            "event-title": "AI4SE & SE4AI Research and Application Workshop",
+            "event-place": "Washington, DC, USA",
+            "genre": "Workshop presentation",
+            "title": "AI-Enhanced DEMA: Transforming Implicit System Knowledge Into Intelligent, Compliant, and Documented Processes"
+          },
+          "corrected_fields": [
+            "context",
+            "extensions",
+            "legacy_tags",
+            "metadata",
+            "native_type",
+            "overrides",
+            "provenance",
+            "title_parts",
+            "title_protection"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "1168645b-083e-48a0-8970-2b82ea14d57b",
+              "sha256": "67b7893a890270da60c867952521e75ea83fd83bef90e29258ed5d0ce31eeac9",
+              "byte_length": 433,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#olearyledford2025ai-enhanced-dema"
+            },
+            {
+              "id": "156e7cac-5ab0-435a-8d4e-ad4f7836997f",
+              "sha256": "8dfe3d665aa8759d2d470b9e4e5cd51129939022c625a1113303fc699b9b1503",
+              "byte_length": 383,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=2537:2920"
+            },
+            {
+              "id": "63db5473-daba-43c1-9a9a-174b41cb80d7",
+              "sha256": "8dfe3d665aa8759d2d470b9e4e5cd51129939022c625a1113303fc699b9b1503",
+              "byte_length": 383,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=2537:2920"
+            }
+          ],
+          "limitations": [
+            {
+              "field": "organization",
+              "reason": "Unmapped field preserved verbatim"
+            },
+            {
+              "field": "howpublished",
+              "reason": "Preserved from import: howpublished"
+            }
+          ],
+          "resources": [
+            {
+              "id": "f6b8f063-b80b-479f-92ca-40ddb888fcdc",
+              "source_id": "1838ba66-10ad-487d-99fe-eb26527bcd0d",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/2025-ai4se-ai-enhanced-dema/AI4SE_AI_Enhanced_DEMA.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "5b2e39c9-4b7a-4ba5-9cc1-eb097a9b35c5",
+              "name": "ai4se-pipyer-proposal"
+            },
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            },
+            {
+              "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+              "name": "dema-llm"
+            },
+            {
+              "id": "c8acaa9f-3cd1-403b-8fdd-d9b922476051",
+              "name": "insight-dema-llm"
+            }
+          ],
+          "links": []
+        },
+        {
+          "schema_version": "1.0",
+          "context": [],
+          "provenance": [
+            {
+              "origin": "import",
+              "access": "unknown",
+              "source_identity": {
+                "namespace": "bibtex",
+                "library_uri": "/private/tmp/refs-dema-execution/filtered-originals.bib",
+                "item_key": "olearyledford2026insight"
+              }
+            }
+          ],
+          "title_protection": {
+            "title": {
+              "protected_terms": [
+                "LLM"
+              ],
+              "preserve_case": false
+            },
+            "container-title": {
+              "protected_terms": [
+                "INSIGHT"
+              ],
+              "preserve_case": false
+            }
+          },
+          "native_type": {
+            "namespace": "bibtex",
+            "value": "article"
+          },
+          "extensions": {},
+          "overrides": {},
+          "title_parts": {},
+          "legacy_tags": [],
+          "id": "5c903a55-e2f9-4087-80f9-a6572c639263",
+          "citation_key": "olearyledford2026insight",
+          "state": "active",
+          "revision": 4,
+          "created_at": "2026-09-27T22:07:42.157139+00:00",
+          "updated_at": "2026-09-29T04:41:50.476010+00:00",
+          "metadata": {
+            "type": "article-journal",
+            "language": "en",
+            "author": [
+              {
+                "family": "O'Leary",
+                "given": "Danny J."
+              },
+              {
+                "family": "Ledford",
+                "given": "Allison B."
+              }
+            ],
+            "issued": {
+              "date-parts": [
+                [
+                  2026
+                ]
+              ]
+            },
+            "container-title": "INSIGHT",
+            "DOI": "10.1002/inst.70055",
+            "issue": "3",
+            "page": "37–42",
+            "publisher": "International Council on Systems Engineering (INCOSE)",
+            "title": "Trustworthy LLM-Augmented Data Reconciliation for Deployment-Constrained Environments",
+            "volume": "29"
+          },
+          "corrected_fields": [
+            "context",
+            "extensions",
+            "legacy_tags",
+            "metadata",
+            "native_type",
+            "overrides",
+            "provenance",
+            "title_parts",
+            "title_protection"
+          ],
+          "key_provenance": {
+            "origin": "supplied",
+            "policy": null,
+            "table_version": null,
+            "unicode_version": null
+          },
+          "kind": null,
+          "originals": [
+            {
+              "id": "08ffc04a-ae0b-46d3-8047-9b53628fcc1c",
+              "sha256": "61e2d128dbf7b12b007c751d5faf27918e7ffdab97f6dc983dbfb7c6a3332f7e",
+              "byte_length": 435,
+              "format": "bib",
+              "origin": "add",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=4757:5192"
+            },
+            {
+              "id": "2cbbbc78-e0a4-49ee-b82d-7c3cb62619c2",
+              "sha256": "61e2d128dbf7b12b007c751d5faf27918e7ffdab97f6dc983dbfb7c6a3332f7e",
+              "byte_length": 435,
+              "format": "bib",
+              "origin": "import-applied",
+              "locator": "/private/tmp/refs-dema-execution/filtered-originals.bib#bytes=4757:5192"
+            },
+            {
+              "id": "fed6683f-0241-492e-b675-20fa05b59b91",
+              "sha256": "ed8f1a86b20461135ba7d90dafbfa74dd90e922d21761ae1b134f72273055d41",
+              "byte_length": 564,
+              "format": "bib",
+              "origin": "import-cv",
+              "locator": "/Volumes/Casa/pub/cv/refs/all.bib#olearyledford2026insight"
+            }
+          ],
+          "limitations": [],
+          "resources": [
+            {
+              "id": "5bec7ab7-34f7-46ef-8961-4582593bb34a",
+              "source_id": "5c903a55-e2f9-4087-80f9-a6572c639263",
+              "revision": 1,
+              "path": "/Volumes/Casa/pub/2026-insight-dema-llm/published/oleary-ledford-2026-insight-dema-llm-version-of-record.pdf",
+              "root": null,
+              "relative": null,
+              "label": null,
+              "media_type": null,
+              "digest": null
+            }
+          ],
+          "projects": [
+            {
+              "id": "5b2e39c9-4b7a-4ba5-9cc1-eb097a9b35c5",
+              "name": "ai4se-pipyer-proposal"
+            },
+            {
+              "id": "f6f51e36-45b7-49e4-83fb-927dab014549",
+              "name": "cv"
+            },
+            {
+              "id": "788a73eb-2369-4487-a74c-f2a3c1956f79",
+              "name": "dema-llm"
+            }
+          ],
+          "links": []
+        }
+      ],
+      "removed_sources": []
+    }
+  },
+  "verification": {
+    "export_bindings_unchanged": true,
+    "ledford2024mbe": {
+      "original_sha256": "17f8f5b4576eb2748e24cd7f35291a24b151b4c9485b0615c99ccb285e77d965",
+      "original_exact": true
+    },
+    "ledford2024patent": {
+      "original_sha256": "b0976de80881780183ba1981972127418a8a27ac67457605ab89678320444bfb",
+      "original_exact": true
+    },
+    "publication_bytes_and_status_unchanged": true,
+    "internal_report_absent": true
+  },
+  "reused_records_unchanged_except_projects": [
+    "ledford2023dissertation",
+    "ledford2023ieee",
+    "ledford2025syseng",
+    "oleary2025ai4se",
+    "olearyledford2026insight"
+  ],
+  "tests": "1207 passed in 41.46s",
+  "owner_decision": "comms/2026-09-29-221022-s1-mirror-proposal-decision.md"
+}
