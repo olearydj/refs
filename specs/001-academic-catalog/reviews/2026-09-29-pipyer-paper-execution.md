@@ -1,6 +1,6 @@
 # Pipyer paper conversion execution — 2026-09-29
 
-**Status: execution complete; awaiting owner gate acceptance.** The native gate matches all 11 approved predictions. All 423 entries from previously converted projects remain identical. Nothing is recorded or adopted in the live paper yet. All required source attachments are now present; recording and adoption remain separate owner gates.
+**Status: owner accepted the gate; pre-adoption fixture recorded.** The native gate matches all 11 approved predictions. All 423 entries from previously converted projects remain identical. The fixture is now recorded; the live paper is not yet adopted. All required source attachments are present. The owner authorized adoption and conditional re-recording at its commit.
 
 ## Backup and scope
 
@@ -123,7 +123,7 @@ Before: Zhang, Qianqian, Jiajia Liao, Heting Ying, et al. 2025. “Unifying Lang
 
 After: Zhang, Qianqian, Jiajia Liao, Heting Ying, et al. 2025. “Unifying Language Agent Algorithms With Graph- Based Orchestration Engine for Reproducible Agent Research.” Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 3: System Demonstrations), 107–17. https: //doi.org/10.18653/v1/2025.acl-demo.11.
 
-The all-project gate confirms **423 existing entries identical**: JHL 195, danvas 22, manufacturing 78, DEMA 80, NEO 4, CV 44. The additional 11 Pipyer entries match the revised prediction exactly; individual and all-project extractions agree. Exit 3 is solely Pipyer's missing unrecorded fixture. No `--record` was used.
+The all-project gate confirms **423 existing entries identical**: JHL 195, danvas 22, manufacturing 78, DEMA 80, NEO 4, CV 44. The additional 11 Pipyer entries match the revised prediction exactly; individual and all-project extractions agree. Exit 3 is solely Pipyer's missing unrecorded fixture. No `--record` was used for that initial gate; the subsequent authorized recording is documented below.
 
 ## Commits and verification
 
@@ -131,7 +131,7 @@ Execution changes are confined to the register, readable scratch consumer, and t
 
 ## Timing and next step
 
-Work began after the 20:14 CDT decision on 2026-09-29. The initial execution completed catalog work and render checks, then paused for three owner PDFs. Those files have now been verified and attached on the same branch without repeating intake. Next action belongs to s1 and the owner: accept the completed export gate. Recording and live adoption remain separate steps after acceptance. No live export, paper edit/commit or merge has occurred.
+Work began after the 20:14 CDT decision on 2026-09-29. The initial execution completed catalog work and render checks, then paused for three owner PDFs. Those files have now been verified and attached on the same branch without repeating intake. The owner subsequently accepted the completed gate and authorized recording and adoption. First recording is complete; next action belongs to session 1’s adoption subagent using the package below. No live export, paper edit/commit or merge has occurred.
 
 ## Findings for refs
 
@@ -140,3 +140,7 @@ No product change is needed. Existing adopted-export provenance avoids duplicate
 ## Findings for the guide
 
 The owner's exception identifies the actually used software release and pins its captures to that tag. No guide edit is proposed. The attachment requirement is now satisfied, including the retained preprint and distinct publication.
+
+## Accepted gate and first recording
+
+The owner accepted and authorized adoption on 2026-09-29. A fresh `--record` run in `/private/tmp/refs-pipyer-record-accepted` reproduced all 11 accepted entries exactly and recorded the fixture and tool/publication provenance. Exit 3 reports the initially absent fixture; recording succeeded. The publication remains untouched and clean at `de88944`. The [adoption package](2026-09-29-pipyer-paper-adoption.md) supplies the exact patch, config, ordered commands and expected JSON hash for session 1’s subagent. Earlier no-record statements describe the initial execution gate.

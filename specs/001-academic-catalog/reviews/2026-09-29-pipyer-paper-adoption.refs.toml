@@ -1,0 +1,5 @@
+project = "pipyer-paper"
+
+[[export.targets]]
+output = "references.json"
+profile = "csl-json-v1"

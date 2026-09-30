@@ -877,12 +877,19 @@
               "recorded": "pdftotext version 26.09.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
             }
           },
-          "style": "Native Quarto PDF, default Chicago author-date through citeproc/LuaLaTeX, native Mermaid diagram"
+          "style": "Native Quarto PDF, default Chicago author-date through citeproc/LuaLaTeX, native Mermaid diagram",
+          "fixture_provenance": {
+            "publication_commit": "de8894483ea107068ef0529e81de28d2f18328ed",
+            "source": "owner-accepted scratch render (--record)",
+            "recorded_at": "2026-09-30T01:44:10.925784+00:00",
+            "artifact_sha256": "8e14aac1e4c76dc1b45c65f55ac1a98c3301db43c89746580f20251e50522884",
+            "fixture_sha256": "f9c8b4f208faad5a35e32241e1f10f9d509f5bc1808ca085352b8927e85b8887"
+          }
         }
       ],
       "proposal_commit": "69ae3a7",
       "execution_source_commit": "de88944",
-      "notes": "Pre-adoption scratch preparation switches bibliography to references.json and Kapoor to the published key, then renders native PDF. Remove preparation after adoption; retain native extraction. No accepted fixture yet; no recording authorized."
+      "notes": "Pre-adoption scratch preparation switches bibliography to references.json and Kapoor to the published key, then renders native PDF. Owner accepted and authorized recording on 2026-09-29; fixture recorded against clean de88944. Remove preparation after adoption; retain native extraction and re-verify before authorized re-recording."
     }
   ]
 }

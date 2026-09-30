@@ -1,5 +1,5 @@
 {
-  "status": "execution complete; awaiting owner gate acceptance",
+  "status": "owner accepted; pre-adoption fixture recorded; adoption pending",
   "branch_base": "ebb845f",
   "backup_path": "/Volumes/Casa/refs-backups/2026-09-29-before-pipyer-paper-conversion",
   "backup_manifest": {
@@ -3814,5 +3814,20 @@
     "pdfs_scanned": 407,
     "matches": []
   },
-  "native_pdf_sha256": "dea9d1fb13509e5b0030cf7eb21bcb964ad4340e2cab83f3b61549af6f1e6ac7"
+  "native_pdf_sha256": "dea9d1fb13509e5b0030cf7eb21bcb964ad4340e2cab83f3b61549af6f1e6ac7",
+  "first_recording": {
+    "work": "/private/tmp/refs-pipyer-record-accepted",
+    "exit_code": 3,
+    "recorded": true,
+    "accepted_extraction_equal": true,
+    "publication_commit": "de8894483ea107068ef0529e81de28d2f18328ed",
+    "export_sha256": "69a894fcd277a1fbbab6bb32a1311f7d76651be46b47800d2dc10ca02d244e31",
+    "fixture_provenance": {
+      "publication_commit": "de8894483ea107068ef0529e81de28d2f18328ed",
+      "source": "owner-accepted scratch render (--record)",
+      "recorded_at": "2026-09-30T01:44:10.925784+00:00",
+      "artifact_sha256": "8e14aac1e4c76dc1b45c65f55ac1a98c3301db43c89746580f20251e50522884",
+      "fixture_sha256": "f9c8b4f208faad5a35e32241e1f10f9d509f5bc1808ca085352b8927e85b8887"
+    }
+  }
 }
