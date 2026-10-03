@@ -58,11 +58,11 @@
             }
           },
           "fixture_provenance": {
-            "publication_commit": "cb2c7ada2692a1293d9a63f1c44d8f72c9199523",
+            "publication_commit": "2c8c51e7416fcd62439c9d6a95336d296a661b31",
             "source": "owner-accepted scratch render (--record)",
-            "recorded_at": "2026-09-27T07:15:35.858348+00:00",
-            "artifact_sha256": "991aaa329d5651cda9cc14c7ba458ce119b4b2b6e72e929c4365454a2ecf8da7",
-            "fixture_sha256": "59bb81cbffd62f28ed01aa4afab00f881aca858bf619187a9dfad68f671e3e52"
+            "recorded_at": "2026-10-03T20:10:45.129262+00:00",
+            "artifact_sha256": "7b5178e289683b991fbefcab3898d76c8322beec6f7ce1b25de5d2b2d8ba6507",
+            "fixture_sha256": "13ae06fd1ea0a55cbca9f69283d0cd62b4cc89c0430c217ed6dde7a2008ef874"
           },
           "style": "Project ieee.csl, including document and webpage genre"
         },
@@ -90,11 +90,11 @@
             }
           },
           "fixture_provenance": {
-            "publication_commit": "cb2c7ada2692a1293d9a63f1c44d8f72c9199523",
+            "publication_commit": "2c8c51e7416fcd62439c9d6a95336d296a661b31",
             "source": "owner-accepted scratch render (--record)",
-            "recorded_at": "2026-09-27T07:15:35.868225+00:00",
-            "artifact_sha256": "45015d8202c0038927aa372e7ea58b8ae484725ce28d7e7a3c734caa5291ab47",
-            "fixture_sha256": "88f15f34e8d185e23f97637eaa85264843539c6df8450a0cecacc1582295b60e"
+            "recorded_at": "2026-10-03T20:10:45.138160+00:00",
+            "artifact_sha256": "48dbf1561643752549186d8f1e6fef71672207ff3ad4c367635bee9d99865455",
+            "fixture_sha256": "c297976e49f6813a18103608303a89e3f5503a4e8ecb102e5943de67ab4b343e"
           },
           "style": "site/scripts/build_data.py source_entry formatter"
         }
