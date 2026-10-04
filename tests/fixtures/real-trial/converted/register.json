@@ -767,11 +767,11 @@
           },
           "style": "Native CV APA style, owner-approved sentence casing; full HTML and Typst PDF rendered, actual references extracted",
           "fixture_provenance": {
-            "publication_commit": "84ad8ab0192988ea0e59dfc6fb99815261a289f9",
+            "publication_commit": "f319f14ee6d5f5e22830880dd70ba2d21b0a3639",
             "source": "owner-accepted scratch render (--record)",
-            "recorded_at": "2026-09-29T05:26:10.455082+00:00",
-            "artifact_sha256": "e9c4064e959509547f95e84c76a0c19c5f0c201fb1bfc8c10a784b61985a9116",
-            "fixture_sha256": "862d849e3be70f51a2759ed4c80f7e1b586c3fb2d919f3d2dad359a40fb06523"
+            "recorded_at": "2026-10-04T21:52:28.421702+00:00",
+            "artifact_sha256": "c0f122c6e81c2a009862446eb106ea37d86f8b21d2b1ed5b2b5b873fc9468d3f",
+            "fixture_sha256": "56b643d868adc02bdfad4cefab8e09c6263312a81b0af5f3941642f623abcd59"
           }
         },
         {
@@ -813,16 +813,16 @@
           },
           "style": "Native CV APA style, owner-approved sentence casing; full HTML and Typst PDF rendered, actual references extracted",
           "fixture_provenance": {
-            "publication_commit": "84ad8ab0192988ea0e59dfc6fb99815261a289f9",
+            "publication_commit": "f319f14ee6d5f5e22830880dd70ba2d21b0a3639",
             "source": "owner-accepted scratch render (--record)",
-            "recorded_at": "2026-09-29T05:26:10.459515+00:00",
-            "artifact_sha256": "52bf9b4edb400d3eb23de8d8d1fec125c1d01d527316ab5824ac9a17ae2f37b5",
-            "fixture_sha256": "38c320ca27b268694a6993b3385879ccf960b2d728e9e176b3c1a9d5a31e1ec4"
+            "recorded_at": "2026-10-04T21:52:28.426617+00:00",
+            "artifact_sha256": "9eb5f613d054be964af7c91386e09d306f44baa3d7aaa1fd12da789798c3a92d",
+            "fixture_sha256": "130d961e50365280b6b29468ab3740d8b842e9d15e5b08bdd3700fabf3001591"
           }
         }
       ],
-      "notes": "Adopted configuration. The project carries its section manifest, pre-render selector, local style/highlighter and activity YAML. The first consumer renders both native formats; the second extracts PDF text using HTML identities and verifies every complete entry in the PDF. Fixtures re-recorded at adopted CV commit 84ad8ab after the owner's conditional \"yes\" (2026-09-29-002457-s1-cv-rerecord-approved.md), with all 44 CV and 379 other entries identical. Fixture bytes are unchanged from the accepted pre-adoption render.",
-      "execution_source_commit": "84ad8ab0192988ea0e59dfc6fb99815261a289f9"
+      "notes": "Adopted configuration. The project carries its section manifest, pre-render selector, local style/highlighter and activity YAML. The first consumer renders both native formats; the second extracts PDF text using HTML identities and verifies every complete entry in the PDF. Fixtures re-recorded at adopted CV commit 84ad8ab after the owner's conditional \"yes\" (2026-09-29-002457-s1-cv-rerecord-approved.md), with all 44 CV and 379 other entries identical. Fixture bytes are unchanged from the accepted pre-adoption render. Re-recorded October 4, 2026 at CV commit f319f14ee6d5f5e22830880dd70ba2d21b0a3639 after the owner selected, verbatim, \"B: (in press) (Recommended)\" and authorized editing, re-exporting, re-gating and recording if only Hossain changed. Both consumers had 21 identical entries and only hossain2024lean-industry40 changed; its unconfirmed issued year is replaced by (in press), with the journal and DOI under Accepted and Forthcoming Journal Articles. Recorded extractions exactly match the reviewed gate.",
+      "execution_source_commit": "f319f14ee6d5f5e22830880dd70ba2d21b0a3639"
     },
     {
       "name": "pipyer-paper",
